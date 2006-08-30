@@ -1,0 +1,2582 @@
+
+# TODO: Put in event lengths
+# TODO: Handle max event counts and limitations
+
+
+
+
+# FixedOption, Option: Choose one (and only one) of the following, based on either
+#                      FixedProbability or Probability (but not both!)
+# FixedProbability: chosen by a random number seeded on the monster's ID (i.e,
+#                   constant for a given monster)
+# Probability: chosen by a random number seeded on the time (i.e., not constant
+#              for a given monster)
+# Delay: In seconds
+# Volume: In percent
+# EndsAfter: In seconds
+# Incompatable: Don't play this event if any of N or more of the following events
+#               are occurring, where N is the number that preceeds the event name.
+# Note that some things that the user may consider a single event should actually
+# be considered multiple events.  For example, a shopkeeper saying
+# "Greetings, adventurer!  Welcome to Adjama's General Store!" should actually be
+# "Greetings, adventurer!  Welcome to" + "Adjama" + "'s " + "General Store"
+# (actually, "adventurer" should technically be the username, but we'll cheat in
+# such cases).
+#
+# Note that some events should be called continuously (for example, background
+# ambience because of the presence of certain rooms on the level) or randomly
+# (same issue).  Continuous calls should make good use of the EndsAfter variable.
+#
+# Sometimes, there is no cue for a given event - for example, a mastadon walking
+# around.  These can be dealt with by simply assuming that if the monster isn't
+# asleep or in a trap, it's walking around every few moves (with some random
+# component).
+#
+# All sounds should be scaled with distance except ambient noise when you're in
+# the room that is causing the ambience.
+#
+# I will declare all events in this file; it is up to the programmer to hook them
+# in.  I will also sort them by category - ambiance, walking around sounds, etc,
+# although the titles should make it obvious.  It is inherent that sounds will
+# need to get hooked in via actual code, since A) Many sound events don't have a
+# triggering message, and B) often when there is a triggering message, it could
+# occur for multiple events which shouldn't play the same sound, and only code
+# has the ability to check for other clues (what's on the current level,
+# user and monster statuses, and dozens of other things depending on the
+# event) that would be indicative of the cause.  Fortunately, many cases
+# will be distinct and message-triggerable, making the job easier on the
+# programmer.  In any case, each message block in the file will be accompanied by
+# a comment suggesting what trigger the programmer should use for the event.
+#
+# If we want to make it so that all of the potential triggering actions can
+# be specified in *this* file, we'll need a basic programming language of
+# sorts.  As of yet, I don't know what all things we'll need to be able to
+# check, but it should be able to do:
+#
+# * Logical combinations and groupings (AND, OR, NOT, (, ), etc) of events
+# * Full regular expressions on the game's text output
+# * Able to check for the presence of monsters, and their statuses
+# * Able to check for dungeon features on the level
+# * Ability to check for objects on the level
+# * Ability to check for objects in your inventory
+# * Able to be declared continuously loading, or randomly loading with a
+#   given probability of occurring per second.
+# * Able to specify where on the map the sound is occurring (and to get the
+#   coordinates of objects, monsters, rooms, etc)
+# * Able to check for user stats and statuses
+# * Able to be alerted when stats and statuses change, and to be able to
+#   play sounds conditionally upon such actions.
+# * Statuses should include things like hallucination, blindness, etc. 
+#   Stats should include not only things like hitpoints, spell points,
+#   strength, dex, etc, but should also include hidden stats like luck,
+#   whether you have a pet (and what their stats are), what your god thinks
+#   of you, etc.
+# * Ability to compare numeric stats, distances to monsters, objects,
+#   and features, et al arithmatically and logically (+, -, *, /, >, <), and
+#   also to look at them as percentages (such as # of max HP)
+# * Ability to tell if the current level is one of the special levels (and
+#   if so, which one)
+#
+# Given this complexity, I think it would probably be easier if all sound
+# events were just hooked in inside code, with only the events described in
+# this file.  However, I will at the very least start off by writing this
+# file and at least describing each event.
+#
+# For example:
+# [Pyrolisk_Gaze]:
+#	Probability 90
+#	Option:
+#		FixedProbability 50
+#		SoundFile "Karen/Monsters/pyrolisk_gaze.ogg":
+#			Delay 0
+#		SoundFile "Karen/effects/catch_fire.ogg":
+#			Delay 1
+#			Volume 80
+#		SoundFile "Karen/effects/smoulder.ogg":
+#			Delay 2.5
+#			Probability 50
+#			Volume 120
+#		EndsAfter 5
+#	Option:
+#		FixedProbability 50
+#		SoundFile "Elaine/Monsters/pyrolisk_gaze.ogg":
+#			Delay 0
+#		SoundFile "Elaine/effects/burn.ogg":
+#			Delay 1.5
+#		EndsAfter 4.5
+#	Incompatible:
+#		1,Pyrolisk_Gaze
+#		1,Pyrolisk_Attack
+#		1,Pyrolisk_Hurt
+#
+# [SomeOtherEvent]:
+#
+#	...
+
+# === Creature Movement ===
+[Xan_flying]:
+	Cue:
+		Movement:
+			Xan
+	Option:
+		SoundFile "Karen/Monsters/xan_flying.ogg":
+			Delay 0
+		EndsAfter 4.8922
+	Incompatible:
+		3,Xan_flying
+[Beelike_flying]:
+	Cue:
+		Movement:
+			Killer Bee
+			Queen Bee
+	Option:
+		SoundFile "Karen/Monsters/bees_flying.ogg":
+			Delay 0
+		EndsAfter 5.8701
+	Incompatible:
+		3,Beelike_flying
+[Small_flying]:
+	Cue:
+		Movement:
+			Bat
+	Option:
+		SoundFile "Karen/Monsters/small_wings.ogg"***:
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Small_flying 
+[Large_flying]:
+	Cue:
+		Movement:
+			Gargoyle
+			Giant bat
+			Raven
+			Vampire bat
+			Couatl
+	Option:
+		SoundFile "Karen/Monsters/large_wings.ogg":
+			Delay 0
+		EndsAfter 3.1526
+	Incompatible:
+		3,Large_flying
+[Very_Large_flying]:
+	Cue:
+		Movement:
+			Winged Gargoyle
+			Aleax
+			Angel
+			Baby gray dragon
+			Baby silver dragon
+			Baby shimmering dragon
+			Baby red dragon
+			Baby white dragon
+			Baby orange dragon
+			Baby black dragon
+			Baby blue dragon
+			Baby green dragon
+			Baby yellow dragon
+			Vrock
+	Option:
+		SoundFile "Karen/Monsters/very_large_wings.ogg":
+			Delay 0
+		EndsAfter 2.4096
+	Incompatible:
+		3,Very_Large_flying
+[Huge_flying]:
+	Cue:
+		Movement:
+			Ki-rin
+			Archon
+			Ixoth
+			Chromatic Dragon
+			Gray dragon
+			Silver dragon
+			Shimmering dragon
+			Red dragon
+			White dragon
+			Orange dragon
+			Black dragon
+			Blue dragon
+			Green dragon
+			Yellow dragon
+			Orcus
+			Geryon
+			Dispater
+			Baalzebub
+			Asmodeus
+	Option:
+		SoundFile "Karen/Monsters/huge_wings.ogg":
+			Delay 0
+		EndsAfter 3.8492
+	Incompatible:
+		3,Huge_flying
+[Insect_walking]:
+	Cue:
+		Movement:
+			Giant ant
+			Soldier ant
+			Fire ant
+			Centipede
+			Cave spider
+			Giant spider
+			Grid bug
+	Option:
+		SoundFile "Karen/Monsters/insect-walking.ogg":
+			Delay 0
+		EndsAfter 3.1990
+	Incompatible:
+		3,Insect_walking
+[Large_Insect_walking]:
+	Cue:
+		Movement:
+			Giant beetle
+			Scorpion
+			Mail daemon
+			Scorpius
+	Option:
+		SoundFile "Karen/Monsters/large_insect_walking.ogg":
+			Delay 0
+		EndsAfter 3.8956
+	Incompatible:
+		3,Large_Insect_walking
+[Blob_crawling]:
+	Cue:
+		Movement:
+			Acid blob
+			Quivering blob
+			Gelatinous cube
+			Blue jelly
+			Spotted jelly
+			Ochre jelly
+			Gray ooze
+			Brown pudding
+			Black pudding
+	Option:
+		SoundFile "Karen/Monsters/blob_walking.ogg":
+			Delay 0
+		EndsAfter 4.3350
+	Incompatible:
+		3,Blob_crawling
+[Small_Animal_walking]:
+	Cue:
+		Movement:
+			Jackal
+			Fox
+			Little dog
+			Dog
+			Dingo
+			Coyote
+			Werejackal (dog)
+			Kitten
+			Housecat
+			Jaguar
+			Lynx
+			Panther
+			Large cat
+			Tiger		# Even big cats are stealthy
+			Gremlin
+			Sewer rat
+			Giant rat
+			Rabid rat
+			Wererat (rodent)
+			Rock mole
+			Woodchuck
+			Rope golem
+			Newt
+			Gecko
+			Iguana
+			Baby crocodile
+			Lizard
+			Chamelion
+	Option:
+		SoundFile "Karen/Monsters/small_animal_walking.ogg":
+			Delay 0
+		EndsAfter 3.6170
+
+	Incompatible:
+		3,Small_Animal_walking
+[Large_Animal_walking]:
+	Cue:
+		Movement:
+			Large dog
+			Wolf
+			Werewolf (dog)
+			Rothe
+			Monkey
+			Leather golem
+	Option:
+		SoundFile "Karen/Monsters/large_animal_walking.ogg":
+			Delay 5.1960
+		EndsAfter 
+	Incompatible:
+		3,Large_Animal_walking
+[Huge_Animal_walking]:
+	Cue:
+		Movement:
+			Warg
+			Cerberus
+			Mumak
+			Titanothere
+			Baluchitherium
+			Mastadon
+			Zruty
+			Earth Elemental
+			Troll
+			Ice troll
+			Rock troll
+			Water troll
+			Olog-hai
+			Umber hulk
+			Xorn
+			Minion of Huhetotl
+	Option:
+		SoundFile "Karen/Monsters/huge_animals_walking.ogg":
+			Delay 0
+		EndsAfter 3.597
+	Incompatible:
+		3,Huge_Animal_walking
+[Gold_Golem_walking]:
+	Cue:
+		Movement:
+			Gold golem
+	Option:
+		SoundFile "Karen/Monsters/huge_animal_walking.ogg":
+			Delay 0
+			Volume 80
+		SoundFile "Karen/Special/drop_money.ogg" ***:
+			Delay 0
+		EndsAfter 3.597
+	Incompatible:
+		3,Gold_Golem_walking
+[Wood_Golem_walking]:
+	Cue:
+		Movement:
+			Wood golem
+	Option:
+		SoundFile "Karen/Monsters/huge_animal_walking.ogg":
+			Delay 0
+			Volume 80
+		SoundFile "Karen/Combat/drop_heavy_wood.ogg" ***:
+			Delay 0
+		EndsAfter 3.597
+	Incompatible:
+		3,Wood_Golem_walking
+[Flesh_Golem_walking]:
+	Cue:
+		Movement:
+			Flesh golem
+	Option:
+		SoundFile "Karen/Monsters/huge_animal_walking.ogg":
+			Delay 0
+			Volume 90
+		SoundFile "Karen/Combat/drop_heavy_organic.ogg" ***:
+			Delay 0
+		EndsAfter 3.597
+	Incompatible:
+		3,Flesh_Golem_walking
+[Clay_Golem_walking]:
+	Cue:
+		Movement:
+			Clay golem
+	Option:
+		SoundFile "Karen/Monsters/huge_animal_walking.ogg":
+			Delay 0
+			Volume 90
+		SoundFile "Karen/Combat/drop_heavy_dragon.ogg" ***:
+			Delay 3.597
+		EndsAfter 
+	Incompatible:
+		3,Clay_Golem_walking
+[Stone_Golem_walking]:
+	Cue:
+		Movement:
+			Clay golem
+	Option:
+		SoundFile "Karen/Monsters/huge_animal_walking.ogg":
+			Delay 0
+			Volume 105
+		SoundFile "Karen/Combat/drop_heavy_stone.ogg" ***:
+			Delay 0
+		SoundFile "Karen/Combat/drop_heavy_stone.ogg" ***:
+			Delay 1.5
+			Volume 50
+		EndsAfter 3.597
+	Incompatible:
+		3,Stone_Golem_walking
+[Stone_Golem_walking]:
+	Cue:
+		Movement:
+			Glass golem
+	Option:
+		SoundFile "Karen/Monsters/huge_animal_walking.ogg":
+			Delay 0
+			Volume 105
+		SoundFile "Karen/Combat/drop_heavy_glass.ogg" ***:
+			Delay 0
+		SoundFile "Karen/Combat/drop_heavy_glass.ogg" ***:
+			Delay 1.5
+			Volume 50
+		EndsAfter 3.597
+	Incompatible:
+		3,Glass_Golem_walking
+[Iron_Golem_walking]:
+	Cue:
+		Movement:
+			Glass golem
+	Option:
+		SoundFile "Karen/Monsters/huge_animal_walking.ogg":
+			Delay 0
+			Volume 115
+		SoundFile "Karen/Combat/drop_heavy_iron.ogg" ***:
+			Delay 0
+		SoundFile "Karen/Combat/drop_heavy_iron.ogg" ***:
+			Delay 1.5
+			Volume 60
+		EndsAfter 3.597
+	Incompatible:
+		3,Iron_Golem_walking
+[Wumpus_walking]:
+	Cue:
+		Movement:
+			Wumpus
+	Option:
+		SoundFile "Karen/Special/suckers.ogg" ***:
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Wumpus_walking
+[Flaming_walking]:
+	Cue:
+		Movement:
+			Hell hound pup
+			Hell hound
+			Fire elemental
+	Option:
+		SoundFile "Karen/Monsters/large_animal_walking.ogg":
+			Delay 0
+		SoundFile "Karen/Special/crackling_fire.ogg":
+			Delay 0.3
+		EndsAfter 
+	Incompatible:
+		3,Flaming_walking
+[Freezing_walking]:
+	Cue:
+		Movement:
+			Winter wolf cub
+			Winter wolf
+	Option:
+		SoundFile "Karen/Monsters/large_animal_walking.ogg":
+			Delay 0
+		SoundFile "Karen/Special/blowing_snow.ogg" ***:
+			Delay 0.3
+		EndsAfter 
+	Incompatible:
+		3,Freezing_Walking
+[Sloshing_walking]:
+	Cue:
+		Movement:
+			Water elemental
+	Option:
+		SoundFile "Karen/Monsters/large_animal_walking.ogg":
+			Delay 0
+		SoundFile "Karen/Special/water_splashing.ogg" ***:
+			Delay 0.3
+		EndsAfter 
+	Incompatible:
+		3,Sloshing_walking
+[Gas_flying]:
+	Cue:
+		Movement:
+			Gas spore
+	Option:
+		SoundFile "Karen/Special/gas.ogg" ***:
+			Delay 0
+			Volume 50
+		SoundFile "Karen/Monsters/manes.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Gas_Spore_flying
+[Freezing_flying]:
+	Cue:
+		Movement:
+			Freezing Sphere
+			Ice vortex
+	Option:
+		SoundFile "Karen/Special/blowing_snow.ogg" ***:
+			Delay 0
+		SoundFile "Karen/Monsters/manes.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Freezing_Sphere_flying
+[Steam_flying]:
+	Cue:
+		Movement:
+			Steam vortex
+	Option:
+		SoundFile "Karen/Special/steam.ogg" ***:
+			Delay 0
+		SoundFile "Karen/Monsters/manes.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Freezing_Sphere_flying
+[Flaming_flying]:
+	Cue:
+		Movement:
+			Flaming Sphere
+			Fire vortex
+	Option:
+		SoundFile "Karen/Special/crackling_fire.ogg":
+			Delay 0
+		SoundFile "Karen/Monsters/manes.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Flaming_Sphere_flying
+[Shocking_flying]:
+	Cue:
+		Movement:
+			Shocking Sphere
+			Energy vortex
+	Option:
+		SoundFile "Karen/Special/sparking.ogg" ***:
+			Delay 0
+		SoundFile "Karen/Monsters/manes.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Shocking_Sphere_flying
+[Quiet_flying]:
+	Cue:
+		Movement:
+			Floating eye
+			Manes
+			Lemure
+			Beholder
+			Fog cloud
+			Stalker
+			Vampire
+			Vampire lord
+			Vampire mage
+			Vlad the impaler
+			Barrow wight
+			Wraith
+			Nazgul
+			Ghost
+			Shade
+	Option:
+		SoundFile "Karen/Monsters/manes.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Quiet_flying
+[Loud_flying]:
+	Cue:
+		Movement:
+			Titan
+			Djinni
+			Sandestin
+	Option:
+		SoundFile "Karen/Monsters/manes.ogg":
+			Delay 0
+			Volume 300
+		EndsAfter 
+	Incompatible:
+		3,Loud_flying
+[Dusty_flying]:
+	Cue:
+		Movement:
+			Dust vortex
+	Option:
+		SoundFile "Karen/Special/dust.ogg" ***:
+			Delay 0
+			Volume 50
+		SoundFile "Karen/Monsters/manes.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Quiet_flying
+[Debris_flying]:
+	Cue:
+		Movement:
+			Air Elemental
+	Option:
+		SoundFile "Karen/Special/pummel.ogg" ***:
+			Delay 0
+			Volume 50
+		SoundFile "Karen/Monsters/manes.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Quiet_flying
+[Miniature_Humanoid_walking]:
+	Cue:
+		Movement:
+			Homunculus
+			Imp
+			Hobbit
+			Leprechaun
+			Gnome
+			Gnome lord
+			Gnomish wizard
+			Gnome king
+	Option:
+		SoundFile "Karen/Monsters/small_stealthy_humanoid_walking.ogg":
+			Delay 0
+		EndsAfter 4.4065
+	Incompatible:
+		3,Miniature_Humanoid_walking
+[Small_Humanoid_walking]:
+	Cue:
+		Movement:
+			Dwarf
+			Dwarf Lord
+			Dwarf King
+			Quasit
+			Tengu
+			Human
+			Mplayer
+			Kobold
+			Large kobold
+			Kobold lord
+			Kobold shaman
+			Large mimic
+			Wood nymph
+			Water nymph
+			Mountain nymph
+			Goblin
+			Hobgoblin
+			Orc
+			Hill orc
+			Mordor orc
+			Uruk-hai
+			Orc shaman
+			Orc-captain
+			Small mimic
+			Quantum mechanic
+			Elf
+			Woodland-elf
+			Green-elf
+			Elf-lord
+			Elvenking
+			Doppelganger
+			Nurse
+			Guard
+			Prisoner
+			Oracle
+			Aligned priest
+			High priest
+			Wererat (human)
+			Werejackal (human)
+			Werewolf (human)
+			Soldier
+			Sergeant
+			Lieutenant
+			Captain
+			Watchman
+			Watch captain
+			Wizard of Yendor
+			Croesus
+			Succubus
+			Incubus
+			Erinys
+			Barbed devil
+			Hezrou
+			Archeologist
+			Barbarian
+			Caveman
+			Cavewoman
+			Healer
+			Knight
+			Monk
+			Priest
+			Priestess
+			Ranger
+			Rogue
+			Samurai
+			Tourist
+			Valkyrie
+			Wizard
+			Lord Carnarvon
+			Pelias
+			Shaman karnov
+			Earendil
+			Elwing
+			Hippocrates
+			King Arthur
+			Grand Master
+			Arch Priest
+			Orion
+			Master of Thieves
+			Lord Sato
+			Twoflower
+			Norn
+			Neferet the Green
+			Thoth Amon
+			Master Kaen
+			Master Assassin
+			Ashikaga Takauji
+			Dark One
+			Student
+			Chieftan
+			Neanderthal
+			High-elf
+			Attendant
+			Page
+			Abbot
+			Acolyte
+			Hunter
+			Thug
+			Ninja
+			Roshi
+			Guide
+			Warrior
+			Apprentice
+	Option:
+		SoundFile "Karen/Monsters/small_humanoid_walking.ogg":
+			Delay 0
+		EndsAfter 4.6387
+	Incompatible:
+		3,Small_Humanoid_walking
+[Shopkeeper_walking]:
+	Cue:
+		Movement:
+			Shopkeeper
+	Option:
+		Probability 80
+		SoundFile "Karen/Monsters/small_humanoid_walking.ogg":
+			Delay 0
+		EndsAfter 4.6387
+	Option:
+		Probability 20
+		SoundFile "Karen/Monsters/small_humanoid_walking.ogg":
+			Delay 0
+		SoundFile "Elaine/Monsters/shopkeeper_walking.ogg":
+			Delay 2
+		EndsAfter 4.6387
+	Incompatible:
+		3,Shopkeeper_walking
+[Large_Humanoid_walking]:
+	Cue:
+		Movement:
+			Bugbear
+			Giant mimic
+			Giant
+			Stone giant
+			Hill giant
+			Fire giant
+			Frost giant
+			Storm giant
+			Ettin
+			Minotaur
+			Ogre
+			Ogre lord
+			Ogre king
+			Ape
+			Owlbear
+			Yeti
+			Carnivorous Ape
+			Sasquatch
+			Water demon
+			Horned devil
+			Nalfeshnee
+			Pit fiend
+			Yeenoghu
+			Cyclops
+			Goblin King
+			Lord Surtur
+			Nalzok
+	Option:
+		SoundFile "Karen/Monsters/large_humanoid_walking.ogg":
+			Delay 0
+		EndsAfter 4.2672
+	Incompatible:
+		3,Large_Humanoid_walking
+[Demogorgon_moving]:
+	Cue:
+		Movement:
+			Demogorgon
+	Option:
+		SoundFile "Karen/Monsters/large_humanoid_walking.ogg":
+			Delay 0
+			Volume 150
+		SoundFile "Karen/Monsters/huge_animal_walking.ogg":
+			Delay 0
+			Volume 150
+		SoundFile "Karen/Monsters/huge_flying.ogg":
+			Delay 0
+			Volume 150
+		SoundFile "Karen/Special/push_boulder.ogg":
+			Delay 1.5
+			Volume 150
+		EndsAfter 4.2672
+	Incompatible:
+		3,Demogorgon_moving
+[Heavy_sliding]:
+	Cue:
+		Movement:
+			Rock piercer
+			Iron piercer
+			Glass piercer
+	Option:
+		SoundFile "Karen/Special/push_boulder.ogg":
+			Delay 0
+		EndsAfter 2.2006
+	Incompatible:
+		3,Heavy_sliding
+[Slimy_Animal_moving]:
+	Cue:
+		Movement:
+			Chickatrice
+			Cockatrice
+			Pyrolisk
+			Mind flayer
+			Master mind flayer
+			Red naga hatchling
+			Black naga hatchling
+			Golden naga hatchling
+			Guardian naga hatchling
+			Garter snake
+			Snake
+			Water moccasin
+			Pit viper
+			Python
+			Cobra
+			Crocodile
+			Salamander
+	Option:
+		SoundFile "Karen/Monsters/slimy_slithering_moving.ogg":
+			Delay 0
+		EndsAfter 2.9668
+	Incompatible:
+		3,Slimy_Animal_moving
+[Huge_Slimy_Animal_moving]:
+	Cue:
+		Movement:
+			Trapper
+			Lurker above
+			Baby purple worm
+			Baby long worm
+			Purple worm
+			Long worm
+			Red naga
+			Black naga
+			Golden naga
+			Guardian naga
+			Medusa
+			Marilith
+			Jubilex
+	Option:
+		SoundFile "Karen/Monsters/huge_slimy_slithering_moving.ogg":
+			Delay 0
+		EndsAfter 5.1495
+	Incompatible:
+		3,Huge_Slimy_Animal_moving
+[Hooved_walking]:
+	Cue:
+		Movement:
+			Leocrotta
+			White unicorn
+			Gray unicorn
+			Black unicorn
+			Pony
+			Horse
+			Warhorse
+			Plains centaur
+			Forest centaur
+			Mountain centaur
+			
+	Option:
+		SoundFile "Karen/Monsters/hooved_walking.ogg":
+			Delay 0
+		EndsAfter 3.6634
+	Incompatible:
+		3,Hooved_walking
+[Riders_moving]:
+	Cue:
+		Movement:
+			Death
+			Famine
+			Pestilence
+			
+	Option:
+		Probability 20
+		SoundFile "Karen/Monsters/hooved_walking.ogg":
+			Delay 0
+			Volume 150
+		SoundFile "Karen/Monsters/hooved_walking.ogg":
+			Delay 0.5
+			Volume 150
+		EndsAfter 4.1634
+	Option:
+		Probability 20
+		SoundFile "Karen/Monsters/hooved_walking.ogg":
+			Delay 0
+			Volume 150
+		SoundFile "Karen/Monsters/hooved_walking.ogg":
+			Delay 0.5
+			Volume 150
+		SoundFile "Karen/Monsters/wail.ogg":
+			Delay 1
+			Volume 150
+		EndsAfter 4.3840
+	Incompatible:
+		3,Riders_moving
+[Fungus_walking]:
+	Cue:
+		Movement:
+			Lichen
+			Brown mold
+			Yellow mold
+			Green mold
+			Red mold
+			Shrieker
+			Violet fungus
+			Straw golem
+			Paper golem
+	Option:
+		SoundFile "Karen/Monsters/lichen_mold_moving.ogg":
+			Delay 0
+		EndsAfter 5.4746
+	Incompatible:
+		3,Fungus_walking
+[Shuffling_walking]:
+	Cue:
+		Movement:
+			Lich
+			Demilich
+			Master lich
+			Arch-lich
+			Kobold mummy
+			Gnome mummy
+			Orc mummy
+			Dwarf mummy
+			Elf mummy
+			Human mummy
+			Ettin mummy
+			Giant mummy
+			Gnome zombie
+			Orc zombie
+			Dwarf zombie
+			Elf zombie
+			Human zombie
+			Ettin zombie
+	Option:
+		SoundFile "Karen/Monsters/zombie_mummy_shuffling.ogg":
+			Delay 0.
+		EndsAfter 2.9668
+	Incompatible:
+		3,Zombie_shuffling
+[Skeletal_walking]:
+	Cue:
+		Movement:
+			Charon
+			Bone devil
+			Skeleton
+	Option:
+		SoundFile "Karen/Monsters/skeletal_walking.ogg":
+			Delay 0
+			Volume 150
+		EndsAfter 4.1743
+	Incompatible:
+		3,Skeletal_walking
+[Ice_Devil_walking]:
+	Cue:
+		Movement:
+			Ice devil
+	Option:
+		SoundFile "Karen/Monsters/skeletal_walking.ogg":
+			Delay 0
+			Volume 150
+		SoundFile "Karen/Special/snow_blowing.ogg" ***:
+			Delay 0
+			Volume 150
+		EndsAfter 4.1743
+	Incompatible:
+		3,Ice_Devil_walking
+[Balrog_moving]:
+	Cue:
+		Movement:
+			Balrog
+	Option:
+		Probability 50
+		SoundFile "Karen/Monsters/huge_animals_walking.ogg":
+			Delay 0
+		EndsAfter 3.597
+	Option:
+		Probability 50
+		SoundFile "Karen/Special/crackling_fire.ogg":
+			Delay 0
+			Volume 150
+		SoundFile "Karen/Special/huge_animals_walking.ogg":
+			Delay 0
+		EndsAfter 7.9507
+	Incompatible:
+		3,Balrog_moving
+[Green_Slime_moving]:
+	Cue:
+		Movement:
+			Green slime
+	Option:
+		SoundFile "Karen/Monsters/green_slime.ogg": ***
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Green_Slime_moving
+[Rust_Monster_moving]:
+	Cue:
+		Movement:
+			Rust monster
+	Option:
+		SoundFile "Karen/Combat/rusting.ogg":
+			Delay 1
+			Volume 60
+		EndsAfter 3.2919
+	Incompatible:
+		3,Rust_Monster_moving
+[Disenchanter_moving]:
+	Cue:
+		Movement:
+			Disenchanter
+	Option:
+		SoundFile "Elaine/Monsters/disenchanter_moving.ogg":
+			Delay 1
+			Volume 60
+		EndsAfter 3.8956
+	Incompatible:
+		3,Disenchanter_moving
+[Jabberwock_moving]:
+	Cue:
+		Movement:
+			Jabberwock
+			Vorpal Jabberwock
+	Option:
+		SoundFile "Karen/Monsters/jabberwock_whiffle.ogg" ***:
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Jabberwock_moving
+[Aquatic_moving]:
+	Cue:
+		Movement:
+			Jellyfish
+			Piranha
+			Shark
+			Giant eel
+			Electric eel
+			Kraken
+	Option:
+		SoundFile "Karen/Special/water_splashing.ogg" ***:
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Aquatic_moving
+[Kop_moving]:
+	Cue:
+		Movement:
+			Keystone Kop
+			Kop Sergeant
+			Kop Lieutenant
+			Kop Kaptain
+	Option:
+		FixedProbability 25
+		SoundFile "Karen/Monsters/kop_moving.ogg" ***:
+			Delay 0
+		EndsAfter 
+	Option:
+		FixedProbability 25
+		SoundFile "Karen/Monsters/kop_moving2.ogg" ***:
+			Delay 0
+		EndsAfter 
+	Option:
+		FixedProbability 25
+		SoundFile "Karen/Monsters/kop_moving3.ogg" ***:
+			Delay 0
+		EndsAfter 
+	Option:
+		FixedProbability 25
+		SoundFile "Karen/Monsters/kop_moving4.ogg" ***:
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Kop_moving
+[Yellow_Light_flying]:
+	Cue:
+		Movement:
+			Yellow Light
+	Option:
+		SoundFile "Karen/Monsters/yellow_light_flying.ogg":
+			Delay 0
+			FairUse 
+				Song "Turn Out The Lights", 
+				Artist Nelly Furtado
+				Album "Whoa Nelly!"
+				Date 2004
+				Label DreamWorks
+		EndsAfter 5.5747
+	Incompatible:
+		1,Yellow_Light_flying
+		1,Yellow_Light_explodes
+		1,Black_Light_flying
+		1,Black_Light_explodes
+		1,Hallucination_action
+[Black_Light_flying]:
+	Cue:
+		Movement:
+			Black Light
+	Option:
+		SoundFile "Karen/Monsters/black_light_flying.ogg":
+			Delay 0
+			FairUse 
+				Song "On The Run", 
+				Artist Pink Floyd
+				Album "Dark Side Of The Moon"
+				Date 1973
+				Label Capitol Records
+		EndsAfter 6.5740
+	Incompatible:
+		1,Yellow_Light_flying
+		1,Yellow_Light_explodes
+		1,Black_Light_flying
+		1,Black_Light_explodes
+		1,Hallucination_action
+
+
+# === Creature Combat ===
+
+[Blob_fighting]:
+	Cue:
+		Combat:
+			Blob
+	Option:
+		Probability 70
+		Soundfile "Karen/Monsters/blob_fighting.ogg":
+			Delay 0
+		EndsAfter  0.9699
+	Incompatible:
+		3,Blob_fighting
+[Trice_fighting]:
+	Cue:
+		Combat:
+			Trice
+	Option:
+		Probability 50
+		Soundfile "Karen/Monsters/cockatrice_fighting.ogg":
+			Delay 0
+		EndsAfter  2.0
+	Incompatible:
+		3,Trice_fighting
+[Pyrolisk_fighting]:
+	Cue:
+		Combat:
+			?
+	Option
+		Probability 50
+		SoundFile "Karen/Monsters/pyrolisk_fighting.ogg":
+			Delay 0
+			Volume 2.0
+		EndsAfter 3.3867
+	Incompatible:
+		3,_fighting
+[Dog_fighting]:
+	Cue:
+		Combat:
+			Dog
+	Option:
+		Probability 40
+		Soundfile "Jaakko/dog.ogg":
+			Delay 0
+		EndsAfter 0.4422
+	Incompatible:
+		3,Dog_fighting
+[Small_Wolf_fighting]:
+	Cue:
+		Combat:
+			Small_Wolf
+	Option:
+		Probability 40
+		Soundfile "Karen/Monsters/wolf_fighting.ogg":
+			Delay 0
+		EndsAfter 1.2486
+	Incompatible:
+		3,Small_Wolf_fighting
+[Large_Wolf_fighting]:
+	Cue:
+		Combat:
+			Large_Wolf
+	Option:
+		Probability 40
+		Soundfile "Karen/Monsters/large_wolf_fighting.ogg":
+			Delay 0
+		EndsAfter 1.2486
+	Incompatible:
+		3,Large_Wolf_fighting
+[Sphere_explosion]:
+	Cue:
+		Combat:
+			Sphere
+	Option:
+		Probability 100
+		Soundfile "Karen/Monsters/explosion.ogg":
+			Delay 0
+		EndsAfter 2.5264
+	Incompatible:
+		3,Sphere_fighting
+[Small_Feline_fighting]:
+	Cue:
+		Combat:
+			Small_Feline
+	Option:
+		Probability 40
+		Soundfile "Karen/Monsters/cat_hiss.ogg":
+			Delay 0
+		EndsAfter 0.2935
+	Incompatible:
+		3,Small_Feline_fighting
+[Large_Feline_fighting]:
+	Cue:
+		Combat:
+			Large_Feline
+	Option:
+		Probability 60
+		Soundfile "Karen/Monsters/large_cat_fighting.ogg": ***
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Large_Feline_fighting
+[Gargoyle_fighting]:
+	Cue:
+		Combat:
+			Gargoyle
+	Option:
+		Probability 30
+		Soundfile "Karen/Monsters/gargoyle_fighting.ogg": ***
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Gargoyle_fighting
+[Hobbit_fighting]:
+	Cue:
+		Combat:
+			Hobbit
+	Option:
+		Probability 30
+		Soundfile "Karen/Monsters/hobbit_fighting.ogg":
+			Delay 0
+		EndsAfter 0.5984
+	Incompatible:
+		3,Hobbit_fighting
+[Dwarf_fighting]:
+	Cue:
+		Combat:
+			Dwarf
+	Option:
+		Probability 30
+		Soundfile "Karen/Monsters/dwarf_fighting.ogg": ***
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Dwarf_fighting
+[Bugbear_fighting]:
+	Cue:
+		Combat:
+			Bugbear
+	Option:
+		Probability 30
+		Soundfile "Karen/Monsters/bugbear_fighting.ogg": ***
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Bugbear_fighting
+[Mind_Flayer_fighting]:
+	Cue:
+		Combat:
+			Mind_Flayer
+	Option:
+		Probability 60
+		Soundfile "Karen/Monsters/mindflayer_fights.ogg":
+			Delay 0
+		EndsAfter 4.5922
+	Incompatible:
+		3,Mind_Flayer_fighting
+[Incorporeal_fighting]:
+	Cue:
+		Combat:
+			Incorporeal
+	Option:
+		Probability 90
+		Soundfile "Karen/Monsters/manes.ogg":
+			Delay 0
+			Volume 300
+		EndsAfter 
+	Incompatible:
+		3,Incorporeal_fighting
+[Minor_Demon_fighting]:
+	Cue:
+		Combat:
+			Minor_Demon
+	Option:
+		Probability 40
+		Soundfile "Karen/Monsters/minor_demon_fighting.ogg":
+			Delay 0
+		EndsAfter 1.6201
+	Incompatible:
+		3,Minor_Demon_fighting
+[Major_Demon_fighting]:
+	Cue:
+		Combat:
+			Major_Demon
+	Option:
+		Probability 40
+		Soundfile "Karen/Monsters/major_demon_fighting.ogg":
+			Delay 0
+		EndsAfter 1.8987
+	Incompatible:
+		3,Major_Demon_fighting
+[Mail_Demon_fighting]:
+	Cue:
+		Combat:
+			Mail_Demon
+	Option:
+		Probability 25
+		Soundfile "Elaine/Monsters/mail_demon_fighting.ogg":
+			Delay 0
+		EndsAfter 2.4560
+	Incompatible:
+		3,Mail_Demon_fighting
+[Incubus_fighting]:
+	Cue:
+		Combat:
+			Incubus
+	Option:
+		Probability 30
+		Soundfile "Karen/Monsters/incubus_fighting.ogg": ***
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Incubus_fighting
+[Succubus_fighting]:
+	Cue:
+		Combat:
+			Succubus
+	Option:
+		Probability 25
+		Soundfile "Elaine/Monsters/succubus_headache.ogg":
+			Delay 0
+		EndsAfter 2.3943
+	Incompatible:
+		3,Succubus_fighting
+[Vrock_fighting]:
+	Cue:
+		Combat:
+			Vrock
+	Option:
+		Probability 50
+		Soundfile "Karen/Monsters/vrock_fighting.ogg":
+			Delay 0
+		EndsAfter 1.5976
+	Incompatible:
+		3,Vrock_fighting
+[Bone_Devil_fighting]:
+	Cue:
+		Combat:
+			Bone devil
+	Option:
+		Probability 75
+		Soundfile "Karen/Monsters/skeletal_fighting.ogg": ***
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Bone_Devil_fighting
+[Ice_Devil_fighting]:
+	Cue:
+		Combat:
+			Ice devil
+	Option:
+		Probability 45
+		Soundfile "Karen/Monsters/skeletal_fighting.ogg": ***
+			Delay 0
+		EndsAfter 
+	Option:
+		Probability 45
+		Soundfile "Karen/Special/snow_blowing.ogg": ***
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Ice_Devil_fighting
+[Pit_Fiend_fighting]:
+	Cue:
+		Combat:
+			Pit_Fiend
+	Option:
+		probability 40
+		Soundfile "Karen/Monsters/pit_fiend.ogg":
+			Delay 0
+		EndsAfter 4.4065
+	Incompatible:
+		3,Pit_Fiend_fighting
+[Balrog_fighting]:
+	Cue:
+		Combat:
+			Balrog
+	Option:
+		Soundfile "Karen/Monsters/balrog_fighting.ogg":
+			Delay 0
+		EndsAfter 4.4065
+	Incompatible:
+		3,Balrog_fighting
+[Kobold_fighting]:
+	Cue:
+		Combat:
+			Kobold
+	Option:
+		Probability 40
+		Soundfile "Karen/Monsters/kobold_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Kobold_fighting
+[Shamans_fighting]:
+	Cue:
+		Combat:
+			Shamans
+	Option:
+		Probability 50
+		Soundfile "Karen/Monsters/shaman_curses.ogg":
+			Delay 0
+			Volume 150
+		EndsAfter 2.9219
+	Incompatible:
+		3,Shamans_fighting
+[Leprechaun_fighting]:
+	Cue:
+		Combat:
+			Leprechaun
+	Option:
+		Soundfile "Karen/Monsters/leprechaun_fighting.ogg": ***
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Leprechaun_fighting
+[Mimic_fighting]:
+	Cue:
+		Combat:
+			Mimic
+	Option:
+		Probability 100
+		Soundfile "Karen/Monsters/mimic_fighting.ogg": ***
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		1,Mimic_fighting
+[Nymph_fighting]:
+	Cue:
+		Combat:
+			Nymph
+	Option:
+		Probability 30
+		Soundfile "Karen/Monsters/nymph_fighting.ogg": ***
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Nymph_fighting
+[Orc_fighting]:
+	Cue:
+		Combat:
+			Orc
+	Option:
+		Probability 35
+		Soundfile "Karen/Monsters/orc_fighting.ogg": ***
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Orc_fighting
+[Rock_Piercer_fighting]:
+	Cue:
+		Combat:
+			Rock piercer
+	Option:
+		Probability 100
+		Soundfile "Karen/Combat/drop_heavy_stone.ogg":
+			Delay 0
+			Volume 300
+		EndsAfter 1.164
+	Incompatible:
+		3,Rock_Piercer_fighting
+[Iron_Piercer_fighting]:
+	Cue:
+		Combat:
+			Iron piercer
+	Option:
+		Probability 100
+		Soundfile "Karen/Combat/drop_heavy_iron.ogg":
+			Delay 0
+			Volume 300
+		EndsAfter 1.3414
+	Incompatible:
+		3,Iron_Piercer_fighting
+[Glass_Piercer_fighting]:
+	Cue:
+		Combat:
+			Glass piercer
+	Option:
+		Probability 100
+		Soundfile "Karen/Combat/drop_heavy_glass.ogg":
+			Delay 0
+			Volume 300
+		EndsAfter 0.8306
+	Incompatible:
+		3,Glass_Piercer_fighting
+[Rothe_fighting]:
+	Cue:
+		Combat:
+			Rothe
+	Option:
+		Probability 40
+		Soundfile "Karen/Monsters/rothe_fighting.ogg": ***
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Rothe_fighting
+[Leocrotta_fighting]:
+	Cue:
+		Combat:
+			Leocrotta
+	Option:
+		Probability 30
+		Soundfile "Karen/Monsters/leocrotta_fighting.ogg": ***
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Leocrotta_fighting
+[Mumak_fighting]:
+	Cue:
+		Combat:
+			Mumak
+	Option:
+		Probability 35
+		Soundfile "Karen/Monsters/elephant_fighting.ogg": ***
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Mumak_fighting
+[Wumpus_fighting]:
+	Cue:
+		Combat:
+			Wumpus
+	Option:
+		Probability 40
+		Soundfile "Karen/Monsters/wumpus_fighting.ogg": ***
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Wumpus_fighting
+[Large_quadraped_fighting]:
+	Cue:
+		Combat:
+			Large_quadraped
+	Option:
+		Soundfile "Karen/Monsters/grunt.ogg":
+			Delay 0
+		Soundfile "Karen/Monsters/growl.ogg":
+			Delay 0
+		EndsAfter 1.8058
+	Incompatible:
+		3,Large_quadraped_fighting
+[Rat_fighting]:
+	Cue:
+		Combat:
+			Rat
+	Option:
+		Probability 50
+		Soundfile "Karen/Monsters/squeek.ogg":
+			Delay 0
+		EndsAfter 0.5984
+	Incompatible:
+		3,Rat_fighting
+[Woodchuck_fighting]:
+	Cue:
+		Combat:
+			Woodchuck
+	Option:
+		Probability 50
+		Soundfile "Karen/Monsters/woodchuck_fighting.ogg": ***
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Woodchuck_fighting
+[Rock_Mole_fighting]:
+	Cue:
+		Combat:
+			Rock_Mole
+	Option:
+		Probability 40
+		Soundfile "Karen/Monsters/rock_mole_fighting.ogg": ***
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Rock_Mole_fighting
+[Lurker_fighting]:
+	Cue:
+		Combat:
+			Lurker
+	Option:
+		Probability 100
+		Soundfile "Karen/Monsters/lurker_fighting.ogg": ***
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Lurker_fighting
+[Unicorn_fighting]:
+	Cue:
+		Combat:
+			Unicorn
+	Option:
+		Probability 30
+		Soundfile "Karen/Monsters/_fighting.ogg": ***
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Unicorn_fighting
+[Horses_fighting]:
+	Cue:
+		Combat:
+			Horses
+	Option:
+		Probability 30
+		Soundfile "Karen/Monsters/neigh.ogg":
+			Delay 0
+		EndsAfter 1.9706
+	Incompatible:
+		3,Horses_fighting
+[Worms_fighting]:
+	Cue:
+		Combat:
+			Worms
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Worms_fighting
+[Xan_fighting]:
+	Cue:
+		Combat:
+			Xan
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Xan_fighting
+[Zruty_fighting]:
+	Cue:
+		Combat:
+			Zruty
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Zruty_fighting
+[Angel_fighting]:
+	Cue:
+		Combat:
+			Angel
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Angel_fighting
+[Bat_fighting]:
+	Cue:
+		Combat:
+			Bat
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Bat_fighting
+[Vampire_Bat_fighting]:
+	Cue:
+		Combat:
+			Vampire_Bat
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Vampire_Bat_fighting
+[Raven_fighting]:
+	Cue:
+		Combat:
+			Raven
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Raven_fighting
+[Centaur_fighting]:
+	Cue:
+		Combat:
+			Centaur
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Centaur_fighting
+[Baby_Dragon_fighting]:
+	Cue:
+		Combat:
+			Baby_Dragon
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Baby_Dragon_fighting
+[Dragon_fighting]:
+	Cue:
+		Combat:
+			Dragon
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Dragon_fighting
+[Stalker_fighting]:
+	Cue:
+		Combat:
+			Stalker
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Stalker_fighting
+[Lichen_fighting]:
+	Cue:
+		Combat:
+			Lichen
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Lichen_fighting
+[Shrieker_shrieking]:
+	Cue:
+		Combat:
+			?
+	Option
+		SoundFile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,_fighting
+[Gnome_fighting]:
+	Cue:
+		Combat:
+			Gnome
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Gnome_fighting
+[Giant_fighting]:
+	Cue:
+		Combat:
+			Giant
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Giant_fighting
+[Jabberwock_fighting]:
+	Cue:
+		Combat:
+			Jabberwock
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Jabberwock_fighting
+[Kop_fighting]:
+	Cue:
+		Combat:
+			Kop
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Kop_fighting
+[Zombie_fighting]:
+	Cue:
+		Combat:
+			Zombie
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Zombie_fighting
+[Minor_Lich_fighting]:
+	Cue:
+		Combat:
+			Minor_Lich
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Minor_Lich_fighting
+[Major_Lich_fighting]:
+	Cue:
+		Combat:
+			Major_Lich
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Major_Lich_fighting
+[Naga_fighting]:
+	Cue:
+		Combat:
+			Naga
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Naga_fighting
+[Quantum_Mechanic_fighting]:
+	Cue:
+		Combat:
+			Quantum_Mechanic
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Quantum_Mechanic_fighting
+[Rust_Monster_fighting]:
+	Cue:
+		Combat:
+			Rust_Monster
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Rust_Monster_fighting
+[Disenchanter_fighting]:
+	Cue:
+		Combat:
+			Disenchanter
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Disenchanter_fighting
+[Snake_fighting]:
+	Cue:
+		Combat:
+			Snake
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Snake_fighting
+[Troll_fighting]:
+	Cue:
+		Combat:
+			Troll
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Troll_fighting
+[Umber_Hulk_fighting]:
+	Cue:
+		Combat:
+			Umber_Hulk
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Umber_Hulk_fighting
+[Vampire_fighting]:
+	Cue:
+		Combat:
+			Vampire
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Vampire_fighting
+[Wraith_fighting]:
+	Cue:
+		Combat:
+			Wraith
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Wraith_fighting
+[Xorn_fighting]:
+	Cue:
+		Combat:
+			Xorn
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Xorn_fighting
+[Monkey_fighting]:
+	Cue:
+		Combat:
+			Monkey
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Monkey_fighting
+[Ape_fighting]:
+	Cue:
+		Combat:
+			Ape
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Ape_fighting
+[Owlbear_fighting]:
+	Cue:
+		Combat:
+			Owlbear
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Owlbear_fighting
+[Huge_Ape_fighting]:
+	Cue:
+		Combat:
+			Huge_Ape
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Huge_Ape_fighting
+[Human_fighting]:
+	Cue:
+		Combat:
+			Human
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Human_fighting
+[Watchman_fighting]:
+	Cue:
+		Combat:
+			Watchman
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Watchman_fighting
+[Soldier_fighting]:
+	Cue:
+		Combat:
+			Soldier
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Soldier_fighting
+[Mplayer_fighting]:
+	Cue:
+		Combat:
+			Mplayer
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Mplayer_fighting
+[Archeologist_fighting]:
+	Cue:
+		Combat:
+			Archeologist
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Archeologist_fighting
+[Tourist_fighting]:
+	Cue:
+		Combat:
+			Tourist
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Tourist_fighting
+[Werecreature_fighting]:
+	Cue:
+		Combat:
+			Werecreature
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Werecreature_fighting
+[Elf_fighting]:
+	Cue:
+		Combat:
+			Elf
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Elf_fighting
+[Nurse_fighting]:
+	Cue:
+		Combat:
+			Nurse
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Nurse_fighting
+[Shopkeeper_fighting]:
+	Cue:
+		Combat:
+			Shopkeeper
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Shopkeeper_fighting
+[Guard_fighting]:
+	Cue:
+		Combat:
+			Guard
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Guard_fighting
+[Prisoner_fighting]:
+	Cue:
+		Combat:
+			Prisoner
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Prisoner_fighting
+[Oracle_fighting]:
+	Cue:
+		Combat:
+			Oracle
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Oracle_fighting
+[Aligned_Priest_fighting]:
+	Cue:
+		Combat:
+			Aligned_Priest
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Aligned_Priest_fighting
+[Medusa_fighting]:
+	Cue:
+		Combat:
+			Medusa
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Medusa_fighting
+[Wizard_Of_Yendor_fighting]:
+	Cue:
+		Combat:
+			Wizard_Of_Yendor
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Wizard_Of_Yendor_fighting
+[Croesus_fighting]:
+	Cue:
+		Combat:
+			Croesus
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Croesus_fighting
+[Jubilex_fighting]:
+	Cue:
+		Combat:
+			Jubilex
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Jubilex_fighting
+[Yeenoghu_fighting]:
+	Cue:
+		Combat:
+			Yeenoghu
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Yeenoghu_fighting
+[Orcus_fighting]:
+	Cue:
+		Combat:
+			Orcus
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Orcus_fighting
+[Geryon_fighting]:
+	Cue:
+		Combat:
+			Geryon
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Geryon_fighting
+[Dispater_fighting]:
+	Cue:
+		Combat:
+			Dispater
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Dispater_fighting
+[Baalzebub_fighting]:
+	Cue:
+		Combat:
+			Baalzebub
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Baalzebub_fighting
+[Asmodeus_fighting]:
+	Cue:
+		Combat:
+			Asmodeus
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Asmodeus_fighting
+[Demogorgon_fighting]:
+	Cue:
+		Combat:
+			Demogorgon
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Demogorgon_fighting
+[Death_fighting]:
+	Cue:
+		Combat:
+			Death
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Death_fighting
+[Pestilence_fighting]:
+	Cue:
+		Combat:
+			Pestilence
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Pestilence_fighting
+[Famine_fighting]:
+	Cue:
+		Combat:
+			Famine
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Famine_fighting
+[Djinni_fighting]:
+	Cue:
+		Combat:
+			Djinni
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Djinni_fighting
+[Sea_Creature_fighting]:
+	Cue:
+		Combat:
+			Sea_Creature
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Sea_Creature_fighting
+[Crocodile_fighting]:
+	Cue:
+		Combat:
+			Crocodile
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Crocodile_fighting
+[Lord_Carnarvon_fighting]:
+	Cue:
+		Combat:
+			Lord_Carnarvon
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Lord_Carnarvon_fighting
+[Pelias_fighting]:
+	Cue:
+		Combat:
+			Pelias
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Pelias_fighting
+[Shaman_Karnov_fighting]:
+	Cue:
+		Combat:
+			Shaman_Karnov
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Shaman_Karnov_fighting
+[Hippocrates_fighting]:
+	Cue:
+		Combat:
+			Hippocrates
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Hippocrates_fighting
+[King_Arthur_fighting]:
+	Cue:
+		Combat:
+			King_Arthur
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,King_Arthur_fighting
+[Grand_Master_fighting]:
+	Cue:
+		Combat:
+			Grand_Master
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Grand_Master_fighting
+[Arch_Priest_fighting]:
+	Cue:
+		Combat:
+			Arch_Priest
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Arch_Priest_fighting
+[Orion_fighting]:
+	Cue:
+		Combat:
+			Orion
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Orion_fighting
+[Master_Of_Thieves_fighting]:
+	Cue:
+		Combat:
+			Master_Of_Thieves
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Master_Of_Thieves_fighting
+[Lord_Sato_fighting]:
+	Cue:
+		Combat:
+			Lord_Sato
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Lord_Sato_fighting
+[Twoflower_fighting]:
+	Cue:
+		Combat:
+			Twoflower
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Twoflower_fighting
+[Norn_fighting]:
+	Cue:
+		Combat:
+			Norn
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Norn_fighting
+[Neferet_The_Green_fighting]:
+	Cue:
+		Combat:
+			Neferet_The_Green
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Neferet_The_Green_fighting
+[Minion_Of_Huhetotl_fighting]:
+	Cue:
+		Combat:
+			Minion_Of_Huhetotl
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Minion_Of_Huhetotl_fighting
+[Thoth_Amon_fighting]:
+	Cue:
+		Combat:
+			Thoth_Amon
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Thoth_Amon_fighting
+[Chromatic_Dragon_fighting]:
+	Cue:
+		Combat:
+			Chromatic_Dragon
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Chromatic_Dragon_fighting
+[Cyclops_fighting]:
+	Cue:
+		Combat:
+			Cyclops
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Cyclops_fighting
+[Ixoth_fighting]:
+	Cue:
+		Combat:
+			Ixoth
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Ixoth_fighting
+[Master_Kaen_fighting]:
+	Cue:
+		Combat:
+			Master_Kaen
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Master_Kaen_fighting
+[Nalzok_fighting]:
+	Cue:
+		Combat:
+			Nalzok
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Nalzok_fighting
+[Scorpius_fighting]:
+	Cue:
+		Combat:
+			Scorpius
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Scorpius_fighting
+[Master_Assassin_fighting]:
+	Cue:
+		Combat:
+			Master_Assassin
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Master_Assassin_fighting
+[Ashikaga_Takauji_fighting]:
+	Cue:
+		Combat:
+			Ashikaga_Takauji
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Ashikaga_Takauji_fighting
+[Lord_Surtur_fighting]:
+	Cue:
+		Combat:
+			Lord_Surtur
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Lord_Surtur_fighting
+[Dark_One_fighting]:
+	Cue:
+		Combat:
+			Dark_One
+	Option:
+		Soundfile "Karen/Monsters/_fighting.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,Dark_One_fighting
+
+# === Creature Hurt ===
+
+# === Creature Present ===
+
+# === Creature Misc ===
+
+
+
+[]:
+	Cue:
+		.c,:
+	Option
+		SoundFile "Karen/Monsters/.ogg":
+			Delay 0
+		EndsAfter 
+	Incompatible:
+		3,
+
+
+
+
+
+			FairUse 
+				Song "Goodbye, Blue Sky", 
+				Artist Pink Floyd
+				Album "The Wall"
+				Date 1979
+				Label Capitol
