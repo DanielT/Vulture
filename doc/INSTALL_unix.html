@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.3.7: http://docutils.sourceforge.net/" />
+<title>Installing Vulture's on unix or a unix clone (like linux)</title>
+<link rel="stylesheet" href="default.css" type="text/css" />
+</head>
+<body>
+<div class="document" id="installing-vulture-s-on-unix-or-a-unix-clone-like-linux">
+<h1 class="title">Installing Vulture's on unix or a unix clone (like linux)</h1>
+<div class="contents topic" id="contents">
+<p class="topic-title first"><a name="contents">Contents</a></p>
+<ul class="simple">
+<li><a class="reference" href="#required-dependancies" id="id1" name="id1">Required dependancies</a><ul>
+<li><a class="reference" href="#simple-directmedia-layer-sdl" id="id2" name="id2">Simple DirectMedia Layer (SDL)</a></li>
+<li><a class="reference" href="#sdl-mixer" id="id3" name="id3">SDL-mixer</a></li>
+</ul>
+</li>
+<li><a class="reference" href="#required-pre-installation-source-modifications" id="id4" name="id4">Required pre-installation source modifications</a><ul>
+<li><a class="reference" href="#freebsd" id="id5" name="id5">FreeBSD</a></li>
+<li><a class="reference" href="#linux" id="id6" name="id6">Linux</a></li>
+</ul>
+</li>
+<li><a class="reference" href="#compiling-and-installing-for-system-deployment-and-actual-gameplay" id="id7" name="id7">Compiling and installing for system deployment and actual gameplay</a></li>
+<li><a class="reference" href="#compiling-and-installing-for-development-or-experimental-purposes" id="id8" name="id8">Compiling and installing for development or experimental purposes</a></li>
+</ul>
+</div>
+<div class="section" id="required-dependancies">
+<h1><a class="toc-backref" href="#id1" name="required-dependancies">Required dependancies</a></h1>
+<p>I suggest reading it's documentation for best graphical and audio output, unless of course your system comes with development packages for these.</p>
+<div class="section" id="simple-directmedia-layer-sdl">
+<h2><a class="toc-backref" href="#id2" name="simple-directmedia-layer-sdl">Simple DirectMedia Layer (SDL)</a></h2>
+<p><a class="reference" href="http://www.libsdl.org/">http://www.libsdl.org/</a></p>
+</div>
+<div class="section" id="sdl-mixer">
+<h2><a class="toc-backref" href="#id3" name="sdl-mixer">SDL-mixer</a></h2>
+<p><a class="reference" href="http://www.libsdl.org/projects/SDL_mixer/">http://www.libsdl.org/projects/SDL_mixer/</a></p>
+<dl class="docutils">
+<dt>This needs to be built and installed with support for:</dt>
+<dd><ul class="first last simple">
+<li>mp3</li>
+<li>ogg vorbis</li>
+<li>midi</li>
+</ul>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="required-pre-installation-source-modifications">
+<h1><a class="toc-backref" href="#id4" name="required-pre-installation-source-modifications">Required pre-installation source modifications</a></h1>
+<div class="section" id="freebsd">
+<h2><a class="toc-backref" href="#id5" name="freebsd">FreeBSD</a></h2>
+<p>None</p>
+</div>
+<div class="section" id="linux">
+<h2><a class="toc-backref" href="#id6" name="linux">Linux</a></h2>
+<p>Search for &quot;sdl11-config&quot; within all makefiles in sys/unix/ and replace with &quot;sdl-config&quot;.</p>
+</div>
+</div>
+<div class="section" id="compiling-and-installing-for-system-deployment-and-actual-gameplay">
+<h1><a class="toc-backref" href="#id7" name="compiling-and-installing-for-system-deployment-and-actual-gameplay">Compiling and installing for system deployment and actual gameplay</a></h1>
+<dl class="docutils">
+<dt>The first thing you need to do is create the required symbolic links to the vultures source within the NetHack and the SLASH'EM directory trees.  This is done as follows:</dt>
+<dd><ul class="first last simple">
+<li>ln -s ../../vultures/win/jtp nethack/win/jtp</li>
+<li>ln -s ../../vultures/win/jtp slashem/win/jtp</li>
+</ul>
+</dd>
+<dt>Now proceed to each of the variants' installation instruction documents.  You will find them here:</dt>
+<dd><ul class="first last simple">
+<li>nethack/sys/unix/Install.unx</li>
+<li>slashem/sys/unix/Install.unx</li>
+</ul>
+</dd>
+</dl>
+<p>Simply follow the instuctions for each of them to build and install the respective variant on your system.</p>
+</div>
+<div class="section" id="compiling-and-installing-for-development-or-experimental-purposes">
+<h1><a class="toc-backref" href="#id8" name="compiling-and-installing-for-development-or-experimental-purposes">Compiling and installing for development or experimental purposes</a></h1>
+<p>in the source code root directory type &quot;make help&quot; to receive instruction on installing vultures to a location within your home directory.</p>
+<p><strong>NOTE</strong> This form of installation should not be used for general gameplay, unless you are wanting to look at the game briefly and do not want it installed system-wide.</p>
+</div>
+</div>
+<hr class="docutils footer" />
+<div class="footer">
+<a class="reference" href="INSTALL_unix.rst">View document source</a>.
+Generated on: 2005-06-16.
+Generated by <a class="reference" href="http://docutils.sourceforge.net/">Docutils</a> from <a class="reference" href="http://docutils.sourceforge.net/rst.html">reStructuredText</a> source.
+</div>
+</body>
+</html>

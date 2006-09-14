@@ -1,0 +1,46 @@
+***************
+*** 320,325 ****
+   *
+   * Internal to display.c, this is a #define for speed.
+   */
+  #define _map_location(x,y,show)						\
+  {									\
+      register struct obj   *obj;						\
+--- 320,338 ----
+   *
+   * Internal to display.c, this is a #define for speed.
+   */
++ #ifdef JTP_GRAPHICS
++ #define _map_location(x,y,show)						\
++ {									\
++     register struct obj   *obj;						\
++     register struct trap  *trap;					\
++ 									\
++     map_background(x,y,show);					\
++     if ((trap = t_at(x,y)) && trap->tseen && !covers_traps(x,y))	\
++ 	map_trap(trap,show);						\
++     if ((obj = vobj_at(x,y)) && !covers_objects(x,y))			\
++ 	map_object(obj,show);						\
++ }
++ #else
+  #define _map_location(x,y,show)						\
+  {									\
+      register struct obj   *obj;						\
+***************
+*** 1286,1291 ****
+  	return;
+      }
+  
+      if (gbuf[y][x].glyph != glyph) {
+  	gbuf[y][x].glyph = glyph;
+  	gbuf[y][x].new   = 1;
+--- 1418,1426 ----
+  	return;
+      }
+  
++ #ifdef JTP_GRAPHICS
++     print_glyph(WIN_MAP,x,y,gbuf[y][x].glyph);
++ #endif
+      if (gbuf[y][x].glyph != glyph) {
+  	gbuf[y][x].glyph = glyph;
+  	gbuf[y][x].new   = 1;
