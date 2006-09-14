@@ -1,0 +1,128 @@
+% jtp_opts.txt
+% This file contains game options for NetHack - Vulture's Eye.
+% You can modify this file to customize the game interface
+% to suit your preferences.
+%
+% The format is:   option=value   where
+%
+%   option
+%      One of a predefined set of option names. See the option lines 
+%      below for a list of defined options.
+%
+%   value
+%      This can be either a number or a string of characters, depending
+%      on the option. See the comments above the option lines for the
+%      allowed values.
+%
+% Lines starting with % are comments. Blank lines are ignored.
+%
+
+
+% -------------------
+% Screen Resolution
+% -------------------
+% 'screen_xsize' is the horizontal resolution and 'screen_ysize' is
+% the vertical resolution. 800x600 is the minimum allowed resolution.
+% Beyond that, you can choose any resolution that your display supports.
+% In Linux, set 'fullscreen' to 1 to use a fullscreen mode. In DOS and
+% Windows, the game always uses a fullscreen mode.
+%
+screen_xsize=1024
+screen_ysize=768
+fullscreen=0
+
+
+% -------------------------
+% Music and Sound Effects
+% -------------------------
+% Turn these off (e.g. play_music=0) if you prefer silence, or if you
+% don't have the appropriate sound hardware.
+%
+play_music=1
+play_effects=1
+
+
+% -----------------------------------
+% External MIDI player (Linux only)
+% -----------------------------------
+% Uncomment one of the lines below to use that program to play MIDI
+% files. You can also give your own command; use %s in place of the 
+% filename. Please give the full path to the player binary.
+%
+linux_midi_player=/usr/local/bin/timidity -idqq %s
+%linux_midi_player=/usr/bin/playmidi %s
+
+
+% -----------------------------------
+% External MP3 player (Linux only)
+% -----------------------------------
+% Uncomment one of the lines below to use that program to play MP3
+% files. You can also give your own command; use %s in place of the 
+% filename. Please give the full path to the player binary. 
+%
+linux_mp3_player=/usr/bin/mpg123 -q %s
+
+
+% ------------
+% Wall Style
+% ------------
+% NetHack - Vulture's Eye features several different display styles for
+% walls. The available styles are:
+%
+%    full          Full-height, opaque walls. Looks best, but
+%                  can block your view of objects next to walls.
+%    half_height   Short, opaque walls. Less realistic, but
+%                  allows a better view.
+%    transparent   Full-height, transparent walls. Less realistic,
+%                  but allows a better view.
+%
+wall_style=full
+
+
+% ------------------------------------
+% Recenter main view after movement?
+% ------------------------------------
+% If you enable this option (recenter_after_movement=1), the main
+% window will follow your character's each movement. If you disable
+% this option, the main window will only shift when you move off-screen.
+%
+recenter_after_movement=1
+
+
+% ------------------------------
+% One command per mouse click?
+% ------------------------------
+% If you enable this option (one_command_per_click=1), the game
+% accepts only one command each time you click the mouse. If you
+% disable this option, you can give several commands (movement,
+% searching, etc.) by holding down the mouse button.
+%
+one_command_per_click=0
+
+
+% ---------------------
+% Game speed controls
+% ---------------------
+% How fast do you want the game to accept commands?
+% You can set the minimum delay (in seconds) between two game
+% commands here. For example, command_delay=0.1 means at most
+% 10 commands per second. You can also set the minimum delay
+% between two scrollings of the game windows (e.g. scroll_delay=0.1).
+%
+scroll_delay=0.1
+command_delay=0.1
+
+
+% ---------------------
+% Gamma correction
+% ---------------------
+% If the game colours are too dark or too light, you can 
+% adjust them here. Gamma correction values are decimal 
+% numbers above zero. The value 1 gives the default game 
+% palette. Values below 1 darken the palette and values 
+% above 1 lighten it. Practical good values are from 0.5
+% (very dark) to 2 (very light).
+%
+gamma_correction=1.0
+
+

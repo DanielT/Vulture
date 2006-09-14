@@ -1,0 +1,108 @@
+% jtp_snds.txt
+% This file contains event sound settings for NetHack - Vulture's Eye.
+% Event sounds are sounds that are played when a particular message
+% is sent to NetHack's message window. One message plays at most one
+% sound (the first applicable one).
+%
+% The format is:   [search string],SOUNDTYPE,[filename]   where
+%
+%   [search string]
+%      The message string, or part of a message string that triggers
+%      the sound. For example, [crashing rock] plays a sound when
+%      the message "You hear crashing rock!" is received.
+%
+%   SOUNDTYPE
+%      This can be one of the following: WAVE, LWAV, MIDI, MP3, RSNG, or NONE.
+%
+%           - WAVE plays a 44100Hz 16bit mono RAW sound effect,
+%           - LWAV plays a 22050Hz 8bit mono RAW sound effect,
+%           - MIDI plays a standard MIDI file,
+%           - MP3  plays a MP3 file (Linux only),
+%           - CDAU plays a CD audio track.
+%           - RSNG plays randomly chosen background music (see Section 2 below)
+%           - NONE can be used to exclude messages
+%             (eg. 'restore' is not the same as 'store').
+%
+%   [filename]
+%      # XXX defunct (?)
+%      This is the name of the sound file. Use short filenames
+%      (of the form aaaaaaaa.bbb) to ensure compatibility with the DOS
+%      version of Vulture's Eye. The format depends on the SOUNDTYPE
+%      parameter, as follows:
+%
+%           - WAVE: the filename, including extension. For example,
+%             [crash.raw]. The file must be in the "sounds" subdirectory.
+%           - LWAV: the filename, including extension. For example,
+%             [crash.raw]. The file must be in the "sounds" subdirectory.
+%           - MIDI: the filename, including extension. For example,
+%             [caves.mid]. The file must be in the "sounds" subdirectory.
+%           - MP3: the filename, including extension. For example,
+%             [nethack.mp3]. The file must be in the "sounds" subdirectory.
+%           - CDAU: the track number. For example, to play
+%             track 01, use [01].
+%           - RSNG: not used, set the filename to [unused]
+%           - NONE: not used, set the filename to [unused]
+%
+% Lines starting with % are comments. Blank lines are ignored.
+%
+
+[door open],WAVE,[opdoor.raw]
+[The door resists!],WAVE,[opdoor.raw]
+[door close],WAVE,[cldoor.raw]
+[You hit ],WAVE,[swordhit.raw]
+[You smite ],WAVE,[swordhit.raw]
+[You destroy ],WAVE,[swordhit.raw]
+[You miss ],WAVE,[swordmis.raw]
+[Welcome to experience level ],LWAV,[levelup.raw]
+[splashing of a naiad],WAVE,[fountain.raw]
+[water falling],WAVE,[fountain.raw]
+[bubbling water],WAVE,[fountain.raw]
+[counting money],LWAV,[counting.raw]
+[WHAMM],WAVE,[cldoor.raw]
+[THUD],WAVE,[cldoor.raw]
+[ cat],LWAV,[cat.raw]
+[ kitten],LWAV,[cat.raw]
+[ dog],LWAV,[dog.raw]
+[ goblin],LWAV,[roar.raw]
+[crashes],WAVE,[cldoor.raw]
+[to NetHack!],RSNG,[unused]
+[emporium],MIDI,[shopping.mid]
+[apparel],MIDI,[shopping.mid]
+[delicatessen],MIDI,[shopping.mid]
+[restore],NONE,[unused]
+[store],MIDI,[shopping.mid]
+
+%
+% Section 2: special music and sound events
+%
+% These include music for the title and end title screens, 
+% the introduction music, the in-game background music selection. 
+% Sound effects associated with NetHack commands (like movement)
+% are also defined here.
+%
+% The format is the same as above; the only difference is 
+% that the search string is one of the special tokens given 
+% below. The token nhfe_music_background can be repeated as 
+% many times as required to add new background music.
+%
+
+[nhfe_music_main_title],MIDI,[nethack.mid]
+[nhfe_music_introduction],MIDI,[intro.mid]
+[nhfe_music_end_died],MIDI,[died.mid]
+[nhfe_music_end_quit],MIDI,[quit.mid]
+[nhfe_music_end_ascended],MIDI,[ascended.mid]
+[nhfe_music_background],MIDI,[aircaves.mid]
+[nhfe_music_background],MIDI,[ambient1.mid]
+[nhfe_music_background],MIDI,[ambient2.mid]
+[nhfe_music_background],MIDI,[battle1.mid]
+[nhfe_music_background],MIDI,[battle2.mid]
+[nhfe_music_background],MIDI,[earthcav.mid]
+[nhfe_music_background],MIDI,[firecave.mid]
+[nhfe_music_background],MIDI,[lament1.mid]
+[nhfe_music_background],MIDI,[lament2.mid]
+[nhfe_music_background],MIDI,[mines.mid]
+[nhfe_music_background],MIDI,[oracle.mid]
+[nhfe_music_background],MIDI,[town.mid]
+[nhfe_music_background],MIDI,[watercav.mid]
+[nhfe_sound_walk],WAVE,[walk.raw]
+

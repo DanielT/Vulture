@@ -1,0 +1,274 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Jaakko Peltonen">
+   <meta name="GENERATOR" content="Mozilla/4.73 [en] (Win95; I) [Netscape]">
+   <title>NetHack - Vulture's Eye manual: What do all those things on the screen mean?</title>
+   <LINK REL=STYLESHEET TYPE="text/css" HREF="nhmanual.css">
+</head>
+<body bgcolor="#FFFFFF" background="paper1.jpg">
+&nbsp;
+<center><h2>3.&nbsp; What do all those things on the screen mean?</h2></center>
+
+<center><hr NOSHADE WIDTH="100%"></center>
+
+<p><img SRC="letter_o.jpg" height=93 width=94 align=LEFT alt="O">n the screen is
+kept a map of where you have been and what you have seen
+on the current dungeon level; as you explore more of the level, it appears
+on the screen in front of you.</p>
+<p>When NetHack's ancestor <b>Rogue</b> first appeared,
+its screen orientation was almost unique
+among computer fantasy games. Since then, screen orientation
+has become the norm rather than the exception;
+NetHack continues this fine tradition. Unlike text adventure
+games that accept commands in pseudo-English sentences and explain
+the results in words, NetHack commands are all one or two keystrokes or mouse clicks, and
+the results are displayed graphically on the screen.</p>
+<p>NetHack can even be played by blind players, with the assistance
+of Braille readers or speech synthesisers. Instructions
+for configuring NetHack for the blind are included in the original NetHack 
+Guidebook.</p>
+<p>NetHack generates a new dungeon every time you play it; even the
+Guidebook authors still find it an entertaining and
+exciting game despite having won several times.</p>
+<p>NetHack offers a variety of display options. The
+options available to you will vary from port to port,
+depending on the capabilities of your hardware and software, and
+whether various compile-time options were enabled when your executable
+was created. Possible display options are:
+<ul>
+<li>a monochrome character interface</li>
+<li>a color character interface</li>
+<li>a graphical interface using small overhead pictures called tiles</li>
+<li>a graphics-intensive interface (called <b>Vulture's Eye</b>) using isometric tiles</li>
+</ul>
+There is no difference between the various display options with respect
+to game play. To find out more about the first three interfaces, see the original
+NetHack Guidebook.</p>
+
+<p>
+<center>
+<img SRC="nhisomet.jpg" height=245 width=325 alt="NetHack screen with Vulture's Eye">
+</center>
+In order to understand what is going on in NetHack,
+first you must understand what NetHack is doing with the screen.
+The NetHack screen replaces the ``You see ...'' descriptions of text
+adventure games. Above is a sample of what a NetHack
+screen might look like with Vulture's Eye.
+</p>
+
+<p>The screen is divided into three main areas: the status window, the
+message window and the main view. The precise layout of the windows depends
+on the screen mode you are using.</td>
+</tr>
+</table>
+
+<h3>
+3.1. The status window (bottom)</h3>
+The bottom of the screen has three areas: a mini-map, a status display and a button panel.
+
+<p>
+<center>
+<img SRC="minimap.jpg" height=100 width=220 alt="Mini-map">
+</center>
+The <b>mini-map</b> shows an overview of the surrounding dungeon layout.
+Dark areas are unexplored or impassable; light areas are rooms or corridors.
+Your character is shown as a white dot.
+Left-click a spot on the mini-map to move there. Right-click a spot to
+center the main view there.<br><br>
+</p>
+
+<p>
+<center>
+<img SRC="statusbar.jpg" height=100 width=361 alt="Status display">
+</center>
+The <b>status display</b> contains several cryptic pieces of information
+describing your current status. If the status information becomes 
+too long for the display, you might not see all of it. 
+Here are explanations of the various status items  
+(though your configuration may not have all of them):
+</p>
+<br>
+<dl>
+<dt><b>Rank</b></dt>
+<dd>Your character's name and professional ranking (based on the experience
+level, see below).</dd>
+
+<dt><b>Strength</b></dt>
+<dd>A measure of your character's strength; one of
+your six <b>basic attributes</b>. Your attributes
+can range from 3 to 18 inclusive (occasionally you may get super-strengths
+of the form 18/xx). The higher your
+strength, the stronger you are. Strength affects how successfully
+you perform physical tasks, how much damage you do in combat,
+and how much loot you can carry.</dd>
+
+<dt><b>Dexterity</b></dt>
+<dd>Dexterity affects your chances to hit in combat, to avoid
+traps, and do other tasks requiring agility or manipulation of objects.</dd>
+
+<dt><b>Constitution</b></dt>
+<dd>Constitution affects your ability to recover from injuries
+and other strains on your stamina.</dd>
+
+<dt><b>Intelligence</b></dt>
+<dd>Intelligence affects your ability to cast spells and
+read spellbooks.</dd>
+
+<dt><b>Wisdom</b></dt>
+<dd>Wisdom comes from your practical experience (especially when dealing with
+magic). It affects your magical energy.</dd>
+
+<dt><b>Charisma</b></dt>
+<dd>Charisma affects how certain creatures react toward you. In particular,
+it can affect the prices shopkeepers offer you.</dd>
+
+<dt><b>Alignment</b></dt>
+<dd>Lawful, Neutral, or Chaotic. Often, Lawful is taken as good and
+Chaotic as evil, but legal and ethical do not always
+coincide. Your alignment influences how other
+monsters react toward you. Monsters of a
+like alignment are more likely to be non-aggressive, while
+those of an opposing alignment are more likely
+to be seriously offended at your presence.</dd>
+
+<dt><b>Dungeon Level</b></dt>
+<dd>How deep you are in the dungeon. You start at level one and the
+number increases as you go deeper into the dungeon.
+Some levels are special, and are identified by a name
+and not a number. The Amulet of Yendor is reputed to
+be somewhere beneath the twentieth level.</dd>
+
+<dt><b>Gold</b></dt>
+<dd>The number of gold pieces you are openly carrying.
+Gold which you have concealed in containers is not counted.</dd>
+
+<dt><b>Hit Points</b></dt>
+<dd>Your current and maximum hit points. Hit points
+indicate how much damage you can take before you die.
+The more you get hit in a fight, the lower they get. You can regain
+hit points by resting, or by using certain
+magical items or spells. The number in parentheses is
+the maximum number your hit points can reach.</dd>
+
+<dt><b>Power</b></dt>
+<dd>Spell points. This tells you how much mystic energy (mana)
+you have available for spell casting. Again, resting
+will regenerate the amount available.</dd>
+
+<dt><b>Armor Class</b></dt>
+<dd>A measure of how effectively your armor stops blows from unfriendly
+creatures. The lower this number is, the more effective the armor;
+it is quite possible to have negative armor class.</dd>
+
+<dt><b>Experience</b></dt>
+<dd>Your current experience level and experience points. As you adventure,
+you gain experience points. At certain experience point totals,
+you gain an experience level. The more experienced you
+are, the better you fight and withstand magical attacks. Many dungeons
+show only your experience level here.</dd>
+
+<dt><b>Time</b></dt>
+<dd>The number of turns elapsed so far, displayed if you
+have the time option set.</dd>
+
+<dt><b>Hunger status</b></dt>
+<dd>Your current hunger status, ranging from Satiated down
+to Fainting. If your hunger status
+is normal, it is not displayed.</dd>
+</dl>
+Additional status flags may appear after the hunger status: <b>Conf</b>
+when you're confused, <b>FoodPois</b> or <b>Ill</b> when sick, <b>Blind</b>
+when you can't see, <b>Stun</b> when stunned, and <b>Hallu</b> when hallucinating.
+<br>
+
+<p>
+<center>
+<img SRC="buttonpanel.jpg" height=100 width=249 alt="Button panel">
+</center>
+The <b>button panel</b> has eight command buttons that 
+provide more game information. Clockwise from top left, they are:
+<dl>
+<dt><b>Look button (eye)</b></dt>
+<dd>Click this to examine your surroundings. The cursor changes to a question mark;
+click anywhere on the main view to get a detailed description. When you're done, click
+the button again or press the spacebar.</dd>
+
+<dt><b>Automap (parchment)</b></dt>
+<dd>Click this to get a top-down view of the entire dungeon level. Creatures are shown
+as green dots, objects as yellow and traps as red. Click anywhere to dismiss the automap.</dd>
+
+<dt><b>Message log (quill)</b></dt>
+<dd>Click this to see the last 50 messages (newest first). A text window will appear;
+use the scrollbar to browse through the messages. Click "Continue" when you're done.</dd>
+
+<dt><b>Game options (cogwheel)</b></dt>
+<dd>Click this to set some in-game options. Select the option(s) you want to change and click
+"Continue".<dd>
+
+<dt><b>Help (question mark)</b></dt>
+<dd>Click this to read the online help texts available in NetHack.<dd>
+
+<dt><b>Inventory (bag)</b></dt>
+<dd>Click this to view your current equipment.<dd>
+
+<dt><b>Spells (sparkles)</b></dt>
+<dd>Click this to view what spells your character knows (if any).<dd>
+
+<dt><b>Extended commands (hand)</b></dt>
+<dd>Click this to get a list of <b>extended commands</b>; 
+some of the more complex or infrequent actions in NetHack are listed here.
+Just choose a command and click "Continue" to perform it.<dd>
+
+</dl>
+</dl>
+</p>
+
+
+<h3>3.2. The message window (top)</h3>
+
+<p>
+<center>
+<table BORDER=0 CELLSPACING=6 CELLPADDING=6 WIDTH="100%" >
+<tr>
+<td ALIGN=CENTER BGCOLOR="#000000"><font color="#666666">You displaced
+your kitten.</font>
+<br><font color="#999999">The door resists!</font>
+<br><font color="#CCCCCC">The door opens.</font>
+<br><font color="#FFFFFF">The goblin hits!</font></td>
+</tr>
+</table>
+</center>
+The top of the screen is reserved for messages
+that describe things that are impossible to represent
+visually. In Vulture's Eye, messages are shaded according to their age (old
+messages are darker). Only the newest messages are shown; to view older ones,
+open the message log from the button panel.
+</p>
+
+<h3>
+3.3. The map (rest of the screen)</h3>
+
+<table BORDER=0 CELLSPACING=6 CELLPADDING=6 WIDTH="100%" >
+<tr>
+<td><img SRC="mapwindow.jpg" height=229 width=231 align=LEFT alt="Map area"></td>
+
+<td VALIGN=TOP>The rest of the screen is the main view; it shows the
+dungeon level as you have explored it so far. In Vulture's Eye, 
+you usually can't see the entire dungeon level at once; 
+click the mouse on the edges of the main view to scroll.
+Each tile on the screen represents something. Move the mouse cursor
+over an object or monster to see a quick description.</td>
+</tr>
+</table>
+
+<br>
+<br>
+<p>
+<hr NOSHADE WIDTH="100%">
+<p>Previous: <a href="main_2.html">What is going on here?</a>
+Next: <a href="main_4.html">Commands</a></p>
+<br>
+</body>
+</html>
