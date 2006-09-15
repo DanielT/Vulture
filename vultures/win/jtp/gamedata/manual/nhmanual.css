@@ -1,0 +1,10 @@
+/* Cascading Style Sheet, Level 1, for NetHack - Vulture's Eye manual */
+
+/* To use this style sheet, add the following in your HTML file's <HEAD> section: */
+/* <LINK REL=STYLESHEET TYPE="text/css" HREF="nhmanual.css"> */
+
+BODY {
+    margin: 0;
+    font-family: arial, helvetica, sans-serif;
+    color: black;
+  }

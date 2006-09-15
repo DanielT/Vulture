@@ -1,0 +1,36 @@
+%dreams.pcx
+Lately, your dreams have grown troubled.
+Images of ruins, strange creatures and combat
+haunt your sleep.
+%dreams.pcx
+Could these visions mean something?
+%valley.pcx
+Beyond the Valley of Gehennom are ancient ruins,
+the entrance to the Mazes of Menace.
+%valley.pcx
+Rumor says they're full of monsters and treasure.
+Some have returned rich. Many have not returned.
+%yendor.pcx
+And somewhere within,
+below the monsters, the dust and cobwebs,
+lies the Amulet of Yendor.
+%yendor.pcx
+(or so they say)
+%mandolin.pcx
+The Amulet would bring you great wealth,
+if you found it.
+%mandolin.pcx
+Even if you didn't, minstrels might pay for your tale.
+%entrance.pcx
+Compelled by your dreams, 
+you choose to enter the Mazes.
+%entrance.pcx
+After days of travel, you arrive near the entrance.
+%dawn.pcx
+You spend the night sleeping under the sky.
+Your dreams are uneventful, free of visions.
+%dawn.pcx
+Finally, morning comes.
+%stairway.pcx
+Your belongings packed,
+you descend the long, rubble-strewn stairway...

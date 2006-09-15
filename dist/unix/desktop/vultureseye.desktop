@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=NetHack - Vulture's Eye
+Comment=A NetHack interface descended from Falcon's Eye
+Exec=vultureseye
+Icon=vultureseye.png
+Terminal=false
+Type=Application
+Encoding=UTF-8
+Categories=Application;Game;3DGame;PuzzleGame;
