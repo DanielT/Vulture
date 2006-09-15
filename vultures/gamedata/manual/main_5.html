@@ -1,0 +1,103 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Jaakko Peltonen">
+   <meta name="GENERATOR" content="Mozilla/4.73 [en] (Win95; I) [Netscape]">
+   <LINK REL=STYLESHEET TYPE="text/css" HREF="nhmanual.css">
+   <title>NetHack - Vulture's Eye manual: Rooms and corridors</title>
+</head>
+<body bgcolor="#FFFFFF" background="paper1.jpg">
+ 
+<center><h2>5. Rooms and corridors</h2></center>
+
+<center><hr NOSHADE WIDTH="100%"></center>
+
+<p><img SRC="letter_r.jpg" height=95 width=95 align=LEFT alt="R">ooms and corridors
+in the dungeon are either <b>lit</b> or <b>dark</b>. Any 
+lit areas within your line of sight will be displayed; dark areas
+are only displayed if they are within one space of 
+you. Walls and corridors remain on the map as you explore them.
+<p>Secret corridors are hidden. You can find them with the <b>search</b>
+command (left-click yourself, or choose it from the context menu, or press 's').
+<br> 
+<h3>
+5.1. Doorways</h3>
+<img SRC="dng_door.jpg" height=104 width=91 align=LEFT alt="Doorway">Doorways connect
+rooms and corridors. Some doorways have no doors; you 
+can walk right through. Others have doors in them, which may
+be open, closed, or locked. To <b>open</b> a closed door, left-click it, use 
+the context menu, or press 'o'; to <b>close</b> it again, use the context menu or press `c'.
+<p>You can get through a locked door by using a tool to 
+pick the lock with the `a' (apply) command, or by <b>kicking</b> it open (use the
+context menu or press 'k').
+<p>Open doors cannot be entered diagonally; you must approach
+them straight on, horizontally or vertically. Doorways
+without doors are not restricted in this fashion.
+<p>Doors can be useful for shutting out monsters.  Most 
+monsters cannot open doors, although a few don't need to (ex. ghosts can
+walk through doors).
+<p>Secret doors are hidden. You can find them with 
+the <b>search</b> command. Once found they are in all
+ways equivalent to normal doors.
+<br> 
+<h3>
+5.2. Traps</h3>
+There are traps throughout the dungeon to snare the unwary
+delver.  For example, you may suddenly fall
+into a pit and be stuck for a few turns trying to climb out. Traps
+don't appear on your map until you see one triggered by moving onto it,
+see something fall into it, or you discover it with the `s' (search) command. 
+Monsters can fall prey to traps, too, which can be a very useful defensive
+strategy. Left-clicking on a trap won't enter it; use <b>enter trap</b> from the
+context menu to do this.
+<p>There is a special pre-mapped branch of the dungeon based on the 
+classic computer game ``<b>Sokoban</b>.'' The goal is to push
+the boulders into the pits or holes. With careful foresight, 
+it is possible to complete all of the levels according
+to the traditional rules of Sokoban. Some allowances are permitted 
+in case the player gets stuck; however, they will lower your luck.
+To push a boulder, select <b>push</b> from the context menu.
+<br> 
+<h3>
+5.3. Stairs</h3>
+<img SRC="dng_strs.jpg" height=106 width=75 align=LEFT alt="Stairs">In general, each
+level in the dungeon will have a staircase going up to the
+previous level and another going down to the next level. There
+are some exceptions though.  For instance, fairly early in the dungeon you 
+will find a level with two down staircases, one continuing into the dungeon 
+and the other branching into an area known as the <b>Gnomish Mines</b>. 
+Those mines eventually hit a dead end, so after exploring them (if 
+you choose to do so), you'll need to climb back up to the main dungeon.
+
+<p>When you climb a set of stairs, or trigger a trap which
+sends you to another level, the level you're leaving will be deactivated 
+and stored in a file on disk. If you're moving to a previously visited level, 
+it will be loaded from its file on disk and reactivated. If you're moving to 
+a previously unexplored level, it will be created. Most random levels are
+created from scratch, some special levels are made from a template, and
+sometimes you'll find the remains of an earlier game (a ``bones'' level).
+Monsters are only active on the current level; those on other levels 
+are essentially placed into stasis.
+
+<p>Ordinarily when you climb a set of stairs, you will arrive
+on the corresponding staircase at your destination. 
+However, pets (see <a href="main_6.html">Monsters</a>) and some other monsters will follow 
+along if they're close enough when you travel up or down stairs,
+and occasionally one of these creatures will displace 
+you during the climb. When that occurs, the pet or other
+monster will arrive on the staircase and you will end up nearby.
+<br> 
+<h3>
+5.4. Ladders</h3>
+Ladders serve the same purpose as staircases, and the 
+two types of inter-level connections are nearly
+indistinguishable during game play.
+<br> 
+<br> 
+<p>
+<hr NOSHADE WIDTH="100%">
+<p>Previous: <a href="main_4.html">Commands</a>&nbsp;&nbsp; Next: <a href="main_6.html">Monsters</a>
+<br> 
+</body>
+</html>

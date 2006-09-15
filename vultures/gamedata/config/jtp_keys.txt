@@ -1,0 +1,189 @@
+% jtp_keys.txt
+% This file contains key remappings for NetHack - Vulture's Eye.
+%
+% Any commands that are not listed here will use the original NetHack
+% keys. See the NetHack documentation (guideboo.txt in the manual 
+% directory) for explanations of what the keys mean in the original 
+% configuration.
+%
+% The remapping format is: [command]=[new key], where
+%
+%   [command]
+%      The NetHack command that you want to assign a key to.
+%      All configurable commands are listed in the examples below.
+%
+%   [new key]
+%      The new key that you want to use instead of the old one.
+%      For example, [b] or [B] or [CTRL+b] or [META+B]. 
+%      The 'META' key is 'Alt' on PC systems.
+%      Make sure that the new key is not already used for some 
+%      other command in the NetHack keymap.
+% 
+% Lines starting with % are comments. Empty lines are ignored.
+%
+
+%----------------------------------------------------------------
+% Movement
+%----------------------------------------------------------------
+[north]=[9]
+[south]=[1]
+[west]=[7]
+[east]=[3]
+[northwest]=[8]
+[northeast]=[6]
+[southwest]=[4]
+[southeast]=[2]
+
+[move prefix: no fight/pickup]=[m]
+[move prefix: fight]=[F]
+[move prefix: far, no pickup]=[M]
+[move prefix: until interesting]=[g]
+[move prefix: until interesting nonfork]=[G]
+
+[up]=[<]
+[down]=[>]
+[jump]=[j]
+[sit down]=[META+s]
+[teleport]=[CTRL+t]
+[travel]=[_]
+
+%----------------------------------------------------------------
+% Exploring
+%----------------------------------------------------------------
+[kick]=[k]
+[close door]=[c]
+[open door]=[o]
+[look here]=[:]
+[search]=[s]
+[untrap]=[u]
+
+%----------------------------------------------------------------
+% Getting items
+%----------------------------------------------------------------
+[force lock]=[META+f]
+[loot chest]=[l]
+[pick up]=[,]
+[toggle autopickup]=[@]
+
+%----------------------------------------------------------------
+% Browsing your inventory
+%----------------------------------------------------------------
+[assign inventory letters]=[META+a]
+[count gold]=[$]
+[list inventory]=[i]
+[list partial inventory]=[I]
+[tell weapon]=[)]
+[tell armor]=[[]
+[tell rings]=[=]
+[tell amulet]=["]
+[tell tools]=[(]
+[tell equipment]=[*]
+
+%----------------------------------------------------------------
+% Wearing and wielding items
+%----------------------------------------------------------------
+[put on accessory]=[P]
+[select quiver]=[Q]
+[wear armor]=[W]
+[wield weapon]=[w]
+
+%----------------------------------------------------------------
+% Using items
+%----------------------------------------------------------------
+[apply]=[a]
+[dip object]=[META+d]
+[eat]=[e]
+[fire quiver]=[f]
+[invoke object]=[META+i]
+[offer object]=[META+o]
+[quaff]=[q]
+[read]=[r]
+[rub object]=[META+r]
+[throw]=[t]
+[zap wand]=[z]
+
+%----------------------------------------------------------------
+% Getting rid of items
+%----------------------------------------------------------------
+[remove accessory]=[R]
+[remove worn item]=[A]
+[take off armor]=[T]
+[drop]=[d]
+[drop several]=[D]
+
+%----------------------------------------------------------------
+% Other actions
+%----------------------------------------------------------------
+[cast spell]=[Z]
+[chat with monster]=[META+c]
+[engrave]=[E]
+[enhance weapon skill]=[META+e]
+[exchange weapon]=[x]
+[list spells]=[+]
+[monster ability]=[META+m]
+[pay bill]=[p]
+[pray]=[META+p]
+[rest]=[.]
+[turn undead]=[META+t]
+[two-weapon mode]=[META+2]
+[wipe face]=[META+w]
+[playersteal]=[CTRL+b]
+[poly at will]=[CTRL+y]
+[borg toggle]=[B]
+[list vanquished monsters]=[K]
+[use techniques]=[META-t]
+
+[display role]=[CTRL+x]
+[name monster]=[C]
+[name object]=[N]
+
+%----------------------------------------------------------------
+% Help commands
+%----------------------------------------------------------------
+[help menu]=[?]
+[explain command]=[&]
+[explain onscreen symbol]=[;]
+[explain symbol]=[/]
+[explain trap]=[^]
+[list discovered objects]=[\]
+[main menu]=[~]
+
+%----------------------------------------------------------------
+% Miscellaneous commands
+%----------------------------------------------------------------
+[quit game]=[META+q]
+[save game]=[S]
+[set options]=[O]
+[display version]=[v]
+[display extended version]=[META+v]
+[display history]=[V]
+[escape to shell]=[!]
+[previous message]=[CTRL+p]
+[suspend]=[CTRL+z]
+[redraw screen]=[CTRL+r]
+[explore mode]=[X]
+[prefix: extended command]=[#]
+[prefix: repeated command]=[n]
+[show map]=[CTRL+i]
+[save screenshot]=[]
+
+%----------------------------------------------------------------
+% Wizard commands; not all of them have keys assigned
+%----------------------------------------------------------------
+[wizard: gain ac]=[CTRL+c]
+[wizard: detect]=[CTRL+e]
+[wizard: magic mapping]=[CTRL+f]
+[wizard: create monster]=[CTRL+g]
+[wizard: identify]=[CTRL+i]
+[wizard: gain level]=[CTRL+j]
+[wizard: invulnerability]=[CTRL+n]
+[wizard: where]=[CTRL+o]
+[wizard: level teleport]=[CTRL+v]
+[wizard: make wish]=[CTRL+w]
+[wizard: light sources]=[]
+[wizard: show stats]=[]
+[wizard: show seen vectors]=[]
+[wizard: timeout queue]=[]
+[wizard: show vision]=[]
+[wizard: show wall modes]=[]
+[wizard: debug]=[]
