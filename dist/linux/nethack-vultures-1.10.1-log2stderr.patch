@@ -1,0 +1,26 @@
+--- vultures/win/jtp/jtp_gen.c~	2005-11-11 10:47:45.000000000 +0200
++++ vultures/win/jtp/jtp_gen.c	2005-11-15 18:11:28.000000000 +0200
+@@ -50,7 +50,7 @@
+ 
+ void jtp_write_log_message_va(int msgtype, const char *file, int line, const char *logmessage, va_list args)
+ {
+-	FILE *f;
++	FILE *f = NULL;
+ 
+ 	if (logmessage == NULL || *logmessage == '\0')
+ 		return;
+@@ -74,12 +74,14 @@
+ 	if ((msgtype == JTP_LOG_DEBUG) && (JTP_LOG_WRITE_DEBUG == 0))
+ 		return;
+ 
++#if 0
+ 	f = fopen(JTP_LOG_FILENAME, "a");
+ 	if (!f)
+ 	{
+ 		perror("ERROR: could not open log file " JTP_LOG_FILENAME
+ 		       " for appending");
+ 	}
++#endif
+ 	if (file != NULL)
+ 	{
+ 		fprintf(f ? : stderr, "[%s: %d] %s: ", jtp_basename(file), line,

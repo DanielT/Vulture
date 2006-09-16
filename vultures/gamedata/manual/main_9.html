@@ -1,0 +1,171 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Jaakko Peltonen">
+   <meta name="GENERATOR" content="Mozilla/4.73 [en] (Win95; I) [Netscape]">
+   <LINK REL=STYLESHEET TYPE="text/css" HREF="nhmanual.css">
+   <title>NetHack - Vulture's Eye manual: Options</title>
+</head>
+<body bgcolor="#FFFFFF" background="paper1.jpg">
+&nbsp;
+<center><h2>9.&nbsp; Options</h2></center>
+
+<center><hr NOSHADE WIDTH="100%"></center>
+
+<p><img SRC="letter_y.jpg" height=91 width=92 align=LEFT alt="Y">ou
+can customize NetHack in many ways to suit your tastes. 
+The Vulture's Eye interface also has a few options of its own. 
+This chapter is mainly about the latter, although it briefly
+mentions the former.</p>
+
+</p>
+There are three ways to change the 'basic' NetHack options:
+<ul>
+<li>During a game, click the <b>options</b> button in the lower right corner
+of the game screen to see a menu of options. You can change some of them
+while playing.</li>
+<li>You can use the <b>NETHACKOPTIONS</b> environment variable to set
+some options.</li>
+<li>You can edit NetHack's <b>configuration file</b>. The filename varies;
+in the Vulture's Eye distribution it is called <b>defaults.nh</b>.
+</ul>
+Please see the original NetHack Guidebook for more information.
+</p>
+
+<p>Vulture's Eye reads its own options from four configuration files
+in the <b>config</b> subdirectory: <b>jtp_opts.txt</b>, <b>jtp_snds.txt</b>,
+<b>jtp_keys.txt</b> and <b>jtp_intr.txt</b>. The files are ASCII text files,
+so you can edit them with any text editor. 
+Lines that start with the percent sign (%) are considered comments.
+See the files for examples.</p>
+
+<h3>9.1. General options</h3>
+
+<p>
+The file <b>jtp_opts.txt</b> contains general interface options.
+They are all of the form 'Option=value'. 
+Some of the various options are explained below: for the full list,
+see <b>jtp_opts.txt</b>.
+</p>
+
+<ul>
+<li><b>screen_xsize</b> and <b>screen_ysize</b>: These are the screen resolution 
+(width and height) that you want to use while playing. Larger resolutions show you more 
+of the dungeon at once. You can use any 256-color screen mode that your system supports:
+the DOS version requires VESA support.
+The width must be at least 800 pixels.</li>
+
+<li><b>play_music</b> and <b>play_effects</b>: Set these to 1 if you want to hear
+music and sound effects, or to 0 if you prefer silence. The DOS version
+does not support sound yet, so these options are only meaningful in the Windows 
+and Linux versions.</li>
+
+<li><b>recenter_after_movement</b>: If you set this to 1, the game will keep the main view
+centered on your character during movement. If you set this to 0, the game will recenter
+the main view only when your character moves off-screen. (You can of course scroll
+the view yourself to see more.)</li>
+
+<li><b>wall_style</b>: Vulture's Eye has three alternate graphics sets for walls.
+If you set this to <b>full</b>, the game will show full-height, opaque walls.
+If you set this to <b>transparent</b>, the game will show full-height, transparent walls.
+If you set this to <b>half_height</b>, the game will show short, opaque walls.
+The default wall style is <b>full</b>, but the alternate styles can be useful if you want
+to make sure you haven't overlooked any objects or creatures. Below is a comparison
+of the three wall styles:
+<br>
+<br>
+<table border=0><tr>
+<td><img src="wallstyle_full.jpg" alt="Full walls"></td>
+<td><img src="wallstyle_transparent.jpg" alt="Transparent walls"></td>
+<td><img src="wallstyle_halfheight.jpg" alt="Half-height walls"></td>
+</tr><tr>
+<td align="center">Full walls</td>
+<td align="center">Transparent walls</td>
+<td align="center">Half-height walls</td>
+</tr></table>
+<br>
+<br>
+</li>
+
+<li><b>scroll_delay</b>: The minimum delay (in seconds) between two updates while scrolling 
+a game window. The smaller this value is, the faster the game windows will scroll when you 
+click on the scroll buttons (the edges of the screen, for the main window).</li>
+
+<li><b>command_delay</b>: The minimum delay (in seconds) between two commands while scrolling 
+the main view. The smaller this value is, the faster you can give commands with the mouse.
+If you feel the character is (for example) moving too fast, increase this value.</li>
+
+<li><b>gamma_correction</b>: The lightness of the game graphics (a positive number). The
+value 1.0 is the default. Values below 1 darken the graphics and values above 1 lighten them.
+Good values are between 0.5 and 2.0.</li>
+
+</ul>
+
+<h3>9.2. Event sound options</h3>
+
+<p>
+The file <b>jtp_snds.txt</b> contains event sound options.
+You can add your own custom sound effects or music to NetHack events 
+by modifying this file. These sounds are played when a particular message
+is sent to NetHack's message window. One message plays at most one
+sound (the first applicable one in the file).</p>
+
+<p>Sounds can be WAVE sound effects, MIDI and MP3 files or CD audio tracks.
+WAVE, MIDI and MP3 files must be in the <b>sound</b> subdirectory.
+Short filenames are recommended for DOS compatibility.</p>
+
+<p>The format is: <b>[search string],SOUNDTYPE,[filename]</b> where</p>
+<ul>
+<li>[search string] = the message string (complete or partial) that triggers the sound.</li>
+<li>SOUNDTYPE = WAVE, LWAV, MIDI, MP3, RSNG or NONE.
+<ul>
+<li>WAVE plays a 44100Hz 16bit mono RAW sound effect</li>
+<li>LWAV plays a 22050Hz 8bit mono RAW sound effect</li>
+<li>MIDI plays a standard MIDI file</li>
+<li>MP3 plays an MP3 file (currently only supported in Linux)</li>
+<li>CDAU plays a track from an audio CD</li>
+<li>RSNG plays a random piece of background music</li>
+<li>NONE can be used to exclude messages (eg. 'restore' is not the same as 'store')</li>
+</ul>
+<li>[filename] = name of the sound file. If SOUNDTYPE is RSNG or NONE, then this value is not used.
+If SOUNDTYPE is CDAU, give the track number here (for example, [01]).</li>
+</ul>
+<p></p>
+
+<h3>9.3. Key mapping options</h3>
+
+<p>
+The file <b>jtp_keys.txt</b> contains key mapping options.
+You can modify the default nethack command keys by modifying this file. 
+See the previous sections to learn more about the commands and the associated keys.</p>
+
+<p>Command is customized by entering lines in the following format:
+<b>[command]=[new key]</b>, for example [kick]=[CTRL+d].
+</p>
+
+<ul>
+<li>[command] = the NetHack command to customize. All the available commands
+are listed in <b>jtp_keys.txt</b>. </li>
+<li>[new key] = this is the new command key that you want to use.
+This can be a single character, CTRL+character or META+character.
+The META key is Alt on PC systems.</li>
+</ul>
+
+<p>Note: commands that aren't customized will use the default NetHack keys.</p>
+
+<h3>9.4. The game introduction</h3>
+
+<p>The file <b>jtp_intr.txt</b> contains the script for the game introduction (the series of still images
+that plays after you select a character). If you want, you can modify this to create a personal introduction,
+for example to make it more appropriate to a particular character you want to play. 
+In the file, lines starting with % specify the picture to be shown, and the lines
+after that are subtitles. The pictures must be 800x450, 256-color PCX files, and must be in the <b>graphics</b>
+subdirectory.</p>
+
+<p>
+<hr NOSHADE WIDTH="100%">
+<p>Previous: <a href="main_8.html">Conduct</a>&nbsp;&nbsp; Next: <a href="main_10.html">Scoring</a></p>
+<br>&nbsp;
+</body>
+</html>
