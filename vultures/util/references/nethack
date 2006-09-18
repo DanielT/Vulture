@@ -1,0 +1,1057 @@
+monster.ant or other insect.giant ant
+monster.ant or other insect.killer bee
+monster.ant or other insect.soldier ant
+monster.ant or other insect.fire ant
+monster.ant or other insect.giant beetle
+monster.ant or other insect.queen bee
+monster.blob.acid blob
+monster.blob.quivering blob
+monster.blob.gelatinous cube
+monster.cockatrice.chickatrice
+monster.cockatrice.cockatrice
+monster.cockatrice.pyrolisk
+monster.dog or other canine.jackal
+monster.dog or other canine.fox
+monster.dog or other canine.coyote
+monster.dog or other canine.werejackal
+monster.dog or other canine.little dog
+monster.dog or other canine.dog
+monster.dog or other canine.large dog
+monster.dog or other canine.dingo
+monster.dog or other canine.wolf
+monster.dog or other canine.werewolf
+monster.dog or other canine.warg
+monster.dog or other canine.winter wolf cub
+monster.dog or other canine.winter wolf
+monster.dog or other canine.hell hound pup
+monster.dog or other canine.hell hound
+monster.dog or other canine.cerberus
+monster.eye or sphere.gas spore
+monster.eye or sphere.floating eye
+monster.eye or sphere.freezing sphere
+monster.eye or sphere.flaming sphere
+monster.eye or sphere.shocking sphere
+monster.eye or sphere.beholder
+monster.cat or other feline.kitten
+monster.cat or other feline.housecat
+monster.cat or other feline.jaguar
+monster.cat or other feline.lynx
+monster.cat or other feline.panther
+monster.cat or other feline.large cat
+monster.cat or other feline.tiger
+monster.gremlin.gremlin
+monster.gremlin.gargoyle
+monster.gremlin.winged gargoyle
+monster.humanoid.hobbit
+monster.humanoid.dwarf
+monster.humanoid.bugbear
+monster.humanoid.dwarf lord
+monster.humanoid.dwarf king
+monster.humanoid.mind flayer
+monster.humanoid.master mind flayer
+monster.imp or minor demon.manes
+monster.imp or minor demon.homunculus
+monster.imp or minor demon.imp
+monster.imp or minor demon.lemure
+monster.imp or minor demon.quasit
+monster.imp or minor demon.tengu
+monster.jelly.blue jelly
+monster.jelly.spotted jelly
+monster.jelly.ochre jelly
+monster.kobold.kobold
+monster.kobold.large kobold
+monster.kobold.kobold lord
+monster.kobold.kobold shaman
+monster.leprechaun.leprechaun
+monster.mimic.small mimic
+monster.mimic.large mimic
+monster.mimic.giant mimic
+monster.nymph.wood nymph
+monster.nymph.water nymph
+monster.nymph.mountain nymph
+monster.orc.goblin
+monster.orc.hobgoblin
+monster.orc.orc
+monster.orc.hill orc
+monster.orc.mordor orc
+monster.orc.uruk-hai
+monster.orc.orc shaman
+monster.orc.orc-captain
+monster.piercer.rock piercer
+monster.piercer.iron piercer
+monster.piercer.glass piercer
+monster.quadruped.rothe
+monster.quadruped.mumak
+monster.quadruped.leocrotta
+monster.quadruped.wumpus
+monster.quadruped.titanothere
+monster.quadruped.baluchitherium
+monster.quadruped.mastodon
+monster.rodent.sewer rat
+monster.rodent.giant rat
+monster.rodent.rabid rat
+monster.rodent.wererat
+monster.rodent.rock mole
+monster.rodent.woodchuck
+monster.spider.cave spider
+monster.spider.centipede
+monster.spider.giant spider
+monster.spider.scorpion
+monster.trapper or lurker above.lurker above
+monster.trapper or lurker above.trapper
+monster.unicorn or horse.white unicorn
+monster.unicorn or horse.gray unicorn
+monster.unicorn or horse.black unicorn
+monster.unicorn or horse.pony
+monster.unicorn or horse.horse
+monster.unicorn or horse.warhorse
+monster.vortex.fog cloud
+monster.vortex.dust vortex
+monster.vortex.ice vortex
+monster.vortex.energy vortex
+monster.vortex.steam vortex
+monster.vortex.fire vortex
+monster.worm.baby long worm
+monster.worm.baby purple worm
+monster.worm.long worm
+monster.worm.purple worm
+monster.xan or other mythical.fantastic insect.grid bug
+monster.xan or other mythical.fantastic insect.xan
+monster.light.yellow light
+monster.light.black light
+monster.yeti ape or other large beast.zruty
+monster.angelic being.couatl
+monster.angelic being.aleax
+monster.angelic being.angel
+monster.angelic being.ki-rin
+monster.angelic being.archon
+monster.bat or bird.bat
+monster.bat or bird.giant bat
+monster.bat or bird.raven
+monster.bat or bird.vampire bat
+monster.centaur.plains centaur
+monster.centaur.forest centaur
+monster.centaur.mountain centaur
+monster.dragon.baby gray dragon
+monster.dragon.baby silver dragon
+monster.dragon.baby shimmering dragon
+monster.dragon.baby red dragon
+monster.dragon.baby white dragon
+monster.dragon.baby orange dragon
+monster.dragon.baby black dragon
+monster.dragon.baby blue dragon
+monster.dragon.baby green dragon
+monster.dragon.baby yellow dragon
+monster.dragon.gray dragon
+monster.dragon.silver dragon
+monster.dragon.shimmering dragon
+monster.dragon.red dragon
+monster.dragon.white dragon
+monster.dragon.orange dragon
+monster.dragon.black dragon
+monster.dragon.blue dragon
+monster.dragon.green dragon
+monster.dragon.yellow dragon
+monster.elemental.stalker
+monster.elemental.air elemental
+monster.elemental.fire elemental
+monster.elemental.earth elemental
+monster.elemental.water elemental
+monster.fungus or mold.lichen
+monster.fungus or mold.brown mold
+monster.fungus or mold.yellow mold
+monster.fungus or mold.green mold
+monster.fungus or mold.red mold
+monster.fungus or mold.shrieker
+monster.fungus or mold.violet fungus
+monster.gnome.gnome
+monster.gnome.gnome lord
+monster.gnome.gnomish wizard
+monster.gnome.gnome king
+monster.giant humanoid.giant
+monster.giant humanoid.stone giant
+monster.giant humanoid.hill giant
+monster.giant humanoid.fire giant
+monster.giant humanoid.frost giant
+monster.giant humanoid.storm giant
+monster.giant humanoid.ettin
+monster.giant humanoid.titan
+monster.giant humanoid.minotaur
+monster.jabberwock.jabberwock
+monster.jabberwock.vorpal jabberwock
+monster.keystone kop.keystone kop
+monster.keystone kop.kop sergeant
+monster.keystone kop.kop lieutenant
+monster.keystone kop.kop kaptain
+monster.lich.lich
+monster.lich.demilich
+monster.lich.master lich
+monster.lich.arch-lich
+monster.mummy.kobold mummy
+monster.mummy.gnome mummy
+monster.mummy.orc mummy
+monster.mummy.dwarf mummy
+monster.mummy.elf mummy
+monster.mummy.human mummy
+monster.mummy.ettin mummy
+monster.mummy.giant mummy
+monster.naga.red naga hatchling
+monster.naga.black naga hatchling
+monster.naga.golden naga hatchling
+monster.naga.guardian naga hatchling
+monster.naga.red naga
+monster.naga.black naga
+monster.naga.golden naga
+monster.naga.guardian naga
+monster.ogre.ogre
+monster.ogre.ogre lord
+monster.ogre.ogre king
+monster.pudding or ooze.gray ooze
+monster.pudding or ooze.brown pudding
+monster.pudding or ooze.black pudding
+monster.pudding or ooze.green slime
+monster.quantum mechanic or other scientist.quantum mechanic
+monster.rust monster or disenchanter.rust monster
+monster.rust monster or disenchanter.disenchanter
+monster.snake.garter snake
+monster.snake.snake
+monster.snake.water moccasin
+monster.snake.pit viper
+monster.snake.python
+monster.snake.cobra
+monster.troll.troll
+monster.troll.ice troll
+monster.troll.rock troll
+monster.troll.water troll
+monster.troll.olog-hai
+monster.umber hulk.umber hulk
+monster.vampire.vampire
+monster.vampire.vampire lord
+monster.vampire.vampire mage
+monster.vampire.vlad the impaler
+monster.wraith.barrow wight
+monster.wraith.wraith
+monster.wraith.nazgul
+monster.xorn.xorn
+monster.yeti ape or other large beast.monkey
+monster.yeti ape or other large beast.ape
+monster.yeti ape or other large beast.owlbear
+monster.yeti ape or other large beast.yeti
+monster.yeti ape or other large beast.carnivorous ape
+monster.yeti ape or other large beast.sasquatch
+monster.zombie.kobold zombie
+monster.zombie.gnome zombie
+monster.zombie.orc zombie
+monster.zombie.dwarf zombie
+monster.zombie.elf zombie
+monster.zombie.human zombie
+monster.zombie.ettin zombie
+monster.zombie.giant zombie
+monster.zombie.ghoul
+monster.zombie.skeleton
+monster.golem.straw golem
+monster.golem.paper golem
+monster.golem.rope golem
+monster.golem.gold golem
+monster.golem.leather golem
+monster.golem.wood golem
+monster.golem.flesh golem
+monster.golem.clay golem
+monster.golem.stone golem
+monster.golem.glass golem
+monster.golem.iron golem
+monster.human or elf.human
+monster.human or elf.wererat
+monster.human or elf.werejackal
+monster.human or elf.werewolf
+monster.human or elf.elf
+monster.human or elf.woodland-elf
+monster.human or elf.green-elf
+monster.human or elf.grey-elf
+monster.human or elf.elf-lord
+monster.human or elf.elvenking
+monster.human or elf.doppelganger
+monster.human or elf.nurse
+monster.human or elf.shopkeeper
+monster.human or elf.guard
+monster.human or elf.prisoner
+monster.human or elf.oracle
+monster.human or elf.aligned priest
+monster.human or elf.high priest
+monster.human or elf.soldier
+monster.human or elf.sergeant
+monster.human or elf.lieutenant
+monster.human or elf.captain
+monster.human or elf.watchman
+monster.human or elf.watch captain
+monster.human or elf.medusa
+monster.human or elf.wizard of yendor
+monster.human or elf.croesus
+monster.human or elf.charon
+monster.ghost.ghost
+monster.ghost.shade
+monster.major demon.water demon
+monster.major demon.horned devil
+monster.major demon.succubus
+monster.major demon.incubus
+monster.major demon.erinys
+monster.major demon.barbed devil
+monster.major demon.marilith
+monster.major demon.vrock
+monster.major demon.hezrou
+monster.major demon.bone devil
+monster.major demon.ice devil
+monster.major demon.nalfeshnee
+monster.major demon.pit fiend
+monster.major demon.balrog
+monster.major demon.juiblex
+monster.major demon.yeenoghu
+monster.major demon.orcus
+monster.major demon.geryon
+monster.major demon.dispater
+monster.major demon.baalzebub
+monster.major demon.asmodeus
+monster.major demon.demogorgon
+monster.major demon.death
+monster.major demon.pestilence
+monster.major demon.famine
+monster.major demon.mail daemon
+monster.major demon.djinni
+monster.major demon.sandestin
+monster.sea monster.jellyfish
+monster.sea monster.piranha
+monster.sea monster.shark
+monster.sea monster.giant eel
+monster.sea monster.electric eel
+monster.sea monster.kraken
+monster.lizard.newt
+monster.lizard.gecko
+monster.lizard.iguana
+monster.lizard.baby crocodile
+monster.lizard.lizard
+monster.lizard.chameleon
+monster.lizard.crocodile
+monster.lizard.salamander
+monster.long worm tail.long worm tail
+monster.human or elf.archeologist
+monster.human or elf.barbarian
+monster.human or elf.caveman
+monster.human or elf.cavewoman
+monster.human or elf.healer
+monster.human or elf.knight
+monster.human or elf.monk
+monster.human or elf.priest
+monster.human or elf.priestess
+monster.human or elf.ranger
+monster.human or elf.rogue
+monster.human or elf.samurai
+monster.human or elf.tourist
+monster.human or elf.valkyrie
+monster.human or elf.wizard
+monster.human or elf.lord carnarvon
+monster.human or elf.pelias
+monster.human or elf.shaman karnov
+monster.human or elf.earendil
+monster.human or elf.elwing
+monster.human or elf.hippocrates
+monster.human or elf.king arthur
+monster.human or elf.grand master
+monster.human or elf.arch priest
+monster.human or elf.orion
+monster.human or elf.master of thieves
+monster.human or elf.lord sato
+monster.human or elf.twoflower
+monster.human or elf.norn
+monster.human or elf.neferet the green
+monster.major demon.minion of huhetotl
+monster.human or elf.thoth amon
+monster.dragon.chromatic dragon
+monster.orc.goblin king
+monster.giant humanoid.cyclops
+monster.dragon.ixoth
+monster.human or elf.master kaen
+monster.major demon.nalzok
+monster.spider.scorpius
+monster.human or elf.master assassin
+monster.human or elf.ashikaga takauji
+monster.giant humanoid.lord surtur
+monster.human or elf.dark one
+monster.human or elf.student
+monster.human or elf.chieftain
+monster.human or elf.neanderthal
+monster.human or elf.high-elf
+monster.human or elf.attendant
+monster.human or elf.page
+monster.human or elf.abbot
+monster.human or elf.acolyte
+monster.human or elf.hunter
+monster.human or elf.thug
+monster.human or elf.ninja
+monster.human or elf.roshi
+monster.human or elf.guide
+monster.human or elf.warrior
+monster.human or elf.apprentice
+monster.invisible monster.invisible monster
+object.illegal objects.strange object
+object.weapons.arrow
+object.weapons.runed arrow.elven arrow
+object.weapons.crude arrow.orcish arrow
+object.weapons.silver arrow
+object.weapons.bamboo arrow.ya
+object.weapons.crossbow bolt
+object.weapons.dart
+object.weapons.throwing star.shuriken
+object.weapons.boomerang
+object.weapons.spear
+object.weapons.runed spear.elven spear
+object.weapons.crude spear.orcish spear
+object.weapons.stout spear.dwarvish spear
+object.weapons.silver spear
+object.weapons.throwing spear.javelin
+object.weapons.trident
+object.weapons.dagger
+object.weapons.runed dagger.elven dagger
+object.weapons.crude dagger.orcish dagger
+object.weapons.silver dagger
+object.weapons.athame
+object.weapons.scalpel
+object.weapons.knife
+object.weapons.stiletto
+object.weapons.worm tooth
+object.weapons.crysknife
+object.weapons.axe
+object.weapons.double-headed axe.battle-axe
+object.weapons.short sword
+object.weapons.runed short sword.elven short sword
+object.weapons.crude short sword.orcish short sword
+object.weapons.broad short sword.dwarvish short sword
+object.weapons.curved sword.scimitar
+object.weapons.silver saber
+object.weapons.broadsword
+object.weapons.runed broadsword.elven broadsword
+object.weapons.long sword
+object.weapons.two-handed sword
+object.weapons.samurai sword.katana
+object.weapons.long samurai sword.tsurugi
+object.weapons.runed broadsword.runesword
+object.weapons.vulgar polearm.partisan
+object.weapons.hilted polearm.ranseur
+object.weapons.forked polearm.spetum
+object.weapons.single-edged polearm.glaive
+object.weapons.lance
+object.weapons.angled poleaxe.halberd
+object.weapons.long poleaxe.bardiche
+object.weapons.pole cleaver.voulge
+object.weapons.broad pick.dwarvish mattock
+object.weapons.pole sickle.fauchard
+object.weapons.pruning hook.guisarme
+object.weapons.hooked polearm.bill-guisarme
+object.weapons.pronged polearm.lucern hammer
+object.weapons.beaked polearm.bec de corbin
+object.weapons.mace
+object.weapons.morning star
+object.weapons.war hammer
+object.weapons.club
+object.weapons.rubber hose
+object.weapons.staff.quarterstaff
+object.weapons.thonged club.aklys
+object.weapons.flail
+object.weapons.bullwhip
+object.weapons.bow
+object.weapons.runed bow.elven bow
+object.weapons.crude bow.orcish bow
+object.weapons.long bow.yumi
+object.weapons.sling
+object.weapons.crossbow
+object.armor.leather hat.elven leather helm
+object.armor.iron skull cap.orcish helm
+object.armor.hard hat.dwarvish iron helm
+object.armor.fedora
+object.armor.conical hat.cornuthaum
+object.armor.conical hat.dunce cap
+object.armor.dented pot
+object.armor.plumed helmet.helmet
+object.armor.etched helmet.helm of brilliance
+object.armor.crested helmet.helm of opposite alignment
+object.armor.visored helmet.helm of telepathy
+object.armor.gray dragon scale mail
+object.armor.silver dragon scale mail
+object.armor.shimmering dragon scale mail
+object.armor.red dragon scale mail
+object.armor.white dragon scale mail
+object.armor.orange dragon scale mail
+object.armor.black dragon scale mail
+object.armor.blue dragon scale mail
+object.armor.green dragon scale mail
+object.armor.yellow dragon scale mail
+object.armor.gray dragon scales
+object.armor.silver dragon scales
+object.armor.shimmering dragon scales
+object.armor.red dragon scales
+object.armor.white dragon scales
+object.armor.orange dragon scales
+object.armor.black dragon scales
+object.armor.blue dragon scales
+object.armor.green dragon scales
+object.armor.yellow dragon scales
+object.armor.plate mail
+object.armor.crystal plate mail
+object.armor.bronze plate mail
+object.armor.splint mail
+object.armor.banded mail
+object.armor.dwarvish mithril-coat
+object.armor.elven mithril-coat
+object.armor.chain mail
+object.armor.crude chain mail.orcish chain mail
+object.armor.scale mail
+object.armor.studded leather armor
+object.armor.ring mail
+object.armor.crude ring mail.orcish ring mail
+object.armor.leather armor
+object.armor.leather jacket
+object.armor.hawaiian shirt
+object.armor.t-shirt
+object.armor.mummy wrapping
+object.armor.faded pall.elven cloak
+object.armor.coarse mantelet.orcish cloak
+object.armor.hooded cloak.dwarvish cloak
+object.armor.slippery cloak.oilskin cloak
+object.armor.robe
+object.armor.apron.alchemy smock
+object.armor.leather cloak
+object.armor.tattered cape.cloak of protection
+object.armor.opera cloak.cloak of invisibility
+object.armor.ornamental cope.cloak of magic resistance
+object.armor.piece of cloth.cloak of displacement
+object.armor.small shield
+object.armor.blue and green shield.elven shield
+object.armor.white-handed shield.uruk-hai shield
+object.armor.red-eyed shield.orcish shield
+object.armor.large shield
+object.armor.large round shield.dwarvish roundshield
+object.armor.polished silver shield.shield of reflection
+object.armor.old gloves.leather gloves
+object.armor.padded gloves.gauntlets of fumbling
+object.armor.riding gloves.gauntlets of power
+object.armor.fencing gloves.gauntlets of dexterity
+object.armor.walking shoes.low boots
+object.armor.hard shoes.iron shoes
+object.armor.jackboots.high boots
+object.armor.combat boots.speed boots
+object.armor.jungle boots.water walking boots
+object.armor.hiking boots.jumping boots
+object.armor.mud boots.elven boots
+object.armor.buckled boots.kicking boots
+object.armor.riding boots.fumble boots
+object.armor.snow boots.levitation boots
+object.rings.wooden.adornment
+object.rings.granite.gain strength
+object.rings.opal.gain constitution
+object.rings.clay.increase accuracy
+object.rings.coral.increase damage
+object.rings.black onyx.protection
+object.rings.moonstone.regeneration
+object.rings.tiger eye.searching
+object.rings.jade.stealth
+object.rings.bronze.sustain ability
+object.rings.agate.levitation
+object.rings.topaz.hunger
+object.rings.sapphire.aggravate monster
+object.rings.ruby.conflict
+object.rings.diamond.warning
+object.rings.pearl.poison resistance
+object.rings.iron.fire resistance
+object.rings.brass.cold resistance
+object.rings.copper.shock resistance
+object.rings.twisted.free action
+object.rings.steel.slow digestion
+object.rings.silver.teleportation
+object.rings.gold.teleport control
+object.rings.ivory.polymorph
+object.rings.emerald.polymorph control
+object.rings.wire.invisibility
+object.rings.engagement.see invisible
+object.rings.shiny.protection from shape changers
+object.amulets.circular.amulet of esp
+object.amulets.spherical.amulet of life saving
+object.amulets.oval.amulet of strangulation
+object.amulets.triangular.amulet of restful sleep
+object.amulets.pyramidal.amulet versus poison
+object.amulets.square.amulet of change
+object.amulets.concave.amulet of unchanging
+object.amulets.hexagonal.amulet of reflection
+object.amulets.octagonal.amulet of magical breathing
+object.amulets.amulet of yendor.cheap plastic imitation of the amulet of yendor
+object.amulets.amulet of yendor
+object.tools.large box
+object.tools.chest
+object.tools.ice box
+object.tools.bag.sack
+object.tools.bag.oilskin sack
+object.tools.bag.bag of holding
+object.tools.bag.bag of tricks
+object.tools.key.skeleton key
+object.tools.lock pick
+object.tools.credit card
+object.tools.candle.tallow candle
+object.tools.candle.wax candle
+object.tools.brass lantern
+object.tools.lamp.oil lamp
+object.tools.lamp.magic lamp
+object.tools.expensive camera
+object.tools.looking glass.mirror
+object.tools.glass orb.crystal ball
+object.tools.lenses
+object.tools.blindfold
+object.tools.towel
+object.tools.saddle
+object.tools.leash
+object.tools.stethoscope
+object.tools.tinning kit
+object.tools.tin opener
+object.tools.can of grease
+object.tools.figurine
+object.tools.magic marker
+object.tools.land mine
+object.tools.beartrap
+object.tools.whistle.tin whistle
+object.tools.whistle.magic whistle
+object.tools.flute.wooden flute
+object.tools.flute.magic flute
+object.tools.horn.tooled horn
+object.tools.horn.frost horn
+object.tools.horn.fire horn
+object.tools.horn.horn of plenty
+object.tools.harp.wooden harp
+object.tools.harp.magic harp
+object.tools.bell
+object.tools.bugle
+object.tools.drum.leather drum
+object.tools.drum.drum of earthquake
+object.tools.pick-axe
+object.tools.iron hook.grappling hook
+object.tools.unicorn horn
+object.tools.candelabrum.candelabrum of invocation
+object.tools.silver bell.bell of opening
+object.food.tripe ration
+object.food.corpse
+object.food.egg
+object.food.meatball
+object.food.meat stick
+object.food.huge chunk of meat
+object.food.meat ring
+object.food.kelp frond
+object.food.eucalyptus leaf
+object.food.apple
+object.food.orange
+object.food.pear
+object.food.melon
+object.food.banana
+object.food.carrot
+object.food.sprig of wolfsbane
+object.food.clove of garlic
+object.food.slime mold
+object.food.lump of royal jelly
+object.food.cream pie
+object.food.candy bar
+object.food.fortune cookie
+object.food.pancake
+object.food.lembas wafer
+object.food.cram ration
+object.food.food ration
+object.food.k-ration
+object.food.c-ration
+object.food.tin
+object.potions.ruby.gain ability
+object.potions.pink.restore ability
+object.potions.orange.confusion
+object.potions.yellow.blindness
+object.potions.emerald.paralysis
+object.potions.dark.speed
+object.potions.cyan.levitation
+object.potions.sky blue.hallucination
+object.potions.brilliant blue.invisibility
+object.potions.magenta.see invisible
+object.potions.purple-red.healing
+object.potions.puce.extra healing
+object.potions.milky.gain level
+object.potions.swirly.enlightenment
+object.potions.bubbly.monster detection
+object.potions.smoky.object detection
+object.potions.cloudy.gain energy
+object.potions.effervescent.sleeping
+object.potions.black.full healing
+object.potions.golden.polymorph
+object.potions.brown.booze
+object.potions.fizzy.sickness
+object.potions.dark.fruit juice
+object.potions.white.acid
+object.potions.murky.oil
+object.potions.clear.water
+object.scrolls.zelgo mer.enchant armor
+object.scrolls.juyed awk yacc.destroy armor
+object.scrolls.nr 9.confuse monster
+object.scrolls.xixaxa xoxaxa xuxaxa.scare monster
+object.scrolls.pratyavayah.remove curse
+object.scrolls.daiyen fooels.enchant weapon
+object.scrolls.lep gex ven zea.create monster
+object.scrolls.prirutsenie.taming
+object.scrolls.elbib yloh.genocide
+object.scrolls.verr yed horre.light
+object.scrolls.venzar borgavve.teleportation
+object.scrolls.tharr.gold detection
+object.scrolls.yum yum.food detection
+object.scrolls.kernod wel.identify
+object.scrolls.elam ebow.magic mapping
+object.scrolls.duam xnaht.amnesia
+object.scrolls.andova begarin.fire
+object.scrolls.kirje.earth
+object.scrolls.ve forbryderne.punishment
+object.scrolls.hackem muche.charging
+object.scrolls.velox neb.stinking cloud
+object.scrolls.foobie bletch
+object.scrolls.temov
+object.scrolls.garven deh
+object.scrolls.read me
+object.scrolls.stamped.mail
+object.scrolls.unlabeled.blank paper
+object.spell books.parchment.dig
+object.spell books.vellum.magic missile
+object.spell books.ragged.fireball
+object.spell books.dog eared.cone of cold
+object.spell books.mottled.sleep
+object.spell books.stained.finger of death
+object.spell books.cloth.light
+object.spell books.leather.detect monsters
+object.spell books.white.healing
+object.spell books.pink.knock
+object.spell books.red.force bolt
+object.spell books.orange.confuse monster
+object.spell books.yellow.cure blindness
+object.spell books.velvet.drain life
+object.spell books.light green.slow monster
+object.spell books.dark green.wizard lock
+object.spell books.turquoise.create monster
+object.spell books.cyan.detect food
+object.spell books.light blue.cause fear
+object.spell books.dark blue.clairvoyance
+object.spell books.indigo.cure sickness
+object.spell books.magenta.charm monster
+object.spell books.purple.haste self
+object.spell books.violet.detect unseen
+object.spell books.tan.levitation
+object.spell books.plaid.extra healing
+object.spell books.light brown.restore ability
+object.spell books.dark brown.invisibility
+object.spell books.gray.detect treasure
+object.spell books.wrinkled.remove curse
+object.spell books.dusty.magic mapping
+object.spell books.bronze.identify
+object.spell books.copper.turn undead
+object.spell books.silver.polymorph
+object.spell books.gold.teleport away
+object.spell books.glittering.create familiar
+object.spell books.shining.cancellation
+object.spell books.dull.protection
+object.spell books.thin.jumping
+object.spell books.thick.stone to flesh
+object.spell books.plain.blank paper
+object.spell books.papyrus.book of the dead
+object.wands.glass.light
+object.wands.balsa.secret door detection
+object.wands.crystal.enlightenment
+object.wands.maple.create monster
+object.wands.pine.wishing
+object.wands.oak.nothing
+object.wands.ebony.striking
+object.wands.marble.make invisible
+object.wands.tin.slow monster
+object.wands.brass.speed monster
+object.wands.copper.undead turning
+object.wands.silver.polymorph
+object.wands.platinum.cancellation
+object.wands.iridium.teleportation
+object.wands.zinc.opening
+object.wands.aluminum.locking
+object.wands.uranium.probing
+object.wands.iron.digging
+object.wands.steel.magic missile
+object.wands.hexagonal.fire
+object.wands.short.cold
+object.wands.runed.sleep
+object.wands.long.death
+object.wands.curved.lightning
+object.wands.forked
+object.wands.spiked
+object.wands.jeweled
+object.coins.gold piece
+object.rocks.white.dilithium crystal
+object.rocks.white.diamond
+object.rocks.red.ruby
+object.rocks.orange.jacinth
+object.rocks.blue.sapphire
+object.rocks.black.black opal
+object.rocks.green.emerald
+object.rocks.green.turquoise
+object.rocks.yellow.citrine
+object.rocks.green.aquamarine
+object.rocks.yellowish brown.amber
+object.rocks.yellowish brown.topaz
+object.rocks.black.jet
+object.rocks.white.opal
+object.rocks.yellow.chrysoberyl
+object.rocks.red.garnet
+object.rocks.violet.amethyst
+object.rocks.red.jasper
+object.rocks.violet.fluorite
+object.rocks.black.obsidian
+object.rocks.orange.agate
+object.rocks.green.jade
+object.rocks.white.worthless piece of white glass
+object.rocks.blue.worthless piece of blue glass
+object.rocks.red.worthless piece of red glass
+object.rocks.yellowish brown.worthless piece of yellowish brown glass
+object.rocks.orange.worthless piece of orange glass
+object.rocks.yellow.worthless piece of yellow glass
+object.rocks.black.worthless piece of black glass
+object.rocks.green.worthless piece of green glass
+object.rocks.violet.worthless piece of violet glass
+object.rocks.gray.luckstone
+object.rocks.gray.loadstone
+object.rocks.gray.touchstone
+object.rocks.gray.flint
+object.rocks.rock
+object.large stones.boulder
+object.large stones.statue
+object.iron balls.heavy iron ball
+object.chains.iron chain
+object.venoms.splash of venom.blinding venom
+object.venoms.splash of venom.acid venom
+cmap.dark part of a room
+cmap.wall.vertical
+cmap.wall.horizontal
+cmap.wall.top left corner
+cmap.wall.top right corner
+cmap.wall.bottom left corner
+cmap.wall.bottom right corner
+cmap.wall.crosswall
+cmap.wall.tee up
+cmap.wall.tee down
+cmap.wall.tee left
+cmap.wall.tee right
+cmap.door.doorway
+cmap.door.vertical open door
+cmap.door.horizontal open door
+cmap.door.vertical closed door
+cmap.door.horizontal closed door
+cmap.iron bars
+cmap.tree
+cmap.floor of a room
+cmap.corridor
+cmap.lit corridor
+cmap.staircase up
+cmap.staircase down
+cmap.ladder up
+cmap.ladder down
+cmap.altar
+cmap.grave
+cmap.opulent throne
+cmap.sink
+cmap.fountain
+cmap.pool
+cmap.ice
+cmap.molten lava
+cmap.lowered drawbridge.vertical
+cmap.lowered drawbridge.horizontal
+cmap.raised drawbridge.vertical
+cmap.raised drawbridge.horizontal
+cmap.air
+cmap.cloud
+cmap.water
+cmap.trap.arrow trap
+cmap.trap.dart trap
+cmap.trap.falling rock trap
+cmap.trap.squeaky board
+cmap.trap.bear trap
+cmap.trap.land mine
+cmap.trap.rolling boulder trap
+cmap.trap.sleeping gas trap
+cmap.trap.rust trap
+cmap.trap.fire trap
+cmap.trap.pit
+cmap.trap.spiked pit
+cmap.trap.hole
+cmap.trap.trap door
+cmap.trap.teleportation trap
+cmap.trap.level teleporter
+cmap.trap.magic portal
+cmap.trap.web
+cmap.trap.statue trap
+cmap.trap.magic trap
+cmap.trap.anti-magic field
+cmap.trap.polymorph trap
+cmap.effect.vertical beam
+cmap.effect.horizontal beam
+cmap.effect.left slant beam
+cmap.effect.right slant beam
+cmap.effect.dig beam
+cmap.effect.camera flash
+cmap.effect.thrown boomerang.open left
+cmap.effect.thrown boomerang.open right
+cmap.effect.magic shield 1
+cmap.effect.magic shield 2
+cmap.effect.magic shield 3
+cmap.effect.magic shield 4
+cmap.swallow.top left
+cmap.swallow.top center
+cmap.swallow.top right
+cmap.swallow.middle left
+cmap.swallow.middle right
+cmap.swallow.bottom left
+cmap.swallow.bottom center
+cmap.swallow.bottom right
+explosion.dark.top left
+explosion.dark.top center
+explosion.dark.top right
+explosion.dark.middle left
+explosion.dark.middle center
+explosion.dark.middle right
+explosion.dark.bottom left
+explosion.dark.bottom center
+explosion.dark.bottom right
+explosion.noxious.top left
+explosion.noxious.top center
+explosion.noxious.top right
+explosion.noxious.middle left
+explosion.noxious.middle center
+explosion.noxious.middle right
+explosion.noxious.bottom left
+explosion.noxious.bottom center
+explosion.noxious.bottom right
+explosion.muddy.top left
+explosion.muddy.top center
+explosion.muddy.top right
+explosion.muddy.middle left
+explosion.muddy.middle center
+explosion.muddy.middle right
+explosion.muddy.bottom left
+explosion.muddy.bottom center
+explosion.muddy.bottom right
+explosion.wet.top left
+explosion.wet.top center
+explosion.wet.top right
+explosion.wet.middle left
+explosion.wet.middle center
+explosion.wet.middle right
+explosion.wet.bottom left
+explosion.wet.bottom center
+explosion.wet.bottom right
+explosion.magical.top left
+explosion.magical.top center
+explosion.magical.top right
+explosion.magical.middle left
+explosion.magical.middle center
+explosion.magical.middle right
+explosion.magical.bottom left
+explosion.magical.bottom center
+explosion.magical.bottom right
+explosion.fiery.top left
+explosion.fiery.top center
+explosion.fiery.top right
+explosion.fiery.middle left
+explosion.fiery.middle center
+explosion.fiery.middle right
+explosion.fiery.bottom left
+explosion.fiery.bottom center
+explosion.fiery.bottom right
+explosion.frosty.top left
+explosion.frosty.top center
+explosion.frosty.top right
+explosion.frosty.middle left
+explosion.frosty.middle center
+explosion.frosty.middle right
+explosion.frosty.bottom left
+explosion.frosty.bottom center
+explosion.frosty.bottom right
+zap.magic missile.vertical
+zap.magic missile.horizontal
+zap.magic missile.left slant
+zap.magic missile.right slant
+zap.fire.vertical
+zap.fire.horizontal
+zap.fire.left slant
+zap.fire.right slant
+zap.cold.vertical
+zap.cold.horizontal
+zap.cold.left slant
+zap.cold.right slant
+zap.sleep.vertical
+zap.sleep.horizontal
+zap.sleep.left slant
+zap.sleep.right slant
+zap.death.vertical
+zap.death.horizontal
+zap.death.left slant
+zap.death.right slant
+zap.lightning.vertical
+zap.lightning.horizontal
+zap.lightning.left slant
+zap.lightning.right slant
+zap.poison gas.vertical
+zap.poison gas.horizontal
+zap.poison gas.left slant
+zap.poison gas.right slant
+zap.acid.vertical
+zap.acid.horizontal
+zap.acid.left slant
+zap.acid.right slant
+warning.0
+warning.1
+warning.2
+warning.3
+warning.4
+warning.5
+cmap.wall.vertical.mine
+cmap.wall.horizontal.mine
+cmap.wall.top left corner.mine
+cmap.wall.top right corner.mine
+cmap.wall.bottom left corner.mine
+cmap.wall.bottom right corner.mine
+cmap.wall.crosswall.mine
+cmap.wall.tee up.mine
+cmap.wall.tee down.mine
+cmap.wall.tee left.mine
+cmap.wall.tee right.mine
+cmap.wall.vertical.gehennom
+cmap.wall.horizontal.gehennom
+cmap.wall.top left corner.gehennom
+cmap.wall.top right corner.gehennom
+cmap.wall.bottom left corner.gehennom
+cmap.wall.bottom right corner.gehennom
+cmap.wall.crosswall.gehennom
+cmap.wall.tee up.gehennom
+cmap.wall.tee down.gehennom
+cmap.wall.tee left.gehennom
+cmap.wall.tee right.gehennom
+cmap.wall.vertical.knox
+cmap.wall.horizontal.knox
+cmap.wall.top left corner.knox
+cmap.wall.top right corner.knox
+cmap.wall.bottom left corner.knox
+cmap.wall.bottom right corner.knox
+cmap.wall.crosswall.knox
+cmap.wall.tee up.knox
+cmap.wall.tee down.knox
+cmap.wall.tee left.knox
+cmap.wall.tee right.knox
+cmap.wall.vertical.sokoban
+cmap.wall.horizontal.sokoban
+cmap.wall.top left corner.sokoban
+cmap.wall.top right corner.sokoban
+cmap.wall.bottom left corner.sokoban
+cmap.wall.bottom right corner.sokoban
+cmap.wall.crosswall.sokoban
+cmap.wall.tee up.sokoban
+cmap.wall.tee down.sokoban
+cmap.wall.tee left.sokoban
+cmap.wall.tee right.sokoban

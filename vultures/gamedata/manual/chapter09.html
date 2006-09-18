@@ -1,0 +1,539 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <meta content="text/html; charset=iso-8859-15" http-equiv="Content-Type" />
+    <meta name="Author" content="Daniel Thaler" />
+    <link rel="stylesheet" type="text/css" href="manual.css" />
+    <title>Vulture's manual</title>
+</head>
+
+<body>
+    <div class="chaplinks">
+        <div class="leftlink"><a href="chapter08.html">&lt; Back: Conduct</a></div>
+        <div class="rightlink"><a href="chapter10.html">Next: Makros &gt;</a></div>
+        <a href="index.html">Index</a>
+    </div>
+
+    <div id="title">
+        <h1>9. Options</h1>
+    </div>
+    
+    <div id="main">
+        <p class="first"><img src="img/letter_d.png" alt="D" />ue to
+        variations in personal tastes and conceptions of how
+        the game should do things, there are options you can set to change
+        how it behaves.</p>
+
+        <p>This manual will not go into all the details of how NetHack/SLASH'EM
+        options can be set; to learn about those, please read the orginal Guidebook.</p>
+
+
+        <h2 id="options">9.1 Game options</h2>
+
+        <p>There are 2 main ways to set game options: Ingame with the <span class="key">O</span>
+        command and by editing the configuration file. Options set ingame do not persist; editing
+        the config file is the only way to set an option permanently. Additionally, some options
+        can only be set in the config file, because they no longer make sense or are immutable
+        once the game has started.</p>
+
+        <p>On unix(-like OSes) the config-file is called either &ldquo;.nethackrc&rdquo;
+        for vultureseye or &ldquo;.slashemrc&rdquo; for vulturesclaw and is located in your home directory.<br />
+        On Windows the file is always called &ldquo;defaults.nh&rdquo; and is located in the game's 
+        installation directory</p>
+        
+        <p>These options are available:</p>
+        
+        <table style="border-spacing:5px;">
+            <tr>
+                <td class="cell1">align</td>
+                <td>Your starting alignment (align:lawful, align:neutral, or
+                align:chaotic). You may specify just the first letter. The
+                default is to randomly pick an appropriate alignment. Cannot
+                be set with the <span class="key">O</span> command.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">autodig</td>
+                <td>Automatically dig if you are wielding a digging tool and moving
+                into a place that can be dug (default false).</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">autopickup</td>
+                <td>Automatically pick up things onto which you move (default on).
+                See pickup_types to refine the behavior.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">autoquiver</td>
+                <td>This option controls what happens when you attempt the <span class="key">f</span>
+                (fire) command with an empty quiver. When true, the computer
+                will fill your quiver with some suitable weapon. Note that it
+                will not take into account the blessed/cursed status, enchantment,
+                damage, or quality of the weapon; you are free to manually
+                fill your quiver with the <span class="key">Q</span> command instead. If no weapon
+                is found or the option is false, the <span class="key">t</span> (throw)
+                command is executed instead. (default false)</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">catname</td>
+                <td>Name your starting cat (ex. &ldquo;catname:Morris&rdquo;). Cannot be set
+                with the <span class="key">O</span> command.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">character</td>
+                <td>Pick your type of character (ex. &ldquo;character:Monk&rdquo;); synonym
+                for &ldquo;role&rdquo;. See &ldquo;name&rdquo; for an alternate method of
+                specifying your role. Normally only the first letter of the value is
+                examined; the string &ldquo;random&rdquo; is an exception.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">checkpoint</td>
+                <td>Save game state after each level change, for possible recovery
+                after program crash (default on).</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">cmdassist</td>
+                <td>Have the game provide some additional command assistance for
+                new players if it detects some anticipated mistakes (default
+                on).</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">confirm</td>
+                <td>Have user confirm attacks on pets, shopkeepers, and other
+                peaceable creatures (default on).</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">disclose</td>
+                <td>Controls options for disclosing various information when the
+                game ends (defaults to all possibilities being disclosed). The
+                possibilities are:
+                
+                <ul style="list-style:none;">
+                    <li>i - disclose your inventory.</li>
+                    <li>a - disclose your attributes.</li>
+                    <li>v - summarize monsters that have been vanquished.</li>
+                    <li>g - list monster species that have been genocided.</li>
+                    <li>c - display your conduct.</li>
+                </ul>
+
+                Each disclosure possibility can optionally be preceded by a
+                prefix which let you refine how it behaves. Here are the valid
+                prefixes:
+
+                <ul style="list-style:none;">
+                    <li>y - prompt you and default to yes on the prompt.</li>
+                    <li>n - prompt you and default to no on the prompt.</li>
+                    <li>+ - disclose it without prompting.</li>
+                    <li>- - do not disclose it and do not prompt.</li>
+                </ul>
+
+                (ex. &ldquo;disclose:yi na +v -g -c&rdquo;) The example sets inventory to
+                prompt and default to yes, attributes to prompt and default to
+                no, vanquished to disclose without prompting, genocided to not
+                disclose and not to prompt, conduct to not disclose and not to
+                prompt. Note that the vanquished monsters list includes all
+                monsters killed by traps and each other as well as by you.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">dogname</td>
+                <td>Name your starting dog (ex. &ldquo;dogname:Fang&rdquo;). Cannot be set
+                with the <span class="key">O</span> command.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">female</td>
+                <td>An obsolete synonym for &ldquo;gender:female&rdquo;. Cannot be set with
+                the <span class="key">O</span> command.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">fixinv</td>
+                <td>An object's inventory letter sticks to it when it's dropped
+                (default on). If this is off, dropping an object shifts all
+                the remaining inventory letters.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">font_text</td>
+                <td>The full filename (including the path) of a TrueType or OpenType font to use
+                instead of the default one (Bitstream Vera Serif)</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">fruit</td>
+                <td>Name a fruit after something you enjoy eating (ex. &ldquo;fruit:mango&rdquo;)
+                (default &ldquo;slime mold&rdquo;). Basically a nostalgic whimsy
+                that NetHack uses from time to time. You should set this to
+                something you find more appetizing than slime mold. Apples,
+                oranges, pears, bananas, and melons already exist in NetHack,
+                so don't use those.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">gender</td>
+                <td>Your starting gender (gender:male or gender:female). You may
+                specify just the first letter. Although you can still denote
+                your gender using the &ldquo;male&rdquo; and &ldquo;female&rdquo; options, the
+                &ldquo;gender&rdquo; option will take precedence. The default is to
+                randomly pick an appropriate gender. Cannot be set with the <span class="key">O</span>
+                command.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">horsename</td>
+                <td>Name your starting horse (ex. &ldquo;horsename:Trigger&rdquo;). Cannot
+                be set with the <span class="key">O</span> command.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">lootabc</td>
+                <td>Use the old &lsquo;a&rsquo;, &lsquo;b&rsquo;, and &lsquo;c&rsquo;
+                keyboard shortcuts when looting, rather than the mnemonics &lsquo;o&rsquo;,
+                &lsquo;i&rsquo;, and &lsquo;b&rsquo; (default off).</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">mail</td>
+                <td>Enable mail delivery during the game (default on).</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">male</td>
+                <td>An obsolete synonym for &ldquo;gender:male&rdquo;. Cannot be set with
+                the <span class="key">O</span> command.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">menustyle</td>
+                <td>Controls the interface used when you need to choose various
+                objects (in response to the Drop command, for instance). The
+                value specified should be the first letter of one of the
+                following: traditional, combination, partial, or full.
+                Traditional was the only interface available for earlier versions;
+                it consists of a prompt for object class characters, followed
+                by an object-by-object prompt for all items matching the selected
+                object class(es). Combination starts with a prompt for
+                object class(es) of interest, but then displays a menu of
+                matching objects rather than prompting one-by-one. Partial
+                skips the object class filtering and immediately displays a
+                menu of all objects. Full displays a menu of object classes
+                rather than a character prompt, and then a menu of matching
+                objects for selection.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">name</td>
+                <td>Set your character's name. You
+                can also set your character's role by appending a dash and one
+                or more letters of the role (that is, by suffixing one of -A -B
+                -C -H -K -M -P -Ra -Ro -S -T -V -W). If -@ is used for the
+                role, then a random one will be automatically chosen. Cannot
+                be set with the <span class="key">O</span> command.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">packorder</td>
+                <td>Specify the order to list object types in (default
+                ``")[%?+!=/(*`0_''). The value of this option should be a
+                string containing the symbols for the various object types.
+                Any omitted types are filled in at the end from the previous
+                order.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">pettype</td>
+                <td>Specify the type of your initial pet, if you are playing a
+                character class that uses multiple types of pets; or choose to
+                have no initial pet at all. Possible values are &ldquo;cat&rdquo;,
+                &ldquo;dog&rdquo; and &ldquo;none&rdquo;. Cannot be set with the <span class="key">O</span> command.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">pickup_burden</td>
+                <td>When you pick up an item that would exceed this encumbrance
+                level (Unburdened, Burdened, streSsed, straiNed, overTaxed, or
+                overLoaded), you will be asked if you want to continue.
+                (Default &lsquo;S&rsquo;).</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">pickup_types</td>
+                <td>Specify the object types to be picked up when autopickup is on.
+                Default is all types.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">prayconfirm</td>
+                <td>Prompt for confirmation before praying (default on).</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">pushweapon</td>
+                <td>Using the &lsquo;w&rsquo; (wield) command when already wielding something
+                pushes the old item into your alternate weapon slot (default
+                off).</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">race</td>
+                <td>Selects your race (for example, &ldquo;race:human&rdquo;). Default is
+                random. Cannot be set with the <span class="key">O</span> command.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">rest_on_space</td>
+                <td>Make the space bar a synonym for the &lsquo;.&rsquo; (rest) command (default off).</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">role</td>
+                <td>Pick your type of character (ex. &ldquo;role:Samurai&rdquo;); synonym for
+                &ldquo;character&rdquo;. See &ldquo;name&rdquo; for an alternate method of
+                specifying your role. Normally only the first letter of the value
+                is examined; &lsquo;r&rsquo; is an exception with &ldquo;Rogue&rdquo;, &ldquo;Ranger&rdquo;,
+                and &ldquo;random&rdquo; values.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">runmode</td>
+                <td>Controls the amount of screen updating for the map window when
+                engaged in multi-turn movement (running via shift+direction or
+                control+direction and so forth, or via the travel command or
+                mouse click). The possible values are:
+
+                <ul style="list-style:none">
+                    <li>teleport - update the map after movement has finished;</li>
+                    <li>run - update the map after every seven or so steps;</li>
+                    <li>walk - update the map after each step;</li>
+                    <li>crawl - like walk, but pause briefly after each step.</li>
+                </ul>
+
+                This option only affects the game's screen display, not the
+                actual results of moving. The default is &lsquo;run&rsquo;; versions prior
+                to 3.4.1 used &lsquo;teleport&rsquo; only. Whether or not the effect is
+                noticeable will depend upon the window port used or on the type
+                of terminal.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">safe_pet</td>
+                <td>Prevent you from (knowingly) attacking your pets (default on).</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">scores</td>
+                <td>Control what parts of the score list you are shown at the end
+                (ex. &ldquo;scores:5 top scores/4 around my score/own scores&rdquo;).
+                Only the first letter of each category (&lsquo;t&rsquo;, &lsquo;a&rsquo;, or &lsquo;o&rsquo;) is
+                necessary.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">showexp</td>
+                <td>Show your accumulated experience points on bottom line (default
+                off).</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">showrace</td>
+                <td>Display yourself as the glyph for your race, rather than the
+                glyph for your role (default off). Note that this setting
+                affects only the appearance of the display, not the way the game
+                treats you.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">sortpack</td>
+                <td>Sort the pack contents by type when displaying inventory
+                (default on).</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">sparkle</td>
+                <td>Display a sparkly effect when a monster (including yourself) is
+                hit by an attack to which it is resistant (default on).</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">suppress_alert</td>
+                <td>This option may be set to a NetHack version level to suppress
+                alert notification messages about feature changes for that and
+                prior versions (ex. &ldquo;suppress_alert:3.3.1&rdquo;).</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">time</td>
+                <td>Show the elapsed game time in turns on bottom line (default
+                off).</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">tombstone</td>
+                <td>Draw a tombstone graphic upon your death (default on).</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">toptenwin</td>
+                <td>Put the ending display in a NetHack window instead of on stdout
+                (default off). Setting this option makes the score list visible
+                when a  windowing version of NetHack is started without a
+                parent window, but it no longer leaves the score list around
+                after game end on a terminal or emulating window.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">travel</td>
+                <td>Allow the travel command (default on). Turning this option off
+                will prevent the game from attempting unintended moves if you
+                make inadvertent mouse clicks on the map window.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">verbose</td>
+                <td>Provide more commentary during the game (default on).</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">windowtype</td>
+                <td>Select which windowing system to use, such as &ldquo;tty&rdquo; or
+                &ldquo;X11&rdquo; (default depends on version). Cannot be set with the
+                <span class="key">O</span> command. To play vultures you should generally
+                set this to &ldquo;vultures&rdquo; :-D</td>
+            </tr>
+        </table>
+        
+        <h2 id="interface">9.2 Interface options</h2>
+        
+        <p>The interface options can be set in the global configuration
+        &ldquo;vultures.conf&rdquo; file in the config subdirectory, in a per-user
+        configuration file which overrides the global one as well as ingame.
+        Additionally, if options are changed ingame they are written back to the
+        per-user configuration file. The best way to change interface options is to
+        simply use the dialog ingame.</p>
+        
+        <table style="border-spacing:15px;">
+            <tr>
+                <td class="cell1">recenter</td>
+                <td>If you set this to 1, the game will keep the main view
+                centered on your character during movement. If you set this to 0, the game will recenter
+                the main view only when your character moves off-screen. (You can of course scroll
+                the view yourself to see more.)<br />
+                If you are playing on a slow computer turning this off is a good idea, because less
+                of the screen will be redrawn after each move, making the game run faster.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">play_music &amp;<br />play_effects</td>
+                <td>Set these to 1 if you want to hear
+                music and sound effects, or to 0 if you prefer silence.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">wall_style</td>
+                <td>You may play with full height or half-height walls. Half-height walls are
+                less realistic, but they obstruct your view less.
+                <img src="img/wallheight.png" alt="wall height example" />
+                </td>
+            </tr>
+
+            <tr>
+                <td class="cell1">wall_opacity</td>
+                <td>You may set the opacity of your dungeon walls. A value of 1.0 means fully opaque,
+                0 is fully transparent.<br />
+                The image below shows walls at 1.0, 0.75 and 0.5
+                <img src="img/walltrans.png" alt="wall height example" />
+                </td>
+            </tr>
+
+            <tr>
+                <td class="cell1">screen_xsize &amp;<br />screen_ysize</td>
+                <td>This is the screen resolution (width and height) that you want to
+                use while playing. Larger resolutions show you more of the dungeon at once.
+                The minimum is 510x640.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">fullscreen</td>
+                <td>Switch between fullscreen and windowed mode.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">show helpbar</td>
+                <td>Show the lower toolbar.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">show actionbar</td>
+                <td>Show the upper toolbar.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">show minimap</td>
+                <td>Show the minimap.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">message lines</td>
+                <td>The maximum height of the message window in lines.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">Disable key rotation</td>
+                <td>By default the numpad movement keys are rotated to match the isometric view.
+                If you are used to a more traditional interface you may wish to disable the rotation.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">makros 1-6</td>
+                <td>User-defined sequences of actions. The &ldquo;<a href="chapter10.html">Makros</a>&rdquo; section
+                describes how they work</td>
+            </tr>
+        </table>
+        
+        
+        <h2 id="sounds">9.3. Event sound options</h2>
+
+        <p>The file <b>vultures_sounds.conf</b> contains event sound options.
+        You can add your own custom sound effects or music to NetHack events 
+        by modifying this file. These sounds are played when a particular message
+        is sent to NetHack's message window. One message plays at most one
+        sound (the first applicable one in the file).</p>
+        
+        <p>Sounds can be OGG files or CD audio tracks.</p>
+        
+        <p>The format is: <b>[search string],SOUNDTYPE,[filename]</b> where</p>
+
+        <ul>
+            <li>[search string] = the message string (complete or partial) that triggers the sound.</li>
+            <li>SOUNDTYPE = SND, MUS, CDAU, RSNG or NONE.
+            <ul>
+                <li>SND plays an OGG sound effect </li>
+                <li>MUS plays an OGG music file</li>
+                <li>CDAU plays a track from an audio CD</li>
+                <li>RSNG plays a random piece of background music</li>
+                <li>NONE can be used to exclude messages (eg. 'restore' is not the same as 'store')</li>
+            </ul>
+            </li>
+            <li>[filename] = name of the sound file. If SOUNDTYPE is RSNG or NONE, then this value is not used.
+            If SOUNDTYPE is CDAU, give the track number here (for example, [01]).</li>
+        </ul>
+        
+        <p>The file contains extensive comments and the existing entries are good patterns to follow.</p>
+
+    </div>
+    
+    <div class="chaplinks">
+        <div class="leftlink"><a href="chapter08.html">&lt; Back: Conduct</a></div>
+        <div class="rightlink"><a href="chapter10.html">Next: Makros &gt;</a></div>
+        <a href="index.html">Index</a>
+    </div>
+</body>
+</html>

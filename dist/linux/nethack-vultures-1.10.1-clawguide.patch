@@ -1,0 +1,14 @@
+--- slashem/sys/unix/Makefile.doc~	2005-11-11 10:47:37.000000000 +0200
++++ slashem/sys/unix/Makefile.doc	2005-11-15 21:57:10.000000000 +0200
+@@ -31,9 +31,9 @@
+ # GUIDECMD = cat Guidebook.txt
+ # GUIDECMD = type Guidebook.txt
+ # The following work better with groff-1.18, eg on Linux
+-# GUIDECMD = tbl tmac.n Guidebook.mn | nroff -c -Tascii | $(COLCMD)
++GUIDECMD = tbl tmac.n Guidebook.mn | nroff -c -Tascii | $(COLCMD)
+ # GUIDECMD = tbl tmac.n Guidebook.mn | groff -Wall -mtty-char -Tascii -P-u -P-b 
+-GUIDECMD = tbl tmac.n Guidebook.mn | nroff | $(COLCMD)
++# GUIDECMD = tbl tmac.n Guidebook.mn | nroff | $(COLCMD)
+ 
+ # the basic guidebook
+ Guidebook:	Guidebook.mn

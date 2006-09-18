@@ -1,0 +1,476 @@
+/* Copyright (c) Jaakko Peltonen, 2000				  */
+/* NetHack may be freely redistributed.  See license for details. */
+
+/*-------------------------------------------------------------------
+ vultures_sdl.c : SDL API calls for Vulture's windowing system.
+ Requires SDL 1.1 or newer.
+-------------------------------------------------------------------*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef __GNUC__
+#include <unistd.h>
+#endif
+#include <stdarg.h>
+#include "SDL.h"
+#include "SDL_video.h"
+#include "SDL_error.h"
+#include "SDL_audio.h"
+#include "SDL_mixer.h"
+#include "vultures_gen.h"
+#include "vultures_gfl.h"
+#include "vultures_win.h"
+#include "vultures_sdl.h"
+#include "vultures_main.h"
+#include "vultures_sound.h"
+#include "vultures_mou.h"
+#include "vultures_opt.h"
+
+#include "date.h"
+
+
+/* Definitions */
+
+
+static int fs_message_printed = 0;
+static int have_mouse_focus = 1;
+
+/* Graphics objects */
+SDL_Surface *vultures_screen;             /* Graphics surface */
+
+
+Uint32 vultures_timer_callback(Uint32 interval, void * param);
+int vultures_handle_global_event(SDL_Event * event);
+
+
+
+
+int vultures_convertkey_sdl2nh(SDL_keysym * keysym)
+{
+    int shift = keysym->mod & KMOD_SHIFT;
+    int ctrl = keysym->mod & KMOD_CTRL;
+    int alt = keysym->mod & KMOD_ALT;
+
+    int ch = keysym->unicode;
+
+    if (ch=='!')
+        return 0; // damn shell thing :/
+
+    if ((ctrl && ch == 'z') || (ch == ('z' - ('a' - 1))))
+        return 0; // lets just ignore this nasty lil bugger...
+
+    if (ctrl && ch >= 'a' && ch < 'z')
+        return ch - ('a' - 1);
+
+    if (alt && ch >= 'a' && ch <= 'z')
+        return (0x80 | (ch));
+
+    if (ch >= 'a' && ch <= 'z') {
+        if (shift)
+            ch += 'A'-'a';
+        return ch;
+    }
+
+    switch (keysym->sym) {
+        case SDLK_BACKSPACE: return '\b';
+        case SDLK_KP_ENTER:
+        case SDLK_RETURN: return '\n';
+        case SDLK_ESCAPE: return '\033';
+        case SDLK_TAB: return '\t';
+        case SDLK_KP8:
+        case SDLK_UP: return iflags.num_pad ? '8' : (shift) ? 'K' : 'k';
+        case SDLK_KP2:
+        case SDLK_DOWN: return iflags.num_pad ? '2' : (shift) ? 'J' : 'j';
+        case SDLK_KP4:
+        case SDLK_LEFT: return iflags.num_pad ? '4' : (shift) ? 'H' : 'h';
+        case SDLK_KP6:
+        case SDLK_RIGHT: return iflags.num_pad ? '6' : (shift) ? 'L' : 'l';
+        case SDLK_KP7: return iflags.num_pad ? '7' : (shift) ? 'Y' : 'y';
+        case SDLK_KP9: return iflags.num_pad ? '9' : (shift) ? 'U' : 'u';
+        case SDLK_KP1: return iflags.num_pad ? '1' : (shift) ? 'B' : 'b';
+        case SDLK_KP3: return iflags.num_pad ? '3' : (shift) ? 'N' : 'n';
+    
+        case SDLK_PAGEUP:   return MENU_PREVIOUS_PAGE;
+        case SDLK_PAGEDOWN: return MENU_NEXT_PAGE;
+        case SDLK_HOME:     return MENU_FIRST_PAGE;
+        case SDLK_END:      return MENU_LAST_PAGE;
+        default: break; /* prevent "enumeration value ... not handled in switch" warning */
+    }
+
+
+    if ((ch > 0) && (ch < 0x7e))
+        return ch;
+
+    return 0;
+
+}
+
+
+
+void vultures_wait_event(SDL_Event * event, int wait_timeout)
+{
+    int done = 0;
+    SDL_TimerID sleeptimer = NULL;
+
+    if (wait_timeout > 0)
+        sleeptimer = SDL_AddTimer(wait_timeout, vultures_timer_callback, NULL);
+
+
+    while (!done)
+    {
+        event->type = 0;
+
+        while (SDL_PollEvent(event) && event->type == SDL_MOUSEMOTION)
+            /* do nothing, we're merely dequeueing unhandled mousemotion events */ ;
+
+        if (!event->type && !SDL_WaitEvent(event))
+            continue;
+
+        vultures_handle_global_event(event);
+
+        if (event->type == SDL_KEYDOWN ||
+            event->type == SDL_MOUSEBUTTONDOWN ||
+            event->type == SDL_MOUSEBUTTONUP ||
+            /* send timer events only while the mouse is in the window */
+            (event->type == SDL_TIMEREVENT && have_mouse_focus) ||
+            event->type == SDL_MOUSEMOTION)
+            done = 1;
+    }
+
+    SDL_RemoveTimer(sleeptimer);
+}
+
+
+
+int vultures_poll_event(SDL_Event * event)
+{
+    int done = 0;
+
+    while (!done)
+    {
+        event->type = 0;
+
+        while (SDL_PollEvent(event) && event->type == SDL_MOUSEMOTION)
+            /* do nothing, we're merely dequeueing unhandled mousemotion events */ ;
+
+        if (!event->type)
+            /* no events queued */
+            return 0;
+
+        vultures_handle_global_event(event);
+
+        if (event->type == SDL_KEYDOWN ||
+            event->type == SDL_MOUSEBUTTONDOWN ||
+            event->type == SDL_MOUSEBUTTONUP ||
+            event->type == SDL_MOUSEMOTION)
+            /* an interesting event, leave the loop */
+            done = 1;
+
+        /* else: an uninteresting event, like those handled in vultures_handle_global_event */
+    }
+    return 1;
+}
+
+
+void vultures_wait_input(SDL_Event * event, int wait_timeout)
+{
+    int done = 0;
+    SDL_TimerID sleeptimer = NULL;
+
+    if (wait_timeout > 0)
+        sleeptimer = SDL_AddTimer(wait_timeout, vultures_timer_callback, NULL);
+
+    while (!done)
+    {
+        if (!SDL_WaitEvent(event))
+            continue;
+
+        vultures_handle_global_event(event);
+
+        if (event->type == SDL_KEYDOWN ||
+            event->type == SDL_MOUSEBUTTONUP ||
+            event->type == SDL_TIMEREVENT)
+            done = 1;
+    }
+
+    SDL_RemoveTimer(sleeptimer);
+}
+
+
+
+
+void vultures_wait_key(SDL_Event * event)
+{
+    int done = 0;
+
+    while (!done)
+    {
+        if (!SDL_WaitEvent(event))
+            continue;
+
+        vultures_handle_global_event(event);
+
+        if (event->type == SDL_KEYDOWN)
+            done = 1;
+    }
+}
+
+
+Uint32 vultures_timer_callback(Uint32 interval, void * param)
+{
+    SDL_Event event;
+    event.type = SDL_TIMEREVENT;
+    event.user.data1 = param;
+
+    SDL_PushEvent(&event);
+
+    return interval;
+}
+
+
+
+static void vultures_set_fullscreen(void)
+{
+    SDL_Rect **modes;
+    int newheight = 0;
+    int newwidth = 0;
+    int bestmode = 0;
+    int i;
+
+    /* Get available fullscreen/hardware modes */
+    modes = SDL_ListModes(NULL, SDL_FULLSCREEN);
+
+    /* Check if our resolution is restricted */
+    if(modes == (SDL_Rect **)-1){
+        newheight = vultures_opts.height;
+        newwidth  = vultures_opts.width;
+    }
+    else{
+        /* find a mode that is >= the dimensions in the config file */
+        for (i = 0; modes[i]; i++)
+        {
+             if (modes[i]->h >= vultures_opts.height &&
+                 modes[i]->w >= vultures_opts.width)
+                 bestmode = i;
+        }
+        newheight = modes[bestmode]->h;
+        newwidth  = modes[bestmode]->w;
+    }
+
+    vultures_screen = SDL_SetVideoMode(newwidth, newheight, 0, 
+                                       SDL_SWSURFACE | SDL_FULLSCREEN | SDL_ASYNCBLIT);
+
+    vultures_win_resize(newwidth, newheight);
+}
+
+
+
+static void vultures_set_windowed()
+{
+    vultures_screen = SDL_SetVideoMode(vultures_opts.width, vultures_opts.height, 0, 
+                                       SDL_SWSURFACE |SDL_ASYNCBLIT);
+    vultures_win_resize(vultures_opts.width, vultures_opts.height);
+}
+
+
+
+void vultures_set_screensize(void)
+{
+    if (vultures_opts.fullscreen)
+        vultures_set_fullscreen();
+    else
+        vultures_set_windowed();
+}
+
+
+
+int vultures_handle_global_event(SDL_Event * event)
+{
+    static int quitting = 0;
+
+    switch (event->type)
+    {
+        case SDL_ACTIVEEVENT:
+            if (event->active.gain && event->active.state == SDL_APPACTIVE)
+                vultures_refresh();
+            else if (event->active.state == SDL_APPMOUSEFOCUS)
+                have_mouse_focus = event->active.gain;
+            break;
+
+        case SDL_VIDEOEXPOSE:
+            vultures_refresh();
+            break;
+
+        case SDL_QUIT:
+            if (quitting)
+                break;
+
+            /* prevent recursive quit dialogs... */
+            quitting++;
+
+            /* exit gracefully */
+            if (program_state.gameover)
+            {
+                /* assume the user really meant this, as the game is already over... */
+                /* to make sure we still save bones, just set stop printing flag */
+                program_state.stopprint++;
+                /* and send keyboard input as if user pressed ESC */
+                vultures_eventstack_add('\033', -1, -1, V_RESPOND_POSKEY); 
+            }
+            else if (!program_state.something_worth_saving)
+            {
+                /* User exited before the game started, e.g. during splash display */
+                /* Just get out. */
+                vultures_bail(NULL);
+            }
+            else
+            {
+                switch (vultures_yn_function("Save and quit?", "ync", 'n'))
+                {
+                    case 'y':
+                        vultures_eventstack_add('y', -1 , -1, V_RESPOND_CHARACTER);
+                        dosave();
+                        break;
+                    case 'n':
+                        vultures_eventstack_add('\033', -1, -1, V_RESPOND_CHARACTER);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            quitting--;
+            break;
+
+        case SDL_MOUSEMOTION:
+            vultures_set_mouse_pos(event->motion.x, event->motion.y);
+            break;
+
+        case SDL_KEYDOWN:
+            if (event->key.keysym.sym == SDLK_TAB && (event->key.keysym.mod & KMOD_ALT) && vultures_opts.fullscreen)
+            {
+                /* go out of fullscreen for alt + tab */
+                vultures_opts.fullscreen = 0;
+                vultures_set_windowed();
+                if (!vultures_opts.fullscreen && !fs_message_printed++)
+                    /* This gets displayed only once */
+                    pline("You have left fullscreen mode. Press ALT+RETURN to reenter it.");
+
+                event->type = 0; /* we don't want to leave the event loop for this */
+                return 1;
+            }
+            else if(event->key.keysym.sym == SDLK_RETURN && (event->key.keysym.mod & KMOD_ALT))
+            {
+                /* toggle fullscreen with ctrl + enter */
+                if (vultures_opts.fullscreen)
+                {
+                    vultures_opts.fullscreen = 0;
+                    vultures_set_windowed();
+                }
+                else
+                {
+                    vultures_opts.fullscreen = 1;
+                    vultures_set_fullscreen();
+                }
+                event->type = 0; /* we don't want to leave the event loop for this */
+                return 1;
+            }
+            else if(event->key.keysym.sym == SDLK_SYSREQ ||
+                    event->key.keysym.sym == SDLK_PRINT ||
+                    event->key.keysym.sym == SDLK_F12)
+            {
+                vultures_save_screenshot();
+                event->type = 0; /* we don't want to leave the event loop for this */
+                return 1;
+            }
+    }
+
+    return 0;
+}
+
+
+
+static void vultures_sdl_error(const char *file, int line, const char *what)
+{
+	vultures_write_log(V_LOG_ERROR, file, line, "%s: %s\n", what, SDL_GetError());
+}
+
+
+void vultures_enter_graphics_mode()
+{
+    if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_INIT_NOPARACHUTE) == -1)
+    {
+        vultures_sdl_error(__FILE__, __LINE__, "Could not initialize SDL");
+        exit(1);
+    }
+
+    /* Initialize the event handlers */
+    atexit(SDL_Quit);
+    /* Filter key, mouse and quit events */
+    /*  SDL_SetEventFilter(FilterEvents); */
+    /* Enable key repeat */
+    SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);  
+    SDL_WM_SetCaption(VERSION_ID,NULL);
+
+    if (vultures_opts.fullscreen)
+        vultures_screen = SDL_SetVideoMode(vultures_opts.width, vultures_opts.height, 32,
+                                           SDL_SWSURFACE | SDL_FULLSCREEN | SDL_ASYNCBLIT);
+    else
+        vultures_screen = SDL_SetVideoMode(vultures_opts.width, vultures_opts.height, 32,
+                                           SDL_SWSURFACE | SDL_ASYNCBLIT);
+    if (!vultures_screen)
+    {
+        vultures_sdl_error(__FILE__, __LINE__, "Could not initialize video mode");
+        exit(1);
+    }
+
+    /* Don't show double cursor */
+    SDL_ShowCursor(SDL_DISABLE);
+
+    /* Enable Unicode translation. Necessary to match keypresses to characters */
+    SDL_EnableUNICODE(1);
+
+    if (vultures_opts.play_effects || vultures_opts.play_music)
+        vultures_init_sound();
+}
+
+
+
+void vultures_exit_graphics_mode(void)
+{
+    vultures_stop_music();
+    if (vultures_cdrom) SDL_CDClose(vultures_cdrom);
+    vultures_cdrom = NULL;
+    SDL_Quit();
+}
+
+
+
+void vultures_refresh_region
+(
+    int x1, int y1, 
+    int x2, int y2 
+)
+{
+    SDL_Rect rect;
+
+    /* resizing support makes this check necessary: we may try to refresh
+     * a region that used to be inside the window, but isn't anymore */
+    x1 = (x1 >= vultures_screen->w) ? vultures_screen->w - 1 : x1;
+    y1 = (y1 >= vultures_screen->h) ? vultures_screen->h - 1 : y1;
+    
+    /* Clip edges (yes, really, otherwise we crash...) */
+    rect.x = (x1 < 0) ? 0 : x1;
+    rect.y = (y1 < 0) ? 0 : y1;
+    rect.w = ((x2 >= vultures_screen->w) ? vultures_screen->w - 1 : x2) - rect.x + 1;
+    rect.h = ((y2 >= vultures_screen->h) ? vultures_screen->h - 1 : y2) - rect.y + 1;
+
+    SDL_UpdateRects(vultures_screen, 1, &rect);
+}
+
+
+
+void vultures_refresh(void)
+{
+    SDL_Flip( vultures_screen );
+}
+

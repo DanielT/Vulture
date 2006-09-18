@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <meta content="text/html; charset=iso-8859-15" http-equiv="Content-Type" />
+    <meta name="Author" content="Daniel Thaler" />
+    <link rel="stylesheet" type="text/css" href="manual.css" />
+    <title>Vulture's manual</title>
+</head>
+
+<body>
+    <div class="chaplinks">
+        <div class="leftlink"><a href="chapter09.html">&lt; Back: Options</a></div>
+        <div class="rightlink"><a href="chapter11.html">Next: Scoring &gt;</a></div>
+        <a href="index.html">Index</a>
+    </div>
+
+    <div id="title">
+        <h1>10. Makros</h1>
+    </div>
+    
+    <div id="main">
+        <p class="first"><img src="img/letter_v.png" alt="V" />ulture's
+        has the ability to automate short sequences of keys.</p>
+        
+        <p>Since Vulture's - being an interface - knows nothing about the internal state of the game,
+        thes makros differ only slightly from blindly typing out those sequences of keys yourself.
+        In fact, the only difference is that Vulture's will aoutomatically acknowledge any dialogs
+        that are encountered.</p>
+        
+        <p>The direct consequence of this is that all the &ldquo;intelligence&rdquo; in the makro
+        must be supplied by the user.</p>
+        
+        <h2>Examples</h2>
+        
+        <p>&ldquo;<b>n100.</b>&rdquo;: Rest 100 turns. A safe makro, because none of the keys it
+        uses change over time or between games.</p>
+        
+        <p>&ldquo;<b>n20s</b>&rdquo;: Search 20 turns (or until something is found). Another safe makro.</p>
+        
+        <p>&ldquo;<b>n2f</b>&rdquo;: Fire twice (instead of the 3 or 4 times you might be capable of).
+        An elegant and safe way of conserving ammo against weak opponents.</p>
+
+        <p>&ldquo;<b>ey</b>&rdquo;: Vultureseye asks "There is a &lt;foo&gt; corpse here,
+        do you want to eat it?" if you press e while standing on a corpse. This makro would let
+        you skip over that question. Whether skipping it is actually a good idea is an
+        entirely different problem...</p>
+        
+        <p>&ldquo;<b>ad</b>&rdquo;: Apply inventory item d (a pick axe or a key, for example).
+        Very useful in multiple variants; for example you might want to have one makro to activate
+        your magic whistle and another for your pick-axe.<br />
+        This is till fairly safe: As long as &ldquo;fixinv&rdquo; is on, this will work. But beware:
+        Inventory letters can <i>still</i> change. Assume that &lsquo;d&rsquo; is a pick-axe,
+        which you drop to enter a shop where you buy a potion of oil. Later you use your makro
+        again and find that you just set fire to your potion of oil... definitely annoying.
+        Fortunately the <i>really</i> destructive actions ask for confirmation first.</p>
+        
+        <p>&ldquo;<b>Zb</b>&rdquo;: Cast spell &lsquo;b&rsquo;. This would usually be something
+        like light, protection or similar. This is safe as long as you don't reorder your spells.
+        If you do, you had better change your makro, too. Otherwise you might find yourself polymorphing
+        a harmlesss creature into a dragon instead of killing it with a magic missile...</p>
+        
+        <p>This can be extended to zapping wands, and just about anything else you can think of.
+        However you are advised to use common sense and caution.</p>
+
+    </div>
+    
+    <div class="chaplinks">
+        <div class="leftlink"><a href="chapter09.html">&lt; Back: Options</a></div>
+        <div class="rightlink"><a href="chapter11.html">Next: Scoring &gt;</a></div>
+        <a href="index.html">Index</a>
+    </div>
+</body>
+</html>
