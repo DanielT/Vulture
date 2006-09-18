@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <meta content="text/html; charset=iso-8859-15" http-equiv="Content-Type" />
+    <meta name="Author" content="Daniel Thaler" />
+    <link rel="stylesheet" type="text/css" href="manual.css" />
+    <title>Vulture's manual</title>
+</head>
+
+<body>
+    <div class="chaplinks">
+        <div class="leftlink"><a href="chapter04.html">&lt; Back: Commands</a></div>
+        <div class="rightlink"><a href="chapter06.html">Next: Monsters &gt;</a></div>
+        <a href="index.html">Index</a>
+    </div>
+
+    <div id="title">
+        <h1>5. Rooms and corridors</h1>
+    </div>
+    
+    <div id="main">
+        <p class="first"><img src="img/letter_r.png" alt="R" />ooms and corridors
+        in the dungeon are either <b>lit</b> or <b>dark</b>. Any 
+        lit areas within your line of sight will be displayed; dark areas
+        are only displayed if they are within one space of 
+        you. Walls and corridors remain on the map as you explore them.<br />
+        Secret corridors are hidden. You can find them with the <b>search</b>
+        command (choose it from the context menu, or press <span class="key">s</span>).</p>
+        
+        <h2 id="doors">5.1. Doorways</h2>
+
+        <img style="float:left;" src="img/door.jpg" alt="Doorway" />
+
+        <p>Doorways connect rooms and corridors. Some doorways have no doors; you 
+        can walk right through. Others have doors in them, which may
+        be open, closed, or locked. To <b>open</b> a closed door, left-click it, use 
+        the context menu, or press <span class="key">o</span>; to <b>close</b> it again, use the
+        context menu or press <span class="key">c</span>.</p>
+
+        <p>You can get through a locked door by using a tool to 
+        pick the lock with the <span class="key">a</span> (apply) command, or by <b>kicking</b> it open (use the
+        context menu or press <span class="key">k</span>).</p>
+
+        <p>Open doors cannot be entered diagonally; you must approach
+        them straight on, horizontally or vertically. Doorways
+        without doors are not restricted in this fashion.</p>
+
+        <p>Doors can be useful for shutting out monsters.  Most 
+        monsters cannot open doors, although a few don't need to (ex. ghosts can
+        walk through doors).</p>
+
+        <p>Secret doors are hidden. You can find them with 
+        the <b>search</b> command. Once found they are in all
+        ways equivalent to normal doors.</p>
+
+
+        <h2 id="traps">5.2. Traps</h2>
+
+        <p>There are traps throughout the dungeon to snare the unwary
+        delver.  For example, you may suddenly fall
+        into a pit and be stuck for a few turns trying to climb out. Traps
+        don't appear on your map until you see one triggered by moving onto it,
+        see something fall into it, or you discover it with the <span class="key">s</span> (search) command. 
+        Monsters can fall prey to traps, too, which can be a very useful defensive
+        strategy.</p>
+
+        <p>There is a special pre-mapped branch of the dungeon based on the 
+        classic computer game &ldquo;<b>Sokoban</b>.&rdquo; The goal is to push
+        the boulders into the pits or holes. With careful foresight, 
+        it is possible to complete all of the levels according
+        to the traditional rules of Sokoban. Some allowances are permitted 
+        in case the player gets stuck; however, they will lower your luck.</p>
+        
+        
+        <h2 id="stairs">5.3. Stairs and ladders</h2>
+        
+        <img style="float:left;" src="img/stairs.jpg" alt="Stairs" />
+        
+        <p>In general, each level in the dungeon will have a staircase going up to the
+        previous level and another going down to the next level. There
+        are some exceptions though.  For instance, fairly early in the dungeon you 
+        will find a level with two down staircases, one continuing into the dungeon 
+        and the other branching into an area known as the <b>Gnomish Mines</b>. 
+        Those mines eventually hit a dead end, so after exploring them (if 
+        you choose to do so), you'll need to climb back up to the main dungeon.</p>
+        
+        <p>When you climb a set of stairs, or trigger a trap which
+        sends you to another level, the level you're leaving will be deactivated 
+        and stored in a file on disk. If you're moving to a previously visited level, 
+        it will be loaded from its file on disk and reactivated. If you're moving to 
+        a previously unexplored level, it will be created. Most random levels are
+        created from scratch, some special levels are made from a template, and
+        sometimes you'll find the remains of an earlier game (a &ldquo;bones&rdquo; level).
+        Monsters are only active on the current level; those on other levels 
+        are essentially placed into stasis.</p>
+        
+        <p>Ordinarily when you climb a set of stairs, you will arrive
+        on the corresponding staircase at your destination. 
+        However, pets (see <a href="chapter06.html">Monsters</a>) and some other monsters will follow 
+        along if they're close enough when you travel up or down stairs,
+        and occasionally one of these creatures will displace 
+        you during the climb. When that occurs, the pet or other
+        monster will arrive on the staircase and you will end up nearby.</p>
+        
+        <p>Ladders serve the same purpose as staircases,  and  the  two
+        types  of  inter-level  connections  are nearly indistinguishable
+        during game play.</p>
+        
+        
+        <h2 id="shops">5.4. Shops and shopping</h2>
+        
+        <p>Occasionally you will run across a room  with a shopkeeper
+        near the door and many items lying on the floor. You can buy
+        items by picking them up and then using the <span class="key">p</span> command. You can
+        inquire  about the price of an item prior to picking it up by using
+        the &ldquo;<b>#chat</b>&rdquo; command while standing on it. Using an item
+        prior to paying for it will incur a charge, and the shopkeeper
+        won't allow you to leave the shop until you have paid any debt
+        you owe.</p>
+
+        <p>You  can  sell items to a shopkeeper by dropping them to the
+        floor while inside a shop.  You will either be offered an  amount
+        of  gold  and  asked whether you're willing to sell, or you'll be
+        told that the shopkeeper isn't interested (generally,  your  item
+        needs  to  be  compatible with the type of merchandise carried by
+        the shop).</p>
+
+        <p>If you drop something in a shop by accident, the  shopkeeper
+        will  usually  claim ownership without offering any compensation.
+        You'll have to buy it back if you want to reclaim it.</p>
+
+        <p>Shopkeepers sometimes run out of money.  When that  happens,
+        you'll  be  offered  credit  instead of gold when you try to sell
+        something.  Credit can be used to pay for purchases,  but  it  is
+        only  good  in  the shop where it was obtained; other shopkeepers
+        won't honor it. (If you happen to find a "credit card" in the
+        dungeon, don't bother trying to use it in shops; shopkeepers will
+        not accept it.)</p>
+        
+        <p>The <span class="key">$</span> command, which reports the amount of gold you are
+        carrying (in inventory, not inside bags or boxes), will also show
+        current shop debt or credit, if any.  The &lsquo;Iu&rsquo; command lists
+        unpaid  items  (those  which  still  belong to the shop) if you are
+        carrying any.  The &lsquo;Ix&rsquo; command shows an  inventory-like  display
+        of  any  unpaid  items  which have been used up, along with other
+        shop fees, if any.</p>
+        
+        <p>Several aspects of shop behavior might be unexpected.</p>
+        <ul>
+            <li>The price of a given item can vary due to a variety of factors.</li>
+
+            <li>A  shopkeeper treats the spot immediately inside the door as if
+            it were outside the shop.</li>
+
+            <li>While the shopkeeper watches you like a hawk, he will generally
+            ignore any other customers.</li>
+
+            <li>If  a  shop  is "closed for inventory", it will not open of its
+            own accord.</li>
+
+            <li>Shops do not get restocked with new items, regardless of
+            inventory depletion.</li>
+        </ul>
+
+    </div>
+
+    <div class="chaplinks">
+        <div class="leftlink"><a href="chapter04.html">&lt; Back: Commands</a></div>
+        <div class="rightlink"><a href="chapter06.html">Next: Monsters &gt;</a></div>
+        <a href="index.html">Index</a>
+    </div>
+</body>
+</html>
