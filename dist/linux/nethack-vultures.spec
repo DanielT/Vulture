@@ -11,7 +11,7 @@ Source0:        http://www.darkarts.co.za/projects/vultures/downloads/vultures-%
 #Patch1:         %{name}-1.10.1-config.patch
 #Patch2:         %{name}-1.10.1-clawguide.patch
 #Patch3:         %{name}-1.10.1-log2stderr.patch
-#Patch4:         disable-pcmusic.diff
+Patch4:         disable-pcmusic.diff
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  SDL-devel
