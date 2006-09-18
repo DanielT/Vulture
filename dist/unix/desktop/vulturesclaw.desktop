@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=NetHack - Vulture's Claw
-Comment=A NetHack interface descended from Falcon's Eye, merged with Slash'EM
-Exec=vulturesclaw
-Icon=vulturesclaw.png
-Terminal=false
-Type=Application
-Encoding=UTF-8
-Categories=Application;Game;3DGame;PuzzleGame;
