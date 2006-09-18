@@ -1,25 +1,31 @@
 Name:           nethack-vultures
-Version:        1.10.1
-Release:        0.3
+Version:        2.1.0
+Release:        0
 Summary:        NetHack - Vulture's Eye and Vulture's Claw
 
 Group:          Amusements/Games
 License:        NetHack General Public License
 URL:            http://www.darkarts.co.za/projects/vultures/
 Source0:        http://www.darkarts.co.za/projects/vultures/downloads/vultures-%{version}/vultures-%{version}-full.tar.bz2
-Patch0:         %{name}-1.10.1-optflags.patch
-Patch1:         %{name}-1.10.1-config.patch
-Patch2:         %{name}-1.10.1-clawguide.patch
-Patch3:         %{name}-1.10.1-log2stderr.patch
+#Patch0:         %{name}-1.10.1-optflags.patch
+#Patch1:         %{name}-1.10.1-config.patch
+#Patch2:         %{name}-1.10.1-clawguide.patch
+#Patch3:         %{name}-1.10.1-log2stderr.patch
+Patch4:         disable-pcmusic.diff
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  SDL-devel
+%if %suse_version  > 930
 BuildRequires:  SDL_mixer-devel
+%else
+BuildRequires:  SDL_mixer
+%endif
 BuildRequires:  ncurses-devel
-BuildRequires:  byacc
+BuildRequires:  bison
 BuildRequires:  flex
 BuildRequires:  desktop-file-utils
 BuildRequires:  groff
+BuildRequires:  libpng-devel SDL_image-devel SDL_ttf
 Requires:       /usr/bin/bzip2
 Obsoletes:      nethack-falconseye <= 1.9.4-6.a
 
@@ -33,10 +39,13 @@ Claw, which is based on the Slash'Em core.
 
 %prep
 %setup -q -n vultures-%{version}
-%patch0 -p1
-%patch1 -p1
-%patch2
-%patch3
+#%patch0 -p1
+#%patch1 -p1
+#%patch2
+#%patch3
+%if %suse_version <= 930
+%patch4
+%endif
 sed -i -e 's|/usr/games/lib/nethackdir|%{_prefix}/games/vultureseye|g' \
     nethack/doc/{nethack,recover}.6 nethack/include/config.h
 sed -i -e 's|/var/lib/games/nethack|%{_var}/games/vultureseye|g' \
@@ -124,7 +133,8 @@ gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
 %files
 %defattr(-,root,root,-)
 %doc nethack/README nethack/dat/license nethack/dat/history nethack/dat/*help
-%doc slashem/readme.txt slashem/history.txt slashem/slamfaq.txt vultures/win/jtp/gamedata/manual/
+#%doc slashem/readme.txt slashem/history.txt slashem/slamfaq.txt vultures/win/jtp/gamedata/manual/
+%doc slashem/readme.txt slashem/history.txt slashem/slamfaq.txt
 %{_bindir}/vultures*
 %dir %{_prefix}/games/vultureseye/
 %{_prefix}/games/vultureseye/config/
@@ -159,6 +169,8 @@ gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
 %config(noreplace) %{_var}/games/vulturesclaw/perm
 %config(noreplace) %{_var}/games/vulturesclaw/logfile
 %dir %{_var}/games/vulturesclaw/save/
+%{_prefix}/games/vulturesclaw/fonts/VeraSe.ttf
+%{_prefix}/games/vultureseye/fonts/VeraSe.ttf
 
 
 %changelog
