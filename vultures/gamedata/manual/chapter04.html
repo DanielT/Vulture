@@ -1,0 +1,847 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <meta content="text/html; charset=iso-8859-15" http-equiv="Content-Type" />
+    <meta name="Author" content="Daniel Thaler" />
+    <link rel="stylesheet" type="text/css" href="manual.css" />
+    <title>Vulture's manual: Commands</title>
+</head>
+
+<body>
+    <div class="chaplinks">
+        <div class="leftlink"><a href="chapter03.html">&lt; Back: The interface</a></div>
+        <div class="rightlink"><a href="chapter05.html">Next: Rooms and corridors &gt;</a></div>
+        <a href="index.html">Index</a>
+    </div>
+
+    <div id="title">
+        <h1>4. Commands</h1>
+    </div>
+    
+    <div id="main">
+        <p class="first"><img src="img/letter_c.png" alt="C" />ommands are given
+        either with the mouse or by typing one or two characters.</p>
+
+        <p>If you left-click an object, creature or location in the main view, Vulture's Eye
+        will try to perform a <b>default action</b> for that object, creature or location.</p>
+        
+        <p class="first">The default actions are:</p>
+
+        <ul>
+            <li>click a distant location to move closer to it</li>
+            <li>click a closed door to open it</li>
+            <li>click a hostile creature next to you to attack it</li>
+            <li>at a fountain, click on yourself to take a drink</li>
+            <li>on a stairwell, click on yourself to climb it</li>
+            <li>on an object, click on yourself to pick it up</li>
+            <li>at a chest, click on yourself to loot the chest</li>
+            <li>otherwise, click on yourself to search your vicinity</li>
+        </ul>
+
+        <img style="float:left;margin:5px;" src="img/contextmenu.png" alt="Context menu" /> 
+
+        <p>You can also right-click an object, creature or location. This brings up a 
+        <b>context menu</b> which lists a number of likely commands. Click any of the 
+        command buttons in the menu to perform that command, or click outside the menu 
+        to dismiss it. For example, to kick a door, right-click it and
+        select "kick" from the menu. (You might need to move closer first.)</p>
+
+        <p>Some commands require more information, for example 
+        a direction, or an object to be used. 
+        If a command requires more information, NetHack will
+        show you a menu of choices or a command line prompt requesting information. 
+        Which one it is depends on the <b>menustyle</b> option.</p>
+
+        <p>For example, a common question like &ldquo;What do
+        you want to use? [a-zA-Z ?*]&rdquo;, asks you to choose an object you
+        are carrying. Here, &ldquo;a-zA-Z&rdquo; are the inventory letters
+        of your possible choices. Type &lsquo;?&rsquo; to see an inventory list of these items, 
+        so you can see what the letters refer to. In this example, there is
+        also a &lsquo;*&rsquo;, indicating that you may choose an object not on the list, if
+        you wanted to use something unexpected. Typing a &lsquo;*&rsquo; lists
+        your entire inventory.<br />
+        Finally, if you don't want to do this command after all, 
+        you can press the <span class="key">esc</span> key to cancel the command.</p>
+
+
+        <p>You can put a number before some commands to repeat
+        them; for example, &ldquo;n10s&rdquo; will search ten times.</p>
+
+        <p>Commands for which counts make no sense ignore them. To cancel a count or a prefix, press the ESC
+        key.</p>
+        
+        <p>Every command in Vulture's is accessible with the mouse.<br/>
+        Commands involving objects in your inventory can be acessed by opening
+        the inventory and right-clicking the object.<br />
+        Most other commands can be invoked by right-clicking on yourself or some part of the dungeon.<br />
+        Finally, a handful of rarely used commands are available only from the extended commands menu</p>
+        
+        <p>These commands (once again with the exception of a few extended commands) all have keyboard
+        shortcuts. Using these is faster than using the mouse, so you will probably want to learn them
+        eventually. The best way to go about that is to look up the key whenever you
+        find you are performing an action frequently, rather than trying to memorize them all at once.</p>
+        
+        <p>The list of keyboard commands is rather long, but it can be read
+        at any time during the game through the <b>help button</b>, 
+        which displays a menu of helpful texts.<br/>
+        Here are the commands for your reference:</p>
+
+        <h2 id="help">4.1 Getting help</h2>
+
+        <table class="keylist">
+            <colgroup><col class="col1" /><col /></colgroup>
+            <tr>
+                <td><span class="key">/</span></td>
+                <td>Tell what a symbol represents. You may choose to specify a
+                location or type a symbol (or even a whole word) to explain. Specifying
+                a location is done by a spot on the map with the mouse.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">?</span></td>
+                <td>Help menu: display one of several help texts available.</td>
+            </tr>
+
+
+            <tr>
+                <td><span class="key">&amp;</span></td>
+                <td>Tell what a command does.</td>
+            </tr>
+
+
+            <tr>
+                <td><span class="key">;</span></td>
+                <td>Show what type of thing a visible symbol corresponds to.</td>
+            </tr>
+
+
+            <tr>
+                <td><span class="key">^</span></td>
+                <td>Ask for the type of a trap you found earlier.</td>
+            </tr>
+
+
+            <tr>
+                <td><span class="key">\</span></td>
+                <td>Show what types of objects have been discovered.</td>
+            </tr>
+        </table>
+
+
+        <h2 id="moving">4.2 Moving and exploring</h2>
+
+        <table class="keylist">
+            <colgroup><col class="col1" /><col /></colgroup>
+            <tr>
+                <td><span class="key">1</span> to <span class="key">9</span></td>
+                <td>Go one step in the direction indicated (see the figure below).
+                If you can sense a monster there, you will fight the
+                monster instead. Only these one-step movement commands cause you
+                to fight monsters; the others (below) are &ldquo;safe.&rdquo;<br />
+                Movement prefixes can alter the way these keys behave.
+                <img src="img/arrows.png" alt="Movement keys" /></td>
+            </tr>
+
+            <tr>
+                <td><span class="key">m</span></td>
+                <td>Prefix: move without picking up objects or fighting (even
+                if you remember a monster there)</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">F</span></td>
+                <td>Prefix: fight a monster (even if you only guess one is there)</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">M</span></td>
+                <td>Prefix: move far, no pickup.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">g</span></td>
+                <td>Prefix: move until something interesting is found.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">G</span></td>
+                <td>Prefix: same as <span class="key">g</span>, but forking of corridors is not
+                considered interesting.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">_</span></td>
+                <td>Travel to a map location via a shortest-path algorithm.  The
+                shortest path is computed over map locations the hero  knows
+                about  (e.g. seen or previously traversed). If there is no
+                known path, a guess is made instead.  Stops on most  of  the
+                same  conditions  as the <span class="key">G</span> command, but without picking up
+                objects, similar to the <span class="key">M</span> command.<br />
+                This command is automatically invoked if you click on a non-adjacent
+                location.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">&lt;</span></td>
+                <td>Go up to the previous level (if you are on the staircase or ladder).</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">&gt;</span></td>
+                <td>Go down to the next level (if you are on the staircase or ladder).</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">c</span></td>
+                <td>Close a door.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">o</span></td>
+                <td>Open a door.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">s</span></td>
+                <td>Search for secret doors and traps around you. It usually
+                takes several tries to find something.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">ctrl</span>+<span class="key">t</span></td>
+                <td>Teleport, if you have the ability.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">j</span></td>
+                <td>Jump, if you have the ability.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">.</span></td>
+                <td>Rest, do nothing for one turn. If you want to rest for multiple turns,
+                use a count (something like &ldquo;n50.&rdquo;) rather than leaning on the key.
+                If you simply hold the key down you might miss an approaching monster and get
+                killed while resting with a count will stop automatically.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">:</span></td>
+                <td>Look at what is here.</td>
+            </tr>
+        </table>
+        
+        
+        <h2 id="inventory">4.3 Managing your inventory</h2>
+
+        <table class="keylist">
+            <colgroup><col class="col1" /><col /></colgroup>
+
+            <tr>
+                <td><span class="key">d</span></td>
+                <td>Drop something. Ex. &ldquo;d7a&rdquo; means drop seven items of
+                object a.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">D</span></td>
+                <td>Drop several things. What happens now depends on how you have set the
+                &ldquo;menustyle&rdquo; option.<br />
+                If it is set to &ldquo;full&rdquo; (default) you get to select first some types of 
+                objects, then all object in your inventory of those types are listed 
+                and you select the individual objects you wish to drop</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">i</span></td>
+                <td>Opens your inventory.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">I</span></td>
+                <td>List selected parts of your inventory. How this is done depends on the
+                &ldquo;menustyle&rdquo; option.<br />
+                By default you select the types of objects you want a list of in a menu.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">,</span></td>
+                <td>Pick up some things.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">l</span></td>
+                <td>Loot a box or bag on the floor beneath you, or the saddle
+                from a horse standing next to you.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">)</span></td>
+                <td>Tell what weapon you are wielding.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">[</span></td>
+                <td>Tell what armor you are wearing.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">=</span></td>
+                <td>Tell what rings you are wearing.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">&quot;</span></td>
+                <td>Tell what amulet you are wearing.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">(</span></td>
+                <td>Tell what tools you are using.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">*</span></td>
+                <td>Tell  what  equipment  you are using; combines the preceding
+                five type-specific commands into one.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">$</span></td>
+                <td>Count your gold pieces.</td>
+            </tr>
+        </table>
+
+
+        <h2 id="items">4.4 Using items</h2>
+
+        <table class="keylist">
+            <colgroup><col class="col1" /><col /></colgroup>
+
+            <tr>
+                <td><span class="key">alt</span>+<span class="key">2</span></td>
+                <td>Toggle two-weapon combat on or off. Note that you must use
+                suitable weapons for this type of combat, or it will be
+                automatically turned off. Same as &ldquo;<b>#twoweapon</b>&rdquo;.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">a</span></td>
+                <td>Apply (use) a tool (pick-axe, key, lamp...).</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">A</span></td>
+                <td>Remove one or more worn items, such as armor. Use <span class="key">T</span> (take
+                off) to take off only one piece of armor or <span class="key">R</span> (remove) to
+                take off only one accessory.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">alt</span>+<span class="key">a</span></td>
+                <td>Adjust inventory letters (most useful when the fixinv option is 
+                &ldquo;on&rdquo;). Same as  &ldquo;<b>#adjust</b>&rdquo;.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">alt</span>+<span class="key">d</span></td>
+                <td>Dip an object into something. Same as &ldquo;<b>#dip</b>&rdquo;.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">e</span></td>
+                <td>Eat food.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">alt</span>+<span class="key">i</span></td>
+                <td>Invoke an object's special powers. Same as &ldquo;<b>#invoke</b>&rdquo;.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">f</span></td>
+                <td>Fire one of the objects placed in your quiver. You may select
+                ammunition with a previous <span class="key">Q</span> command, or let the
+                computer pick something appropriate if autoquiver is on.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">N</span></td>
+                <td>Name an item or type of object. Same as &ldquo;<b>#name</b>&rdquo;.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">alt</span>+<span class="key">o</span></td>
+                <td>Offer a sacrifice to the gods. Same as &ldquo;<b>#offer</b>&rdquo;.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">P</span></td>
+                <td>Put on a ring or other accessory (amulet, blindfold).</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">q</span></td>
+                <td>Quaff (drink) a potion or drink from a sink or fountain if you are standing on one.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">Q</span></td>
+                <td>Select an object for your quiver. You can then throw
+                this using the <span class="key">f</span> command.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">r</span></td>
+                <td>Read a scroll or spellbook.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">R</span></td>
+                <td>Remove an accessory (ring, amulet, etc).</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">alt</span>+<span class="key">r</span></td>
+                <td>Rub a lamp or a stone. Same as &ldquo;<b>#rub</b>&rdquo;.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">t</span></td>
+                <td>Throw an object or shoot a projectile.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">T</span></td>
+                <td>Take off armor.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">w</span></td>
+                <td>Wield weapon.<br />
+                    &ldquo;w-&rdquo; - wield nothing, use your bare hands.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">W</span></td>
+                <td>Wear armor.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">x</span></td>
+                <td>Exchange your wielded weapon with the item in your alternate
+                weapon slot. The latter is used as  your secondary weapon
+                when engaging in  two-weapon combat. Note that if one of
+                these slots is empty, the exchange still takes place.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">z</span></td>
+                <td>Zap a wand. To aim at yourself, use <span class="key">.</span> for the  direction.</td>
+            </tr>
+        </table>
+
+
+        <h2 id="spells">4.5 Using Spells</h2>
+
+        <table class="keylist">
+            <colgroup><col class="col1" /><col /></colgroup>
+
+            <tr>
+                <td><span class="key">Z</span></td>
+                <td>Zap (cast) a spell.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">+</span></td>
+                <td>List the spells you know. Using this command, you can also
+                rearrange the order in which your spells are listed. They
+                are shown via a menu, and if you select a spell in that
+                menu, you'll be re-prompted for another spell to swap places
+                with it, and then have opportunity to make further exchanges.</td>
+            </tr>
+        </table>
+
+
+        <h2 id="misc">4.6 Miscellaneous commands</h2>
+
+        <table class="keylist">
+            <colgroup><col class="col1" /><col /></colgroup>
+
+            <tr>
+                <td><span class="key">tab</span></td>
+                <td>Toggle the map on and off.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">alt</span>+<span class="key">enter</span></td>
+                <td>Toggle between fullscreen and windowed mode.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">ctrl</span>+<span class="key">a</span></td>
+                <td>Redo the previous command.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">C</span></td>
+                <td>Call (name) an individual monster.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">alt</span>+<span class="key">c</span></td>
+                <td>Talk to someone. Same as &ldquo;<b>#chat</b>&rdquo;.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">ctrl</span>+<span class="key">d</span></td>
+                <td>Kick something (usually a door).</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">E</span></td>
+                <td>Engrave a message on the floor. Engraving the word
+                &ldquo;Elbereth&rdquo; will cause most monsters to not attack you
+                hand-to-hand (but if you attack, you will rub it out); this
+                is often useful to give yourself a breather.<br />
+                &ldquo;E-&rdquo; - write in the dust with your fingers.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">alt</span>+<span class="key">e</span></td>
+                <td>Advance or check weapons and spell skills. Same as &ldquo;<b>#enhance</b>&rdquo;.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">alt</span>+<span class="key">m</span></td>
+                <td>Use a monster's special ability (when polymorphed into
+                monster form). Same as &ldquo;<b>#monster</b>&rdquo;.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">O</span></td>
+                <td><a href="chapter09.html">Set options</a>. A menu showing the current option values  will
+                be displayed. You can change most values simply by selecting the
+                menu entry for the given option (ie, by typing its letter or
+                clicking  upon it).<br />
+                For the  non-boolean choices, a further menu or
+                prompt will appear once you've closed this menu. The available
+                options are listed later in  this Guidebook. Options
+                are  usually  set  before  the game rather than with the <span class="key">O</span>
+                command.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">ctrl</span>+<span class="key">O</span></td>
+                <td>Set interface options. These too are described later on.
+                The interface options are saved for you when you quit the game;
+                you do not have to edit any configuration files manually.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">p</span></td>
+                <td>Pay your shopping bill.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">ctrl</span>+<span class="key">p</span></td>
+                <td>Scroll the message window back to show earlier messages</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">ctrl</span>+<span class="key">P</span></td>
+                <td>Display the message log to see up to 256 old messages.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">alt</span>+<span class="key">p</span></td>
+                <td>Pray to the gods for help. Same as &ldquo;<b>#pray</b>&rdquo;.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">alt</span>+<span class="key">q</span></td>
+                <td>Quit without saving your game. Your score is recorded. Same as
+                &ldquo;<b>#quit</b>&rdquo;.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">ctrl</span>+<span class="key">r</span></td>
+                <td>Redraw the screen.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">S</span></td>
+                <td>Save (and suspend) the game. The game will be restored automatically
+                the next time you play.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">alt</span>+<span class="key">s</span></td>
+                <td>Sit down. Same as &ldquo;<b>#sit</b>&rdquo;.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">alt</span>+<span class="key">t</span></td>
+                <td>Vultureseye: Turn undead. Same as &ldquo;<b>#turn</b>&rdquo;.<br />
+                Vulturesclaw: Perform a role or race specific technique. Same as
+                &ldquo;<b>#technique</b>&rdquo;.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">u</span></td>
+                <td>Untrap something (trap, door, or chest). Same as &ldquo;<b>#untrap</b>&rdquo;.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">v</span></td>
+                <td>Display version number.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">V</span></td>
+                <td>Display the game history.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">alt</span>+<span class="key">w</span></td>
+                <td>Wipe off your face. Same as &ldquo;<b>#wipe</b>&rdquo;.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">X</span></td>
+                <td>Enter explore (discovery) mode, explained in its own section later.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">ctrl</span>+<span class="key">x</span></td>
+                <td>Display your name, role, race, gender, and alignment as well as the various
+                deities in your game.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">@</span></td>
+                <td>Toggle the autopickup option on and off.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">F1</span> to <span class="key">F6</span></td>
+                <td>Trigger a user-defined macro. Macros can be set up in the 
+                &ldquo;interface options&rdquo; dialog</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">PrintSc</span></td>
+                <td>Take a screenshot. (On windows use <span class="key">F12</span> instead.)<br />
+                Screenshots are saved in the game directory; you will get a messagebox informing you what
+                the name is.</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">#</span></td>
+                <td>Perform an <b>extended command</b>. As you can see, the authors of
+                NetHack used up all the letters, so this is a way to introduce the
+                less frequently used commands.</td>
+            </tr>
+
+        </table>
+        
+        <h2 id="extended">4.7 Extended commands</h2>
+        
+        <table style="border-spacing:5px;">
+            <tr>
+                <td style="font-size:13pt;">#adjust</td>
+                <td>Adjust inventory letters (most useful when the fixinv option
+                is &ldquo;on&rdquo;).</td>
+            </tr>
+
+            <tr>
+                <td style="font-size:13pt;">#chat</td>
+                <td>Talk to someone.</td>
+            </tr>
+
+            <tr>
+                <td style="font-size:13pt;">#conduct</td>
+                <td>List which challenges you have adhered to.  See the  section
+                entitled &ldquo;<a href="chapter08.html">Conduct</a>&rdquo; for details.</td>
+            </tr>
+
+            <tr>
+                <td style="font-size:13pt;">#dip</td>
+                <td>Dip an object into something.</td>
+            </tr>
+
+            <tr>
+                <td style="font-size:13pt;">#enhance</td>
+                <td>Advance or check weapons and spell skills.</td>
+            </tr>
+
+            <tr>
+                <td style="font-size:13pt;">#force</td>
+                <td>Force a lock.</td>
+            </tr>
+
+            <tr>
+                <td style="font-size:13pt;">#invoke</td>
+                <td>Invoke an object's special powers.</td>
+            </tr>
+
+            <tr>
+                <td style="font-size:13pt;">#jump</td>
+                <td>Jump to another location.</td>
+            </tr>
+
+            <tr>
+                <td style="font-size:13pt;">#loot</td>
+                <td>Loot  a  box  or bag on the floor beneath you, or the saddle
+               from a horse standing next to you.</td>
+            </tr>
+
+            <tr>
+                <td style="font-size:13pt;">#monster</td>
+                <td>Use a monster's special ability (when polymorphed into monster form).</td>
+            </tr>
+
+            <tr>
+                <td style="font-size:13pt;">#name</td>
+                <td>Name an item or type of object.</td>
+            </tr>
+
+            <tr>
+                <td style="font-size:13pt;">#offer</td>
+                <td>Offer a sacrifice to the gods.</td>
+            </tr>
+
+            <tr>
+                <td style="font-size:13pt;">#pray</td>
+                <td>Pray to the gods for help.</td>
+            </tr>
+
+            <tr>
+                <td style="font-size:13pt;">#quit</td>
+                <td>Quit the program without saving your game.</td>
+            </tr>
+
+            <tr>
+                <td style="font-size:13pt;">#ride</td>
+                <td>Ride (or stop riding) a monster.</td>
+            </tr>
+
+            <tr>
+                <td style="font-size:13pt;">#rub</td>
+                <td>Rub a lamp or a stone.</td>
+            </tr>
+
+            <tr>
+                <td style="font-size:13pt;">#sit</td>
+                <td>Sit down.</td>
+            </tr>
+
+            <tr>
+                <td style="font-size:13pt;">#technique</td>
+                <td>Perform a role or race specific technique. <b>(Vulturesclaw only)</b></td>
+            </tr>
+
+            <tr>
+                <td style="font-size:13pt;">#turn</td>
+                <td>Turn undead.</td>
+            </tr>
+
+            <tr>
+                <td style="font-size:13pt;">#twoweapon</td>
+                <td>Toggle  two-weapon combat on or off.  Note that you must use
+                suitable weapons for this type of combat, or it will be automatically turned off.</td>
+            </tr>
+
+            <tr>
+                <td style="font-size:13pt;">#untrap</td>
+                <td>Untrap something (trap, door, or chest).</td>
+            </tr>
+
+            <tr>
+                <td style="font-size:13pt;">#version</td>
+                <td>Print compile time options for this version of NetHack.</td>
+            </tr>
+
+            <tr>
+                <td style="font-size:13pt;">#wipe</td>
+                <td>Wipe off your face.</td>
+            </tr>
+
+            <tr>
+                <td style="font-size:13pt;">#?</td>
+                <td>Help menu:  get the list of available extended commands.</td>
+            </tr>
+        </table>
+        
+        
+        <h2 id="menu">4.8 Menu shortcuts</h2>
+
+        <table class="keylist">
+            <colgroup><col class="col1" /><col /></colgroup>
+
+            <tr>
+                <td><span class="key">home</span></td>
+                <td>Jump to the first page</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">end</span></td>
+                <td>Jump to the last page</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">PgDn</span></td>
+                <td>Scroll down one page</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">PgUp</span></td>
+                <td>Scroll up one page</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">.</span></td>
+                <td>Select all (Multiple selection menus only)</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">-</span></td>
+                <td>Unselect all (Multiple selection menus only)</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">@</span></td>
+                <td>Invert the entire selection (Multiple selection menus only)</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">,</span></td>
+                <td>Select everything on the current page (Multiple selection menus only)</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">\</span></td>
+                <td>Unselect everything on the current page (Multiple selection menus only)</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">~</span></td>
+                <td>Invert the selection on the current page (Multiple selection menus only)</td>
+            </tr>
+
+            <tr>
+                <td><span class="key">:</span></td>
+                <td>Search for a menuitem by name</td>
+            </tr>
+        </table>
+
+
+    </div>
+    
+    <div class="chaplinks">
+        <div class="leftlink"><a href="chapter03.html">&lt; Back: The interface</a></div>
+        <div class="rightlink"><a href="chapter05.html">Next: Rooms and corridors &gt;</a></div>
+        <a href="index.html">Index</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <meta content="text/html; charset=iso-8859-15" http-equiv="Content-Type" />
+    <meta name="Author" content="Daniel Thaler" />
+    <link rel="stylesheet" type="text/css" href="manual.css" />
+    <title>Vulture's manual</title>
+</head>
+
+<body>
+    <div class="chaplinks">
+        <div class="leftlink"><a href="chapter02.html">&lt; Back: What is going on here?</a></div>
+        <div class="rightlink"><a href="chapter04.html">Next: Commands &gt;</a></div>
+        <a href="index.html">Index</a>
+    </div>
+
+    <div id="title">
+        <h1>3. The Interface</h1>
+    </div>
+    
+    <div id="main">
+        <p class="first"><img src="img/letter_o.png" alt="O" />n the screen is a view of a section of the current
+        dungeon level; as you explore more of the level, it appears on the
+        screen in front of you. A new dungeon is generated every time you play; even
+        the authors still find it an entertaining and exciting game
+        despite having won several times.</p>
+        
+        <p>In the corners of the screen you will also see your current status,
+        2 toolbars that allow access to important commands and the minimap which
+        keeps you from getting lost. You can disable the minimap and the toolbars
+        if you want to.</p>
+        
+        <img style="margin:auto" src="img/gamewin1.png" alt="The game window" />
+        
+        <p>Traditionally NetHack and SLASH'EM use a text-mode interface that displays
+        single characters for every element of the dungeon. Vulture's replaces this
+        with a fully graphical view of the dungeon, which makes learning the game easier.
+        However the fully graphical view has the disadvantage that the level can no longer
+        be displayed completely on the screen. To offset this disadvantage Vulture's
+        has a map and a minimap.</p>
+
+
+        <h2 id="map">2.1 The map</h2>
+
+        <img style="margin:auto" src="img/map.png" alt="The map" />
+        <p>The map shows you an abstract view of the entire level.<br />
+        Monsters are represented by green circles containing a letter denoting the monster's class.<br />
+        Objects are yellow and also contain a letter to indicate the type of object.<br />
+        Traps are displayed in red. Since nethack traditionally uses the '^'
+        symbol for all traps the trap glyphs on the map instead contain tiny images to make it possible
+        to distinguish between them visually.<br />
+        Other parts of the dungeon such as fountains, altars and sinks use small graphics</p>
+        
+        <p>You can move around and perform actions while the map open: clicking on an empty spot will
+        cause you to move there; right-clicking anywhere will bring up the context-menu for that spot
+        and so on.</p>
+
+
+        <h2 id="minimap">2.2 The minimap</h2>
+
+        <img style="float:left;" src="img/minimap.png" alt="The minimap" />
+        <p>The minimap is another means for you to keep an eye on your surroundings.
+        For example it allows you to know about monsters that are already in sight,
+        but not yet within the area shown in the main view. The minimap uses colored
+        dots to represent different items of interest:</p>
+
+        <ul>
+            <li>You are shown in white</li>
+            <li>Your pet is green</li>
+            <li>Other inhabitants of the dungeon (even peaceful ones) are red</li>
+            <li>Stairs are gray</li>
+            <li>Doors are brown</li>
+        </ul>
+
+        <p class="first">Left-click on a spot on the minimap to move there.<br />
+        Right-click anywhere on the minimap to center the main view on that spot.</p>
+
+        <p class="first">You may disable the minimap in the interface options if you don't need it.</p>
+
+
+        <h2 id="statuswin">2.3 The status window</h2>
+        
+        <p>The statuswindow contains several cryptic pieces of information
+        describing your current status. Here are explanations of what the
+        various status items mean:</p>
+        
+        <img style="margin:auto;" src="img/statusbar.png" alt="statusbar" />
+
+        <table style="border-spacing:5px;">
+            <tr>
+                <td class="cell1">Rank</td>
+                <td>Your character's name and professional ranking (based on the
+                experience level).</td>
+            </tr>
+            
+            <tr>
+                <td class="cell1">Strength</td>
+                <td>A  measure of your character's strength; one of your six
+                basic attributes.  A human character's attributes can range
+                from 3 to 18 inclusive; non-humans may exceed these limits
+                (occasionally you may get super-strengths of the form 18/xx,
+                and  magic  can  also  cause attributes to exceed the normal
+                limits).  The higher your strength, the  stronger  you  are.
+                Strength  affects  how  successfully  you  perform  physical
+                tasks, how much damage you do in combat, and how  much  loot
+                you can carry.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">Dexterity</td>
+                <td>Dexterity  affects  your  chances to hit in combat, to avoid
+                traps, and do other tasks requiring agility or manipulation
+                of objects.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">Constitution</td>
+                <td>Constitution  affects  your ability to recover from injuries
+                and other strains on your stamina.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">Intelligence</td>
+                <td>Intelligence affects your ability to cast spells and read
+                spellbooks.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">Wisdom</td>
+                <td>Wisdom comes from your practical experience (especially when
+                dealing with magic). It affects your magical energy.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">Charisma</td>
+                <td>Charisma affects how certain creatures react toward you. In
+                particular, it can affect the prices shopkeepers offer you.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">Alignment</td>
+                <td>Lawful, Neutral, or Chaotic.  Often, Lawful is taken as good
+                and Chaotic as evil, but legal and ethical do not always coincide.
+                Your alignment influences how other monsters  react
+                toward you.  Monsters of a like alignment are more likely to
+                be non-aggressive, while those of an opposing alignment  are
+                more likely to be seriously offended at your presence.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">Dungeon Level</td>
+                <td>How deep you are in the dungeon. You start at level one and
+                the number increases as you go deeper into the dungeon.
+                The Amulet of Yendor is reputed to be somewhere
+                beneath the twentieth level.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">Gold</td>
+                <td>The number of gold pieces you are openly carrying. Gold
+                which you have concealed in containers is not counted.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">Hit Points</td>
+                <td>Your current and maximum hit points. Hit points indicate
+                how  much  damage you can take before you die. The more you
+                get hit in a fight, the lower they get. You can regain hit
+                points  by  resting, or by using certain magical items or
+                spells. The number in parentheses is the maximum number
+                your hit points can reach.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">Power</td>
+                <td>Spell points. This tells you how much mystic energy (mana)
+                you have available for spell casting. Again, resting will
+                regenerate the amount available.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">Armor Class</td>
+                <td>A measure of how effectively your armor stops blows from
+                unfriendly creatures. The lower this number is, the more
+                effective the armor; it is quite possible to have negative
+                armor class.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">Experience</td>
+                <td>Your current experience level and experience points. As you
+                adventure,  you  gain experience points.  At certain experience
+                point totals, you gain an experience level. The more
+                experienced you are, the better you fight and withstand magical
+                attacks. Many dungeons show only your experience level
+                here.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">Time</td>
+                <td>The number of turns elapsed so far, displayed if you have
+                the time option set.</td>
+            </tr>
+
+            <tr>
+                <td class="cell1">Hunger status</td>
+                <td>Your current hunger status, ranging from <b>Satiated</b> down to
+                <b>Fainting</b>. If your hunger status is normal, it is not displayed.</td>
+            </tr>
+        </table>
+
+
+        <p>Additional status flags may appear below the hunger status:
+        <b>Conf</b> when you're confused, <b>FoodPois</b> or <b>Ill</b> when sick, <b>Blind</b> when
+        you can't see, <b>Stun</b> when stunned, and <b>Hallu</b> when hallucinating.</p>
+        
+        <p>Some items in your staus display will be colored. The colors range from
+        green (take note) to red (you are about to die!)</p>
+
+
+        <h2 id="messagewin">2.4 The message window</h2>
+        
+        <img style="margin:auto" src="img/messages.png" alt="messages" />
+        <p>The message window at the top of the screen is used for things that are
+        impossible to represent visually. The message window displays 3 lines of
+        messages by default. This works well even for small window sizes, however
+        you may wish to increase this if you are playing Vulture's on a large screen.</p>
+        
+        <p>Messages in the message window start out white and slowly fade over time,
+        until they vanish completely after 16 turns. If you wish to view older messages,
+        you can open the message log which shows the last 256 messages.</p>
+        
+        
+        <h2 id="toolbars">2.5 The toolbars</h2>
+        
+        <img src="img/tb1.png" alt="messages" />
+        <p>The upper of the two toolbars is called the action-toolbar. It's buttons
+        (from left to right) are:</p>
+        <table style="border-spacing:5px;">
+            <tr>
+                <td class="cell1">Open Inventory</td>
+                <td>Shows the contents of your backpack. This is the same as pressing
+                <span class="key">i</span>.</td>
+            </tr>
+            <tr>
+                <td class="cell1">Show map</td>
+                <td>Opens the map. Same as <span class="key">tab</span></td>
+            </tr>
+            <tr>
+                <td class="cell1">Cast spell</td>
+                <td>Cast one of your spells. Same as <span class="key">Z</span></td>
+            </tr>
+            <tr>
+                <td class="cell1">Extended commands</td>
+                <td>Show a menu of all <a href="chapter04.html#extended">extended commands</a>.
+                Same as <span class="key">#</span></td>
+            </tr>
+            <tr>
+                <td class="cell1">Show discoveries</td>
+                <td>Display a list of all items whose nature you have discovered.
+                Same as <span class="key">\</span></td>
+            </tr>
+        </table>
+
+        <img style="margin-top:5px;" src="img/tb2.png" alt="messages" />
+        <p>The lower of the two toolbars is called the help toolbar. It's buttons
+        (from left to right) are:</p>
+        <table style="border-spacing:5px;">
+            <tr>
+                <td class="cell1">Look at</td>
+                <td>After clicking look at, you may select any object to get a description of it. Press
+                <span class="key">esc</span> to leave "look at" mode again. This is the same as pressing
+                <span class="key">/</span>.</td>
+            </tr>
+            <tr>
+                <td class="cell1">Show message log</td>
+                <td>Opens the message log which contains the 256 most recent messages.
+                Same as <span class="key">ctrl</span>+<span class="key">P</span></td>
+            </tr>
+            <tr>
+                <td class="cell1">Options</td>
+                <td>View or change game options. Same as <span class="key">O</span></td>
+            </tr>
+            <tr>
+                <td class="cell1">Interface options</td>
+                <td>View or change interface options.
+                Same as <span class="key">ctrl</span>+<span class="key">O</span></td>
+            </tr>
+            <tr>
+                <td class="cell1">View help</td>
+                <td>Display a list of the ingame help topics.
+                Same as <span class="key">?</span></td>
+            </tr>
+        </table>
+
+        <p>Both toolbars may be disabled seperately in the interface options, if you prefer
+        to use the keyboard shortcuts</p>
+
+    </div>
+
+    <div class="chaplinks">
+        <div class="leftlink"><a href="chapter02.html">&lt; Back: What is going on here?</a></div>
+        <div class="rightlink"><a href="chapter04.html">Next: Commands &gt;</a></div>
+        <a href="index.html">Index</a>
+    </div>
+</body>
+</html>

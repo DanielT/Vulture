@@ -1,0 +1,72 @@
+#!/bin/sh
+
+SRC_ROOT=$1
+DST_ROOT=$2
+CUSTOM_DATA=$3
+
+LIB_DIR=/usr/lib
+
+LIB_SDL=libSDL-1.2.0.dylib
+LIB_SDLIMAGE=libSDL_image-1.2.0.dylib
+LIB_SDLMIXER=libSDL_mixer-1.2.0.dylib
+LIB_SDLTTF=libSDL_ttf-2.0.0.dylib
+LIB_PNG=libpng.3.dylib
+
+GAME_DIR=$SRC_ROOT/lib/vultureseyedir
+
+APP_DIR=$DST_ROOT/VulturesEye.app
+APP_GAMERESOURCES=$APP_DIR/vultureseyedir
+APP_STARTDIR=$APP_DIR/Contents
+APP_APPRESOURCES=$APP_DIR/Contents/Resources
+APP_APPSTART=$APP_DIR/Contents/MacOS
+APP_APPLIB=$APP_DIR/Contents/Frameworks
+
+DMG_NAME=$DST_ROOT/VulturesEye-snapshot.dmg
+
+
+REAL_EXECUTABLE=$APP_GAMERESOURCES/vultureseye
+
+LOCAL_LIBREF=@executable_path/../Frameworks
+
+#todo: create only if not yet exists $APP_DIR
+# mkdir $APP_DIR
+
+# clean up
+rm -f $DMG_NAME
+rm -rf $APP_DIR/*
+
+# create the structure
+mkdir -p $APP_STARTDIR
+mkdir -p $APP_APPLIB
+mkdir -p $APP_APPSTART
+mkdir -p $APP_APPRESOURCES
+mkdir -p $APP_GAMERESOURCES
+
+# copy the normal game resources
+cp -r $GAME_DIR/* $APP_GAMERESOURCES
+
+# copy plist
+cp $CUSTOM_DATA/Info-nethack.plist $APP_STARTDIR/Info.plist
+
+# copy icon(s)
+cp $CUSTOM_DATA/vultureseye.icns $APP_APPRESOURCES 
+
+# copy starter
+cp $CUSTOM_DATA/vultureseye $APP_APPSTART
+chmod u+x $APP_APPSTART/vultureseye
+
+# copy needed libraries
+cp $LIB_DIR/$LIB_SDL $APP_APPLIB/$LIB_SDL
+cp $LIB_DIR/$LIB_SDLIMAGE $APP_APPLIB/$LIB_SDLIMAGE
+cp $LIB_DIR/$LIB_SDLMIXER $APP_APPLIB/$LIB_SDLMIXER
+cp $LIB_DIR/$LIB_SDLTTF $APP_APPLIB/$LIB_SDLTTF
+
+# do the relink stuff
+install_name_tool -change $LIB_DIR/$LIB_SDL $LOCAL_LIBREF/$LIB_SDL $REAL_EXECUTABLE 
+install_name_tool -change $LIB_DIR/$LIB_SDLIMAGE $LOCAL_LIBREF/$LIB_SDLIMAGE $REAL_EXECUTABLE 
+install_name_tool -change $LIB_DIR/$LIB_SDLMIXER $LOCAL_LIBREF/$LIB_SDLMIXER $REAL_EXECUTABLE 
+install_name_tool -change $LIB_DIR/$LIB_SDLTTF $LOCAL_LIBREF/$LIB_SDLTTF $REAL_EXECUTABLE 
+install_name_tool -change $LIB_DIR/$LIB_PNG $LOCAL_LIBREF/$LIB_PNG $REAL_EXECUTABLE 
+
+# build the DMG
+hdiutil create -srcfolder $APP_DIR -format UDZO -imagekey zlib-level=9 $DMG_NAME

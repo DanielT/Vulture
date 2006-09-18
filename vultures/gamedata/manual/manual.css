@@ -1,0 +1,160 @@
+body {
+    background-image:url(img/paperbg.jpg);
+    margin:0px;
+    padding:0px;
+    font-size:12pt;
+}
+
+img {
+    margin:0px;
+    padding:0px;
+    display:block;
+    border:0px;
+}
+
+#title {
+    display:block;
+    text-align:center;
+    width:100%;
+    border-bottom:2px solid grey;
+    font-family:sans-serif;
+    margin:0px;
+    padding:0px;
+}
+
+
+#title h1 {
+    font-size:24pt;
+    margin:12px;
+    padding:0px;
+}
+
+#title h2 {
+    font-size:18pt;
+    margin-top:12px;
+    margin-bottom:0px;
+    padding:0px;
+}
+
+#title p {
+    margin:0px;
+    margin-bottom:12px;
+    padding:0px;
+}
+
+#main {
+    padding:6px;
+    padding-left:12px;
+}
+
+#main h2 {
+    margin-top:2.5em;
+    clear:both;
+}
+
+#main p {
+    text-indent:2em;
+}
+
+#main .first {
+    text-indent:0;
+}
+
+#main .first img {
+    margin-bottom:5px;
+    float: left;
+}
+
+#main .racelist li {
+    margin-top:3px;
+}
+
+#main ol li {
+    font-size:13pt;
+    margin-top:5px;
+}
+
+#main ol ol li {
+    font-size:12pt;
+    margin-top:0px;
+}
+
+#main ol ol {
+/*     margin:0px; */
+    padding:0px;
+    list-style-position:inside;
+}
+
+#main ol ol ol {
+    margin-left:1.5em;
+    padding:0px;
+    list-style-position:inside;
+}
+
+.chaplinks {
+    display:block;
+    background-color: lightgrey;
+    width:100%;
+    text-align:center; 
+    margin:0;
+    padding:0px;
+}
+
+.chaplinks .leftlink {
+    text-align:left;
+    float:left;
+    margin-left:5px;
+}
+
+.chaplinks .rightlink {
+    text-align:right;
+    float:right;
+    margin-right:5px;
+}
+
+.proftbl {
+    width:100%;
+    table-layout:fixed;
+    border-spacing:10px;
+}
+
+.proftbl td img {
+    float:left;
+}
+
+.keylist {
+    border-spacing:9px;
+}
+
+.keylist .col1 {
+    width:93px;
+}
+
+ tr .key {
+    border:1px solid black;
+    padding:1px 5px 1px 5px;
+    font-size:13pt;
+    font-weight:900;
+}
+
+.key {
+    border:1px solid black;
+    padding:0px 3px 0px 3px;
+    font-size:12pt;
+    font-weight:700;
+}
+
+#main ul {
+    clear:both;
+}
+
+#main .cmdlist li {
+    margin-top:3px;
+}
+
+table tr .cell1 {
+    font-weight:700;
+    font-size:13pt;
+    white-space:nowrap;
+    vertical-align:top;
+}
