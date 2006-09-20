@@ -58,7 +58,7 @@ SDL_Surface *vultures_load_surface(char *srcbuf, unsigned int buflen)
     img = NULL;
 
     /* memory region must contain a png file */
-    if (png_sig_cmp((char *)srcbuf, 0, PNG_BYTES_TO_CHECK))
+    if (png_sig_cmp((unsigned char *)srcbuf, 0, PNG_BYTES_TO_CHECK))
         return NULL;
 
     /* Create the PNG loading context structure */
