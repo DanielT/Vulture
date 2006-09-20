@@ -1,0 +1,67 @@
+--- ../vultures-2.1.0.orig/nethack/include/unixconf.h	2006-06-06 13:23:33.000000000 -0600
++++ ./nethack/include/unixconf.h	2006-09-19 11:57:57.000000000 -0600
+@@ -32,12 +32,12 @@
+ 
+ 
+ /* define any of the following that are appropriate */
+-#define SVR4		/* use in addition to SYSV for System V Release 4 */
++/* #define SVR4 */		/* use in addition to SYSV for System V Release 4 */
+ 			/* including Solaris 2+ */
+ #define NETWORK		/* if running on a networked system */
+ 			/* e.g. Suns sharing a playground through NFS */
+ /* #define SUNOS4 */	/* SunOS 4.x */
+-/* #define LINUX */     /* Another Unix clone */
++#define LINUX		/* Another Unix clone */
+ /* #define CYGWIN32 */	/* Unix on Win32 -- use with case sensitive defines */
+ /* #define GENIX */	/* Yet Another Unix Clone */
+ /* #define HISX */	/* Bull Unix for XPS Machines */
+@@ -102,7 +102,7 @@
+  * If you want the static parts of your playground on a read-only file
+  * system, define VAR_PLAYGROUND to be where the variable parts are kept.
+  */
+-/* #define VAR_PLAYGROUND "/var/lib/games/nethack" */
++#define VAR_PLAYGROUND "/var/games/nethack"
+ 
+ 
+ /*
+@@ -132,7 +132,7 @@
+  * "extra output" method is used, but not all systems provide access to
+  * a fine-grained timer.
+  */
+-/* #define TIMED_DELAY */	/* usleep() */
++#define TIMED_DELAY 	/* usleep() */
+ #endif
+ 
+ /*
+@@ -189,7 +189,8 @@
+ #   endif
+ #  endif
+ # else
+-#define DEF_MAILREADER	"/bin/mail"
++/* SUSE Linux mail reader is /usr/bin/mail not /bin/mail */
++#define DEF_MAILREADER	"/usr/bin/mail"
+ # endif
+ #endif
+ 
+--- ../vultures-2.1.0.orig/nethack/sys/unix/Makefile.top	2006-06-06 13:23:32.000000000 -0600
++++ ./nethack/sys/unix/Makefile.top	2006-09-19 12:02:21.000000000 -0600
+@@ -35,8 +35,8 @@
+ # therefore there should not be anything in GAMEDIR that you want to keep
+ # (if there is, you'll have to do the installation by hand or modify the
+ # instructions)
+-GAMEDIR  = $(PREFIX)/games/lib/$(GAME)dir
+-VARDIR  = $(GAMEDIR)
++GAMEDIR  = /usr/lib/nethack
++VARDIR  = /var/games/nethack
+ SHELLDIR = $(PREFIX)/games
+ 
+ # per discussion in Install.X11 and Install.Qt
+@@ -48,7 +48,7 @@
+ # for BeOS
+ # VARDATND = beostiles
+ # for Gnome
+-# VARDATND = x11tiles pet_mark.xbm rip.xpm mapbg.xpm
++VARDATND = x11tiles pet_mark.xbm rip.xpm mapbg.xpm
+ 
+ VARDATD = data oracles options quest.dat rumors
+ VARDAT = $(VARDATD) $(VARDATND)

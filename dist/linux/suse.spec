@@ -7,11 +7,12 @@ Group:          Amusements/Games
 License:        NetHack General Public License
 URL:            http://www.darkarts.co.za/projects/vultures/
 Source0:        http://www.darkarts.co.za/projects/vultures/downloads/vultures-%{version}/vultures-%{version}-full.tar.bz2
-#Patch0:         %{name}-1.10.1-optflags.patch
-#Patch1:         %{name}-1.10.1-config.patch
-#Patch2:         %{name}-1.10.1-clawguide.patch
-#Patch3:         %{name}-1.10.1-log2stderr.patch
+Patch0:         suse-nethack-config.diff
+Patch1:         suse-nethack-decl.patch
+Patch2:         suse-nethack-gzip.patch
+Patch3:         suse-nethack-misc.patch
 Patch4:         disable-pcmusic.diff
+Patch5:         suse-nethack-syscall.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  SDL-devel
@@ -39,10 +40,13 @@ Claw, which is based on the Slash'Em core.
 
 %prep
 %setup -q -n vultures-%{version}
-#%patch0 -p1
-#%patch1 -p1
+%if %suse_version
+%patch0 
+%patch1
 #%patch2
 #%patch3
+%patch5
+%endif
 %if %suse_version <= 930
 %patch4
 %endif
@@ -144,6 +148,10 @@ gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
 %{_prefix}/games/vultureseye/music/
 %{_prefix}/games/vultureseye/nhdat
 %{_prefix}/games/vultureseye/sound/
+%{_prefix}/games/vultureseye/mapbg.xpm
+%{_prefix}/games/vultureseye/pet_mark.xbm
+%{_prefix}/games/vultureseye/rip.xpm
+%{_prefix}/games/vultureseye/x11tiles
 %attr(2755,root,games) %{_prefix}/games/vultureseye/vultureseye
 %dir %{_prefix}/games/vulturesclaw/
 %{_prefix}/games/vulturesclaw/config/
@@ -174,21 +182,12 @@ gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
-* Mon Nov 21 2005 Karen Pease <meme@daughtersoftiresias.org> - 1.10.1-0.3
-- Applied patch 3 (log2stderr)
+* Tue Sep 19 2006 Boyd Gerber <gerberb@zenez.com> - 2.1.0 
+- Patches for SUSE Linux/OpenSUSE Linux
+- Applied patch 0 (suse-nethack-config.diff)
+- Applied patch 1 (suse-nethack-decl.patch)
+- Applied patch 2 (suse-nethack-gzip.patch)
+- Applied patch 3 (suse-nethack-misc.patch)
+- Applied patch 4 (disable-pcmusic.diff)
+- Applied patch 5 (suse-nethack-syscall.patch)
 
-* Tue Nov 16 2005 Karen Pease <meme@daughtersoftiresias.org> - 1.10.1-0.2
-- Upped revision
-- Removed timidity++ dep
-- Fixed manual installation
-- Put stderr patch back in.
-
-* Tue Nov 15 2005 Karen Pease <meme@daughtersoftiresias.org> - 1.10.1-0.1
-- Took over maintainership of package
-- Handled TODOs
-
-* Tue Nov 15 2005 Ville Skyttä <ville.skytta at iki.fi> - 1.10.1-0.1
-- 1.10.1, log crash fix applied upstream.
-
-* Mon Nov  7 2005 Ville Skyttä <ville.skytta at iki.fi> - 1.10.0-0.1
-- First build, based on my, Karen Pease's and Luke Macken's related work.
