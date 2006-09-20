@@ -7,11 +7,11 @@ Group:          Amusements/Games
 License:        NetHack General Public License
 URL:            http://www.darkarts.co.za/projects/vultures/
 Source0:        http://www.darkarts.co.za/projects/vultures/downloads/vultures-%{version}/vultures-%{version}-full.tar.bz2
-Patch0:         suse-nethack-config.diff
+Patch0:         suse-nethack-config.patch
 Patch1:         suse-nethack-decl.patch
 Patch2:         suse-nethack-gzip.patch
 Patch3:         suse-nethack-misc.patch
-Patch4:         disable-pcmusic.diff
+Patch4:         disable-pcmusic.patch
 Patch5:         suse-nethack-syscall.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -184,10 +184,10 @@ gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
 %changelog
 * Tue Sep 19 2006 Boyd Gerber <gerberb@zenez.com> - 2.1.0 
 - Patches for SUSE Linux/OpenSUSE Linux
-- Applied patch 0 (suse-nethack-config.diff)
+- Applied patch 0 (suse-nethack-config.patch)
 - Applied patch 1 (suse-nethack-decl.patch)
 - Applied patch 2 (suse-nethack-gzip.patch)
 - Applied patch 3 (suse-nethack-misc.patch)
-- Applied patch 4 (disable-pcmusic.diff)
+- Applied patch 4 (disable-pcmusic.patch)
 - Applied patch 5 (suse-nethack-syscall.patch)
 
