@@ -11,18 +11,32 @@ Patch0:         suse-nethack-config.patch
 Patch1:         suse-nethack-decl.patch
 Patch2:         suse-nethack-gzip.patch
 Patch3:         suse-nethack-misc.patch
-Patch4:         disable-pcmusic.patch
+Patch4:         disable-pcmusic.diff
 Patch5:         suse-nethack-syscall.patch
+Patch6:         suse-nethack-yacc.patch
+Patch7:         suse-nethack-gametiles.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  SDL-devel
+#%if %{?suse_version:1}0
+#%endif
+%if 0%{?suse_version}
 %if %suse_version  > 930
 BuildRequires:  SDL_mixer-devel
 %else
 BuildRequires:  SDL_mixer
 %endif
-BuildRequires:  ncurses-devel
+%else
+BuildRequires:  SDL_ttf-devel
+BuildRequires:  SDL_mixer-devel
+%endif
+%if 0%{?suse_version}
 BuildRequires:  bison
+%endif
+%if 0%{?fedora_version}
+BuildRequires:  byacc
+%endif
+BuildRequires:  ncurses-devel
 BuildRequires:  flex
 BuildRequires:  desktop-file-utils
 BuildRequires:  groff
@@ -40,16 +54,21 @@ Claw, which is based on the Slash'Em core.
 
 %prep
 %setup -q -n vultures-%{version}
+%if %{?suse_version:1}0
 %if %suse_version
 %patch0 
 %patch1
-#%patch2
-#%patch3
+%patch2
+%patch3
 %patch5
 %endif
 %if %suse_version <= 930
 %patch4
 %endif
+%patch6
+%endif
+#:w
+%patch7
 sed -i -e 's|/usr/games/lib/nethackdir|%{_prefix}/games/vultureseye|g' \
     nethack/doc/{nethack,recover}.6 nethack/include/config.h
 sed -i -e 's|/var/lib/games/nethack|%{_var}/games/vultureseye|g' \
@@ -148,10 +167,6 @@ gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
 %{_prefix}/games/vultureseye/music/
 %{_prefix}/games/vultureseye/nhdat
 %{_prefix}/games/vultureseye/sound/
-%{_prefix}/games/vultureseye/mapbg.xpm
-%{_prefix}/games/vultureseye/pet_mark.xbm
-%{_prefix}/games/vultureseye/rip.xpm
-%{_prefix}/games/vultureseye/x11tiles
 %attr(2755,root,games) %{_prefix}/games/vultureseye/vultureseye
 %dir %{_prefix}/games/vulturesclaw/
 %{_prefix}/games/vulturesclaw/config/
@@ -184,10 +199,10 @@ gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
 %changelog
 * Tue Sep 19 2006 Boyd Gerber <gerberb@zenez.com> - 2.1.0 
 - Patches for SUSE Linux/OpenSUSE Linux
-- Applied patch 0 (suse-nethack-config.patch)
+- Applied patch 0 (suse-nethack-config.diff)
 - Applied patch 1 (suse-nethack-decl.patch)
 - Applied patch 2 (suse-nethack-gzip.patch)
 - Applied patch 3 (suse-nethack-misc.patch)
-- Applied patch 4 (disable-pcmusic.patch)
+- Applied patch 4 (disable-pcmusic.diff)
 - Applied patch 5 (suse-nethack-syscall.patch)
 

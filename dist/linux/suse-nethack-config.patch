@@ -56,12 +56,3 @@
  SHELLDIR = $(PREFIX)/games
  
  # per discussion in Install.X11 and Install.Qt
-@@ -48,7 +48,7 @@
- # for BeOS
- # VARDATND = beostiles
- # for Gnome
--# VARDATND = x11tiles pet_mark.xbm rip.xpm mapbg.xpm
-+VARDATND = x11tiles pet_mark.xbm rip.xpm mapbg.xpm
- 
- VARDATD = data oracles options quest.dat rumors
- VARDAT = $(VARDATD) $(VARDATND)

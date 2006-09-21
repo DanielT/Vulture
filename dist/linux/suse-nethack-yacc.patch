@@ -1,0 +1,26 @@
+--- ../vultures-2.1.0.orig/nethack/sys/unix/Makefile.utl
++++ ./nethack/sys/unix/Makefile.utl
+@@ -101,8 +101,9 @@
+ 
+ # yacc/lex programs to use to generate *_comp.h, *_lex.c, and *_yacc.c.
+ # if, instead of yacc/lex you have bison/flex, comment/uncomment the following.
+-YACC     = yacc
++YACC     = bison -y
+ LEX      = lex
++# YACC     = yacc
+ # YACC     = bison -y
+ # YACC     = byacc
+ # LEX      = flex
+--- ../vultures-2.1.0.orig/slashem/sys/unix/Makefile.utl
++++ ./slashem/sys/unix/Makefile.utl
+@@ -101,8 +101,9 @@
+ 
+ # yacc/lex programs to use to generate *_comp.h, *_lex.c, and *_yacc.c.
+ # if, instead of yacc/lex you have bison/flex, comment/uncomment the following.
+-YACC     = yacc
++YACC     = bison -y
+ LEX      = lex
++# YACC     = yacc
+ # YACC     = bison -y
+ # YACC     = byacc
+ # LEX      = flex
