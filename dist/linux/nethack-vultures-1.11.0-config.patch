@@ -1,5 +1,5 @@
---- vultures-1.10.1/nethack/include/config.h~	2005-11-11 10:47:33.000000000 +0200
-+++ vultures-1.10.1/nethack/include/config.h	2005-11-15 21:44:26.000000000 +0200
+--- vultures-2.1.0/nethack/include/config.h~	2005-11-11 10:47:33.000000000 +0200
++++ vultures-2.1.0/nethack/include/config.h	2005-11-15 21:44:26.000000000 +0200
 @@ -150,10 +150,10 @@
  
  #ifndef WIZARD		/* allow for compile-time or Makefile changes */
@@ -60,8 +60,8 @@
  
  /*
   * Section 5:  EXPERIMENTAL STUFF
---- vultures-1.10.1/nethack/include/unixconf.h~	2005-11-11 10:47:32.000000000 +0200
-+++ vultures-1.10.1/nethack/include/unixconf.h	2005-11-15 21:45:42.000000000 +0200
+--- vultures-2.1.0/nethack/include/unixconf.h~	2005-11-11 10:47:32.000000000 +0200
++++ vultures-2.1.0/nethack/include/unixconf.h	2005-11-15 21:45:42.000000000 +0200
 @@ -37,7 +37,7 @@
  #define NETWORK		/* if running on a networked system */
  			/* e.g. Suns sharing a playground through NFS */
@@ -89,8 +89,8 @@
  #endif
  
  #define FCMASK	0660	/* file creation mask */
---- vultures-1.10.1/slashem/include/config.h~	2005-11-11 10:47:39.000000000 +0200
-+++ vultures-1.10.1/slashem/include/config.h	2005-11-15 21:46:27.000000000 +0200
+--- vultures-2.1.0/slashem/include/config.h~	2005-11-11 10:47:39.000000000 +0200
++++ vultures-2.1.0/slashem/include/config.h	2005-11-15 21:46:27.000000000 +0200
 @@ -206,10 +206,10 @@
  
  #ifndef WIZARD		/* allow for compile-time or Makefile changes */
@@ -108,19 +108,19 @@
  
  #ifdef UNIX
  /* path and file name extension for compression program */
--# define COMPRESS "/usr/bin/compress" /* Lempel-Ziv compression */                                       
--# define COMPRESS_EXTENSION ".Z"        /* compress's extension */                                       
-+# define COMPRESS "/usr/bin/bzip2"
-+# define COMPRESS_EXTENSION ".bz2"
+-# define COMPRESS "/usr/bin/compress" /* Lempel-Ziv compression */
+-# define COMPRESS_EXTENSION ".Z"	     /* compress's extension */
++#define COMPRESS "/usr/bin/bzip2"
++#define COMPRESS_EXTENSION ".bz2"
  
  /* An example of one alternative you might want to use: */
- /* # define COMPRESS "/usr/local/bin/gzip" */   /* FSF gzip compression */                               
+ /* # define COMPRESS "/usr/local/bin/gzip" */   /* FSF gzip compression */
 @@ -253,7 +253,7 @@
   *	a tar-like file, thus making a neater installation.  See *conf.h
   *	for detailed configuration.
   */
--/* #define DLB */             /* not supported on all platforms */                                       
-+#define DLB             /* not supported on all platforms */                                       
+-/* #define DLB */             /* not supported on all platforms */
++#define DLB  /* not supported on all platforms */
  
  /*
   *	Defining INSURANCE slows down level changes, but allows games that
@@ -160,8 +160,8 @@
  /* #define BORG */            /* Works only under DOS */
  /* #define KEEP_SAVE */       /* Keep savefiles after Restore (wac@intergate.bc.ca)*/
  /* #define CHARON */	/* Charon's boat, enables Cerebus - not implemented */
---- vultures-1.10.1/slashem/include/unixconf.h~	2005-11-11 10:47:39.000000000 +0200
-+++ vultures-1.10.1/slashem/include/unixconf.h	2005-11-15 21:46:58.000000000 +0200
+--- vultures-2.1.0/slashem/include/unixconf.h~	2005-11-11 10:47:39.000000000 +0200
++++ vultures-2.1.0/slashem/include/unixconf.h	2005-11-15 21:46:58.000000000 +0200
 @@ -38,7 +38,7 @@
  #define NETWORK		/* if running on a networked system */
  			/* e.g. Suns sharing a playground through NFS */

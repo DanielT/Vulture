@@ -1,0 +1,44 @@
+--- vultures-2.1.0/nethack/sys/unix/Makefile.src~	2005-11-11 10:47:34.000000000 +0200
++++ vultures-2.1.0/nethack/sys/unix/Makefile.src	2005-11-15 16:44:21.000000000 +0200
+@@ -161,7 +161,7 @@
+ 	SDLMAIN = -lSDLmain
+ endif
+ VULTURESCFLAGS = -Wall -g
+-CFLAGS = -g -I../include -I ../win/vultures $(shell $(SDL_CONFIG) --cflags)
++CFLAGS = $(RPM_OPT_FLAGS) -I../include -I../win/vultures/  $(shell $(SDL_CONFIG) --cflags)
+ LFLAGS = 
+ 
+ # The Qt and Be window systems are written in C++, while the rest of
+--- vultures-2.1.0/nethack/sys/unix/Makefile.utl~	2005-11-11 10:47:34.000000000 +0200
++++ vultures-2.1.0/nethack/sys/unix/Makefile.utl	2005-11-15 16:44:49.000000000 +0200
+@@ -89,7 +89,7 @@
+ # flags for debugging:
+ # CFLAGS = -g -I../include
+ 
+-CFLAGS = -O -I../include -I../win/vultures -DVULTURESEYE
++CFLAGS = $(RPM_OPT_FLAGS) -I../include -I../win/vultures -DVULTURESEYE
+ LFLAGS =
+ 
+ LIBS =
+--- vultures-2.1.0/slashem/sys/unix/Makefile.src~	2005-11-11 10:47:37.000000000 +0200
++++ vultures-2.1.0/slashem/sys/unix/Makefile.src	2005-11-15 16:45:05.000000000 +0200
+@@ -155,7 +155,7 @@
+         SDLMAIN = -lSDLmain
+ endif
+ VULTURESCFLAGS = -Wall -O -g
+-CFLAGS = -g -O -I../include -I ../win/vultures $(shell $(SDL_CONFIG) --cflags)
++CFLAGS = $(RPM_OPT_FLAGS) -I../include -I ../win/vultures $(shell $(SDL_CONFIG) --cflags)
+ LFLAGS =
+ 
+ # Only used for the Gnome interface.
+--- vultures-2.1.0/slashem/sys/unix/Makefile.utl~	2005-11-11 10:47:37.000000000 +0200
++++ vultures-2.1.0/slashem/sys/unix/Makefile.utl	2005-11-15 16:45:14.000000000 +0200
+@@ -89,7 +89,7 @@
+ # flags for debugging:
+ # CFLAGS = -g -I../include
+ 
+-CFLAGS = -O -I../include -I../win/vultures -DVULTURESCLAW
++CFLAGS = $(RPM_OPT_FLAGS) -I../include -I../win/vultures -DVULTURESCLAW
+ LFLAGS =
+ 
+ LIBS =
