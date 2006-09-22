@@ -1,0 +1,11 @@
+--- ../vultures-2.1.0.orig/vultures/GNUmakefile
++++ ./vultures/GNUmakefile
+@@ -79,7 +79,7 @@
+ $(TTOUTPUT): $(BUILDDIR)/tiletrans $(TILESRC)/*.png
+ 	@echo "running tiletrans:"
+ 	@mkdir -p $(BUILDDIR)
+-	@$(BUILDDIR)/tiletrans ./gamedata/graphics/gametiles.bin $(TILESRC)/
++	@$(BUILDDIR)/tiletrans ./gamedata/graphics/gametiles.bin $(TILESRC)/
+ 	@mv vultures_gametiles.c $(BUILDDIR)/
+ 	@mv vultures_gametiles.h $(BUILDDIR)/
+ 
