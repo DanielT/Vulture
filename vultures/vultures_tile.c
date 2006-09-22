@@ -5,6 +5,10 @@
 
 #include "hack.h"
 
+#if !defined WIN32
+    #include <sys/mman.h>
+#endif
+
 #include "vultures_types.h"
 #include "vultures_tile.h"
 #include "vultures_gra.h"
@@ -210,11 +214,19 @@ int vultures_load_gametiles(void)
     if (fsize != V_BINFILESIZE)
         panic("FATAL: Actual size of gametiles.bin does not match the expected size!\nAre you sure you are using the gametiles.bin that was built together with this executable?\n");
 
+
+#if !defined WIN32
+    vultures_srcfile = mmap(0, fsize, PROT_READ, MAP_SHARED, fileno(fp), 0);
+    if (!vultures_srcfile)
+        return 0;
+
+#else
     vultures_srcfile = malloc(fsize);
     if (!vultures_srcfile)
         return 0;
 
     fread(vultures_srcfile, fsize, 1, fp);
+#endif
     fclose(fp);
 
     /* initialize the two tile arrays */
@@ -253,9 +265,12 @@ void vultures_unload_gametiles(void)
     free(vultures_tiles_cur);
     free(vultures_tiles_prev);
     
-    
+#if !defined WIN32
+    munmap(vultures_srcfile, 0);
+#else
     free(vultures_srcfile);
-    
+#endif
+
     SDL_FreeSurface(vultures_ftshade1);
     SDL_FreeSurface(vultures_ftshade2);    
 }
