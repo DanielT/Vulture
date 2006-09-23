@@ -119,6 +119,7 @@ for i in nethack slashem ; do
     make -C $i/util recover dlb dgn_comp lev_comp
     make -C $i/dat spec_levs quest_levs
 done
+
 cp nethack/dat/options nethack/dat/options.tty
 
 %install
@@ -183,7 +184,7 @@ install -m 755 SuSE/nethack $RPM_BUILD_ROOT/usr/games/
 # recover helper
 install -m 755 SuSE/recover-helper $RPM_BUILD_ROOT/usr/lib/nethack/
 # utils
-install -m 755 nethack/util/{dgn_comp,dlb,lev_comp,makedefs,recover,tile2x11} $RPM_BUILD_ROOT/usr/lib/nethack/
+#install -m 755 nethack/util/{dgn_comp,dlb,lev_comp,makedefs,recover,tile2x11} $RPM_BUILD_ROOT/usr/lib/nethack/
 #install -m 755 nethack/util/tilemap $RPM_BUILD_ROOT/usr/lib/nethack/
 # x11 app-defaults
 #mkdir -p $RPM_BUILD_ROOT/usr/X11R6/lib/X11/app-defaults
@@ -195,18 +196,28 @@ install -m 755 nethack/util/{dgn_comp,dlb,lev_comp,makedefs,recover,tile2x11} $R
 #gzip $RPM_BUILD_ROOT/usr/X11R6/lib/X11/fonts/misc/nh10.pcf
 # the font is added into fonts.dir by SuSEconfig.fonts
 
+make -C nethack install CHGRP=: CHOWN=: \
+    GAMEDIR=$RPM_BUILD_ROOT%{_prefix}/games/vultureseye \
+    VARDIR=$RPM_BUILD_ROOT%{_var}/games/vultureseye \
+    SHELLDIR=$RPM_BUILD_ROOT%{_bindir}
+make -C slashem install CHGRP=: CHOWN=: \
+    GAMEDIR=$RPM_BUILD_ROOT%{_prefix}/games/vulturesclaw \
+    VARDIR=$RPM_BUILD_ROOT%{_var}/games/vulturesclaw \
+    SHELLDIR=$RPM_BUILD_ROOT%{_bindir}
 
-install -dm 755 $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/48x48/apps
+
+install -dm 755 $RPM_BUILD_ROOT/usr/share/games/vultureseye/icons/hicolor/48x48/apps
+install -dm 755 $RPM_BUILD_ROOT/usr/share/games/vulturesclaw/icons/hicolor/48x48/apps
 for i in vultureseye vulturesclaw ; do
     desktop-file-install \
-        --vendor=fedora \
-        --dir=$RPM_BUILD_ROOT%{_datadir}/applications \
+        --vendor=opensuse \
+        --dir=$RPM_BUILD_ROOT/usr/share/games/$i/applications \
         --mode=644 \
-        --add-category=X-Fedora \
+        --add-category=X-SUSE \
         dist/unix/desktop/$i.desktop
-    mv $RPM_BUILD_ROOT%{_prefix}/games/$i/*.png \
-        $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/48x48/apps/$i.png
-    mv $RPM_BUILD_ROOT%{_prefix}/games/$i/recover \
+    mv $RPM_BUILD_ROOT/usr/games/$i/*.png \
+        $RPM_BUILD_ROOT/usr/share/games/$i/icons/hicolor/48x48/apps/$i.png
+    mv $RPM_BUILD_ROOT/usr/games/$i/recover \
         $RPM_BUILD_ROOT%{_bindir}/$i-recover
 done
 
@@ -216,16 +227,16 @@ rm -r $RPM_BUILD_ROOT%{_prefix}/games/vulturesclaw/manual
 # Save some space
 # Save some space
 for f in graphics music sound ; do
-    rm -r $RPM_BUILD_ROOT%{_prefix}/games/vulturesclaw/$f
+    rm -r $RPM_BUILD_ROOT/usr/games/vulturesclaw/$f
     ln -s ../vultureseye/$f \
-        $RPM_BUILD_ROOT%{_prefix}/games/vulturesclaw/$f
+        $RPM_BUILD_ROOT/usr/games/vulturesclaw/$f
 done
 
-chmod -s $RPM_BUILD_ROOT%{_prefix}/games/vultures*/vultures* # for stripping
+chmod -s $RPM_BUILD_ROOT/usr/games/vultures*/vultures* # for stripping
 
 # Clean up
 sed -i -e "s|$RPM_BUILD_ROOT||" $RPM_BUILD_ROOT%{_bindir}/vultures{eye,claw}
-rm $RPM_BUILD_ROOT%{_prefix}/games/vultures*/*.ico
+rm $RPM_BUILD_ROOT/usr/games/vultures*/*.ico
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -259,6 +270,13 @@ gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
 /usr/lib/nethack/recover
 /usr/lib/nethack/tile2x11
 #/usr/lib/nethack/tilemap
+/usr/lib/nethack/
+#/usr/games
+/usr/share/games/nethack
+/usr/games/vultureseye
+/usr/share/games/vultureseye
+/usr/games/vulturesclaw
+/usr/share/games/vulturesclaw
 %{_docdir}/nethack
 %{_mandir}/man6/*
 %attr(-,games,games) /var/games/nethack
@@ -269,41 +287,41 @@ gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
 %doc slashem/readme.txt slashem/history.txt slashem/slamfaq.txt
 
 %{_bindir}/vultures*
-%dir %{_prefix}/games/vultureseye/
-%{_prefix}/games/vultureseye/config/
-%{_prefix}/games/vultureseye/defaults.nh
-%{_prefix}/games/vultureseye/graphics/
-%{_prefix}/games/vultureseye/license
-%{_prefix}/games/vultureseye/music/
-%{_prefix}/games/vultureseye/nhdat
-%{_prefix}/games/vultureseye/sound/
-%attr(2755,root,games) %{_prefix}/games/vultureseye/vultureseye
-%dir %{_prefix}/games/vulturesclaw/
-%{_prefix}/games/vulturesclaw/config/
-%{_prefix}/games/vulturesclaw/defaults.nh
-%{_prefix}/games/vulturesclaw/graphics/
-%{_prefix}/games/vulturesclaw/Guidebook.txt
-%{_prefix}/games/vulturesclaw/license
-%{_prefix}/games/vulturesclaw/music/
-%{_prefix}/games/vulturesclaw/nh*share
-%{_prefix}/games/vulturesclaw/sound/
-%attr(2755,root,games) %{_prefix}/games/vulturesclaw/vulturesclaw
+%dir /usr/games/vultureseye/
+%/usr/games/vultureseye/config/
+%/usr/games/vultureseye/defaults.nh
+%/usr/games/vultureseye/graphics/
+%/usr/games/vultureseye/license
+%/usr/games/vultureseye/music/
+%/usr/games/vultureseye/nhdat
+%/usr/games/vultureseye/sound/
+%attr(2755,root,games) %/usr/games/vultureseye/vultureseye
+%dir /usr/games/vulturesclaw/
+%/usrgames/vulturesclaw/config/
+%/usr/games/vulturesclaw/defaults.nh
+%/usr/games/vulturesclaw/graphics/
+%/usr/games/vulturesclaw/Guidebook.txt
+%/usr/games/vulturesclaw/license
+%/usr/games/vulturesclaw/music/
+%/usr/games/vulturesclaw/nh*share
+%/usr/games/vulturesclaw/sound/
+%attr(2755,root,games) /usr/games/vulturesclaw/vulturesclaw
 %{_datadir}/applications/*vultures*.desktop
 %{_datadir}/icons/hicolor/48x48/apps/vultures*.png
 %{_mandir}/man6/vultures*.6*
 %defattr(664,root,games,775)
-%dir %{_var}/games/vultureseye/
-%config(noreplace) %{_var}/games/vultureseye/record
-%config(noreplace) %{_var}/games/vultureseye/perm
-%config(noreplace) %{_var}/games/vultureseye/logfile
-%dir %{_var}/games/vultureseye/save/
-%dir %{_var}/games/vulturesclaw/
-%config(noreplace) %{_var}/games/vulturesclaw/record
-%config(noreplace) %{_var}/games/vulturesclaw/perm
-%config(noreplace) %{_var}/games/vulturesclaw/logfile
-%dir %{_var}/games/vulturesclaw/save/
-%{_prefix}/games/vulturesclaw/fonts/VeraSe.ttf
-%{_prefix}/games/vultureseye/fonts/VeraSe.ttf
+%dir /var/games/vultureseye/
+%config(noreplace) /var/games/vultureseye/record
+%config(noreplace) /var/games/vultureseye/perm
+%config(noreplace) /var/games/vultureseye/logfile
+%dir /var/games/vultureseye/save/
+%dir /var/games/vulturesclaw/
+%config(noreplace) /var/games/vulturesclaw/record
+%config(noreplace) /var/games/vulturesclaw/perm
+%config(noreplace) /var/games/vulturesclaw/logfile
+%dir /var/games/vulturesclaw/save/
+/usr/games/vulturesclaw/fonts/VeraSe.ttf
+/usr/games/vultureseye/fonts/VeraSe.ttf
 %endif
 
 
