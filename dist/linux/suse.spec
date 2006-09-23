@@ -104,6 +104,7 @@ sed -i -e 's|/var/lib/games/nethack|%{_var}/games/vulturesclaw|' \
 
 %build
 
+%if 0%{?suse_version}
 # create symlinks to makefiles
 cd nethack
 sh sys/unix/setup.sh 1
@@ -111,6 +112,7 @@ sh sys/unix/setup.sh 1
 cp -f ../SuSE/tty/config.h include/config.h
 cp -f ../SuSE/tty/Makefile.src src/Makefile
 cd ..
+%endif
 
 # Note: no %{?_smp_mflags} in any of these: various parallel build issues.
 for i in nethack slashem ; do
@@ -120,7 +122,9 @@ for i in nethack slashem ; do
     make -C $i/dat spec_levs quest_levs
 done
 
+%if 0%{?suse_version}
 cp nethack/dat/options nethack/dat/options.tty
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
