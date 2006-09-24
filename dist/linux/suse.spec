@@ -91,6 +91,16 @@ tar xvfj %{S:1}
 sed -i "s/^CFLAGS.*/& $RPM_OPT_FLAGS/" nethack/sys/unix/Makefile*
 %endif
 
+%if 0%{?suse_version}
+sed -i -e 's|/usr/games/lib/nethackdir|%{_prefix}/games/vultureseye|g' \
+    nethack/doc/{nethack,recover}.6 nethack/include/config.h
+sed -i -e 's|/var/lib/games/nethack|%{_var}/games/vultureseye|g' \
+    nethack/include/unixconf.h
+sed -i -e 's|/usr/games/lib/nethackdir|%{_prefix}/games/vulturesclaw|g' \
+    slashem/doc/{nethack,recover}.6 slashem/include/config.h
+sed -i -e 's|/var/lib/games/nethack|%{_var}/games/vulturesclaw|' \
+    slashem/include/unixconf.h
+%endif
 %if 0%{?fedora_version}
 sed -i -e 's|/usr/games/lib/nethackdir|%{_prefix}/games/vultureseye|g' \
     nethack/doc/{nethack,recover}.6 nethack/include/config.h
@@ -109,8 +119,8 @@ sed -i -e 's|/var/lib/games/nethack|%{_var}/games/vulturesclaw|' \
 cd nethack
 sh sys/unix/setup.sh 1
 # tty
-cp -f ../SuSE/tty/config.h include/config.h
-cp -f ../SuSE/tty/Makefile.src src/Makefile
+cp -f ../SuSE/vultures/config.h include/config.h
+cp -f ../SuSE/vultures/Makefile.src src/Makefile
 cd ..
 %endif
 
