@@ -209,7 +209,7 @@ char * vultures_get_userdir(void)
     
 #ifdef WIN32
     /* %appdir% = X:\Documents and Settings\<username>\Application Data */
-    snprintf(userdir, 512, "%s\\.vultures\\", getenv("APPDATA"));
+    snprintf(userdir, 512, "%s\\Vultures\\", getenv("APPDATA"));
 #else
     /* everywhere else we use the user's homedir (/home/<name>/) */
     snprintf(userdir, 512, "%s/.vultures/", getenv("HOME"));
