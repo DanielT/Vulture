@@ -297,9 +297,25 @@ rm -rf $RPM_BUILD_ROOT
 %post
 [ $1 -eq 1 ] && \
 gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
+ln -s /var/games/vulturesclaw/logfile /usr/share/games/vulturesclaw/logfile &>/dev/null 
+ln -s /var/games/vulturesclaw/perm /usr/share/games/vulturesclaw/perm &>/dev/null 
+ln -s /var/games/vulturesclaw/record /usr/share/games/vulturesclaw/record &>/dev/null 
+ln -s /var/games/vulturesclaw/save /usr/share/games/vulturesclaw/save &>/dev/null 
+ln -s /var/games/vultureseye/logfile /usr/share/games/vultureseye/logfile &>/dev/null 
+ln -s /var/games/vultureeye/perm /usr/share/games/vultureseye/perm &>/dev/null 
+ln -s /var/games/vultureseye/record /usr/share/games/vultureseye/record &>/dev/null 
+ln -s /var/games/vultureseye/save /usr/share/games/vultureseye/save &>/dev/null 
 
 %postun
 gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
+ln -s /var/games/vulturesclaw/logfile /usr/share/games/vulturesclaw/logfile &>/dev/null 
+ln -s /var/games/vulturesclaw/perm /usr/share/games/vulturesclaw/perm &>/dev/null 
+ln -s /var/games/vulturesclaw/record /usr/share/games/vulturesclaw/record &>/dev/null 
+ln -s /var/games/vulturesclaw/save /usr/share/games/vulturesclaw/save &>/dev/null 
+ln -s /var/games/vultureseye/logfile /usr/share/games/vultureseye/logfile &>/dev/null 
+ln -s /var/games/vultureeye/perm /usr/share/games/vultureseye/perm &>/dev/null 
+ln -s /var/games/vultureseye/record /usr/share/games/vultureseye/record &>/dev/null 
+ln -s /var/games/vultureseye/save /usr/share/games/vultureseye/save &>/dev/null 
 
 %run_permissions
 
