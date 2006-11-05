@@ -307,48 +307,23 @@ gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
 # %verify_permissions -e /usr/lib/nethack/nethack.tty
 
 %files
-%defattr(-,root,root)
+%defattr(-,games,games)
 # %verify(not mode) %attr(0755,games,games) /usr/lib/nethack/nethack.tty
 #/usr/lib/vultures/options.tty
-# /usr/games/nethack*.tty
-# %config /etc/nethack/nethackrc.tty
-#/etc/nethack
-#/usr/lib/nethack
-#/usr/share/games/nethack
-#/usr/lib/nethack/recover-helper
-#/usr/lib/nethack/dgn_comp
-#/usr/lib/nethack/dlb
-#/usr/lib/nethack/lev_comp
-#/usr/lib/nethack/makedefs
-#/usr/lib/nethack/recover
-#/usr/lib/nethack/tile2x11
-#/usr/lib/nethack/tilemap
-#/usr/lib/nethack/
 /etc/vultures
 /etc/vultures/vulturesrc.vultures
 /usr/games
-#/usr/share/games/nethack
-#/usr/games/nethack
-#/var/games/nethack
 /usr/games/vultureseye
 /usr/games/vulturesclaw
 /usr/share/games/vultureseye
 /usr/share/games/vulturesclaw
 /var/games/vultureseye
 /var/games/vulturesclaw
-%{_docdir}/nethack
-%{_mandir}/man6/*
-#%attr(-,games,games) /var/games/nethack
-%attr(0775,games,games) /var/games/vultureseye
-%attr(0775,games,games) /var/games/vulturesclaw
-# /usr/games/nethack
-
-%doc nethack/README nethack/dat/license nethack/dat/history nethack/dat/*help
+%attr(0777,games,games) /var/games/vultureseye
+%attr(0777,games,games) /var/games/vulturesclaw
 #%doc slashem/readme.txt slashem/history.txt slashem/slamfaq.txt vultures/win/jtp/gamedata/manual/
 %doc slashem/readme.txt slashem/history.txt slashem/slamfaq.txt
-
-/usr/games/vultures*
-%dir /usr/share/games/vultureseye/
+%attr(0777,games,games) %dir /usr/share/games/vultureseye/
 /usr/share/games/vultureseye/config/
 /usr/share/games/vultureseye/defaults.nh
 /usr/share/games/vultureseye/graphics/
@@ -356,10 +331,10 @@ gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
 /usr/share/games/vultureseye/music/
 /usr/share/games/vultureseye/nhdat
 /usr/share/games/vultureseye/sound/
-/usr/share/games/vultureseye-recover
+%attr(666,games,games) /usr/share/games/vultureseye-recover
 %attr(666,games,games) /usr/share/games/vultureseye/vultures_log.txt
-%attr(2755,games,games) /usr/share/games/vultureseye/vultureseye
-%dir /usr/share/games/vulturesclaw/
+%attr(2777,games,games) /usr/share/games/vultureseye/vultureseye
+%attr(0777,games,games) %dir /usr/share/games/vulturesclaw/
 /usr/share/games/vulturesclaw/config/
 /usr/share/games/vulturesclaw/defaults.nh
 /usr/share/games/vulturesclaw/graphics/
@@ -368,25 +343,28 @@ gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
 /usr/share/games/vulturesclaw/music/
 /usr/share/games/vulturesclaw/nh*share
 /usr/share/games/vulturesclaw/sound/
-/usr/share/games/vulturesclaw-recover
+%attr(666,games,games) /usr/share/games/vulturesclaw-recover
 %attr(666,games,games) /usr/share/games/vulturesclaw/vultures_log.txt
-%attr(2755,games,games) /usr/share/games/vulturesclaw/vulturesclaw
+%attr(2777,games,games) /usr/share/games/vulturesclaw/vulturesclaw
 %{_datadir}/applications/*vultures*.desktop
 %{_datadir}/icons/hicolor/48x48/apps/vultures*.png
-%{_mandir}/man6/vultures*.6*
 %defattr(666,games,games,775)
 %dir /var/games/vultureseye/
-%config(noreplace) /var/games/vultureseye/record
-%config(noreplace) /var/games/vultureseye/perm
-%config(noreplace) /var/games/vultureseye/logfile
+%config(noreplace) %attr(666,games,games) /var/games/vultureseye/record
+%config(noreplace) %attr(666,games,games) /var/games/vultureseye/perm
+%config(noreplace) %attr(666,games,games) /var/games/vultureseye/logfile
 %dir /var/games/vultureseye/save/
 %dir /var/games/vulturesclaw/
-%config(noreplace) /var/games/vulturesclaw/record
-%config(noreplace) /var/games/vulturesclaw/perm
-%config(noreplace) /var/games/vulturesclaw/logfile
+%config(noreplace) %attr(666,games,games) /var/games/vulturesclaw/record
+%config(noreplace) %attr(666,games,games) /var/games/vulturesclaw/perm
+%config(noreplace) %attr(666,games,games) /var/games/vulturesclaw/logfile
 %dir /var/games/vulturesclaw/save/
 /usr/share/games/vulturesclaw/fonts/VeraSe.ttf
 /usr/share/games/vultureseye/fonts/VeraSe.ttf
+/usr/share/man/man6/vulturesclaw-recover.6.gz
+/usr/share/man/man6/vulturesclaw.6.gz
+/usr/share/man/man6/vultureseye-recover.6.gz
+/usr/share/man/man6/vultureseye.6.gz
 %endif
 
 
