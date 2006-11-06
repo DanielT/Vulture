@@ -240,12 +240,18 @@ make -C nethack install CHGRP=: CHOWN=: \
     VARDIR=$RPM_BUILD_ROOT/var/games/vultureseye \
     SHELLDIR=$RPM_BUILD_ROOT/usr/games/
 
+mkdir -p $RPM_BUILD_ROOT/usr/share/games/vultureseye/graphics
+cp -p vultures/gamedata/graphics/gametiles.bin $RPM_BUILD_ROOT/usr/share/games/vultureseye/graphics/
+
 cp -f SuSE/vultures/Makefile.top.vulturesclaw slashem/sys/unix/Makefile.top
 
 make -C slashem install CHGRP=: CHOWN=: \
     GAMEDIR=$RPM_BUILD_ROOT/usr/share/games/vulturesclaw \
     VARDIR=$RPM_BUILD_ROOT/var/games/vulturesclaw \
     SHELLDIR=$RPM_BUILD_ROOT/usr/games/
+
+mkdir -p $RPM_BUILD_ROOT/usr/share/games/vultureclaw/graphics
+cp -p vultures/gamedata/graphics/gametiles.bin $RPM_BUILD_ROOT/usr/share/games/vulturesclaw/graphics/
 
 # install -dm 755 $RPM_BUILD_ROOT/usr/share/games/vultureseye/icons/hicolor/48x48/apps
 # install -dm 755 $RPM_BUILD_ROOT/usr/share/games/vulturesclaw/icons/hicolor/48x48/apps
@@ -274,7 +280,8 @@ touch $RPM_BUILD_ROOT/usr/share/games/vultureseye/vultures_log.txt
 #rm -r $RPM_BUILD_ROOT/usr/share/games/vulturesclaw/manual
 
 # Save some space
-for f in graphics music sound ; do
+# for f in graphics music sound ; do
+for f in music sound ; do
     rm -r $RPM_BUILD_ROOT/usr/share/games/vulturesclaw/$f
     ln -s ../vultureseye/$f \
         $RPM_BUILD_ROOT/usr/share/games/vulturesclaw/$f
