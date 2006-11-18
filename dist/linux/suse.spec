@@ -36,7 +36,7 @@ BuildRequires:  SDL_ttf-devel
 BuildRequires:  SDL_mixer-devel
 %endif
 %if 0%{?suse_version}
-BuildRequires:  bison
+BuildRequires:  bison update-desktop-files
 %endif
 %if 0%{?fedora_version}
 BuildRequires:  byacc
@@ -258,13 +258,19 @@ cp -p vultures/gamedata/graphics/gametiles.bin $RPM_BUILD_ROOT/usr/share/games/v
 #        --dir=$RPM_BUILD_ROOT/usr/share/games/$i/applications \
 #        $RPM_BUILD_ROOT/usr/share/games/$i/icons/hicolor/48x48/apps/$i.png
 install -dm 755 $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/48x48/apps
+%if %{?suse_version:1}0
+%suse_update_desktop_file -i vultureseye Game RolePlaying
+%suse_update_desktop_file -i vulturesclaw Game RolePlaying
+%endif
 for i in vultureseye vulturesclaw ; do
+%if %{!?suse_version:1}0
     desktop-file-install \
         --vendor=opensuse \
         --dir=$RPM_BUILD_ROOT%{_datadir}/applications \
         --mode=644 \
         --add-category=X-SUSE \
         dist/unix/desktop/$i.desktop
+%endif
     mv $RPM_BUILD_ROOT/usr/share/games/$i/*.png \
         $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/48x48/apps/$i.png
     mv $RPM_BUILD_ROOT/usr/share/games/$i/recover \
