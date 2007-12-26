@@ -279,8 +279,11 @@ endif
 #
 # files for the Vulture's Claw port
 ifeq ($(USE_VULTURES),Y)
+MINGW = /mingw
+GNUWIN32 = $(MINGW)/GnuWin32/gnuwin32/
+MSYS = /msys/1.0/local
 VULTURESTILESRC = ../win/vultures/gamedata/graphics/tilesrc
-WINVULTURESCFLAGS=-I$(MINGW)/include -I$(MSYS)/include -I$(MINGW)/include/SDL -I$(MSYS)/include/SDL
+WINVULTURESCFLAGS= -I$(GNUWIN32)/include -I$(MSYS)/include -I$(MINGW)/include -I$(GNUWIN32)/include/SDL -I$(MSYS)/include/SDL -I$(MINGW)/include/SDL
 WINVULTURESSRC = $(WVULTURES)/vultures_gen.c $(WVULTURES)/vultures_gfl.c $(WVULTURES)/vultures_init.c \
 	$(WVULTURES)/vultures_gra.c $(WVULTURES)/vultures_mou.c \
 	$(WVULTURES)/vultures_sdl.c $(WVULTURES)/vultures_txt.c $(WVULTURES)/vultures_win.c \
@@ -351,9 +354,7 @@ LFLAGS += -mwindows
 else	# USE_GTK
 ifeq ($(USE_VULTURES),Y)
 WINSRC += $(WINVULTURESSRC)
-MINGW = /mingw
-MSYS = /msys/1.0/local
-LFLAGS += -L$(MINGW)/lib -L$(MSYS)/lib -mwindows
+LFLAGS += -L$(GNUWIN32)/lib -L$(MSYS)/lib -L$(MINGW)/lib -mwindows
 ifneq ($(USE_PROXY),Y)
 WINSRC += $(PROXYUTLSRC) $(PROXYSHRSRC)
 WOBJ04 += tile.o
@@ -401,7 +402,7 @@ endif
 
 # libraries for Vulture's Claw
 ifeq ($(USE_VULTURES),Y)
-WINVULTURESLIB = -lmingw32 -lSDLmain -lpng -lSDL -lSDL_mixer -lSDL_ttf
+WINVULTURESLIB = -lmingw32 -lSDLmain -lpng -lSDL_mixer -lSDL_ttf -lfreetype -lSDL
 endif
 
 ifeq ($(USE_PROXY),Y)
@@ -1847,7 +1848,7 @@ vultures_gametiles.c vultures_gametiles.h: tiletrans.exe $(VULTURESTILESRC)/*.pn
 
 # build tiletrans
 tiletrans.exe: monst.o objects.o tiletrans.o tilespec.o
-	$(CCOMPILE) -o$@ monst.o objects.o tiletrans.o tilespec.o -L$(MINGW)/lib -L$(MSYS)/lib -lpng -lm -lz
+	$(CCOMPILE) -o$@ monst.o objects.o tiletrans.o tilespec.o -L$(GNUWIN32)/lib -L$(MSYS)/lib -L$(MINGW)/lib -lpng -lm -lz
 
 tiletrans.o: ../win/vultures/util/tiletrans.c
 	$(CCOMPILE) $(CFLAGS) $(WINVULTURESCFLAGS) -o$@ ../win/vultures/util/tiletrans.c -I$(MINGW)/include -I$(MSYS)/include
