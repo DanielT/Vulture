@@ -39,9 +39,10 @@ ifeq  "$(GRAPHICAL)" "Y"
 VULTURES = Y
 ifeq  "$(VULTURES)" "Y"
 MINGW = /mingw
+GNUWIN32 = $(MINGW)/GnuWin32/gnuwin32/
 MSYS = /msys/1.0/local
-SDLCFLAGS = -I$(MINGW)/include -I$(MSYS)/include -I$(MINGW)/include/SDL -I$(MSYS)/include/SDL
-SDLLIBS = -L$(MINGW)/lib -L$(MSYS)/lib -lmingw32 -lSDLmain -lpng -lSDL -lSDL_mixer -lSDL_ttf -mwindows
+SDLCFLAGS = -I$(GNUWIN32)/include -I$(MSYS)/include -I$(MINGW)/include -I$(MINGW)/include/SDL -I$(GNUWIN32)/include/SDL -I$(MSYS)/include/SDL
+SDLLIBS = -L$(GNUWIN32)/lib -L$(MSYS)/lib -L$(MINGW)/lib -lmingw32 -lSDLmain -lpng -lSDL_mixer -lSDL_ttf -lfreetype -lSDL -mwindows
 endif
 endif
 
@@ -1247,7 +1248,7 @@ vultures_gametiles.c vultures_gametiles.h: tiletrans.exe $(VULTURESTILESRC)/*.pn
 
 # build tiletrans
 tiletrans.exe: $(O)monst.o $(O)objects.o $(O)tiletrans.o $(O)tilespec.o
-	$(cc) -o$@ $(O)monst.o $(O)objects.o $(O)tiletrans.o $(O)tilespec.o -L$(MINGW)/lib -L$(MSYS)/lib -lpng -lm -lz
+	$(cc) -o$@ $(O)monst.o $(O)objects.o $(O)tiletrans.o $(O)tilespec.o -L$(GNUWIN32)/lib -L$(MSYS)/lib -L$(MINGW)/lib -lpng -lm -lz
 
 $(O)tiletrans.o: ../win/vultures/util/tiletrans.c
 	$(cc) $(CFLAGS) -o$@ ../win/vultures/util/tiletrans.c -I$(MINGW)/include -I$(MSYS)/include
