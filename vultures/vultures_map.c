@@ -21,6 +21,7 @@ extern short glyph2tile[];
 
 #define CMD_TRAVEL (char)0x90
 #define META(c) (0x80 | (c))
+#define CTRL(c) (0x1f & (c))
 
 
 /* the only other cmaps beside furniture that have significant height and
@@ -1896,7 +1897,7 @@ int vultures_perform_map_action(int action_id, point mappos)
         case V_ACTION_MOVE_HERE:
             return vultures_mappos_to_dirkey(mappos);
 
-        case V_ACTION_LOOT:        return 'l';
+        case V_ACTION_LOOT:        return META('l');
         case V_ACTION_PICK_UP:     return ',';
         case V_ACTION_GO_DOWN:     return '>';
         case V_ACTION_GO_UP:       return '<';
@@ -1916,7 +1917,7 @@ int vultures_perform_map_action(int action_id, point mappos)
 
         case V_ACTION_KICK:
             vultures_eventstack_add(vultures_mappos_to_dirkey(mappos),-1,-1, V_RESPOND_CHARACTER);
-            return 'k';
+            return CTRL('d');
 
         case V_ACTION_OPEN_DOOR:
             vultures_eventstack_add(vultures_mappos_to_dirkey(mappos),-1,-1, V_RESPOND_CHARACTER);
@@ -2319,21 +2320,21 @@ static char vultures_mappos_to_dirkey(point mappos)
 {
     if (mappos.y == u.uy + 1)
     {
-        if (mappos.x == u.ux - 1) return '1';
-        if (mappos.x == u.ux)     return '2';
-        if (mappos.x == u.ux + 1) return '3';
+        if (mappos.x == u.ux - 1) return iflags.num_pad ? '1' : 'b';
+        if (mappos.x == u.ux)     return iflags.num_pad ? '2' : 'j';
+        if (mappos.x == u.ux + 1) return iflags.num_pad ? '3' : 'n';
     }
     else if (mappos.y == u.uy)
     {
-        if (mappos.x == u.ux - 1) return '4';
+        if (mappos.x == u.ux - 1) return iflags.num_pad ? '4' : 'h';
         if (mappos.x == u.ux)     return '.';
-        if (mappos.x == u.ux + 1) return '6';
+        if (mappos.x == u.ux + 1) return iflags.num_pad ? '6' : 'l';
     }
     else if (mappos.y == u.uy - 1)
     {
-        if (mappos.x == u.ux - 1) return '7';
-        if (mappos.x == u.ux)     return '8';
-        if (mappos.x == u.ux + 1) return '9';
+        if (mappos.x == u.ux - 1) return iflags.num_pad ? '7' : 'y';
+        if (mappos.x == u.ux)     return iflags.num_pad ? '8' : 'k';
+        if (mappos.x == u.ux + 1) return iflags.num_pad ? '9' : 'u';
     }
 
     /* the caller should make sure we don't get here */

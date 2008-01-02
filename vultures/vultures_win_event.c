@@ -622,21 +622,21 @@ int vultures_eventh_query_direction(struct window* handler, struct window* targe
             choice = 0;
             if (dir_y == -1)
             {
-                if (dir_x == -1) choice = '8';
-                else if (dir_x == 0) choice = '9';
-                else if (dir_x == 1) choice = '6';
+                if (dir_x == -1) choice = iflags.num_pad ? '8' : 'k';
+                else if (dir_x == 0) choice = iflags.num_pad ? '9' : 'u';
+                else if (dir_x == 1) choice = iflags.num_pad ? '6' : 'l';
             }
             else if (dir_y == 0)
             {
-                if (dir_x == -1) choice = '7';
+                if (dir_x == -1) choice = iflags.num_pad ? '7' : 'y';
                 else if (dir_x == 0) choice = '.';
-                else if (dir_x == 1) choice = '3';
+                else if (dir_x == 1) choice = iflags.num_pad ? '3' : 'n';
             }
             if (dir_y == 1)
             {
-                if (dir_x == -1) choice = '4';
-                else if (dir_x == 0) choice = '1';
-                else if (dir_x == 1) choice = '2';
+                if (dir_x == -1) choice = iflags.num_pad ? '4' : 'h';
+                else if (dir_x == 0) choice = iflags.num_pad ? '1' : 'b';
+                else if (dir_x == 1) choice = iflags.num_pad ? '2' : 'j';
             }
 
             if (dir_x >= 2 && mouse.x < target->w / 2 && mouse.y < target->h / 2)
@@ -1505,16 +1505,32 @@ int vultures_translate_key(int cmd_key)
     if (vultures_opts.no_key_translation)
         return cmd_key;
 
-    switch (cmd_key)
+    if (iflags.num_pad) {
+	switch (cmd_key)
+	{
+		case '1': return '2';
+		case '2': return '3';
+		case '3': return '6';
+		case '4': return '1';
+		case '6': return '9';
+		case '7': return '4';
+		case '8': return '7';
+		case '9': return '8';
+	}
+    }
+    else
     {
-        case '1': return '2';
-        case '2': return '3';
-        case '3': return '6';
-        case '4': return '1';
-        case '6': return '9';
-        case '7': return '4';
-        case '8': return '7';
-        case '9': return '8';
+	switch (cmd_key)
+	{
+		case 'b': return 'j';
+		case 'j': return 'n';
+		case 'n': return 'l';
+		case 'h': return 'b';
+		case 'l': return 'u';
+		case 'y': return 'h';
+		case 'k': return 'y';
+		case 'u': return 'k';
+	}
     }
 
     return cmd_key;
