@@ -289,12 +289,12 @@ WINVULTURESSRC = $(WVULTURES)/vultures_gen.c $(WVULTURES)/vultures_gfl.c $(WVULT
 	$(WVULTURES)/vultures_sdl.c $(WVULTURES)/vultures_txt.c $(WVULTURES)/vultures_win.c \
 	$(WVULTURES)/vultures_main.c $(WVULTURES)/vultures_nhplayerselection.c $(WVULTURES)/vultures_map.c \
 	$(WVULTURES)/vultures_gametiles.c $(WVULTURES)/vultures_pcmusic.c $(WVULTURES)/vultures_sound.c \
-	$(WVULTURES)/vultures_opt.c \
+	$(WVULTURES)/vultures_opt.c ${WVULTURES}/vultures_export_tiles.c\
 	$(WVULTURES)/vultures_win_event.c $(WVULTURES)/vultures_tile.c  
 WINVULTURESOBJ = vultures_gen.o vultures_gfl.o vultures_init.o \
 	vultures_gra.o vultures_mou.o vultures_opt.o \
 	vultures_sdl.o vultures_txt.o vultures_win.o vultures_win_event.o \
-	vultures_map.o vultures_sound.o vultures_tile.o \
+	vultures_map.o vultures_sound.o vultures_tile.o vultures_export_tiles.o\
 	vultures_main.o icon.o vultures_nhplayerselection.o \
 	vultures_gametiles.o vultures_pcmusic.o
 endif
@@ -1825,6 +1825,8 @@ vultures_txt.o: ../win/vultures/vultures_txt.c ../win/vultures/vultures_txt.h
 	$(CCOMPILE) $(CFLAGS) $(WINVULTURESCFLAGS) -o$@ -I$(WVULTURES) -DUSE_SDL_SYSCALLS -c ../win/vultures/vultures_txt.c
 vultures_win.o: ../win/vultures/vultures_win.c ../win/vultures/vultures_win.h ../win/vultures/vultures_gametiles.h
 	$(CCOMPILE) $(CFLAGS) $(WINVULTURESCFLAGS) -o$@ -I$(WVULTURES) -DUSE_SDL_SYSCALLS -c ../win/vultures/vultures_win.c
+vultures_export_tiles.o: ../win/vultures/vultures_export_tiles.c ../win/vultures/vultures_export_tiles.h
+	$(CCOMPILE) $(CFLAGS) $(WINVULTURESCFLAGS) -o$@ -I$(WVULTURES) -DUSE_SDL_SYSCALLS -c ../win/vultures/vultures_export_tiles.c
 vultures_map.o: ../win/vultures/vultures_map.c ../win/vultures/vultures_map.h ../win/vultures/vultures_gametiles.h
 	$(CCOMPILE) $(CFLAGS) $(WINVULTURESCFLAGS) -o$@ -I$(WVULTURES) -DUSE_SDL_SYSCALLS -c ../win/vultures/vultures_map.c
 vultures_init.o: ../win/vultures/vultures_init.c ../win/vultures/vultures_init.h ../win/vultures/vultures_gametiles.h

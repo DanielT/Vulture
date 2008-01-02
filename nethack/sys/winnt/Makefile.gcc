@@ -181,6 +181,7 @@ WINPORT = $(O)vultures_win_event.o $(O)vultures_gen.o $(O)vultures_gfl.o \
 	$(O)vultures_sdl.o $(O)vultures_txt.o $(O)vultures_win.o $(O)vultures_pcmusic.o \
 	$(O)vultures_map.o $(O)vultures_init.o $(O)vultures_nhplayerselection.o \
 	$(O)vultures_opt.o \
+	$(O)vultures_export_tiles.o \
 	$(O)vultures_gametiles.o $(O)vultures_main.o  $(O)vultures_tile.o $(O)icon.o $(O)tile.o
 WINPFLAG   = -DTILES $(SDLCFLAGS) -DVULTURESEYE
 NHRES   = 
@@ -1215,7 +1216,9 @@ $(O)vultures_txt.o: ../win/vultures/vultures_txt.c ../win/vultures/vultures_txt.
 	$(cc) $(CFLAGS) -o$@ -I$(JTP) -DUSE_SDL_SYSCALLS -c ../win/vultures/vultures_txt.c
 $(O)vultures_win.o: ../win/vultures/vultures_win.c ../win/vultures/vultures_win.h ../win/vultures/vultures_gametiles.h
 	$(cc) $(CFLAGS) -o$@ -I$(JTP) -DUSE_SDL_SYSCALLS -c ../win/vultures/vultures_win.c
-$(O)vultures_map.o: ../win/vultures/vultures_map.c ../win/vultures/vultures_map.h ../win/vultures/vultures_gametiles.h
+$(O)vultures_export_tiles.o: ../win/vultures/vultures_export_tiles.c ../win/vultures/vultures_export_tiles.h
+	$(cc) $(CFLAGS) -o$@ -I$(JTP) -DUSE_SDL_SYSCALLS -c ../win/vultures/vultures_export_tiles.c
+$(O)vultures_map.o: ../win/vultures/vultures_map.c ../win/vultures/vultures_map.h
 	$(cc) $(CFLAGS) -o$@ -I$(JTP) -DUSE_SDL_SYSCALLS -c ../win/vultures/vultures_map.c
 $(O)vultures_init.o: ../win/vultures/vultures_init.c ../win/vultures/vultures_init.h ../win/vultures/vultures_gametiles.h
 	$(cc) $(CFLAGS) -o$@ -I$(JTP) -DUSE_SDL_SYSCALLS -c ../win/vultures/vultures_init.c
