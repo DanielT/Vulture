@@ -884,6 +884,18 @@ void vultures_print_glyph(winid window, XCHAR_P x, XCHAR_P y, int glyph)
 
             map_mon =  vultures_monster_to_tile(glyph_to_mon(glyph), x, y);
         }
+        /* handle invisible monsters */
+        else if (glyph_is_invisible(glyph))
+        {
+            mapglyph(glyph, &character, &colour, &vultures_map_specialattr[y][x], x, y);
+            map_mon = V_TILE_INVISIBLE_MONSTER;
+        }
+        /* handle monsters you are warned of */
+        else if (glyph_is_warning(glyph))
+        {
+            map_mon = V_TILE_WARNLEV_1 + glyph_to_warning(glyph);
+            mapglyph(glyph, &character, &colour, &vultures_map_specialattr[y][x], x, y);
+        }
         /* however they may be temporarily obscured by magic effects... */
         else if (map_special == V_TILE_NONE)
             map_mon = V_TILE_NONE;
