@@ -768,7 +768,7 @@ void vultures_putstr(int winid, int attr, const char *str)
             win->content_is_text = 1;    /* Text content */
 
             /* Add the new text line as a menu item */
-            menuid.a_int = 0; /* Since text lines can't be selected anyway, these can be the same */
+            menuid.a_void = 0; /* Since text lines can't be selected anyway, these can be the same */
             vultures_add_menu(winid, NO_GLYPH, &menuid, 0, 0, ATR_NONE, str, FALSE);
             break;
 
