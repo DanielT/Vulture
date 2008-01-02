@@ -437,6 +437,8 @@ void vultures_enter_graphics_mode()
 
 void vultures_exit_graphics_mode(void)
 {
+    SDL_ShowCursor(SDL_ENABLE);
+
     vultures_stop_music();
     if (vultures_cdrom) SDL_CDClose(vultures_cdrom);
     vultures_cdrom = NULL;
