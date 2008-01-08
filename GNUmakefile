@@ -184,8 +184,6 @@ $(DISTDIR)/Unix\ Installer/$(FULLNAME)-$(SLASHEM)_unix-$(RELEASE).bin.sh: $(DIST
 $(DISTDIR)/$(FULLNAME): $(DISTDIR)
 	svn export ./@HEAD $@
 	rm -rf $@/future
-	@$(MAKE) -C doc context changelog.txt changelog.html
-	cp doc/context doc/changelog.txt doc/changelog.rst doc/changelog.html $@/doc/
 	echo "#define $(GAMEDEF)_PORT_VERSION \"$(VERSION)\"">$@/$(GAME)/$(GAME)version.h
 	ln -s ../../$(GAME) $@/nethack/win/$(GAME)
 	ln -s ../../$(GAME) $@/slashem/win/$(GAME)
