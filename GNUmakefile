@@ -23,9 +23,8 @@ CWD = $(shell pwd)
 TESTDIR = $(CWD)/testdir
 DMGDIR = $(CWD)/dmgdir
 INSTPREFIX = $$HOME/$(GAME)
-MD5 = /sbin/md5
-SHA256 = /usr/local/sbin/sha256
-
+MD5 = md5sum
+SHA256 = sha256sum
 
 help:
 	@echo "to build NetHack in your home directory: $(MAKE) nethack-home"
@@ -124,12 +123,12 @@ $(DISTDIR)/$(FULLNAME)-full.tar.gz: $(DISTDIR)/$(FULLNAME)
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-full.tar.gz > $(FULLNAME)-full.tar.gz.sha256
 
 $(DISTDIR)/$(FULLNAME)-$(NETHACK).tar.gz: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); tar zcvfL $(FULLNAME)-$(NETHACK).tar.gz $(FULLNAME)/nethack $(FULLNAME)/doc
+	cd $(DISTDIR); tar zcvfh $(FULLNAME)-$(NETHACK).tar.gz $(FULLNAME)/nethack $(FULLNAME)/doc
 	cd $(DISTDIR); $(MD5) $(FULLNAME)-$(NETHACK).tar.gz > $(FULLNAME)-$(NETHACK).tar.gz.md5
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-$(NETHACK).tar.gz > $(FULLNAME)-$(NETHACK).tar.gz.sha256
 
 $(DISTDIR)/$(FULLNAME)-$(SLASHEM).tar.gz: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); tar zcvfL $(FULLNAME)-$(SLASHEM).tar.gz $(FULLNAME)/slashem $(FULLNAME)/doc
+	cd $(DISTDIR); tar zcvfh $(FULLNAME)-$(SLASHEM).tar.gz $(FULLNAME)/slashem $(FULLNAME)/doc
 	cd $(DISTDIR); $(MD5) $(FULLNAME)-$(SLASHEM).tar.gz > $(FULLNAME)-$(SLASHEM).tar.gz.md5
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-$(SLASHEM).tar.gz > $(FULLNAME)-$(SLASHEM).tar.gz.sha256
 
@@ -139,12 +138,12 @@ $(DISTDIR)/$(FULLNAME)-full.tar.bz2: $(DISTDIR)/$(FULLNAME)
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-full.tar.bz2 > $(FULLNAME)-full.tar.bz2.sha256
 
 $(DISTDIR)/$(FULLNAME)-$(NETHACK).tar.bz2: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); tar jcvfL $(FULLNAME)-$(NETHACK).tar.bz2 $(FULLNAME)/nethack $(FULLNAME)/doc
+	cd $(DISTDIR); tar jcvfh $(FULLNAME)-$(NETHACK).tar.bz2 $(FULLNAME)/nethack $(FULLNAME)/doc
 	cd $(DISTDIR); $(MD5) $(FULLNAME)-$(NETHACK).tar.bz2 > $(FULLNAME)-$(NETHACK).tar.bz2.md5
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-$(NETHACK).tar.bz2 > $(FULLNAME)-$(NETHACK).tar.bz2.sha256
 
 $(DISTDIR)/$(FULLNAME)-$(SLASHEM).tar.bz2: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); tar jcvfL $(FULLNAME)-$(SLASHEM).tar.bz2 $(FULLNAME)/slashem $(FULLNAME)/doc
+	cd $(DISTDIR); tar jcvfh $(FULLNAME)-$(SLASHEM).tar.bz2 $(FULLNAME)/slashem $(FULLNAME)/doc
 	cd $(DISTDIR); $(MD5) $(FULLNAME)-$(SLASHEM).tar.bz2 > $(FULLNAME)-$(SLASHEM).tar.bz2.md5
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-$(SLASHEM).tar.bz2 > $(FULLNAME)-$(SLASHEM).tar.bz2.sha256
 
