@@ -230,7 +230,11 @@ SOUND = $(OBJ)/ntsound.o
 USE_DLB = Y
 
 ifeq  "$(USE_DLB)" "Y"
+ifneq  "$(VULTURES)" "Y"
 DLBFLG = -DDLB
+else
+DLBFLG =
+endif
 else
 DLBFLG =
 endif

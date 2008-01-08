@@ -193,7 +193,11 @@ GAMEFILE = $(GAMEDIR)\$(GAME).exe
 
 # Changing this conditional block is not recommended
 ifeq ($(USE_DLB),Y)
+ifneq ($(USE_VULTURES),Y)
 DLBFLG = -DDLB
+else
+DLBFLG =
+endif
 else
 DLBFLG =
 endif
