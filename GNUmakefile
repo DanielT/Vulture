@@ -182,7 +182,7 @@ $(DISTDIR)/Unix\ Installer/$(FULLNAME)-$(SLASHEM)_unix-$(RELEASE).bin.sh: $(DIST
 	cd $(DISTDIR)/Unix\ Installer; $(SHA256) $(FULLNAME)-$(SLASHEM)_unix-$(RELEASE).bin.sh > $(FULLNAME)-$(SLASHEM)_unix-$(RELEASE).bin.sh.sha256
 
 $(DISTDIR)/$(FULLNAME): $(DISTDIR)
-	cp -r _darcs/current $@
+	svn export ./@HEAD $@
 	rm -rf $@/future
 	@$(MAKE) -C doc context changelog.txt changelog.html
 	cp doc/context doc/changelog.txt doc/changelog.rst doc/changelog.html $@/doc/
