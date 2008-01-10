@@ -14,7 +14,8 @@ SLASHEM = claw
 GAMENETHACK = $(GAME)$(NETHACK)
 GAMESLASHEM = $(GAME)$(SLASHEM)
 DATE := $(shell date +%Y%m%d%H%M%S)
-VERSION = snapshot-$(DATE)
+SVNVERSION := $(shell svnversion -n .|sed s/:/_/)
+VERSION = snapshot-$(SVNVERSION)-$(DATE)
 RELEASE = 1
 FULLNAME = $(GAME)-$(VERSION)
 DISTDIR = dist/$(FULLNAME)
@@ -110,12 +111,17 @@ distfiles_zip: \
 	$(DISTDIR)/$(FULLNAME)-$(NETHACK).zip		\
 	$(DISTDIR)/$(FULLNAME)-$(SLASHEM).zip
 
+distfiles_7z: \
+	$(DISTDIR)/$(FULLNAME)-full.7z		\
+	$(DISTDIR)/$(FULLNAME)-$(NETHACK).7z		\
+	$(DISTDIR)/$(FULLNAME)-$(SLASHEM).7z
+
 distfiles_unixbin:	\
 	$(DISTDIR)/Unix\ Installer/$(FULLNAME)-full_unix-$(RELEASE).bin.sh \
 	$(DISTDIR)/Unix\ Installer/$(FULLNAME)-$(NETHACK)_unix-$(RELEASE).bin.sh \
 	$(DISTDIR)/Unix\ Installer/$(FULLNAME)-$(SLASHEM)_unix-$(RELEASE).bin.sh
 
-distfiles: distfiles_targz distfiles_tarbz2 distfiles_zip distfiles_unixbin
+distfiles: distfiles_targz distfiles_tarbz2 distfiles_zip distfiles_7z distfiles_unixbin
 
 $(DISTDIR)/$(FULLNAME)-full.tar.gz: $(DISTDIR)/$(FULLNAME)
 	cd $(DISTDIR); tar zcvf $(FULLNAME)-full.tar.gz $(FULLNAME)
@@ -161,6 +167,21 @@ $(DISTDIR)/$(FULLNAME)-$(SLASHEM).zip: $(DISTDIR)/$(FULLNAME)
 	cd $(DISTDIR); zip -r -9 $(FULLNAME)-$(SLASHEM).zip $(FULLNAME)/slashem $(FULLNAME)/doc
 	cd $(DISTDIR); $(MD5) $(FULLNAME)-$(SLASHEM).zip > $(FULLNAME)-$(SLASHEM).zip.md5
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-$(SLASHEM).zip > $(FULLNAME)-$(SLASHEM).zip.sha256
+
+$(DISTDIR)/$(FULLNAME)-full.7z: $(DISTDIR)/$(FULLNAME)
+	cd $(DISTDIR); 7z a -y -r -mx=9 $(FULLNAME)-full.7z $(FULLNAME)
+	cd $(DISTDIR); $(MD5) $(FULLNAME)-full.7z > $(FULLNAME)-full.7z.md5
+	cd $(DISTDIR); $(SHA256) $(FULLNAME)-full.7z > $(FULLNAME)-full.7z.sha256
+
+$(DISTDIR)/$(FULLNAME)-$(NETHACK).7z: $(DISTDIR)/$(FULLNAME)
+	cd $(DISTDIR); 7z a -y -r -mx=9 $(FULLNAME)-$(NETHACK).7z $(FULLNAME)/nethack $(FULLNAME)/doc
+	cd $(DISTDIR); $(MD5) $(FULLNAME)-$(NETHACK).7z > $(FULLNAME)-$(NETHACK).7z.md5
+	cd $(DISTDIR); $(SHA256) $(FULLNAME)-$(NETHACK).7z > $(FULLNAME)-$(NETHACK).7z.sha256
+
+$(DISTDIR)/$(FULLNAME)-$(SLASHEM).7z: $(DISTDIR)/$(FULLNAME)
+	cd $(DISTDIR); 7z a -y -r -mx=9 $(FULLNAME)-$(SLASHEM).7z $(FULLNAME)/slashem $(FULLNAME)/doc
+	cd $(DISTDIR); $(MD5) $(FULLNAME)-$(SLASHEM).7z > $(FULLNAME)-$(SLASHEM).7z.md5
+	cd $(DISTDIR); $(SHA256) $(FULLNAME)-$(SLASHEM).7z > $(FULLNAME)-$(SLASHEM).7z.sha256
 
 $(DISTDIR)/Unix\ Installer: $(DISTDIR)
 	mkdir $(DISTDIR)/Unix\ Installer
