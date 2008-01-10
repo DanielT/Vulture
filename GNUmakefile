@@ -14,7 +14,8 @@ SLASHEM = claw
 GAMENETHACK = $(GAME)$(NETHACK)
 GAMESLASHEM = $(GAME)$(SLASHEM)
 DATE := $(shell date +%Y%m%d%H%M%S)
-VERSION = snapshot-$(DATE)
+SVNVERSION := $(shell svnversion -n .|sed s/:/_/)
+VERSION = snapshot-$(SVNVERSION)-$(DATE)
 RELEASE = 1
 FULLNAME = $(GAME)-$(VERSION)
 DISTDIR = dist/$(FULLNAME)
@@ -23,18 +24,13 @@ CWD = $(shell pwd)
 TESTDIR = $(CWD)/testdir
 DMGDIR = $(CWD)/dmgdir
 INSTPREFIX = $$HOME/$(GAME)
-MD5 = /sbin/md5
-SHA256 = /usr/local/sbin/sha256
-
+MD5 = md5sum
+SHA256 = sha256sum
 
 help:
 	@echo "to build NetHack in your home directory: $(MAKE) nethack-home"
 	@echo "to build Slashem in your home directory: $(MAKE) slashem-home"
 	@echo "to build * Both  in your home directory: $(MAKE) home"
-
-posthook:
-	@darcs record --repodir=./_darcs/ -a -m "autopatch" --run-posthook --posthook="darcs diff --last 1|grep '^>'|cut -c2-|mail -s 'darcs patch bundle applied' $(GAME)@darkarts.co.za"
-	@sh "util/posthook.sh" &
 
 install:
 	@echo "Nothing to do for 'install'"
@@ -115,12 +111,17 @@ distfiles_zip: \
 	$(DISTDIR)/$(FULLNAME)-$(NETHACK).zip		\
 	$(DISTDIR)/$(FULLNAME)-$(SLASHEM).zip
 
+distfiles_7z: \
+	$(DISTDIR)/$(FULLNAME)-full.7z		\
+	$(DISTDIR)/$(FULLNAME)-$(NETHACK).7z		\
+	$(DISTDIR)/$(FULLNAME)-$(SLASHEM).7z
+
 distfiles_unixbin:	\
 	$(DISTDIR)/Unix\ Installer/$(FULLNAME)-full_unix-$(RELEASE).bin.sh \
 	$(DISTDIR)/Unix\ Installer/$(FULLNAME)-$(NETHACK)_unix-$(RELEASE).bin.sh \
 	$(DISTDIR)/Unix\ Installer/$(FULLNAME)-$(SLASHEM)_unix-$(RELEASE).bin.sh
 
-distfiles: distfiles_targz distfiles_tarbz2 distfiles_zip distfiles_unixbin
+distfiles: distfiles_targz distfiles_tarbz2 distfiles_zip distfiles_7z distfiles_unixbin
 
 $(DISTDIR)/$(FULLNAME)-full.tar.gz: $(DISTDIR)/$(FULLNAME)
 	cd $(DISTDIR); tar zcvf $(FULLNAME)-full.tar.gz $(FULLNAME)
@@ -128,12 +129,12 @@ $(DISTDIR)/$(FULLNAME)-full.tar.gz: $(DISTDIR)/$(FULLNAME)
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-full.tar.gz > $(FULLNAME)-full.tar.gz.sha256
 
 $(DISTDIR)/$(FULLNAME)-$(NETHACK).tar.gz: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); tar zcvfL $(FULLNAME)-$(NETHACK).tar.gz $(FULLNAME)/nethack $(FULLNAME)/doc
+	cd $(DISTDIR); tar zcvfh $(FULLNAME)-$(NETHACK).tar.gz $(FULLNAME)/nethack $(FULLNAME)/doc
 	cd $(DISTDIR); $(MD5) $(FULLNAME)-$(NETHACK).tar.gz > $(FULLNAME)-$(NETHACK).tar.gz.md5
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-$(NETHACK).tar.gz > $(FULLNAME)-$(NETHACK).tar.gz.sha256
 
 $(DISTDIR)/$(FULLNAME)-$(SLASHEM).tar.gz: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); tar zcvfL $(FULLNAME)-$(SLASHEM).tar.gz $(FULLNAME)/slashem $(FULLNAME)/doc
+	cd $(DISTDIR); tar zcvfh $(FULLNAME)-$(SLASHEM).tar.gz $(FULLNAME)/slashem $(FULLNAME)/doc
 	cd $(DISTDIR); $(MD5) $(FULLNAME)-$(SLASHEM).tar.gz > $(FULLNAME)-$(SLASHEM).tar.gz.md5
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-$(SLASHEM).tar.gz > $(FULLNAME)-$(SLASHEM).tar.gz.sha256
 
@@ -143,12 +144,12 @@ $(DISTDIR)/$(FULLNAME)-full.tar.bz2: $(DISTDIR)/$(FULLNAME)
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-full.tar.bz2 > $(FULLNAME)-full.tar.bz2.sha256
 
 $(DISTDIR)/$(FULLNAME)-$(NETHACK).tar.bz2: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); tar jcvfL $(FULLNAME)-$(NETHACK).tar.bz2 $(FULLNAME)/nethack $(FULLNAME)/doc
+	cd $(DISTDIR); tar jcvfh $(FULLNAME)-$(NETHACK).tar.bz2 $(FULLNAME)/nethack $(FULLNAME)/doc
 	cd $(DISTDIR); $(MD5) $(FULLNAME)-$(NETHACK).tar.bz2 > $(FULLNAME)-$(NETHACK).tar.bz2.md5
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-$(NETHACK).tar.bz2 > $(FULLNAME)-$(NETHACK).tar.bz2.sha256
 
 $(DISTDIR)/$(FULLNAME)-$(SLASHEM).tar.bz2: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); tar jcvfL $(FULLNAME)-$(SLASHEM).tar.bz2 $(FULLNAME)/slashem $(FULLNAME)/doc
+	cd $(DISTDIR); tar jcvfh $(FULLNAME)-$(SLASHEM).tar.bz2 $(FULLNAME)/slashem $(FULLNAME)/doc
 	cd $(DISTDIR); $(MD5) $(FULLNAME)-$(SLASHEM).tar.bz2 > $(FULLNAME)-$(SLASHEM).tar.bz2.md5
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-$(SLASHEM).tar.bz2 > $(FULLNAME)-$(SLASHEM).tar.bz2.sha256
 
@@ -166,6 +167,21 @@ $(DISTDIR)/$(FULLNAME)-$(SLASHEM).zip: $(DISTDIR)/$(FULLNAME)
 	cd $(DISTDIR); zip -r -9 $(FULLNAME)-$(SLASHEM).zip $(FULLNAME)/slashem $(FULLNAME)/doc
 	cd $(DISTDIR); $(MD5) $(FULLNAME)-$(SLASHEM).zip > $(FULLNAME)-$(SLASHEM).zip.md5
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-$(SLASHEM).zip > $(FULLNAME)-$(SLASHEM).zip.sha256
+
+$(DISTDIR)/$(FULLNAME)-full.7z: $(DISTDIR)/$(FULLNAME)
+	cd $(DISTDIR); 7z a -y -r -mx=9 $(FULLNAME)-full.7z $(FULLNAME)
+	cd $(DISTDIR); $(MD5) $(FULLNAME)-full.7z > $(FULLNAME)-full.7z.md5
+	cd $(DISTDIR); $(SHA256) $(FULLNAME)-full.7z > $(FULLNAME)-full.7z.sha256
+
+$(DISTDIR)/$(FULLNAME)-$(NETHACK).7z: $(DISTDIR)/$(FULLNAME)
+	cd $(DISTDIR); 7z a -y -r -mx=9 $(FULLNAME)-$(NETHACK).7z $(FULLNAME)/nethack $(FULLNAME)/doc
+	cd $(DISTDIR); $(MD5) $(FULLNAME)-$(NETHACK).7z > $(FULLNAME)-$(NETHACK).7z.md5
+	cd $(DISTDIR); $(SHA256) $(FULLNAME)-$(NETHACK).7z > $(FULLNAME)-$(NETHACK).7z.sha256
+
+$(DISTDIR)/$(FULLNAME)-$(SLASHEM).7z: $(DISTDIR)/$(FULLNAME)
+	cd $(DISTDIR); 7z a -y -r -mx=9 $(FULLNAME)-$(SLASHEM).7z $(FULLNAME)/slashem $(FULLNAME)/doc
+	cd $(DISTDIR); $(MD5) $(FULLNAME)-$(SLASHEM).7z > $(FULLNAME)-$(SLASHEM).7z.md5
+	cd $(DISTDIR); $(SHA256) $(FULLNAME)-$(SLASHEM).7z > $(FULLNAME)-$(SLASHEM).7z.sha256
 
 $(DISTDIR)/Unix\ Installer: $(DISTDIR)
 	mkdir $(DISTDIR)/Unix\ Installer
@@ -186,10 +202,8 @@ $(DISTDIR)/Unix\ Installer/$(FULLNAME)-$(SLASHEM)_unix-$(RELEASE).bin.sh: $(DIST
 	cd $(DISTDIR)/Unix\ Installer; $(SHA256) $(FULLNAME)-$(SLASHEM)_unix-$(RELEASE).bin.sh > $(FULLNAME)-$(SLASHEM)_unix-$(RELEASE).bin.sh.sha256
 
 $(DISTDIR)/$(FULLNAME): $(DISTDIR)
-	cp -r _darcs/current $@
+	svn export ./@HEAD $@
 	rm -rf $@/future
-	@$(MAKE) -C doc context changelog.txt changelog.html
-	cp doc/context doc/changelog.txt doc/changelog.rst doc/changelog.html $@/doc/
 	echo "#define $(GAMEDEF)_PORT_VERSION \"$(VERSION)\"">$@/$(GAME)/$(GAME)version.h
 	ln -s ../../$(GAME) $@/nethack/win/$(GAME)
 	ln -s ../../$(GAME) $@/slashem/win/$(GAME)
