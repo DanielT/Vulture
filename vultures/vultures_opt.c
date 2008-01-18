@@ -32,6 +32,7 @@ enum interface_opts_menu_ids {
     V_IOMID_HELPTB,
     V_IOMID_ACTIONTB,
     V_IOMID_MINIMAP,
+    V_IOMID_USESTANDARDINVENTORY,
     V_IOMID_MESSAGELINES,
     V_IOMID_KEYROTATION,
     V_IOMID_MACROS = 99
@@ -94,6 +95,8 @@ void vultures_read_main_config(FILE * fp)
             vultures_opts.show_actiontb = atoi(param);
         else if (!strncmp(configline, "show_minimap", optend - configline))
             vultures_opts.show_minimap = atoi(param);
+        else if (!strncmp(configline, "use_standard_inventory", optend - configline))
+            vultures_opts.use_standard_inventory = atoi(param);
         else if (!strncmp(configline, "messagelines", optend - configline))
             vultures_opts.messagelines = atoi(param);
         else if (!strncmp(configline, "no_key_translation", optend - configline))
@@ -237,6 +240,7 @@ void vultures_read_options(void)
     vultures_opts.show_helptb = 1;
     vultures_opts.show_actiontb = 1;
     vultures_opts.show_minimap = 1;
+    vultures_opts.use_standard_inventory = 0;
     vultures_opts.messagelines = 3;
     vultures_opts.no_key_translation = 0;
 
@@ -386,6 +390,7 @@ void vultures_write_userconfig(void)
         fprintf(fp, "show_helpbar=%d\n", vultures_opts.show_helptb);
         fprintf(fp, "show_actionbar=%d\n", vultures_opts.show_actiontb);
         fprintf(fp, "show_minimap=%d\n", vultures_opts.show_minimap);
+        fprintf(fp, "use_standard_inventory=%d\n", vultures_opts.use_standard_inventory);
         fprintf(fp, "messagelines=%d\n", vultures_opts.messagelines);
         fprintf(fp, "no_key_translation=%d\n", vultures_opts.no_key_translation);        
 
@@ -460,6 +465,14 @@ int vultures_iface_opts(void)
 
     any.a_int = V_IOMID_MINIMAP;
     sprintf(str, "Show minimap\t[%s]", vultures_opts.show_minimap ? "yes" : "no");
+    vultures_add_menu(winid, NO_GLYPH, &any, 0, 0, ATR_BOLD, str, MENU_UNSELECTED);
+
+    any.a_int = V_IOMID_USESTANDARDINVENTORY;
+    sprintf(str, "Use standard inventory\t[%s]", vultures_opts.use_standard_inventory ? "yes" : "no");
+    vultures_add_menu(winid, NO_GLYPH, &any, 0, 0, ATR_BOLD, str, MENU_UNSELECTED);
+
+    any.a_int = V_IOMID_MESSAGELINES;
+    sprintf(str, "Message lines\t[%d]", vultures_opts.messagelines);
     vultures_add_menu(winid, NO_GLYPH, &any, 0, 0, ATR_BOLD, str, MENU_UNSELECTED);
 
     any.a_int = V_IOMID_MESSAGELINES;
@@ -613,6 +626,10 @@ int vultures_iface_opts(void)
                 }
                 vultures_map_force_redraw();
                 vultures_display_nhwindow(WIN_MAP, 0);
+                break;
+
+            case V_IOMID_USESTANDARDINVENTORY:
+                vultures_opts.use_standard_inventory = ! vultures_opts.use_standard_inventory;
                 break;
 
             case V_IOMID_MESSAGELINES:

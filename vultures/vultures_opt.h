@@ -28,6 +28,7 @@ struct vultures_optstruct {
     int show_minimap;
     int messagelines;
     int no_key_translation;
+    int use_standard_inventory;
     char macro[6][10];
     double wall_opacity;
 };

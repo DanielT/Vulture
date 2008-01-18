@@ -590,7 +590,7 @@ int vultures_select_menu(int winid, int how, menu_item ** menu_list)
     win->select_how = how;
     *menu_list = NULL; /* realloc blows up if this contains a random memory location */
 
-    if (winid == WIN_INVEN && how == PICK_NONE)
+    if (winid == WIN_INVEN && how == PICK_NONE && !vultures_opts.use_standard_inventory)
     {
         win->visible = 1;
         win->need_redraw = 1;
