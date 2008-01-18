@@ -620,7 +620,7 @@ int vultures_select_menu(int winid, int how, menu_item ** menu_list)
         }
     }
 
-    if (win->content_is_text)
+    if ( win->content_is_text || how == PICK_NONE )
     {
         win_elem = vultures_create_window_internal(0, win, V_WINTYPE_BUTTON);
         win_elem->caption = strdup("Continue");
