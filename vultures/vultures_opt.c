@@ -475,10 +475,6 @@ int vultures_iface_opts(void)
     sprintf(str, "Message lines\t[%d]", vultures_opts.messagelines);
     vultures_add_menu(winid, NO_GLYPH, &any, 0, 0, ATR_BOLD, str, MENU_UNSELECTED);
 
-    any.a_int = V_IOMID_MESSAGELINES;
-    sprintf(str, "Message lines\t[%d]", vultures_opts.messagelines);
-    vultures_add_menu(winid, NO_GLYPH, &any, 0, 0, ATR_BOLD, str, MENU_UNSELECTED);
-
     any.a_int = V_IOMID_KEYROTATION;
     sprintf(str, "Disable key rotation\t[%s]", vultures_opts.no_key_translation ? "yes" : "no");
     vultures_add_menu(winid, NO_GLYPH, &any, 0, 0, ATR_BOLD, str, MENU_UNSELECTED);
