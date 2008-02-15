@@ -1769,6 +1769,7 @@ int vultures_get_map_contextmenu(point mappos)
         if ((abs(u.ux-mappos. x) <= 1) && (abs(u.uy-mappos. y) <= 1))
         {
             vultures_add_context_action(menu, V_ACTION_CHAT, "Chat");
+            vultures_add_context_action(menu, V_ACTION_FIGHT, "Fight");
             vultures_add_context_action(menu, V_ACTION_NAMEMON, "Name");
         }
 
@@ -1954,6 +1955,10 @@ int vultures_perform_map_action(int action_id, point mappos)
         case V_ACTION_CHAT:
             vultures_eventstack_add(vultures_mappos_to_dirkey(mappos),-1,-1, V_RESPOND_CHARACTER);
             return META('c');
+
+        case V_ACTION_FIGHT:
+            vultures_eventstack_add(vultures_mappos_to_dirkey(mappos),-1,-1, V_RESPOND_POSKEY);
+            return 'F';
 
         case V_ACTION_NAMEMON:
             vultures_eventstack_add(0, mappos.x, mappos.y, V_RESPOND_POSKEY);
