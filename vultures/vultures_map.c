@@ -848,7 +848,7 @@ void vultures_print_glyph(winid window, XCHAR_P x, XCHAR_P y, int glyph)
     int map_furniture = vultures_map_furniture[y][x];
     int darkness = vultures_map_tile_is_dark[y][x];
 
-    vultures_map_glyph[y][x]=glyph;
+    vultures_map_glyph[y][x] = glyph;
 
     /* check wether we are swallowed, if so, return, because nothing but the swallow graphic will be drawn anyway */
     if (glyph_is_swallow(glyph))
@@ -876,9 +876,16 @@ void vultures_print_glyph(winid window, XCHAR_P x, XCHAR_P y, int glyph)
             /* digbeam, camera flash, boomerang, magic resistance: these are not floor tiles ... */
             map_special = vultures_tilemap_special[glyph_to_cmap(glyph)];
 
+        /* if the player is invisible and can't see himself, nethack does not print a
+         * glyph for him; we need to insert it ourselves */
+        if (x == u.ux && y == u.uy && !canseeself())
+        {
+            vultures_map_glyph[y][x] = monnum_to_glyph(u.umonnum);
+            map_mon = V_TILE_PLAYER_INVIS;
+        }
         /* We rely on the glyph for monsters, as they are never covered by anything
          * at the start of the turn and dealing with them manually is ugly */
-        if (glyph_is_monster(glyph))
+        else if (glyph_is_monster(glyph))
         {
             /* we need special attributes, so that we can highlight the pet */
             mapglyph(glyph, &character, &colour, &vultures_map_specialattr[y][x], x, y);
