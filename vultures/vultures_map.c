@@ -1463,7 +1463,7 @@ static int vultures_get_wall_decor(
 {
     int roomid;
 
-#if REINCARNATION
+#ifdef REINCARNATION
     if (Is_rogue_level(&u.uz))
         return V_WALL_LIGHT;
 #endif
@@ -1500,7 +1500,7 @@ static int vultures_get_floor_decor(
 )
 {
     int roomid;
-#if REINCARNATION
+#ifdef REINCARNATION
     if (Is_rogue_level(&u.uz))
         return V_FLOOR_DARK;
 #endif
@@ -2166,7 +2166,7 @@ static int vultures_monster_to_tile(int mon_id, XCHAR_P x, XCHAR_P y)
     if (Invis && u.ux == x && u.uy == y)
         return V_TILE_PLAYER_INVIS;
 
-#if REINCARNATION
+#ifdef REINCARNATION
     if (Is_rogue_level(&u.uz))
     {
         switch (mon_id)
