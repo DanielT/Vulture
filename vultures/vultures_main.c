@@ -620,6 +620,30 @@ int vultures_select_menu(int winid, int how, menu_item ** menu_list)
         }
     }
 
+    /* if this is a PICK_NONE selection, all checkboxes need to be converted into normal text items */
+    if (how == PICK_NONE) {
+        struct window *win_elem_next, *win_tmp;
+
+        /* info for vultures_layout_menu */
+        win->content_is_text = 1;
+
+        /* traverse the list of child windows: contains all checkboxes */
+        win_elem = win->first_child;
+        while (win_elem)
+        {
+            win_elem_next = win_elem->sib_next;
+            if (win_elem->v_type == V_WINTYPE_OPTION) {
+                win_tmp = vultures_create_window_internal(0, win, V_WINTYPE_TEXT);
+
+                win_tmp->caption = win_elem->caption;
+                win_elem->caption = NULL;
+
+                vultures_destroy_window_internal(win_elem);
+            }
+            win_elem = win_elem_next;
+        }
+    }
+
     if ( win->content_is_text || how == PICK_NONE )
     {
         win_elem = vultures_create_window_internal(0, win, V_WINTYPE_BUTTON);
