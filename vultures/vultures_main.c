@@ -638,6 +638,26 @@ int vultures_select_menu(int winid, int how, menu_item ** menu_list)
                 win_tmp->caption = win_elem->caption;
                 win_elem->caption = NULL;
 
+                /* re-link the new window to preserve inventory ordering */
+                /* unlink win_tmp */
+                if (win_tmp->sib_prev)
+                    win_tmp->sib_prev->sib_next = win_tmp->sib_next;
+                if (win_tmp->sib_next)
+                    win_tmp->sib_next->sib_prev = win_tmp->sib_prev;
+
+                if (win_tmp->parent->first_child == win_tmp)
+                    win_tmp->parent->first_child = win_tmp->sib_next;
+                if (win_tmp->parent->last_child == win_tmp)
+                    win_tmp->parent->last_child = win_tmp->sib_prev;
+
+                /* re-link win_tmp before win_elem */
+                win_tmp->sib_prev = win_elem->sib_prev;
+                if (win_tmp->sib_prev)
+                    win_tmp->sib_prev->sib_next = win_tmp;
+
+                win_tmp->sib_next = win_elem;
+                win_elem->sib_prev = win_tmp;
+
                 vultures_destroy_window_internal(win_elem);
             }
             win_elem = win_elem_next;
