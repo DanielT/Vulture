@@ -89,7 +89,7 @@ static int vultures_map_clip_br_y = 0;
 
 int vultures_map_draw_msecs = 0;
 int vultures_map_draw_lastmove = 0;
-
+point vultures_map_highlight = {-1, -1};
 
 /*----------------------------
  * pre-declared functions
@@ -491,6 +491,10 @@ int vultures_draw_level(struct window * win)
             if (tile_id == V_TILE_UNMAPPED_AREA)
                 continue;
 
+            if (vultures_opts.highlight_cursor_square && 
+                (j == vultures_map_highlight.x && i == vultures_map_highlight.y))
+                vultures_put_tile(x, y, V_TILE_FLOOR_HIGHLIGHT);
+
             /* 3. Floor edges */
             for (dir_idx = 0; dir_idx < 12; dir_idx++)
                 vultures_put_tile(x, y, vultures_maptile_floor_edge[i][j].dir[dir_idx]);
@@ -559,6 +563,7 @@ int vultures_draw_level(struct window * win)
                                   vultures_map_tile_is_dark[i][j+1] * GAMETILECOUNT);
         }
     }
+
 
     /* Restore drawing region */
     vultures_set_draw_region(0, 0, vultures_screen->w-1, vultures_screen->h-1);
@@ -772,6 +777,14 @@ void vultures_clear_map()
 }
 
 
+void vultures_add_to_clipregion(int tl_x, int tl_y, int br_x, int br_y)
+{
+    vultures_map_clip_tl_x = (vultures_map_clip_tl_x < tl_x) ? vultures_map_clip_tl_x : tl_x;
+    vultures_map_clip_tl_y = (vultures_map_clip_tl_y < tl_y) ? vultures_map_clip_tl_y : tl_y;
+    vultures_map_clip_br_x = (vultures_map_clip_br_x > br_x) ? vultures_map_clip_br_x : br_x;
+    vultures_map_clip_br_y = (vultures_map_clip_br_y > br_y) ? vultures_map_clip_br_y : br_y;
+}
+
 
 static void vultures_set_map_data(int ** data_array, int x, int y, int newval, int force)
 {
@@ -812,10 +825,7 @@ static void vultures_set_map_data(int ** data_array, int x, int y, int newval, i
             br_y = pixel_y + 22;
         }
 
-        vultures_map_clip_tl_x = (vultures_map_clip_tl_x < tl_x) ? vultures_map_clip_tl_x : tl_x;
-        vultures_map_clip_tl_y = (vultures_map_clip_tl_y < tl_y) ? vultures_map_clip_tl_y : tl_y;
-        vultures_map_clip_br_x = (vultures_map_clip_br_x > br_x) ? vultures_map_clip_br_x : br_x;
-        vultures_map_clip_br_y = (vultures_map_clip_br_y > br_y) ? vultures_map_clip_br_y : br_y;
+        vultures_add_to_clipregion(tl_x, tl_y, br_x, br_y);
     }
 }
 

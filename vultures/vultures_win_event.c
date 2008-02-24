@@ -337,6 +337,21 @@ int vultures_eventh_level(struct window* handler, struct window* target,
             else
                 vultures_set_mcursor(vultures_get_map_cursor(mappos));
 
+            if (vultures_opts.highlight_cursor_square && 
+                vultures_map_highlight.x != mappos.x || vultures_map_highlight.y != mappos.y)
+            {
+                mouse = vultures_map_to_mouse(vultures_map_highlight);
+                vultures_add_to_clipregion(mouse.x - V_MAP_XMOD, mouse.y - V_MAP_YMOD,
+                                           mouse.x + V_MAP_XMOD, mouse.y + V_MAP_YMOD);
+                mouse = vultures_map_to_mouse(mappos);
+                vultures_add_to_clipregion(mouse.x - V_MAP_XMOD, mouse.y - V_MAP_YMOD,
+                                           mouse.x + V_MAP_XMOD, mouse.y + V_MAP_YMOD);
+
+                vultures_map_highlight = mappos;
+                handler->need_redraw = 1;
+                return V_EVENT_HANDLED_REDRAW;
+            }
+
             break;
 
         case SDL_TIMEREVENT:

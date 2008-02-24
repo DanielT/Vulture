@@ -35,6 +35,7 @@ enum interface_opts_menu_ids {
     V_IOMID_USESTANDARDINVENTORY,
     V_IOMID_MESSAGELINES,
     V_IOMID_KEYROTATION,
+    V_IOMID_HIGHLIGHT_CURSOR_SQUARE,
     V_IOMID_MACROS = 99
 };
 
@@ -101,6 +102,8 @@ void vultures_read_main_config(FILE * fp)
             vultures_opts.messagelines = atoi(param);
         else if (!strncmp(configline, "no_key_translation", optend - configline))
             vultures_opts.no_key_translation = atoi(param);
+        else if (!strncmp(configline, "highlight_cursor_square", optend - configline))
+            vultures_opts.highlight_cursor_square = atoi(param);
         else if (!strncmp(configline, "macro", 5))
         {
             macronum = atoi(configline+5);
@@ -243,6 +246,7 @@ void vultures_read_options(void)
     vultures_opts.use_standard_inventory = 0;
     vultures_opts.messagelines = 3;
     vultures_opts.no_key_translation = 0;
+    vultures_opts.highlight_cursor_square = 0;
 
     strcpy(vultures_opts.macro[0], "n100.");
     strcpy(vultures_opts.macro[1], "n20s");
@@ -392,7 +396,8 @@ void vultures_write_userconfig(void)
         fprintf(fp, "show_minimap=%d\n", vultures_opts.show_minimap);
         fprintf(fp, "use_standard_inventory=%d\n", vultures_opts.use_standard_inventory);
         fprintf(fp, "messagelines=%d\n", vultures_opts.messagelines);
-        fprintf(fp, "no_key_translation=%d\n", vultures_opts.no_key_translation);        
+        fprintf(fp, "no_key_translation=%d\n", vultures_opts.no_key_translation);
+        fprintf(fp, "highlight_cursor_square=%d\n", vultures_opts.highlight_cursor_square);
 
         for (i = 0; i < 6; i++)
             if (vultures_opts.macro[i][0] != '\0')
@@ -477,6 +482,10 @@ int vultures_iface_opts(void)
 
     any.a_int = V_IOMID_KEYROTATION;
     sprintf(str, "Disable key rotation\t[%s]", vultures_opts.no_key_translation ? "yes" : "no");
+    vultures_add_menu(winid, NO_GLYPH, &any, 0, 0, ATR_BOLD, str, MENU_UNSELECTED);
+
+    any.a_int = V_IOMID_HIGHLIGHT_CURSOR_SQUARE;
+    sprintf(str, "Highlight the square under the cursor\t[%s]", vultures_opts.highlight_cursor_square ? "yes" : "no");
     vultures_add_menu(winid, NO_GLYPH, &any, 0, 0, ATR_BOLD, str, MENU_UNSELECTED);
 
     for (i = 0; i < 6; i++)
@@ -639,7 +648,11 @@ int vultures_iface_opts(void)
 
             case V_IOMID_KEYROTATION:
                 vultures_opts.no_key_translation = !vultures_opts.no_key_translation;
+                break;
 
+            case V_IOMID_HIGHLIGHT_CURSOR_SQUARE:
+                vultures_opts.highlight_cursor_square = !vultures_opts.highlight_cursor_square;
+                break;
 
             default:
                 if (selected[i].item.a_int >= V_IOMID_MACROS && selected[i].item.a_int <= (V_IOMID_MACROS+6))
@@ -657,9 +670,9 @@ int vultures_iface_opts(void)
         vultures_set_screensize();
 
     free(str);
-    
+
     vultures_write_userconfig();
-    
+
     return 0;
 }
 

@@ -82,6 +82,7 @@ extern struct walls * walltiles;
 
 extern int vultures_map_draw_lastmove;
 extern int vultures_map_draw_msecs;
+extern point vultures_map_highlight;
 
 /* exported functions */
 extern char * vultures_map_square_description(point target, int include_seen);
@@ -102,5 +103,7 @@ extern void vultures_map_force_redraw(void);
 void vultures_destroy_map(void);
 extern int vultures_init_map(void);
 extern void vultures_clear_map(void);
+
+extern void vultures_add_to_clipregion(int tl_x, int tl_y, int br_x, int br_y);
 
 #endif

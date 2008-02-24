@@ -29,6 +29,7 @@ struct vultures_optstruct {
     int messagelines;
     int no_key_translation;
     int use_standard_inventory;
+    int highlight_cursor_square;
     char macro[6][10];
     double wall_opacity;
 };
