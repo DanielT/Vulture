@@ -485,7 +485,7 @@ int vultures_iface_opts(void)
     vultures_add_menu(winid, NO_GLYPH, &any, 0, 0, ATR_BOLD, str, MENU_UNSELECTED);
 
     any.a_int = V_IOMID_HIGHLIGHT_CURSOR_SQUARE;
-    sprintf(str, "Highlight the square under the cursor\t[%s]", vultures_opts.highlight_cursor_square ? "yes" : "no");
+    sprintf(str, "Highlight under the cursor\t[%s]", vultures_opts.highlight_cursor_square ? "yes" : "no");
     vultures_add_menu(winid, NO_GLYPH, &any, 0, 0, ATR_BOLD, str, MENU_UNSELECTED);
 
     for (i = 0; i < 6; i++)
