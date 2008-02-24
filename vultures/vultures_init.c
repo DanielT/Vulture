@@ -540,6 +540,7 @@ int vultures_init_graphics(void)
         vultures_winelem.corner_br = vultures_get_img_src(61, 58, 84, 82, image);
         vultures_winelem.checkbox_off = vultures_get_img_src(1, 107, 17, 123, image);
         vultures_winelem.checkbox_on = vultures_get_img_src(21, 107, 37, 123, image);
+        vultures_winelem.checkbox_count = vultures_get_img_src(21, 127, 37, 143, image);
         vultures_winelem.radiobutton_off = vultures_get_img_src(41, 107, 57, 123, image);
         vultures_winelem.radiobutton_on = vultures_get_img_src(61, 107, 77, 123, image);
         vultures_winelem.scrollbar = vultures_get_img_src(81, 107, 97, 123, image);

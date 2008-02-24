@@ -134,6 +134,7 @@ typedef struct {
     SDL_Surface * radiobutton_on;
     SDL_Surface * radiobutton_off;
     SDL_Surface * checkbox_on;
+    SDL_Surface * checkbox_count;
     SDL_Surface * checkbox_off;
     SDL_Surface * scrollbar;
     SDL_Surface * scrollbutton_up;

@@ -693,9 +693,7 @@ int vultures_select_menu(int winid, int how, menu_item ** menu_list)
             n_selected++;
             *menu_list = realloc(*menu_list, n_selected*sizeof(menu_item));
             (*menu_list)[n_selected-1].item.a_void = win_elem->menu_id_v;
-            (*menu_list)[n_selected-1].count = -1; /* TODO: we don't (never have actually) allow a
-                                                    * count in menus; for example it should be possible
-                                                    * to say put 5 (of a stack of 7) into the BoH */
+            (*menu_list)[n_selected-1].count = win_elem->count;
         }
 
         win_elem = win_elem->sib_next;
@@ -1145,13 +1143,13 @@ static int vultures_find_menu_accelerator(char *used_accelerators)
     char acc_found;
     int cur_accelerator;
     int i, j;
-    char acclist[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ";
+    char acclist[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ";
 
     /* Find an unused accelerator */
     acc_found = 0;
     cur_accelerator = 0;
 
-    /* Pick any available letter from [a-zA-Z0-9] */
+    /* Pick any available letter from [a-zA-Z] */
     for (i = 0; i < strlen(acclist); i++)
     {
         cur_accelerator = acclist[i];

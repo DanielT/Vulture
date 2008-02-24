@@ -60,6 +60,7 @@ typedef struct window {
     unsigned pd_type : 1; /* 0 == the pd union is storing a value, 1 == it's storing an SDL_Surface */
     unsigned select_how : 2;
 
+    int count;
     int accelerator;
 
     union {

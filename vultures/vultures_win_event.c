@@ -771,10 +771,34 @@ int vultures_eventh_messagebox(struct window* handler, struct window* target,
 }
 
 
+static void select_menu_option(struct window * handler, struct window * target, int count)
+{
+    struct window * winelem;
+
+    if (handler->select_how == PICK_ONE)
+    {
+        /* unselect everything else */
+        winelem = handler->first_child;
+        while (winelem)
+        {
+            winelem->selected = 0;
+            winelem->count = -1;
+            winelem = winelem->sib_next;
+        }
+        target->selected = 1;
+    }
+    else
+        target->selected = !target->selected;
+
+    if (target->selected)
+        target->count = count;
+}
+
 
 int vultures_eventh_menu(struct window* handler, struct window* target,
                          void* result, SDL_Event* event)
 {
+    static int current_count = 0;
     struct window * winelem;
     point mouse;
     int scrollind_y;
@@ -798,20 +822,13 @@ int vultures_eventh_menu(struct window* handler, struct window* target,
         /* click on an option / checkbox */
         if (target->v_type == V_WINTYPE_OPTION)
         {
+            select_menu_option(handler, target, current_count ? current_count : -1);
+            current_count = 0;
             if (handler->select_how == PICK_ONE)
             {
-                /* unselect everything else */
-                winelem = handler->first_child;
-                while (winelem)
-                {
-                    winelem->selected = 0;
-                    winelem = winelem->sib_next;
-                }
-                target->selected = 1;
+                *(int*)result = 1;
                 return V_EVENT_HANDLED_FINAL;
             }
-            else
-                target->selected = !target->selected;
 
             handler->need_redraw = 1;
             return V_EVENT_HANDLED_REDRAW;
@@ -896,6 +913,9 @@ int vultures_eventh_menu(struct window* handler, struct window* target,
             case SDLK_KP8:
             case SDLK_UP:
                 return vultures_scrollto(handler, V_SCROLL_LINE_REL, -1);
+
+            case SDLK_BACKSPACE:
+                current_count = current_count / 10;
 
             default: break;
         }
@@ -993,23 +1013,23 @@ int vultures_eventh_menu(struct window* handler, struct window* target,
                 return V_EVENT_HANDLED_REDRAW;
 
             default:
+                /* numbers are part of a count */
+                if (key >= '0' && key <= '9') {
+                    current_count = current_count * 10 + (key - '0');
+                    break;
+                }
+            
+                /* try to match the key to an accelerator */
                 target = vultures_accel_to_win(handler, key);
                 if (target)
                 {
+                    select_menu_option(handler, target, current_count ? current_count : -1);
+                    current_count = 0;
                     if (handler->select_how == PICK_ONE)
                     {
-                        /* unselect everything else */
-                        winelem = handler->first_child;
-                        while (winelem)
-                        {
-                            winelem->selected = 0;
-                            winelem = winelem->sib_next;
-                        }
-                        target->selected = 1;
+                        *(int*)result = 1;
                         return V_EVENT_HANDLED_FINAL;
                     }
-                    else
-                        target->selected = !target->selected;
 
                     /* if the selected element isn't visible bring it into view */
                     if (!target->visible)
