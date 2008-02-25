@@ -713,7 +713,7 @@ int vultures_select_menu(int winid, int how, menu_item ** menu_list)
             n_selected++;
             *menu_list = realloc(*menu_list, n_selected*sizeof(menu_item));
             (*menu_list)[n_selected-1].item.a_void = win_elem->menu_id_v;
-            (*menu_list)[n_selected-1].count = win_elem->count;
+            (*menu_list)[n_selected-1].count = win_elem->pd.count;
         }
 
         win_elem = win_elem->sib_next;

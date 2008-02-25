@@ -161,7 +161,7 @@ struct window * vultures_create_window_internal(int nh_type, struct window * par
 
         case V_WINTYPE_OPTION:
             newwin->draw = vultures_draw_option;
-            newwin->count = -1;
+            newwin->pd.count = 0;
             break;
 
         case V_WINTYPE_SCROLLBAR:
@@ -1131,7 +1131,7 @@ static int vultures_draw_option(struct window * win)
     {
         if (win->selected)
         {
-            if (win->count == -1)
+            if (win->pd.count == -1)
                 vultures_put_img(win->abs_x, win->abs_y, vultures_winelem.checkbox_on);
             else
                 vultures_put_img(win->abs_x, win->abs_y, vultures_winelem.checkbox_count);
