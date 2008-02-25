@@ -146,42 +146,49 @@ struct window * vultures_create_window_internal(int nh_type, struct window * par
     parent->last_child = newwin;
 
     /* set up a draw() function for the window, if it doesn't want to draw itself (V_WINTYPE_CUSTOM) */
+    vultures_init_wintype(newwin, wintype);
+
+    return newwin;
+}
+
+
+void vultures_init_wintype(struct window * win, int wintype)
+{
     switch(wintype)
     {
         case V_WINTYPE_MAIN:
-            newwin->draw = vultures_draw_mainwin;
-            newwin->autobg = 1;
+            win->draw = vultures_draw_mainwin;
+            win->autobg = 1;
             break;
 
         case V_WINTYPE_BUTTON:
-            newwin->draw = vultures_draw_button;
-            newwin->event_handler = vultures_eventh_button;
-            newwin->autobg = 1;
+            win->draw = vultures_draw_button;
+            win->event_handler = vultures_eventh_button;
+            win->autobg = 1;
             break;
 
         case V_WINTYPE_OPTION:
-            newwin->draw = vultures_draw_option;
-            newwin->pd.count = 0;
+            win->draw = vultures_draw_option;
+            win->pd.count = 0;
             break;
 
         case V_WINTYPE_SCROLLBAR:
-            newwin->draw = vultures_draw_scrollbar; break;
+            win->draw = vultures_draw_scrollbar; break;
 
         case V_WINTYPE_TEXT:
-            newwin->draw = vultures_draw_text;
-            newwin->pd.textcolor = V_COLOR_TEXT;
+            win->draw = vultures_draw_text;
+            win->pd.textcolor = V_COLOR_TEXT;
             break;
 
         case V_WINTYPE_DROPDOWN:
-            newwin->draw = vultures_draw_dropdown;
-            newwin->event_handler = vultures_eventh_dropdown;
-            newwin->autobg = 1;
+            win->draw = vultures_draw_dropdown;
+            win->event_handler = vultures_eventh_dropdown;
+            win->autobg = 1;
             break;
 
         default:
-            newwin->draw = NULL;
+            win->draw = NULL;
     }
-    return newwin;
 }
 
 
