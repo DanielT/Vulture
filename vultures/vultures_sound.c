@@ -90,10 +90,12 @@ void vultures_init_sound(void)
 
 
 
+/* tries to play a sound matching the given str */
 void vultures_play_event_sound(const char * str)
 {
     int i;
 
+    /* search the configured sounds for one that matches str */
     for (i = 0; i < vultures_n_event_sounds; i++)
     {
         if (strstr(str, (vultures_event_sounds[i])->searchpattern))
@@ -152,6 +154,7 @@ static void vultures_play_song(char * midifilename)
     vultures_current_music = Mix_LoadMUS(midifilename);
     Mix_PlayMusic(vultures_current_music,0);
 }
+
 
 static void vultures_play_cd_track(char * cdtrackname)
 {

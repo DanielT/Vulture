@@ -356,6 +356,54 @@ void vultures_clear_nhwindow(int winid)
 }
 
 
+/* helper called by vultures_display_nhwindow */
+static void vultures_display_nhmap(struct window * win, vultures_event *result, BOOLEAN_P blocking)
+{
+    if (u.uz.dlevel != 0)
+    {
+        /* u.uz.dlevel == 0 when the game hasn't been fully initialized yet
+        * you can't actually go there, the astral levels have negative numbers */
+
+        /* Center the view on the hero, if necessary */
+        if (!vultures_whatis_active && (vultures_opts.recenter || !vultures_need_recenter(u.ux, u.uy)))
+        {
+            vultures_view_x = u.ux;
+            vultures_view_y = u.uy;
+        }
+
+        if (vultures_winid_map)
+            vultures_get_window(vultures_winid_map)->need_redraw = 1;
+
+        if (vultures_opts.show_minimap)
+            vultures_get_window(vultures_winid_minimap)->need_redraw = 1;
+
+        win->need_redraw = 1;
+
+        if (flags.travel)
+        {
+            if (vultures_event_dispatcher_nonblocking(result, NULL))
+                vultures_stop_travelling = 1;
+        }
+        else
+        {
+            vultures_draw_windows(win);
+            vultures_refresh_window_region();
+        }
+    }
+
+    /* blocking is set for things like monster detection, where we wait for an
+     * event before returning to a normal state */
+    if (blocking)
+    {
+        vultures_event dummy;
+        /* go into the event+drawing loop until we get a response */
+        vultures_event_dispatcher(&dummy, V_RESPOND_POSKEY, NULL);
+
+        /* we may have tried to initiate travel in the event handler, but we don't want that here */
+        u.tx = u.ux;
+        u.ty = u.uy;
+    }
+}
 
 void vultures_display_nhwindow(int winid, BOOLEAN_P blocking)
 {
@@ -384,51 +432,11 @@ void vultures_display_nhwindow(int winid, BOOLEAN_P blocking)
             break;
 
         case NHW_MAP:
-            if (u.uz.dlevel != 0)
-            {
-               /* u.uz.dlevel == 0 when the game hasn't been fully initialized yet
-                * you can't actually go there, the astral levels have negative numbers */
-
-               /* Center the view on the hero, if necessary */
-                if (!vultures_whatis_active && (vultures_opts.recenter || !vultures_need_recenter(u.ux, u.uy)))
-                {
-                    vultures_view_x = u.ux;
-                    vultures_view_y = u.uy;
-                }
-
-                if (vultures_winid_map)
-                    vultures_get_window(vultures_winid_map)->need_redraw = 1;
-
-                if (vultures_opts.show_minimap)
-                    vultures_get_window(vultures_winid_minimap)->need_redraw = 1;
-
-                win->need_redraw = 1;
-
-                if (flags.travel)
-                {
-                    if (vultures_event_dispatcher_nonblocking(&result, NULL))
-                        vultures_stop_travelling = 1;
-                }
-                else
-                {
-                    vultures_draw_windows(win);
-                    vultures_refresh_window_region();
-                }
-            }
-
-            if (blocking)
-            {
-                vultures_event dummy;
-                /* go into the event+drawing loop until we get a response */
-                vultures_event_dispatcher(&dummy, V_RESPOND_POSKEY, NULL);
-
-                /* we have tried to initiate travel in the event handler, but we don't want that here */
-                u.tx = u.ux;
-                u.ty = u.uy;
-            }
+            vultures_display_nhmap(win, &result, blocking);
             break;
 
         case NHW_STATUS:
+            /* status is always visible, so we consider this a request for redraw */
             win->visible = 1;
             win->need_redraw = 1;
             break;
@@ -485,7 +493,7 @@ void vultures_start_menu(int winid)
 
     /* we need a specialzed draw function, too
      * the standard "main window" function doesn't deal
-     * with the complexity added by  scrollbars */
+     * with the complexity added by scrollbars */
     win->draw = vultures_draw_menu;
 
     win->content_is_text = 0;
@@ -493,6 +501,7 @@ void vultures_start_menu(int winid)
 
 
 
+/* add an item to a menu that was started with vultures_start_menu */
 void vultures_add_menu(int winid, int glyph, const ANY_P * identifier,
                        CHAR_P accelerator, CHAR_P groupacc, int attr,
                        const char *str, BOOLEAN_P preselected)
@@ -504,11 +513,13 @@ void vultures_add_menu(int winid, int glyph, const ANY_P * identifier,
     if (!win)
         return;
 
+    /* no identifier means we have a text item */
     if (!identifier || !identifier->a_void)
         type = V_WINTYPE_TEXT;
     else
         type = V_WINTYPE_OPTION;
 
+    /* create the menu item */
     elem = vultures_create_window_internal(0, win, type);
 
     if (identifier && identifier->a_void)
@@ -526,7 +537,7 @@ void vultures_add_menu(int winid, int glyph, const ANY_P * identifier,
 }
 
 
-
+/* finalize a menu window and add the title and accelerators */
 void vultures_end_menu(int winid, const char *prompt)
 {
     struct window * win, *win_elem;
@@ -539,6 +550,7 @@ void vultures_end_menu(int winid, const char *prompt)
     if(!win)
         return;
 
+    /* we (ab)use the prompt as the window title */
     if (prompt)
     {
         win->caption = malloc(strlen(prompt)+1);
@@ -553,6 +565,7 @@ void vultures_end_menu(int winid, const char *prompt)
 
         while (win_elem)
         {
+            /* find an an used accelerator for items that don't have one */
             if (win_elem->accelerator == 0 && win_elem->v_type == V_WINTYPE_OPTION)
             {
                 new_accel = vultures_find_menu_accelerator(used_accels);
@@ -897,6 +910,7 @@ void vultures_bail(const char *mesg)
 }
 
 
+/* display a list of extended commands for the user to pick from */
 int vultures_get_ext_cmd(void)
 {
     int i, j, len;
@@ -914,21 +928,26 @@ int vultures_get_ext_cmd(void)
     /* Add extended commands as menu items */
     for (i = 0; extcmdlist[i].ef_txt != NULL; i++)
     {
+        /* try to find an accelerator that fits the command name */
         cur_accelerator = tolower(extcmdlist[i].ef_txt[0]);
 
+        /* check whether the cosen accel is already in use */
         j = 0;
         while (cur_accelerator != used_accels[j] && used_accels[j])
             j++;
 
         len = strlen(used_accels);
         if (j < len)
+            /* cur_accelerator is already used, so find another */
             cur_accelerator = vultures_find_menu_accelerator(used_accels);
         else
         {
+            /* cur_accelerator is not in use: claim it */
             used_accels[len] = cur_accelerator;
             used_accels[len+1] = '\0';
         }
 
+        /* add the command with the chosen accelerator */
         id.a_int = i + 1;
         vultures_add_menu(win, NO_GLYPH, &id, cur_accelerator, 0,
                           ATR_NONE, extcmdlist[i].ef_txt, FALSE);
@@ -950,7 +969,7 @@ int vultures_get_ext_cmd(void)
 
 
 
-
+/* display a file in a menu window */
 void vultures_display_file(const char *fname, BOOLEAN_P complain)
 {
     dlb * f;                /* Data librarian */
@@ -1002,6 +1021,8 @@ int vultures_doprev_message(void)
 }
 
 
+/* delay output is _supposed to_ simply pause for a bit; unfortunately that
+ * would cause the mouse to freeze, because the eventloop would also pause */
 void vultures_delay_output(void)
 {
     int delay = 50, origdelay;
@@ -1012,7 +1033,10 @@ void vultures_delay_output(void)
     int loops = 0;
 
     funcstart = SDL_GetTicks();
-
+    
+    /* the time it took to draw the map is subtracted from the delay time;
+     * this allows the game to adapt to slow-drawing systems (ie unaccelerated
+     * software graphics) */
     if (vultures_map_draw_lastmove == moves)
     {
         delay -= vultures_map_draw_msecs;
@@ -1022,6 +1046,7 @@ void vultures_delay_output(void)
     }
     origdelay = delay;
 
+    /* delay in small increments and run the eventloop in between */
     while (delay > 10)
     {
         starttick = SDL_GetTicks();
@@ -1059,15 +1084,20 @@ char vultures_message_menu(CHAR_P let, int how, const char *mesg)
 
 
 
+/* the textmode ui highlights one position onscreen, this is the cursor
+ * vultures has no real equivalent, however in some situations we allow
+ * the mose to be moved via keyboard input */
 void vultures_curs(winid window, int x, int y)
 {
-    if ( window == WIN_MAP && vultures_whatis_active)
+    /* allow selecting a position via keyboard for look and teleport (both set vultures_whatis_active) */
+    if (window == WIN_MAP && vultures_whatis_active)
     {
         point mappos, mouse;
 
         mappos.x = x; mappos.y = y;
         mouse = vultures_map_to_mouse( mappos );
 
+        /* move the viewport when the mouse approaches the edge */
         if (mouse.x < 50 || mouse.x > (vultures_screen->w-50) ||
             mouse.y < 50 || mouse.y > (vultures_screen->h-50))
         {
@@ -1083,13 +1113,17 @@ void vultures_curs(winid window, int x, int y)
 }
 
 
-
+/* called by the core, this function is intended to do window event processing
+ * we misuse it to stop travelling, either because this was requested, or
+ * because a loop in the travel algorithm was detected */
 void vultures_get_nh_event(void)
 {
     static point lastpos[2] = {{-1,-1}, {-1,-1}};
 
     if (flags.travel)
     {
+        /* if the positon 2 turns ago is identical to the current position,
+         * the travel algorithm has hung and travel needs to be canceled */
         if (vultures_stop_travelling ||
             ((lastpos[1].x != lastpos[0].x || lastpos[1].y != lastpos[0].y) &&
             lastpos[1].x == u.ux && lastpos[1].y == u.uy))

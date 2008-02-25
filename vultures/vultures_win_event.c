@@ -102,26 +102,32 @@ int vultures_eventh_status(struct window* handler, struct window* target,
 }
 
 
+/* handles events for either of the two toolbars */
 int vultures_eventh_toolbar(struct window* handler, struct window* target,
                            void* result, SDL_Event* event)
 {
     switch (event->type)
     {
+        /* mousemotion sets the correct cursor */
         case SDL_MOUSEMOTION:
             vultures_set_mcursor(V_CURSOR_NORMAL);
             break;
 
+        /* timer: draw tooltips */
         case SDL_TIMEREVENT:
             if (event->user.code > HOVERTIMEOUT)
                 if (target != handler  && target->caption)
                     vultures_mouse_set_tooltip(target->caption);
             break;
 
+        /* click events */
         case SDL_MOUSEBUTTONUP:
+            /* throw away uninterseting clicks */
             if (event->button.button != SDL_BUTTON_LEFT ||
                 target == handler || !target->menu_id)
                 break;
 
+            /* one of the buttons was clicked */
             switch (target->menu_id)
             {
                 case V_HOTSPOT_BUTTON_LOOK:
@@ -189,19 +195,25 @@ int vultures_eventh_messages(struct window* handler, struct window* target,
 
 
 
+/* the enhance "window" is the golden + above the character stats */
 int vultures_eventh_enhance(struct window* handler, struct window* target,
                              void* result, SDL_Event* event)
 {
+    /* change the mouse cursor to indicate that this window is clickable */
     if (event->type == SDL_MOUSEMOTION)
         vultures_set_mcursor(V_CURSOR_NORMAL);
+
+    /* respond to clicks */
     else if (event->type == SDL_MOUSEBUTTONUP && event->button.button == SDL_BUTTON_LEFT)
     {
         ((vultures_event*)result)->num = META('e');
         return V_EVENT_HANDLED_FINAL;
     }
+
+    /* show a tooltip */
     else if (event->type == SDL_TIMEREVENT && event->user.code > HOVERTIMEOUT)
         vultures_mouse_set_tooltip("Enhance a skill");
-    
+
     return V_EVENT_HANDLED_NOREDRAW;
 }
 
@@ -221,6 +233,7 @@ int vultures_eventh_level(struct window* handler, struct window* target,
     switch (event->type)
     {
         case SDL_MOUSEBUTTONUP:
+            /* if vultures_whatis_active is set, we want a location (for look or teleport) */
             if (vultures_whatis_active)
             {
                 ((vultures_event*)result)->num = 0;
@@ -229,14 +242,17 @@ int vultures_eventh_level(struct window* handler, struct window* target,
                 return V_EVENT_HANDLED_FINAL;
             }
 
-            /* else */
+            /* else  */
             action_id = 0;
 
+            /* right click: try to resolve the click on the map to a default action */
             if (event->button.button == SDL_BUTTON_LEFT)
                 action_id = vultures_get_map_action(mappos);
+            /* left click: allow the user to choose from a context menu */
             else if (event->button.button == SDL_BUTTON_RIGHT)
                 action_id = vultures_get_map_contextmenu(mappos);
 
+            /* if an action was chosen, return it and leave the event loop */
             if (action_id)
             {
                 retval = vultures_perform_map_action(action_id, mappos);
@@ -248,6 +264,7 @@ int vultures_eventh_level(struct window* handler, struct window* target,
             }
             break;
 
+        /* keyboard events */
         case SDL_KEYDOWN:
             switch (event->key.keysym.sym)
             {
@@ -255,6 +272,7 @@ int vultures_eventh_level(struct window* handler, struct window* target,
                     vultures_toggle_map();
                     return V_EVENT_HANDLED_REDRAW;
 
+                /* F1- F6 trigger macros */
                 case SDLK_F1:
                 case SDLK_F2:
                 case SDLK_F3:
@@ -278,12 +296,14 @@ int vultures_eventh_level(struct window* handler, struct window* target,
                     vultures_show_mainmenu();
                     return V_EVENT_HANDLED_REDRAW;
 #endif
+                /* CTRL+SHIFT+o opens the interface options */
                 case SDLK_o:
                     if (!(event->key.keysym.mod & KMOD_SHIFT) || !(event->key.keysym.mod & KMOD_CTRL))
                         break;
                     vultures_iface_opts();
                     return V_EVENT_HANDLED_REDRAW;
 
+                /* CTRL+SHIFT+p shows the message log */
                 case SDLK_p:
                     if (!(event->key.keysym.mod & KMOD_SHIFT) || !(event->key.keysym.mod & KMOD_CTRL))
                         break;
@@ -294,8 +314,9 @@ int vultures_eventh_level(struct window* handler, struct window* target,
                     break;
             }
 
+            /* all other keys are converted and passed to the core */
             key = vultures_convertkey_sdl2nh(&event->key.keysym);
-            
+
             if (vultures_winid_map && isdigit(key))
                 translated_key = key;
             else
@@ -312,6 +333,7 @@ int vultures_eventh_level(struct window* handler, struct window* target,
         case SDL_MOUSEMOTION:
             if (target != handler && target->menu_id)
             {
+                /* show a map scroll cursor if the mouse is in the edge zone */
                 switch (target->menu_id)
                 {
                     case V_HOTSPOT_SCROLL_UPLEFT:
@@ -335,8 +357,11 @@ int vultures_eventh_level(struct window* handler, struct window* target,
                 }
             }
             else
+                /* select a cursor for the current position */
                 vultures_set_mcursor(vultures_get_map_cursor(mappos));
 
+            /* if the highlight option is on, store the map position of the mouse
+             * and refresh the current and previous positions */
             if (vultures_opts.highlight_cursor_square && 
                 (vultures_map_highlight.x != mappos.x || vultures_map_highlight.y != mappos.y))
             {
@@ -410,6 +435,7 @@ int vultures_eventh_level(struct window* handler, struct window* target,
  * map handlers
  ************************************************************/
 
+/* event handler for the map (ie the symbolic representation on the parchment) */
 int vultures_eventh_map(struct window* handler, struct window* target,
                         void* result, SDL_Event* event)
 {
@@ -431,6 +457,7 @@ int vultures_eventh_map(struct window* handler, struct window* target,
     switch (event->type)
     {
         case SDL_MOUSEBUTTONUP:
+            /* handler != target if the user clicked on the X in the upper right corner */
             if (handler != target && target->menu_id == 1)
             {
                 vultures_toggle_map();
@@ -438,8 +465,10 @@ int vultures_eventh_map(struct window* handler, struct window* target,
                 return V_EVENT_HANDLED_REDRAW;
             }
 
+            /* only handle clicks on valid map locations */
             if (mappos.x != -1)
             {
+                /* if vultures_whatis_active, return the target coordinates */
                 if (vultures_whatis_active)
                 {
                     ((vultures_event*)result)->num = 0;
@@ -448,11 +477,14 @@ int vultures_eventh_map(struct window* handler, struct window* target,
                     return V_EVENT_HANDLED_FINAL;
                 }
 
+                /* left click: get the default action */
                 if (event->button.button == SDL_BUTTON_LEFT)
                     action_id = vultures_get_map_action(mappos);
+                /* right click: let the user choose an action from a context menu */
                 else if (event->button.button == SDL_BUTTON_RIGHT)
                     action_id = vultures_get_map_contextmenu(mappos);
 
+                /* perform the chosen action */
                 if (action_id)
                 {
                     retval = vultures_perform_map_action(action_id, mappos);
@@ -468,9 +500,11 @@ int vultures_eventh_map(struct window* handler, struct window* target,
         case SDL_TIMEREVENT:
             if (event->user.code < HOVERTIMEOUT)
                 return V_EVENT_HANDLED_NOREDRAW;
-            
+
+            /* draw the tooltip for the close button */
             if (handler != target && target->menu_id == 1)
                 vultures_mouse_set_tooltip(target->caption);
+            /* draw a tooltip for the map location */
             else if (mappos.x != -1)
             {
                 ttext = vultures_map_square_description(mappos, 1);
@@ -497,7 +531,7 @@ int vultures_eventh_minimap(struct window* handler, struct window* target,
     point mouse, mappos;
     int offs_x, offs_y;
 
-
+    /* translate the mouse position to a map coordinate */
     mouse = vultures_get_mouse_pos();
 
     offs_x = mouse.x - handler->abs_x - 6 - 40;
@@ -514,8 +548,11 @@ int vultures_eventh_minimap(struct window* handler, struct window* target,
     if (event->type == SDL_MOUSEMOTION)
         vultures_set_mcursor(V_CURSOR_NORMAL);
 
+    /* limited mouse event handling, due to the fact that the minimap
+     * is too small for precise targeting */
     else if (event->type == SDL_MOUSEBUTTONUP)
     {
+        /* left button: direct selection of a location (for very imprecise teleport) */
         if (event->button.button == SDL_BUTTON_LEFT)
         {
             if (vultures_whatis_active)
@@ -529,6 +566,7 @@ int vultures_eventh_minimap(struct window* handler, struct window* target,
             ((vultures_event*)result)->num = vultures_perform_map_action(V_ACTION_TRAVEL, mappos);
             return V_EVENT_HANDLED_FINAL;
         }
+        /* right button: travel to location */
         else if(event->button.button == SDL_BUTTON_RIGHT)
         {
             vultures_view_x = mappos.x;
@@ -602,7 +640,7 @@ int vultures_eventh_query_choices(struct window* handler, struct window* target,
 }
 
 
-
+/* direction selection dialog event handler */
 int vultures_eventh_query_direction(struct window* handler, struct window* target,
                                     void* result, SDL_Event* event)
 {
@@ -610,9 +648,11 @@ int vultures_eventh_query_direction(struct window* handler, struct window* targe
     int dir_x, dir_y;
     char choice = 0;
 
+    /* mouse motion events are merely used to set the correct cursor */
     if (event->type == SDL_MOUSEMOTION)
         vultures_set_mcursor(V_CURSOR_NORMAL);
 
+    /* any key is accepted as a valid choice */
     else if (event->type == SDL_KEYDOWN)
     {
         if (event->key.keysym.sym == SDLK_ESCAPE)
@@ -621,19 +661,23 @@ int vultures_eventh_query_direction(struct window* handler, struct window* targe
             choice = vultures_convertkey_sdl2nh(&event->key.keysym);
     }
 
+    /* mouse click events: only left clicks on the arrow grid are accepted */
     else if (event->type == SDL_MOUSEBUTTONUP && event->button.button == SDL_BUTTON_LEFT)
     {
         if (target == handler->first_child)
         {
+            /* get the click coordinates and normalize them to the center of the arrow grid */
             mouse = vultures_get_mouse_pos();
             mouse.x -= (target->abs_x + target->w/2);
             mouse.y -= (target->abs_y + target->h/2);
 
+            /* translate the click position to a direction */
             dir_x = V_MAP_YMOD * mouse.x + V_MAP_XMOD * mouse.y + V_MAP_XMOD*V_MAP_YMOD;
             dir_x = dir_x / (2 * V_MAP_XMOD * V_MAP_YMOD) - (dir_x < 0);
             dir_y = -V_MAP_YMOD * mouse.x + V_MAP_XMOD * mouse.y + V_MAP_XMOD * V_MAP_YMOD;
             dir_y = dir_y / (2 * V_MAP_XMOD * V_MAP_YMOD) - (dir_y < 0);
 
+            /* convert the chosen direction to a key */
             choice = 0;
             if (dir_y == -1)
             {
@@ -810,6 +854,7 @@ static void select_menu_option(struct window * handler, struct window * target, 
 }
 
 
+/* event handler for scrollable menus */
 int vultures_eventh_menu(struct window* handler, struct window* target,
                          void* result, SDL_Event* event)
 {
@@ -819,19 +864,25 @@ int vultures_eventh_menu(struct window* handler, struct window* target,
     int key;
     char * str_to_find;
 
+    /* menus use the normal cursor */
     if (event->type == SDL_MOUSEMOTION)
         vultures_set_mcursor(V_CURSOR_NORMAL);
+
+    /* handle clicks and wheel events */
     else if (event->type == SDL_MOUSEBUTTONUP)
     {
+        /* wheel up/down: scroll by one line */
         if (event->button.button == SDL_BUTTON_WHEELUP)
             return vultures_scrollto(handler, V_SCROLL_LINE_REL, -1);
 
         if (event->button.button == SDL_BUTTON_WHEELDOWN)
             return vultures_scrollto(handler, V_SCROLL_LINE_REL, 1);
 
+
         if (target == handler)
             /* clicks on the menu window itself are not interesting */
             return V_EVENT_HANDLED_NOREDRAW;
+
 
         /* click on an option / checkbox */
         if (target->v_type == V_WINTYPE_OPTION)
@@ -848,12 +899,14 @@ int vultures_eventh_menu(struct window* handler, struct window* target,
             return V_EVENT_HANDLED_REDRAW;
         }
 
+
         /* a click on a button */
         else if (target->v_type == V_WINTYPE_BUTTON && target->menu_id)
         {
             *(int*)result = target->menu_id;
             return V_EVENT_HANDLED_FINAL;
         }
+
 
         /* a click on the scrollbar */
         else if (target->v_type == V_WINTYPE_SCROLLBAR)
@@ -899,6 +952,9 @@ int vultures_eventh_menu(struct window* handler, struct window* target,
             }
         }
     }
+
+
+    /* handle keyboard events */
     else if (event->type == SDL_KEYDOWN)
     {
         handler->need_redraw = 1;
@@ -915,11 +971,13 @@ int vultures_eventh_menu(struct window* handler, struct window* target,
                 *(int*)result = (handler->content_is_text) ? 1 : -1;
                 return V_EVENT_HANDLED_FINAL;
 
-            case SDLK_PAGEUP:   key = MENU_PREVIOUS_PAGE; break;
-            case SDLK_PAGEDOWN: key = MENU_NEXT_PAGE;  break;
-            case SDLK_HOME:     key = MENU_FIRST_PAGE;  break;
-            case SDLK_END:      key = MENU_LAST_PAGE;  break;
+            /* handle menu control keys */
+            case SDLK_PAGEUP:   key = MENU_PREVIOUS_PAGE; /* '<' */ break; 
+            case SDLK_PAGEDOWN: key = MENU_NEXT_PAGE;     /* '>' */ break;
+            case SDLK_HOME:     key = MENU_FIRST_PAGE;    /* '^' */ break;
+            case SDLK_END:      key = MENU_LAST_PAGE;     /* '|' */ break;
 
+            /* scroll via arrow keys */
             case SDLK_KP2:
             case SDLK_DOWN:
                 return vultures_scrollto(handler, V_SCROLL_LINE_REL, 1);
@@ -952,10 +1010,13 @@ int vultures_eventh_menu(struct window* handler, struct window* target,
             case MENU_LAST_PAGE:
                 return vultures_scrollto(handler, V_SCROLL_PAGE_ABS, 9999);
 
+
             case MENU_SELECT_ALL:
             case MENU_UNSELECT_ALL:
+                /* invalid for single selection menus */
                 if (handler->select_how == PICK_ONE)
                     return V_EVENT_HANDLED_NOREDRAW;
+
                 winelem = handler->first_child;
                 while (winelem)
                 {
@@ -966,9 +1027,12 @@ int vultures_eventh_menu(struct window* handler, struct window* target,
                 handler->need_redraw = 1;
                 return V_EVENT_HANDLED_REDRAW;
 
+
             case MENU_INVERT_ALL:
+                /* invalid for single selection menus */
                 if (handler->select_how == PICK_ONE)
                     return V_EVENT_HANDLED_NOREDRAW;
+
                 winelem = handler->first_child;
                 while (winelem)
                 {
@@ -979,10 +1043,13 @@ int vultures_eventh_menu(struct window* handler, struct window* target,
                 handler->need_redraw = 1;
                 return V_EVENT_HANDLED_REDRAW;
 
+
             case MENU_SELECT_PAGE:
             case MENU_UNSELECT_PAGE:
+                /* invalid for single selection menus */
                 if (handler->select_how == PICK_ONE)
                     return V_EVENT_HANDLED_NOREDRAW;
+
                 winelem = handler->first_child;
                 while (winelem)
                 {
@@ -993,9 +1060,12 @@ int vultures_eventh_menu(struct window* handler, struct window* target,
                 handler->need_redraw = 1;
                 return V_EVENT_HANDLED_REDRAW;
 
+
             case MENU_INVERT_PAGE:
+                /* invalid for single selection menus */
                 if (handler->select_how == PICK_ONE)
                     return V_EVENT_HANDLED_NOREDRAW;
+
                 winelem = handler->first_child;
                 while (winelem)
                 {
@@ -1005,6 +1075,7 @@ int vultures_eventh_menu(struct window* handler, struct window* target,
                 }
                 handler->need_redraw = 1;
                 return V_EVENT_HANDLED_REDRAW;
+
 
             case MENU_SEARCH:
                 str_to_find = malloc(512);
@@ -1060,26 +1131,30 @@ int vultures_eventh_menu(struct window* handler, struct window* target,
 }
 
 
-
+/* event handler for input boxes */
 int vultures_eventh_input(struct window* handler, struct window* target,
                           void* result, SDL_Event* event)
 {
     char * text = handler->first_child->caption; /* input boxes have only one child, so this works */
     int len = strlen(text);
 
+    /* it's a menu, so it uses the normal cursor */
     if (event->type == SDL_MOUSEMOTION)
         vultures_set_mcursor(V_CURSOR_NORMAL);
 
+    /* other than that we only care about keyboard events */
     else if (event->type == SDL_KEYDOWN)
     {
         switch (event->key.keysym.sym)
         {
             case SDLK_KP_ENTER:
             case SDLK_RETURN:
+                /* done! */
                 *(int*)result = 1;
                 return V_EVENT_HANDLED_FINAL;
 
             case SDLK_ESCAPE:
+                /* cancel */
                 *(int*)result = 0;
                 return V_EVENT_HANDLED_FINAL;
 
@@ -1092,6 +1167,7 @@ int vultures_eventh_input(struct window* handler, struct window* target,
                 return V_EVENT_HANDLED_REDRAW;
 
             default:
+                /* add characters up to a maximum of 256 */
                 if (len < 256 && vultures_text_length(V_FONT_MENU, text) <
                    (handler->first_child->w - 10) && isprint(event->key.keysym.unicode))
                 {
@@ -1099,6 +1175,7 @@ int vultures_eventh_input(struct window* handler, struct window* target,
                     text[len+1] = '\0';
                     handler->first_child->need_redraw = 1;
                 }
+                /* only the child needs to be redrawn */
                 return V_EVENT_HANDLED_REDRAW;
         }
     }
@@ -1380,6 +1457,9 @@ static int vultures_scrollto(struct window * win, int scrolltype, int scrolldir)
     firstvisible = NULL;
     scrollbar = NULL;
     child = win->first_child;
+
+    /* find the first visible child (menu item or text item),
+     * the maximum menu height and the menu's scrollbar */
     while (child)
     {
         if (child->scrollable)
@@ -1481,6 +1561,7 @@ static int vultures_scrollto(struct window * win, int scrolltype, int scrolldir)
 
 
 
+/* show or hide the parchment map */
 static void vultures_toggle_map(void)
 {
     static struct window * map = NULL;

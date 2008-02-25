@@ -24,6 +24,7 @@ static struct vultures_font {
 } * vultures_fonts = NULL;
 
 
+/* load a font from a ttf file with the given fontindex and pointsize as font font_id */
 int vultures_load_font (int font_id, const char * ttf_filename, int fontindex, int pointsize)
 {
     TTF_Font * newfont;
@@ -36,6 +37,7 @@ int vultures_load_font (int font_id, const char * ttf_filename, int fontindex, i
             vultures_fonts = calloc(VULTURES_MAX_FONTS, sizeof(struct vultures_font));
     }
 
+    /* font_id should always be passed as a #define, which is always <  VULTURES_MAX_FONTS */
     if (font_id >= VULTURES_MAX_FONTS)
         return FALSE;
 

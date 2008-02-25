@@ -43,8 +43,7 @@ Uint32 vultures_timer_callback(Uint32 interval, void * param);
 int vultures_handle_global_event(SDL_Event * event);
 
 
-
-
+/* convert sdl keycodes so that nethack can use them */
 int vultures_convertkey_sdl2nh(SDL_keysym * keysym)
 {
     int shift = keysym->mod & KMOD_SHIFT;
@@ -56,6 +55,7 @@ int vultures_convertkey_sdl2nh(SDL_keysym * keysym)
     if (ch=='!')
         return 0; // damn shell thing :/
 
+    /* ctrl+z (suspend) should be disabled in vultures_conf.h, but let'e be sure... */
     if ((ctrl && ch == 'z') || (ch == ('z' - ('a' - 1))))
         return 0; // lets just ignore this nasty lil bugger...
 
@@ -77,27 +77,47 @@ int vultures_convertkey_sdl2nh(SDL_keysym * keysym)
         case SDLK_RETURN: return '\n';
         case SDLK_ESCAPE: return '\033';
         case SDLK_TAB: return '\t';
+
+        /* make sure the keypad and arrow keys work no matter which options are set */
         case SDLK_KP8:
-        case SDLK_UP: return iflags.num_pad ? '8' : (shift) ? 'K' : 'k';
+        case SDLK_UP:
+            return iflags.num_pad ? '8' : (shift) ? 'K' : 'k';
+
         case SDLK_KP2:
-        case SDLK_DOWN: return iflags.num_pad ? '2' : (shift) ? 'J' : 'j';
+        case SDLK_DOWN:
+            return iflags.num_pad ? '2' : (shift) ? 'J' : 'j';
+
         case SDLK_KP4:
-        case SDLK_LEFT: return iflags.num_pad ? '4' : (shift) ? 'H' : 'h';
+        case SDLK_LEFT:
+            return iflags.num_pad ? '4' : (shift) ? 'H' : 'h';
+
         case SDLK_KP6:
-        case SDLK_RIGHT: return iflags.num_pad ? '6' : (shift) ? 'L' : 'l';
-        case SDLK_KP7: return iflags.num_pad ? '7' : (shift) ? 'Y' : 'y';
-        case SDLK_KP9: return iflags.num_pad ? '9' : (shift) ? 'U' : 'u';
-        case SDLK_KP1: return iflags.num_pad ? '1' : (shift) ? 'B' : 'b';
-        case SDLK_KP3: return iflags.num_pad ? '3' : (shift) ? 'N' : 'n';
-    
-        case SDLK_PAGEUP:   return MENU_PREVIOUS_PAGE;
-        case SDLK_PAGEDOWN: return MENU_NEXT_PAGE;
-        case SDLK_HOME:     return MENU_FIRST_PAGE;
-        case SDLK_END:      return MENU_LAST_PAGE;
-        default: break; /* prevent "enumeration value ... not handled in switch" warning */
+        case SDLK_RIGHT:
+            return iflags.num_pad ? '6' : (shift) ? 'L' : 'l';
+
+        case SDLK_KP7:
+            return iflags.num_pad ? '7' : (shift) ? 'Y' : 'y';
+
+        case SDLK_KP9:
+            return iflags.num_pad ? '9' : (shift) ? 'U' : 'u';
+
+        case SDLK_KP1:
+            return iflags.num_pad ? '1' : (shift) ? 'B' : 'b';
+
+        case SDLK_KP3:
+            return iflags.num_pad ? '3' : (shift) ? 'N' : 'n';
+
+        /* replace contol keys by their menu workalikes */
+        case SDLK_PAGEUP:   return MENU_PREVIOUS_PAGE; /* '<' */
+        case SDLK_PAGEDOWN: return MENU_NEXT_PAGE;     /* '>' */
+        case SDLK_HOME:     return MENU_FIRST_PAGE;    /* '^' */
+        case SDLK_END:      return MENU_LAST_PAGE;     /* '|' */
+
+        /* prevent "enumeration value ... not handled in switch" warning */
+        default: break; 
     }
 
-
+    /* high-bit characters are not useable */
     if ((ch > 0) && (ch < 0x7e))
         return ch;
 
@@ -172,6 +192,7 @@ int vultures_poll_event(SDL_Event * event)
 }
 
 
+/* wait for an input event, but stop waiting after wait_timeout milliseconds */
 void vultures_wait_input(SDL_Event * event, int wait_timeout)
 {
     int done = 0;
@@ -180,6 +201,7 @@ void vultures_wait_input(SDL_Event * event, int wait_timeout)
     if (wait_timeout > 0)
         sleeptimer = SDL_AddTimer(wait_timeout, vultures_timer_callback, NULL);
 
+    /* loop until we have an interesting event */
     while (!done)
     {
         if (!SDL_WaitEvent(event))

@@ -120,6 +120,8 @@ void vultures_set_draw_region
 
 
 
+/* draws an unfilled rectangle onto the given surface;
+ * this function may blow up if given invalid coordinates */
 void vultures_rect_surface
 (
     SDL_Surface *surface,
@@ -149,6 +151,8 @@ void vultures_rect_surface
 }
 
 
+/* draws a filled rectangle onto the given surface;
+ * this function blows up if given invalid coordinates */
 void vultures_fill_rect_surface
 (
     SDL_Surface *surface,

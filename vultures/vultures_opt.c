@@ -44,6 +44,7 @@ enum interface_opts_menu_ids {
 struct vultures_optstruct vultures_opts;
 
 
+/* read vultures.conf and set up all options */
 void vultures_read_main_config(FILE * fp)
 {
     char *optend, *param;
@@ -111,7 +112,7 @@ void vultures_read_main_config(FILE * fp)
             {
                 strncpy(vultures_opts.macro[macronum-1], param, 9);
                 vultures_opts.macro[macronum-1][9] = '\0';
-                
+
                 len = strlen(vultures_opts.macro[macronum-1]);
                 while (len >= 0 && (isspace(vultures_opts.macro[macronum-1][len]) ||
                        vultures_opts.macro[macronum-1][len] == '\0'))
@@ -413,6 +414,7 @@ void vultures_write_userconfig(void)
 }
 
 
+/* display the interface options dialog */
 int vultures_iface_opts(void)
 {
     struct window * win;
@@ -422,6 +424,7 @@ int vultures_iface_opts(void)
     menu_item *selected, *selected_sub;
     char * str;
 
+    /* create a menu window */
     winid = vultures_create_nhwindow(NHW_MENU);
     vultures_start_menu(winid);
     
@@ -495,11 +498,12 @@ int vultures_iface_opts(void)
         vultures_add_menu(winid, NO_GLYPH, &any, 0, 0, ATR_BOLD, str, MENU_UNSELECTED);
     }
 
-
+    /* display the menu and get the user's selection */
     vultures_end_menu(winid, "Interface options");
     num_selected = vultures_select_menu(winid, PICK_ANY, &selected);
     vultures_destroy_nhwindow(winid);
 
+    /* toggle the selected options or get new values from the user */
     for (i = 0; i < num_selected; i++)
     {
         switch(selected[i].item.a_int)
@@ -666,6 +670,8 @@ int vultures_iface_opts(void)
         }
     }
 
+    /* if the screen size was changed, the actual resize happens here, rather
+     * separately for width and height with 2 modechanges */
     if (size_changed)
         vultures_set_screensize();
 

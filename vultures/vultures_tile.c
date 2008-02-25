@@ -139,7 +139,7 @@ static vultures_tile * vultures_load_tile(int tile_id)
 }
 
 
-
+/* darken a tile; the amount of darkening is determined by the tile_id */
 static inline vultures_tile * vultures_shade_tile(int tile_id)
 {
     vultures_tile *tile, *orig;
@@ -149,11 +149,13 @@ static inline vultures_tile * vultures_shade_tile(int tile_id)
     if (vultures_gametiles[real_id].ptr == -1)
         return NULL;
 
+    /* the tile was used last turn, no need to load & darken it */
     if (!vultures_tiles_cur[tile_id] && vultures_tiles_prev[tile_id])
         vultures_tiles_cur[tile_id] = vultures_tiles_prev[tile_id];
 
     if (!vultures_tiles_cur[tile_id])
     {
+        /* load the tile */
         orig = vultures_get_tile(real_id);
 
         tile = malloc(sizeof(vultures_tile));
@@ -169,7 +171,7 @@ static inline vultures_tile * vultures_shade_tile(int tile_id)
 }
 
 
-
+/* flip the tile arrays and unload all tiles that were not used for 2 turns */
 void vultures_flip_tile_arrays(void)
 {
     int i;
@@ -327,6 +329,7 @@ static vultures_tile *vultures_make_alpha_player_tile(int monnum, double op_scal
     return tile;
 }
 
+/* makes a tile (partially) transparent */
 static inline vultures_tile *vultures_set_tile_alpha(vultures_tile *tile, double opacity)
 {
     unsigned char * rawdata;
@@ -335,6 +338,7 @@ static inline vultures_tile *vultures_set_tile_alpha(vultures_tile *tile, double
     rawdata = tile->graphic->pixels;
     for (y = 0; y < tile->graphic->h; y++)
         for (x = 0; x < tile->graphic->pitch; x += 4)
+            /* multiply the alpha component by the opacity */
             rawdata[y*tile->graphic->pitch+x+3] *= opacity;
 
     return tile;

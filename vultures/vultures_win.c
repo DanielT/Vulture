@@ -152,6 +152,8 @@ struct window * vultures_create_window_internal(int nh_type, struct window * par
 }
 
 
+/* set the correct values for various window vars depending on the window type,
+ * in particular draw and event_handler */
 void vultures_init_wintype(struct window * win, int wintype)
 {
     switch(wintype)
@@ -193,15 +195,14 @@ void vultures_init_wintype(struct window * win, int wintype)
 
 
 
-void vultures_destroy_window_internal(struct window * win)
+/* remove a window from all lists of  */
+static void vultures_unlink_window(struct window * win)
 {
-    if (!win)
-        /* already destroyed */
-        return;
-
+    /* bemove from the global id list */
     vultures_windows[win->id] = NULL;
     windowcount_cur--;
 
+    /* the root window has no parent */
     if (win->parent)
     {
         /* unlink the window everywhere */
@@ -212,11 +213,22 @@ void vultures_destroy_window_internal(struct window * win)
             win->parent->last_child = win->sib_prev;
     }
 
+    /* remove from the linked list of siblings */
     if (win->sib_prev)
         win->sib_prev->sib_next = win->sib_next;
 
     if (win->sib_next)
         win->sib_next->sib_prev = win->sib_prev;
+}
+
+
+void vultures_destroy_window_internal(struct window * win)
+{
+    if (!win)
+        /* already destroyed */
+        return;
+
+    vultures_unlink_window(win);
 
     /* destroy it's children. note that the child's destroy function will manipulate ->first_child */
     while (win->first_child)
@@ -225,7 +237,6 @@ void vultures_destroy_window_internal(struct window * win)
             win->first_child->visible = 0;
         vultures_destroy_window_internal(win->first_child);
     }
-
 
     /* free up alloced resources */
     if (win->caption)
@@ -250,6 +261,7 @@ void vultures_destroy_window_internal(struct window * win)
 }
 
 
+/* hide a window; if possible blit a stored background back onto the screen */
 void vultures_hide_window(struct window * win)
 {
     if (!win)
@@ -360,7 +372,7 @@ struct window * vultures_get_window(int winid)
 }
 
 
-
+/* create a hotspot. a hotspot is an invisible window, whose purpose is recieving events */
 int vultures_create_hotspot(int x, int y, int w, int h, int menu_id, struct window * parent, char * name)
 {
     struct window * win;
@@ -379,6 +391,7 @@ int vultures_create_hotspot(int x, int y, int w, int h, int menu_id, struct wind
 }
 
 
+/* create a button */
 struct window * vultures_create_button(struct window * parent, const char * caption, int menu_id)
 {
     struct window * win;
@@ -785,7 +798,9 @@ static int vultures_event_dispatcher_core(SDL_Event * event, void * result, stru
 }
 
 
-
+/* takes an event and passes it each window in the win->parent->...->topwin
+ * chain until one of the windows handles the event or until the event is
+ * rejected by topwin */
 static int vultures_handle_event(struct window * topwin, struct window * win,
                                  void * result, SDL_Event * event, int * redraw)
 {
@@ -794,6 +809,7 @@ static int vultures_handle_event(struct window * topwin, struct window * win,
 
     while (event_result < V_EVENT_HANDLED_NOREDRAW)
     {
+        /* ascend past windows that don't have an event handler */
         while (!winptr->event_handler && winptr != topwin)
             winptr = winptr->parent;
 
@@ -805,6 +821,7 @@ static int vultures_handle_event(struct window * topwin, struct window * win,
         if (winptr == topwin)
             break;
 
+        /* try this window's parent next */
         winptr = winptr->parent;
     }
 
@@ -813,7 +830,7 @@ static int vultures_handle_event(struct window * topwin, struct window * win,
 
 
 
-/* eventstack handling */
+/* push an event onto the eventstack */
 void vultures_eventstack_add(int num, int x, int y, int rtype)
 {
     if (!vultures_eventstack)
@@ -837,11 +854,13 @@ void vultures_eventstack_add(int num, int x, int y, int rtype)
 }
 
 
+/* pop an event off the eventstack */
 vultures_event * vultures_eventstack_get(void)
 {
     if (!vultures_eventstack)
         return NULL;
 
+    /* stack empty? */
     if (vultures_eventstack_top >= V_EVENTSTACK_SIZE || vultures_eventstack_top < 0)
         return NULL;
 
@@ -863,6 +882,7 @@ void vultures_eventstack_destroy(void)
  * window drawing functions 
  ****************************/
 
+/* walks the list of windows and draws all of them, depending on their type and status */
 void vultures_draw_windows(struct window * topwin)
 {
     int descend = 1;
@@ -921,6 +941,7 @@ void vultures_draw_windows(struct window * topwin)
 
 
 /* 1) "generic" drawing functions that apply to entire classes of windows */
+
 static int vultures_draw_button(struct window * win)
 {
     int x = win->abs_x;
@@ -1112,8 +1133,10 @@ static int vultures_draw_dropdown(struct window * win)
 
 
 
+/* draw a checkbox or radio button, depending on the menu type */
 static int vultures_draw_option(struct window * win)
 {
+    /* PICK_ONE -> draw radio butttons */
     if (win->parent->select_how == PICK_ONE)
     {
         if (win->selected)
@@ -1121,10 +1144,12 @@ static int vultures_draw_option(struct window * win)
         else
             vultures_put_img(win->abs_x, win->abs_y, vultures_winelem.radiobutton_off);
     }
+    /* otherwise we want checkboxes */
     else
     {
         if (win->selected)
         {
+            /* selected items can be drawn with either an 'x' (count = -1) or an '#' otherwise */
             if (win->pd.count == -1)
                 vultures_put_img(win->abs_x, win->abs_y, vultures_winelem.checkbox_on);
             else
@@ -1134,6 +1159,7 @@ static int vultures_draw_option(struct window * win)
             vultures_put_img(win->abs_x, win->abs_y, vultures_winelem.checkbox_off);
     }
 
+    /* draw the option description */
     vultures_put_text_shadow(V_FONT_MENU, win->caption, vultures_screen,
                              win->abs_x + vultures_winelem.radiobutton_off->w + 4,
                              win->abs_y + 2, V_COLOR_TEXT, V_COLOR_BACKGROUND);
@@ -1541,7 +1567,7 @@ void vultures_layout_inventory(struct window *win)
 }
 
 
-
+/* arrange the buttons on a dropdown (context menu) */
 void vultures_layout_dropdown(struct window *win)
 {
     struct window * button;
@@ -1554,6 +1580,7 @@ void vultures_layout_dropdown(struct window *win)
     win->h = 3;
     lineheight = vultures_get_lineheight(V_FONT_BUTTON);
 
+    /* calculate the hight and find the max button width */
     button = win->first_child;
     while (button)
     {
@@ -1569,6 +1596,7 @@ void vultures_layout_dropdown(struct window *win)
     }
     win->h += 2;
 
+    /* set the width of every button to the max button width */
     button = win->first_child;
     while (button)
     {
@@ -1578,7 +1606,7 @@ void vultures_layout_dropdown(struct window *win)
 
     win->w = btn_maxwidth + 6;
 
-    /* dropdown position */
+    /* set dropdown position */
     if (mouse.x < win->parent->w - win->w)
         win->x = mouse.x;
     else
@@ -1594,13 +1622,14 @@ void vultures_layout_dropdown(struct window *win)
 }
 
 
-
+/* calc the with of a menu item */
 int vultures_get_menuitem_width(struct window *item, int colwidths[8])
 {
     int width, i, thiscol, btnwidth;
     char *sep, *start, *pos;
     char buf[256];
 
+    /* get the width of the radiobutton/checkbox + 4px space */
     btnwidth = 0;
     if (item->v_type == V_WINTYPE_OPTION)
         switch (item->parent->select_how)
@@ -1610,25 +1639,32 @@ int vultures_get_menuitem_width(struct window *item, int colwidths[8])
             case PICK_ANY:  btnwidth = vultures_winelem.checkbox_off->w + 4;    break;
         }
 
+    /* if the caption contains a tab character we have items for multiple columns */
     if (strchr(item->caption, '\t'))
     {
         width = 0;
         i = 0;
         start = item->caption;
         sep = strchr(start, '\t');
+
+        /* for each item  */
         while (sep && i < 7)
         {
             strncpy(buf, start, sep-start);
             buf[sep-start] = '\0';
             pos = &buf[sep-start-1];
+
+            /* strip spaces */
             while (isspace(*pos))
                 *pos-- = '\0';
 
+            /* get the item's width */
             thiscol = vultures_text_length(V_FONT_MENU, buf) + 5;
 
             if (i == 0)
                 thiscol += btnwidth;
 
+            /* adjust the column with to fit, if necessary */
             if (thiscol > colwidths[i])
                 colwidths[i] = thiscol;
 
@@ -1850,13 +1886,17 @@ struct window * vultures_walk_winlist(struct window * win, int * descend)
 }
 
 
-
+/* find the window under the mouse, starting from topwin */
 struct window * vultures_get_window_from_point(struct window * topwin, point mouse)
 {
     struct window *winptr, *nextwin;
 
     winptr = topwin;
 
+    /* as each child window is completely contained by its parent we can descend
+     * into every child window that is under the cursor until no further descent
+     * is possible. The child lists are traversed in reverse because newer child
+     * windows are considered to be on top if child windows overlap */
     while (winptr->last_child)
     {
         nextwin = winptr->last_child;
@@ -1874,7 +1914,7 @@ struct window * vultures_get_window_from_point(struct window * topwin, point mou
 }
 
 
-
+/* check whether the map needs recentering */
 int vultures_need_recenter(int map_x, int map_y)
 {
     int screen_x, screen_y;
@@ -1884,11 +1924,12 @@ int vultures_need_recenter(int map_x, int map_y)
     screen_x = vultures_screen->w/2 + V_MAP_XMOD*(map_x - map_y);
     screen_y = vultures_screen->h/2 + V_MAP_YMOD*(map_x + map_y);
 
+    /* if the player is within the outer 1/4 of the screen, the map needs recentering  */
     if ((screen_x >= vultures_screen->w/4) && (screen_x < vultures_screen->w * 3 / 4) &&
         (screen_y >= vultures_screen->h/4) && (screen_y < vultures_screen->h * 3 / 4))
         return 1;
 
-    return 0;  
+    return 0;
 }
 
 
@@ -2074,12 +2115,13 @@ static void vultures_status_add_cond(const char * str, int warnno, int color, st
 }
 
 
-
+/* enable and display the enhance icon if enhance is possible */
 void vultures_check_enhance(void)
 {
     int to_advance = 0, i, prev_vis;
     struct window * win;
 
+    /* check every skill */
     for (i = 0; i < P_NUM_SKILLS; i++)
     {
         if (P_RESTRICTED(i))
@@ -2099,15 +2141,21 @@ void vultures_check_enhance(void)
 
 
 
+/* windows which have autobg set store an image of the screen behind them, so
+ * that the screen can easily be restored when the window is hidden or destroyed.
+ * if a window behind the current window is updated, the current window must
+ * refresh its stored background */
 void vultures_update_background(struct window * win)
 {
     int i;
     int x1, y1, x2, y2;
     SDL_Rect src, dst;
 
+    /* no stored background and autobg is off: do nothing */
     if (!win->background && !win->autobg)
         return;
 
+    /* no background stored yet: copy a surface that is as large as the window */
     if (!win->background)
     {
         win->background = vultures_get_img(win->abs_x, win->abs_y,
@@ -2115,6 +2163,8 @@ void vultures_update_background(struct window * win)
         return;
     }
 
+    /* find the intersection between all invalid regions and the window so that
+     * only actually invalid parts of the background get updated */
     for (i = 0; i < vultures_invrects_num; i++)
     {
         if (win->abs_x > (vultures_invrects[i].x + vultures_invrects[i].w) ||
@@ -2188,12 +2238,13 @@ void vultures_invalidate_region(int x , int y, int w, int h)
 }
 
 
-
+/* refresh invalid regions */
 void vultures_refresh_window_region(void)
 {
     int x1 = 9999, y1 = 9999, x2 = 0, y2 = 0;
     int i;
 
+    /* find the bounding rectangla around all invalid rects */
     for (i = 0; i < vultures_invrects_num; i++)
     {
         x1 = (x1 < vultures_invrects[i].x) ? x1 : vultures_invrects[i].x;
@@ -2205,9 +2256,11 @@ void vultures_refresh_window_region(void)
             y2 : (vultures_invrects[i].y + vultures_invrects[i].h);
     }
 
+    /* refresh the bounding rect */
     if (x1 < x2 && y1 < y2)
         vultures_refresh_region(x1, y1, x2, y2);
 
+    /* there are now 0 invalid rects */
     if (vultures_invrects)
         free(vultures_invrects);
 
@@ -2217,13 +2270,14 @@ void vultures_refresh_window_region(void)
 }
 
 
-
+/* determine whether a window intersects an invalid region */
 int vultures_intersects_invalid(struct window * win)
 {
     int i;
     int x1, y1, x2, y2;
     for (i = 0; i < vultures_invrects_num; i++)
     {
+        /* check intersection with each invalid rect */
         if (win->abs_x > (vultures_invrects[i].x + vultures_invrects[i].w) ||
             win->abs_y > (vultures_invrects[i].y + vultures_invrects[i].h) ||
             (win->abs_x + win->w) < vultures_invrects[i].x ||
@@ -2283,6 +2337,7 @@ int vultures_messages_getshown()
 }
 
 
+/* retrieve a message from the message buffer, offset messages before the current one */
 char * vultures_messages_get(int offset, int * age)
 {
     if (!vultures_messages_buf || offset >= V_MESSAGEBUF_SIZE)
@@ -2358,6 +2413,7 @@ struct window * vultures_accel_to_win(struct window * parent, char accel)
 }
 
 
+/* resize the vultures application window to the given width and height */
 void vultures_win_resize(int width, int height)
 {
     struct window *win, *child;
@@ -2366,6 +2422,7 @@ void vultures_win_resize(int width, int height)
     win->w = width;
     win->h = height;
 
+    /* reposition child windows */
     child = win->first_child;
     while(child)
     {
@@ -2424,6 +2481,7 @@ void vultures_win_resize(int width, int height)
         child = child->sib_next;
     }
 
+    /* redraw everything */
     vultures_map_force_redraw();
     vultures_draw_windows(win);
     vultures_refresh_window_region();
@@ -2431,6 +2489,7 @@ void vultures_win_resize(int width, int height)
 
 
 #ifdef VULTURESEYE
+/* show a main menu with common options when the user presses esc */
 void vultures_show_mainmenu()
 {
     int winid, n;

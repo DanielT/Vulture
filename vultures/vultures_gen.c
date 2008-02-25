@@ -46,6 +46,7 @@ char *vultures_basename(const char *filename)
 
 
 
+/* appends the name of a data file to it's subdir name to get a name relative to the executable */
 char *vultures_make_filename(const char *subdir1, const char *subdir2, const char *name)
 {
     char *filename;
@@ -64,17 +65,19 @@ char *vultures_make_filename(const char *subdir1, const char *subdir2, const cha
         strcat(filename, subdir1);
         append_slash(filename);
     }
+
     if (subdir2)
     {
         strcat(filename, subdir2);
         append_slash(filename);
     }
     strcat(filename, name);
+
     return filename;
 }
 
 
-
+/* locate the data dir and chdir there so that data files can be loaded */
 int vultures_chdir_to_datadir(char * argv0)
 {
 #if !defined(WIN32) && !defined(CHDIR) && defined(RELOCATEABLE)

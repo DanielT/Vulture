@@ -283,6 +283,7 @@ void vultures_destroy_map(void)
 {
     int i;
 
+    /* free the row arrays */
     for (i = 0; i < V_MAP_HEIGHT; i++)
     {
         free (vultures_map_glyph[i]);
@@ -1732,7 +1733,7 @@ int vultures_get_map_action(point mappos)
 }
 
 
-
+/* display a context menu for the given map location and return the chosen action */
 int vultures_get_map_contextmenu(point mappos)
 {
     struct window * menu;
@@ -1791,6 +1792,7 @@ int vultures_get_map_contextmenu(point mappos)
         mapglyph_offset =  vultures_map_obj[mappos. y][mappos. x];
         switch(mapglyph_offset - OBJTILEOFFSET)
         {
+            /* containers have special options */
             case LARGE_BOX:
             case ICE_BOX:
             case CHEST:
@@ -1815,6 +1817,7 @@ int vultures_get_map_contextmenu(point mappos)
                 }
                 break;
 
+            /* all other objects can merly be picked up */
             default:
                 if ((u.ux == mappos. x) && (u.uy == mappos. y))
                     vultures_create_button(menu, "Pick up", V_ACTION_PICK_UP);
@@ -1876,6 +1879,7 @@ int vultures_get_map_contextmenu(point mappos)
         }
     }
 
+    /* (known) traps */
     if (vultures_map_trap[mappos. y][mappos. x] != V_TILE_NONE)
     {
         vultures_create_button(menu, "Untrap", V_ACTION_UNTRAP);
@@ -1884,6 +1888,7 @@ int vultures_get_map_contextmenu(point mappos)
                 vultures_create_button(menu, "Enter trap", V_ACTION_MOVE_HERE);
     }
 
+    /* move to and look will work for every (mapped) square */
     if (vultures_map_back[mappos. y][mappos. x] != V_TILE_NONE)
     {
         if ((u.ux != mappos. x) || (u.uy != mappos. y))    
@@ -1902,7 +1907,7 @@ int vultures_get_map_contextmenu(point mappos)
 }
 
 
-
+/* convert an action_id into an actual key to be passed to nethack to perform the action */
 int vultures_perform_map_action(int action_id, point mappos)
 {
     switch (action_id)
@@ -1982,15 +1987,18 @@ int vultures_perform_map_action(int action_id, point mappos)
 }
 
 
+/* select an appropriate cursor for the given location */
 int vultures_get_map_cursor(point mappos)
 {
     if ((mappos.x < 1) || (mappos.x >= V_MAP_WIDTH) ||
         (mappos.y < 0) || (mappos.y >= V_MAP_HEIGHT))
         return V_CURSOR_TARGET_INVALID;
 
-     if (vultures_whatis_active)
+    /* whatis: look or teleport */
+    if (vultures_whatis_active)
          return V_CURSOR_TARGET_HELP;
 
+    /* monsters and objects get a red circle */
     if (vultures_map_mon[mappos.y][mappos.x] != V_TILE_NONE &&
         ((mappos.x != u.ux) || (mappos.y != u.uy)))
         return V_CURSOR_TARGET_RED;
@@ -1998,7 +2006,8 @@ int vultures_get_map_cursor(point mappos)
     if (vultures_map_obj[mappos.y][mappos.x] != V_TILE_NONE)  
         return V_CURSOR_TARGET_RED;
 
-    if (vultures_map_back[mappos.y][mappos.x] != V_TILE_NONE)  /* valid visible location  */
+    /* other valid visible locations  */
+    if (vultures_map_back[mappos.y][mappos.x] != V_TILE_NONE)  
     {
         /* Closed doors get an 'open door' cursor */
         if ((vultures_map_furniture[mappos.y][mappos.x] == V_TILE_VDOOR_WOOD_CLOSED) ||
@@ -2042,6 +2051,7 @@ int vultures_object_to_tile(int obj_id, int x, int y)
         obj_id = CORPSE;
 
 
+    /* try to find the actual object corresponding to the given obj_id */
     if (x >= 0)
         obj = level.objects[x][y];
     else
@@ -2051,6 +2061,7 @@ int vultures_object_to_tile(int obj_id, int x, int y)
         obj = (x >= 0) ? obj->nexthere : obj->nobj;
 
 
+    /* all amulets, potions, etc look the same when the player is blind */
     if (obj && Blind && !obj->dknown)
     {
         switch (obj->oclass)
@@ -2070,6 +2081,7 @@ int vultures_object_to_tile(int obj_id, int x, int y)
     }
 
 
+    /* figurines and statues get different tiles depending on which monster they represent */
     if (obj_id == STATUE || obj_id == FIGURINE)
     {
         if (obj_id == FIGURINE)
@@ -2097,6 +2109,8 @@ int vultures_object_to_tile(int obj_id, int x, int y)
         return tile;
     }
 
+
+    /* prevent visual identification of unknown objects */
     if (!objects[obj_id].oc_name_known)
     {
         switch (obj_id)
@@ -2170,7 +2184,7 @@ int vultures_object_to_tile(int obj_id, int x, int y)
 }
 
 
-
+/* returns the tile for a given monster id */
 static int vultures_monster_to_tile(int mon_id, XCHAR_P x, XCHAR_P y)
 {
     if (Invis && u.ux == x && u.uy == y)
@@ -2179,6 +2193,7 @@ static int vultures_monster_to_tile(int mon_id, XCHAR_P x, XCHAR_P y)
 #ifdef REINCARNATION
     if (Is_rogue_level(&u.uz))
     {
+        /* convert all monster tiles to 3d-letters on the rogue level */
         switch (mon_id)
         {
             case PM_COUATL : case PM_ALEAX : case PM_ANGEL :
@@ -2314,9 +2329,11 @@ static int vultures_monster_to_tile(int mon_id, XCHAR_P x, XCHAR_P y)
         }
     }
 #endif
+    /* aleaxes are angelic doppelgangers and always look like the player */
     if (mon_id == PM_ALEAX)
         return MONSTER_TO_VTILE(u.umonnum);
 
+    /* we have different tiles for priests depending on their alignment */
     if (mon_id == PM_ALIGNED_PRIEST)
     {
         register struct monst *mtmp = m_at(x, y);
@@ -2337,7 +2354,7 @@ static int vultures_monster_to_tile(int mon_id, XCHAR_P x, XCHAR_P y)
 }
 
 
-
+/* converts a mappos adjacent to the player to the dirkey pointing in that direction */
 static char vultures_mappos_to_dirkey(point mappos)
 {
     if (mappos.y == u.uy + 1)
@@ -2364,13 +2381,14 @@ static char vultures_mappos_to_dirkey(point mappos)
 }
 
 
-
+/* certain tile ids need to be acessed via arrays; these are built here */
 static void vultures_build_tilemap(void)
 {
     int i;
     vultures_tilemap_special = malloc(MAXPCHARS*sizeof(int));
     vultures_tilemap_engulf = malloc(NUMMONS*sizeof(int));
 
+    /* build engulf tile array */
     for (i = 0; i < NUMMONS; i++)
         vultures_tilemap_engulf[i] = V_TILE_NONE;
 
@@ -2387,7 +2405,7 @@ static void vultures_build_tilemap(void)
     vultures_tilemap_engulf[PM_AIR_ELEMENTAL] = V_TILE_ENGULF_AIR_ELEMENTAL;
     vultures_tilemap_engulf[PM_JUIBLEX]      = V_TILE_ENGULF_JUIBLEX;
 
-
+    /* build "special tile" array: these are the tiles for dungeon glyphs */
     vultures_tilemap_special[S_stone] = V_TILE_UNMAPPED_AREA;
     vultures_tilemap_special[S_vwall] = V_TILE_WALL_GENERIC;
     vultures_tilemap_special[S_hwall] = V_TILE_WALL_GENERIC;
