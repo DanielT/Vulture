@@ -1021,7 +1021,10 @@ int vultures_eventh_menu(struct window* handler, struct window* target,
                 while (winelem)
                 {
                     if (winelem->v_type == V_WINTYPE_OPTION)
+                    {
                         winelem->selected = (key == MENU_SELECT_ALL);
+                        winelem->pd.count = -1;
+                    }
                     winelem = winelem->sib_next;
                 }
                 handler->need_redraw = 1;
@@ -1037,7 +1040,10 @@ int vultures_eventh_menu(struct window* handler, struct window* target,
                 while (winelem)
                 {
                     if (winelem->v_type == V_WINTYPE_OPTION)
+                    {
                         winelem->selected = !winelem->selected;
+                        winelem->pd.count = -1;
+                    }
                     winelem = winelem->sib_next;
                 }
                 handler->need_redraw = 1;
@@ -1054,7 +1060,10 @@ int vultures_eventh_menu(struct window* handler, struct window* target,
                 while (winelem)
                 {
                     if (winelem->v_type == V_WINTYPE_OPTION && winelem->visible)
+                    {
                         winelem->selected = (key == MENU_SELECT_PAGE);
+                        winelem->pd.count = -1;
+                    }
                     winelem = winelem->sib_next;
                 }
                 handler->need_redraw = 1;
@@ -1070,7 +1079,10 @@ int vultures_eventh_menu(struct window* handler, struct window* target,
                 while (winelem)
                 {
                     if (winelem->v_type == V_WINTYPE_OPTION && winelem->visible)
+                    {
                         winelem->selected = !winelem->selected;
+                        winelem->pd.count = -1;
+                    }
                     winelem = winelem->sib_next;
                 }
                 handler->need_redraw = 1;

@@ -1149,8 +1149,8 @@ static int vultures_draw_option(struct window * win)
     {
         if (win->selected)
         {
-            /* selected items can be drawn with either an 'x' (count = -1) or an '#' otherwise */
-            if (win->pd.count == -1)
+            /* selected items can be drawn with either an 'x' (count <= 0) or an '#' otherwise */
+            if (win->pd.count <= 0)
                 vultures_put_img(win->abs_x, win->abs_y, vultures_winelem.checkbox_on);
             else
                 vultures_put_img(win->abs_x, win->abs_y, vultures_winelem.checkbox_count);
