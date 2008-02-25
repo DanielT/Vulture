@@ -171,16 +171,12 @@ void vultures_init_nhwindows(int *argcp, char **argv)
 
     set_wc_option_mod_status(mask, SET_IN_FILE);
 
-
     /* these _must_ have the right value for vultures to work correctly */
     set_option_mod_status("menu_tab_sep", SET_IN_FILE);
-//     set_option_mod_status("number_pad", SET_IN_FILE);
-
 
     /* Setting options here makes sure they have the right value
      * as this is done _after_ reading in .nethackrc and co */
     iflags.menu_tab_sep = 1;
-//     iflags.num_pad = 1;
     iflags.wc_hilite_pet = 1;
 
 #ifdef EXPORT_TILES
