@@ -153,10 +153,10 @@
 
 #ifndef WIZARD		/* allow for compile-time or Makefile changes */
 # ifndef KR1ED
-#  define WIZARD  "wizard" /* the person allowed to use the -D option */
+#  define WIZARD  "daniel" /* the person allowed to use the -D option */
 # else
 #  define WIZARD
-#  define WIZARD_NAME "wizard"
+#  define WIZARD_NAME "daniel"
 # endif
 #endif
 
@@ -179,11 +179,11 @@
 
 #ifdef UNIX
 /* path and file name extension for compression program */
-#define COMPRESS "/usr/bin/compress"   /* Lempel-Ziv compression */                                      
-#define COMPRESS_EXTENSION ".Z"        /* compress's extension */                                        
+// #define COMPRESS "/usr/bin/compress"   /* Lempel-Ziv compression */                                      
+// #define COMPRESS_EXTENSION ".Z"        /* compress's extension */                                        
 /* An example of one alternative you might want to use: */
-/* #define COMPRESS "/usr/local/bin/gzip" */   /* FSF gzip compression */                                
-/* #define COMPRESS_EXTENSION ".gz" */     /* normal gzip extension */                                   
+#define COMPRESS "/bin/gzip"    /* FSF gzip compression */                                
+#define COMPRESS_EXTENSION ".gz"      /* normal gzip extension */                                   
 #endif
 
 #ifndef COMPRESS
@@ -195,7 +195,7 @@
  *	a tar-like file, thus making a neater installation.  See *conf.h
  *	for detailed configuration.
  */
-#define DLB  /* not supported on all platforms */
+//#define DLB  /* not supported on all platforms */
 
 /*
  *	Defining INSURANCE slows down level changes, but allows games that
@@ -214,7 +214,7 @@
  * otherwise it will be the current directory.
  */
 # ifndef HACKDIR
-#  define HACKDIR "/usr/games/lib/nethackdir"
+#  define HACKDIR "/usr/share/games/vultureseye"
 # endif
 
 /*
@@ -329,7 +329,7 @@ typedef unsigned char	uchar;
 #define SINKS		/* Kitchen sinks - Janet Walz */
 /* dungeon levels */
 #define WALLIFIED_MAZE	/* Fancy mazes - Jean-Christophe Collet */
-#define REINCARNATION	/* Special Rogue-like levels */
+// ^#define REINCARNATION	/* Special Rogue-like levels */
 /* monsters & objects */
 #define KOPS		/* Keystone Kops by Scott R. Turner */
 #define SEDUCE		/* Succubi/incubi seduction, by KAA, suggested by IM */
@@ -348,7 +348,7 @@ typedef unsigned char	uchar;
 #endif
 
 #define EXP_ON_BOTL	/* Show experience on bottom line */
-/* #define SCORE_ON_BOTL */	/* added by Gary Erickson (erickson@ucivax) */
+#define SCORE_ON_BOTL	/* added by Gary Erickson (erickson@ucivax) */
 
 /*
  * Section 5:  EXPERIMENTAL STUFF

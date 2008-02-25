@@ -1220,40 +1220,40 @@ int vultures_eventh_inventory(struct window* handler, struct window* target,
                 action = 0;
 
                 menu = vultures_create_window_internal(0, NULL, V_WINTYPE_DROPDOWN);
-                vultures_add_context_action(menu, V_INVACTION_APPLY, "Apply");
+                vultures_create_button(menu, "Apply", V_INVACTION_APPLY);
 
                 if (!target->pd.obj->owornmask)
                 {
                     /* if you can wear it there's no way you can eat or drink it */
-                    vultures_add_context_action(menu, V_INVACTION_DRINK, "Drink");
-                    vultures_add_context_action(menu, V_INVACTION_EAT, "Eat");
+                    vultures_create_button(menu, "Drink", V_INVACTION_DRINK);
+                    vultures_create_button(menu, "Eat", V_INVACTION_EAT);
                 }
 
-                vultures_add_context_action(menu, V_INVACTION_READ, "Read");
+                vultures_create_button(menu, "Read", V_INVACTION_READ);
 
                 if (target->pd.obj->oclass == WAND_CLASS)
-                    vultures_add_context_action(menu, V_INVACTION_ZAP, "Zap");
+                    vultures_create_button(menu, "Zap", V_INVACTION_ZAP);
 
                 /* you could already be wearing it, then you can't wear it again */
                 if (!target->pd.obj->owornmask && target->pd.obj->oclass != WAND_CLASS)
                 {
                     if (target->pd.obj->oclass != RING_CLASS && target->pd.obj->oclass != AMULET_CLASS)
-                        vultures_add_context_action(menu, V_INVACTION_WEAR, "Wear");
+                        vultures_create_button(menu, "Wear", V_INVACTION_WEAR);
 
                     if (target->pd.obj->oclass != ARMOR_CLASS)
-                        vultures_add_context_action(menu, V_INVACTION_PUT_ON, "Put on");
+                        vultures_create_button(menu, "Put on", V_INVACTION_PUT_ON);
                 }
 
-                vultures_add_context_action(menu, V_INVACTION_WIELD, "Wield");
+                vultures_create_button(menu, "Wield", V_INVACTION_WIELD);
 
                 if (target->pd.obj->owornmask)
-                    vultures_add_context_action(menu, V_INVACTION_REMOVE, "Remove");
+                    vultures_create_button(menu, "Remove", V_INVACTION_REMOVE);
 
                 if (!target->pd.obj->owornmask)
-                    vultures_add_context_action(menu, V_INVACTION_DROP, "Drop");
+                    vultures_create_button(menu, "Drop", V_INVACTION_DROP);
 
                 if (!objects[target->pd.obj->otyp].oc_name_known)
-                    vultures_add_context_action(menu, V_INVACTION_NAME, "Name");
+                    vultures_create_button(menu, "Name", V_INVACTION_NAME);
 
                 vultures_layout_dropdown(menu);
 

@@ -164,7 +164,7 @@ extern struct window * vultures_create_window_internal(int nh_type, struct windo
 extern void vultures_destroy_window_internal(struct window * win);
 extern void vultures_hide_window(struct window * win);
 extern int vultures_create_hotspot(int x, int y, int w, int h, int menu_id, struct window * parent, char * name);
-extern int vultures_add_context_action(struct window * parent, int action_id, char * caption);
+extern struct window * vultures_create_button(struct window * parent, const char * caption, int menu_id);
 extern struct window * vultures_get_window(int winid);
 extern void vultures_init_wintype(struct window * win, int wintype);
 

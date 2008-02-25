@@ -1750,17 +1750,17 @@ int vultures_get_map_contextmenu(point mappos)
     if ((u.ux == mappos. x) && (u.uy == mappos. y))
     {
         /* Add personal options: */
-        vultures_add_context_action(menu, V_ACTION_ENGRAVE, "Engrave");
-        vultures_add_context_action(menu, V_ACTION_LOOK_AROUND, "Look around");
-        vultures_add_context_action(menu, V_ACTION_MONSTER_ABILITY, "Monster ability");
+        vultures_create_button(menu, "Engrave", V_ACTION_ENGRAVE);
+        vultures_create_button(menu, "Look around", V_ACTION_LOOK_AROUND);
+        vultures_create_button(menu, "Monster ability", V_ACTION_MONSTER_ABILITY);
 
         if (*u.ushops)
-            vultures_add_context_action(menu, V_ACTION_PAY_BILL, "Pay bill");
+            vultures_create_button(menu, "Pay bill", V_ACTION_PAY_BILL);
 
-        vultures_add_context_action(menu, V_ACTION_PRAY, "Pray");
-        vultures_add_context_action(menu, V_ACTION_REST, "Rest");
-        vultures_add_context_action(menu, V_ACTION_SEARCH, "Search");
-        vultures_add_context_action(menu, V_ACTION_SIT, "Sit");
+        vultures_create_button(menu, "Pray", V_ACTION_PRAY);
+        vultures_create_button(menu, "Rest", V_ACTION_REST);
+        vultures_create_button(menu, "Search", V_ACTION_SEARCH);
+        vultures_create_button(menu, "Sit", V_ACTION_SIT);
 
         /* do a minimum check to leave turn undead out for those who _definitely_ can't do it */
 #ifdef VULTURESEYE
@@ -1769,18 +1769,18 @@ int vultures_get_map_contextmenu(point mappos)
         if (tech_known(T_TURN_UNDEAD) ||
 #endif
             objects[SPE_TURN_UNDEAD].oc_name_known)
-            vultures_add_context_action(menu, V_ACTION_TURN_UNDEAD, "Turn undead");
+            vultures_create_button(menu, "Turn undead", V_ACTION_TURN_UNDEAD);
 
-        vultures_add_context_action(menu, V_ACTION_WIPE_FACE, "Wipe face");
+        vultures_create_button(menu, "Wipe face", V_ACTION_WIPE_FACE);
     }
 
     /* monster options */
     else if (vultures_map_mon[mappos. y][mappos. x] != V_TILE_NONE)
         if ((abs(u.ux-mappos. x) <= 1) && (abs(u.uy-mappos. y) <= 1))
         {
-            vultures_add_context_action(menu, V_ACTION_CHAT, "Chat");
-            vultures_add_context_action(menu, V_ACTION_FIGHT, "Fight");
-            vultures_add_context_action(menu, V_ACTION_NAMEMON, "Name");
+            vultures_create_button(menu, "Chat", V_ACTION_CHAT);
+            vultures_create_button(menu, "Fight", V_ACTION_FIGHT);
+            vultures_create_button(menu, "Name", V_ACTION_NAMEMON);
         }
 
 
@@ -1796,11 +1796,11 @@ int vultures_get_map_contextmenu(point mappos)
             case CHEST:
                 if ((u.ux == mappos. x) && (u.uy == mappos. y))
                 {
-                    vultures_add_context_action(menu, V_ACTION_FORCE_LOCK, "Force lock");
-                    vultures_add_context_action(menu, V_ACTION_LOOT, "Loot");
-                    vultures_add_context_action(menu, V_ACTION_PICK_UP, "Pick up");
+                    vultures_create_button(menu, "Force lock", V_ACTION_FORCE_LOCK);
+                    vultures_create_button(menu, "Loot", V_ACTION_LOOT);
+                    vultures_create_button(menu, "Pick up", V_ACTION_PICK_UP);
                 }
-                vultures_add_context_action(menu, V_ACTION_UNTRAP, "Untrap");
+                vultures_create_button(menu, "Untrap", V_ACTION_UNTRAP);
                 break;
 
             case SACK:
@@ -1810,14 +1810,14 @@ int vultures_get_map_contextmenu(point mappos)
             case (V_TILE_UNIDENTIFIED_BAG + OBJTILEOFFSET):
                 if ((u.ux == mappos. x) && (u.uy == mappos. y))
                 {
-                    vultures_add_context_action(menu, V_ACTION_LOOT, "Loot");
-                    vultures_add_context_action(menu, V_ACTION_PICK_UP, "Pick up");
+                    vultures_create_button(menu, "Loot", V_ACTION_LOOT);
+                    vultures_create_button(menu, "Pick up", V_ACTION_PICK_UP);
                 }
                 break;
 
             default:
                 if ((u.ux == mappos. x) && (u.uy == mappos. y))
-                    vultures_add_context_action(menu, V_ACTION_PICK_UP, "Pick up");
+                    vultures_create_button(menu, "Pick up", V_ACTION_PICK_UP);
                 break;
         }
     }
@@ -1831,64 +1831,64 @@ int vultures_get_map_contextmenu(point mappos)
         {
             case V_TILE_STAIRS_DOWN: case V_TILE_LADDER_DOWN:
                 if ((u.ux == mappos. x) && (u.uy == mappos. y))
-                    vultures_add_context_action(menu, V_ACTION_GO_DOWN, "Go down");
+                    vultures_create_button(menu, "Go down", V_ACTION_GO_DOWN);
                 break;
 
             case V_TILE_STAIRS_UP: case V_TILE_LADDER_UP:
                 if ((u.ux == mappos. x) && (u.uy == mappos. y))
-                    vultures_add_context_action(menu, V_ACTION_GO_UP, "Go up");
+                    vultures_create_button(menu, "Go up", V_ACTION_GO_UP);
                 break;
 
             case V_TILE_FOUNTAIN:
                 if ((u.ux == mappos. x) && (u.uy == mappos. y))
-                    vultures_add_context_action(menu, V_ACTION_DRINK, "Drink");
+                    vultures_create_button(menu, "Drink", V_ACTION_DRINK);
                 break;
 
             case V_TILE_VDOOR_WOOD_OPEN: case V_TILE_HDOOR_WOOD_OPEN:
                 if ((u.ux != mappos. x) || (u.uy != mappos. y))
                 {
-                    vultures_add_context_action(menu, V_ACTION_CLOSE_DOOR, "Close door");
-                    vultures_add_context_action(menu, V_ACTION_UNTRAP, "Untrap");
-                    vultures_add_context_action(menu, V_ACTION_KICK, "Kick");
+                    vultures_create_button(menu, "Close door", V_ACTION_CLOSE_DOOR);
+                    vultures_create_button(menu, "Untrap", V_ACTION_UNTRAP);
+                    vultures_create_button(menu, "Kick", V_ACTION_KICK);
                 }
                 break;
 
             case V_TILE_VDOOR_WOOD_CLOSED: case V_TILE_HDOOR_WOOD_CLOSED:
                 if ((u.ux != mappos. x) || (u.uy != mappos. y))
                 {
-                    vultures_add_context_action(menu, V_ACTION_OPEN_DOOR, "Open door");
-                    vultures_add_context_action(menu, V_ACTION_UNTRAP, "Untrap");
-                    vultures_add_context_action(menu, V_ACTION_KICK, "Kick");
+                    vultures_create_button(menu, "Open door", V_ACTION_OPEN_DOOR);
+                    vultures_create_button(menu, "Untrap", V_ACTION_UNTRAP);
+                    vultures_create_button(menu, "Kick", V_ACTION_KICK);
                 }
                 break;
 
             case V_TILE_ALTAR:
                 if ((u.ux == mappos. x) && (u.uy == mappos. y))
-                    vultures_add_context_action(menu, V_ACTION_OFFER, "Offer");
+                    vultures_create_button(menu, "Offer", V_ACTION_OFFER);
                 else
-                    vultures_add_context_action(menu, V_ACTION_KICK, "Kick");
+                    vultures_create_button(menu, "Kick", V_ACTION_KICK);
                 break;
 
             default:
                 if ((u.ux != mappos. x) || (u.uy != mappos. y))
-                    vultures_add_context_action(menu, V_ACTION_KICK, "Kick");
+                    vultures_create_button(menu, "Kick", V_ACTION_KICK);
                 break;
         }
     }
 
     if (vultures_map_trap[mappos. y][mappos. x] != V_TILE_NONE)
     {
-        vultures_add_context_action(menu, V_ACTION_UNTRAP, "Untrap");
+        vultures_create_button(menu, "Untrap", V_ACTION_UNTRAP);
         if ((u.ux != mappos. x) || (u.uy != mappos. y))
             if ((abs(u.ux-mappos. x) <= 1) && (abs(u.uy-mappos. y) <= 1))
-                vultures_add_context_action(menu, V_ACTION_MOVE_HERE, "Enter trap");
+                vultures_create_button(menu, "Enter trap", V_ACTION_MOVE_HERE);
     }
 
     if (vultures_map_back[mappos. y][mappos. x] != V_TILE_NONE)
     {
         if ((u.ux != mappos. x) || (u.uy != mappos. y))    
-            vultures_add_context_action(menu, V_ACTION_TRAVEL, "Move here");
-        vultures_add_context_action(menu, V_ACTION_WHATS_THIS, "What's this?");
+            vultures_create_button(menu, "Move here", V_ACTION_TRAVEL);
+        vultures_create_button(menu, "What's this?", V_ACTION_WHATS_THIS);
     }
 
 

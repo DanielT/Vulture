@@ -379,17 +379,17 @@ int vultures_create_hotspot(int x, int y, int w, int h, int menu_id, struct wind
 }
 
 
-
-int vultures_add_context_action(struct window * parent, int action_id, char * caption)
+struct window * vultures_create_button(struct window * parent, const char * caption, int menu_id)
 {
     struct window * win;
 
-    win= vultures_create_window_internal(0, parent, V_WINTYPE_BUTTON);
-    win->menu_id = action_id;
+    win = vultures_create_window_internal(0, parent, V_WINTYPE_BUTTON);
     win->caption = strdup(caption);
+    win->menu_id = menu_id;
 
-    return win->id;
+    return win;
 }
+
 
 
 /******************************
