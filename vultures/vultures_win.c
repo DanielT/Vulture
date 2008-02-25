@@ -398,16 +398,14 @@ struct window * vultures_create_button(struct window * parent, const char * capt
 
 void vultures_messagebox(const char * message)
 {
-    struct window * win, *button;
+    struct window * win;
     int dummy;
 
     win = vultures_create_window_internal(0, NULL, V_WINTYPE_MAIN);
     win->event_handler = vultures_eventh_messagebox;
     win->caption = strdup(message);
 
-    button = vultures_create_window_internal(0, win, V_WINTYPE_BUTTON);
-    button->caption = strdup("Continue");
-    button->menu_id = 1;
+    vultures_create_button(win, "Continue", 1);
 
     vultures_layout_menu(win);
 
@@ -512,15 +510,10 @@ struct window * vultures_query_choices(const char * ques, const char *choices, c
         if (longdesc)
             len = strlen(str);
 
-        button = vultures_create_window_internal(0, win, V_WINTYPE_BUTTON);
-
-        button->caption = malloc(len+1);
-        strncpy(button->caption, str, len);
-        button->caption[len] = '\0';
+        button = vultures_create_button(win, str, i);
 
         button->accelerator = str[0];
         button->is_default = (str[0] == defchoice);
-        button->menu_id = i;
 
         if (longdesc)
             str += len;
@@ -585,20 +578,14 @@ struct window * vultures_query_anykey(const char * ques)
 
 
     /* create buttons */
-    subwin = vultures_create_window_internal(0, win, V_WINTYPE_BUTTON);
-    subwin->caption = strdup("Show choices");
+    subwin = vultures_create_button(win, "Show choices", 2);
     subwin->accelerator = '?';
-    subwin->menu_id = 2;
 
-    subwin = vultures_create_window_internal(0, win, V_WINTYPE_BUTTON);
-    subwin->caption = strdup("Show inventory");
+    subwin = vultures_create_button(win, "Show inventory", 3);
     subwin->accelerator = '*';
-    subwin->menu_id = 3;
 
-    subwin = vultures_create_window_internal(0, win, V_WINTYPE_BUTTON);
-    subwin->caption = strdup("Cancel");
+    subwin = vultures_create_button(win, "Cancel", 4);
     subwin->accelerator = '\033';
-    subwin->menu_id = 4;
 
     vultures_layout_menu(win);
 

@@ -637,20 +637,11 @@ int vultures_select_menu(int winid, int how, menu_item ** menu_list)
     }
 
     if ( win->content_is_text || how == PICK_NONE )
-    {
-        win_elem = vultures_create_window_internal(0, win, V_WINTYPE_BUTTON);
-        win_elem->caption = strdup("Continue");
-        win_elem->menu_id = 1;
-    }
+        vultures_create_button(win, "Continue", 1);
     else
     {
-        win_elem = vultures_create_window_internal(0, win, V_WINTYPE_BUTTON);
-        win_elem->caption = strdup("Accept");
-        win_elem->menu_id = 1;
-
-        win_elem = vultures_create_window_internal(0, win, V_WINTYPE_BUTTON);
-        win_elem->caption = strdup("Cancel");
-        win_elem->menu_id = -1;
+        vultures_create_button(win, "Accept", 1);
+        vultures_create_button(win, "Cancel", -1);
     }
 
 
