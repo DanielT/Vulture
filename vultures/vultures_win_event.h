@@ -84,9 +84,5 @@ extern int vultures_eventh_button(struct window* handler, struct window* target,
 extern int vultures_eventh_inventory(struct window* handler, struct window* target,
                                      void* result, SDL_Event* event);
 
-
-
-extern int vultures_translate_key(int cmd_key);
-
 #endif
 

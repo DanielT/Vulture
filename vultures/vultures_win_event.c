@@ -14,6 +14,7 @@
 #include "vultures_main.h"
 #include "vultures_gfl.h"
 #include "vultures_opt.h"
+#include "vultures_gen.h"
 
 
 #define META(c) (0x80 | (c))
@@ -1616,49 +1617,3 @@ static void vultures_toggle_map(void)
     }
 }
 
-
-
-/* Rotate numpad keys for movement */
-int vultures_translate_key(int cmd_key)
-{
-    static int vultures_last_translated_key = 0;
-
-    /* Count keys aren't translated */
-    if (vultures_last_translated_key == 'n' && isdigit(cmd_key))
-        return cmd_key;
-
-    vultures_last_translated_key = cmd_key;
-    
-    if (vultures_opts.no_key_translation)
-        return cmd_key;
-
-    if (iflags.num_pad) {
-	switch (cmd_key)
-	{
-		case '1': return '2';
-		case '2': return '3';
-		case '3': return '6';
-		case '4': return '1';
-		case '6': return '9';
-		case '7': return '4';
-		case '8': return '7';
-		case '9': return '8';
-	}
-    }
-    else
-    {
-	switch (cmd_key)
-	{
-		case 'b': return 'j';
-		case 'j': return 'n';
-		case 'n': return 'l';
-		case 'h': return 'b';
-		case 'l': return 'u';
-		case 'y': return 'h';
-		case 'k': return 'y';
-		case 'u': return 'k';
-	}
-    }
-
-    return cmd_key;
-}
