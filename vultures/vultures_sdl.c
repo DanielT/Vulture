@@ -107,11 +107,6 @@ int vultures_convertkey_sdl2nh(SDL_keysym * keysym)
         case SDLK_KP3:
             return iflags.num_pad ? '3' : (shift) ? 'N' : 'n';
 
-        /* replace contol keys by their menu workalikes */
-        case SDLK_PAGEUP:   return MENU_PREVIOUS_PAGE; /* '<' */
-        case SDLK_PAGEDOWN: return MENU_NEXT_PAGE;     /* '>' */
-        case SDLK_HOME:     return MENU_FIRST_PAGE;    /* '^' */
-        case SDLK_END:      return MENU_LAST_PAGE;     /* '|' */
 
         /* prevent "enumeration value ... not handled in switch" warning */
         default: break; 
