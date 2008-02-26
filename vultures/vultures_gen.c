@@ -231,45 +231,52 @@ void vultures_oom(int do_exit, const char *file, int line)
 /* Rotate numpad keys for movement */
 int vultures_translate_key(int cmd_key)
 {
+    const char num_translation_table[9] = {'2', '3', '6', '1', '5', '9', '4', '7', '8'};
+    const char hjkl_translation_table[9] = {'j', 'n', 'l', 'b', '.', 'u', 'h', 'y', 'k'};
+    const char * hjkl_untranslated = "bjnh.lyku\0";
+
     static int vultures_last_translated_key = 0;
+
+    int is_upper, charpos = 0;
 
     /* Count keys aren't translated */
     if (vultures_last_translated_key == 'n' && isdigit(cmd_key))
         return cmd_key;
 
     vultures_last_translated_key = cmd_key;
-    
-    if (vultures_opts.no_key_translation)
+
+    if (vultures_opts.no_key_translation || cmd_key == '.')
         return cmd_key;
 
-    if (iflags.num_pad) {
-        switch (cmd_key)
-        {
-            case '1': return '2';
-            case '2': return '3';
-            case '3': return '6';
-            case '4': return '1';
-            case '6': return '9';
-            case '7': return '4';
-            case '8': return '7';
-            case '9': return '8';
-        }
+    if (iflags.num_pad && isdigit(cmd_key)) {
+        return num_translation_table[cmd_key -'0' - 1];
     }
     else
     {
-        switch (cmd_key)
-        {
-            case 'b': return 'j';
-            case 'j': return 'n';
-            case 'n': return 'l';
-            case 'h': return 'b';
-            case 'l': return 'u';
-            case 'y': return 'h';
-            case 'k': return 'y';
-            case 'u': return 'k';
-        }
+        /* note: the bit-twiddling converts between upper and lower case chars */
+        is_upper = !(cmd_key & (1 << 5));
+
+        /* can't use strchr here: it's function depends on the locale and it thinks ',' is '.' */
+        while (hjkl_untranslated[charpos] != (cmd_key | (1 << 5)) && hjkl_untranslated[charpos])
+            charpos++;
+
+        if (hjkl_untranslated[charpos])
+            return hjkl_translation_table[charpos] & ~(is_upper << 5);
     }
 
     return cmd_key;
+}
+
+
+int vultures_numpad_to_hjkl(int cmd_key, int shift)
+{
+    const char translation_table[9] = {'B', 'J', 'N', 'H', '.', 'L', 'Y', 'K', 'U'};
+
+    if (!isdigit(cmd_key) || (iflags.num_pad && cmd_key != '.'))
+        return cmd_key;
+
+    /* look up the letter in the translation table, then set bit 6 if shift is true
+     * note that bit 6 is the difference between an upper cas and a lower case char */
+    return translation_table[cmd_key -'0' - 1] | (!shift << 5);
 }
 
