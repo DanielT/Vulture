@@ -596,7 +596,7 @@ int vultures_draw_map(struct window * win)
     struct window * txt = win->first_child;
 
     /* Draw parchment */
-    vultures_put_img(win->abs_x, win->abs_y, win->pd.image);
+    vultures_put_img(win->abs_x, win->abs_y, win->image);
 
     /* Draw the level name */
 #ifdef VULTURESCLAW
@@ -644,7 +644,7 @@ int vultures_draw_minimap(struct window * win)
     Uint32 minimap_colors[V_MMTILE_MAX] = {CLR32_BLACK, V_COLOR_MINI_FLOOR, V_COLOR_MINI_STAIRS,
                                            V_COLOR_MINI_DOOR, V_COLOR_MINI_YOU, CLR32_GREEN, CLR32_RED};
     
-    if (!win->pd.image)
+    if (!win->image)
         return 0;
         
     if (win->background)
@@ -705,8 +705,8 @@ int vultures_draw_minimap(struct window * win)
                 destrect.x = 40 + 2*map_x - 2*map_y;
                 destrect.y = map_x + map_y;
 
-                pixels = win->pd.image->pixels + 
-                         win->pd.image->pitch * (destrect.y+6) + (destrect.x+6) * 4;
+                pixels = win->image->pixels + 
+                         win->image->pitch * (destrect.y+6) + (destrect.x+6) * 4;
 
                 /* A minimap symbol has this shape: _ C _
                  *                                  C C C
@@ -718,8 +718,8 @@ int vultures_draw_minimap(struct window * win)
                  /* pixels[2] = transparent -> dont write */
 
                 /* row 2 */
-                pixels = win->pd.image->pixels + 
-                         win->pd.image->pitch * (destrect.y+7) + (destrect.x+6) * 4;
+                pixels = win->image->pixels + 
+                         win->image->pitch * (destrect.y+7) + (destrect.x+6) * 4;
                 pixels[0] = minimap_colors[sym];
                 pixels[1] = minimap_colors[sym];
                 pixels[2] = minimap_colors[sym];
@@ -728,7 +728,7 @@ int vultures_draw_minimap(struct window * win)
         }
     }
 
-    vultures_put_img(win->abs_x, win->abs_y, win->pd.image);
+    vultures_put_img(win->abs_x, win->abs_y, win->image);
 
     vultures_invalidate_region(win->abs_x, win->abs_y, win->w, win->h);
 

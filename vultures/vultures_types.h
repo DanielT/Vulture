@@ -34,7 +34,7 @@ typedef struct window {
     enum wintypes v_type;
     char * caption;
 
-    /* absolute coords; calculated befor drawing */
+    /* absolute coords; calculated before drawing */
     int abs_x, abs_y;
 
     /* coords relative to parent */
@@ -57,24 +57,23 @@ typedef struct window {
     unsigned visible : 1;
     unsigned is_default : 1;
     unsigned scrollable : 1;
-    unsigned pd_type : 1; /* 0 == the pd union is storing a value, 1 == it's storing an SDL_Surface */
     unsigned select_how : 2;
 
     int accelerator;
+    SDL_Surface * image; /* various windows want to keep image data around */
 
     union {
         int menu_id;
         void * menu_id_v;
     };
 
-    union {
+    struct pd {
         int scrollpos;  /* for scrollbars */
         int ending_type;/* how you died */
-        struct obj * obj;
+        struct obj * obj; /* inventory items */
         int inv_page;   /* the currently displayed inventory page */
-        int count;      /* the count in query_anykey dialogs */
-        Uint32 textcolor;
-        SDL_Surface * image; /* various windows want to keep image data around */
+        int count;      /* query_anykey dialogs, menu items */
+        Uint32 textcolor; /* text items */
     } pd;
 
     /* Function pointers */

@@ -221,10 +221,9 @@ winid vultures_create_nhwindow(int type)
             win = vultures_create_window_internal(NHW_STATUS, NULL, V_WINTYPE_CUSTOM);
             win->draw = vultures_draw_img;
             win->event_handler = vultures_eventh_status;
-            win->pd_type = 1;
-            win->pd.image = vultures_load_graphic(NULL, V_FILENAME_STATUS_BAR);
-            win->w = win->pd.image->w;
-            win->h = win->pd.image->h;
+            win->image = vultures_load_graphic(NULL, V_FILENAME_STATUS_BAR);
+            win->w = win->image->w;
+            win->h = win->image->h;
             win->x = 6;
             win->y = vultures_screen->h - (win->h + 6);
             win->menu_id = V_WIN_STATUSBAR;
@@ -233,10 +232,9 @@ winid vultures_create_nhwindow(int type)
             subwin = vultures_create_window_internal(0, NULL, V_WINTYPE_CUSTOM);
             subwin->draw = vultures_draw_img;
             subwin->event_handler = vultures_eventh_enhance;
-            subwin->pd_type = 1;
-            subwin->pd.image = vultures_load_graphic(NULL, V_FILENAME_ENHANCE);
-            subwin->w = subwin->pd.image->w;
-            subwin->h = subwin->pd.image->h;
+            subwin->image = vultures_load_graphic(NULL, V_FILENAME_ENHANCE);
+            subwin->w = subwin->image->w;
+            subwin->h = subwin->image->h;
             subwin->x = win->x + win->w;
             subwin->y = win->y - subwin->h;
             subwin->visible = 0;
@@ -251,14 +249,13 @@ winid vultures_create_nhwindow(int type)
             win->draw = vultures_draw_messages;
             win->event_handler = vultures_eventh_messages;
 
-            win->pd_type = 1;
-            win->pd.image = SDL_CreateRGBSurface(SDL_SWSURFACE,
+            win->image = SDL_CreateRGBSurface(SDL_SWSURFACE,
                                             40, 20, 32,
                                             vultures_px_format->Rmask,
                                             vultures_px_format->Gmask,
                                             vultures_px_format->Bmask, 0);
-            SDL_FillRect(win->pd.image, NULL, CLR32_BLACK);
-            SDL_SetAlpha(win->pd.image, SDL_SRCALPHA, 128);
+            SDL_FillRect(win->image, NULL, CLR32_BLACK);
+            SDL_SetAlpha(win->image, SDL_SRCALPHA, 128);
 
             break;
 
@@ -276,10 +273,9 @@ winid vultures_create_nhwindow(int type)
             subwin = vultures_create_window_internal(0, NULL, V_WINTYPE_CUSTOM);
             subwin->draw = vultures_draw_img;
             subwin->event_handler = vultures_eventh_toolbar;
-            subwin->pd_type = 1;
-            subwin->pd.image = vultures_load_graphic(NULL, V_FILENAME_TOOLBAR1);
-            subwin->w = subwin->pd.image->w;
-            subwin->h = subwin->pd.image->h;
+            subwin->image = vultures_load_graphic(NULL, V_FILENAME_TOOLBAR1);
+            subwin->w = subwin->image->w;
+            subwin->h = subwin->image->h;
             subwin->x = win->w - (subwin->w + 6);
             subwin->y = win->h - (subwin->h*2 + 8);
             subwin->visible = vultures_opts.show_actiontb;
@@ -301,10 +297,9 @@ winid vultures_create_nhwindow(int type)
             subwin = vultures_create_window_internal(0, NULL, V_WINTYPE_CUSTOM);
             subwin->draw = vultures_draw_img;
             subwin->event_handler = vultures_eventh_toolbar;
-            subwin->pd_type = 1;
-            subwin->pd.image = vultures_load_graphic(NULL, V_FILENAME_TOOLBAR2);
-            subwin->w = subwin->pd.image->w;
-            subwin->h = subwin->pd.image->h;
+            subwin->image = vultures_load_graphic(NULL, V_FILENAME_TOOLBAR2);
+            subwin->w = subwin->image->w;
+            subwin->h = subwin->image->h;
             subwin->x = win->w - (subwin->w + 6);
             subwin->y = win->h - (subwin->h + 6);
             subwin->visible = vultures_opts.show_helptb;

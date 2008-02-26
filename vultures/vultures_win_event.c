@@ -1585,11 +1585,10 @@ static void vultures_toggle_map(void)
         map->y = (map->parent->h - map->h) / 2;
 
         /* Load map parchment */
-        map->pd_type = 1;
-        map->pd.image = vultures_load_graphic(NULL, V_FILENAME_MAP_PARCHMENT);
-        
+        map->image = vultures_load_graphic(NULL, V_FILENAME_MAP_PARCHMENT);
+
         vultures_winid_map = map->id;
-        
+
         txt = vultures_create_window_internal(0, map, V_WINTYPE_TEXT);
         txt->x = map->w/2;
         txt->y = 48;

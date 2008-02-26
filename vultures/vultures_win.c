@@ -253,9 +253,9 @@ void vultures_destroy_window_internal(struct window * win)
     if (win->background)
         SDL_FreeSurface(win->background);
 
-    /* if our private data contains an image we free that too */
-    if (win->pd.image && win->pd_type)
-        SDL_FreeSurface(win->pd.image);
+    /* if there is a stored image we free that too */
+    if (win->image)
+        SDL_FreeSurface(win->image);
 
     free(win);
 }
@@ -331,10 +331,9 @@ void vultures_create_root_window(void)
     subwin = vultures_create_window_internal(0, win, V_WINTYPE_CUSTOM);
     subwin->draw = vultures_draw_minimap;
     subwin->event_handler = vultures_eventh_minimap;
-    subwin->pd_type = 1;
-    subwin->pd.image = vultures_load_graphic(NULL, V_FILENAME_MINIMAPBG);
-    subwin->w = subwin->pd.image->w;
-    subwin->h = subwin->pd.image->h;
+    subwin->image = vultures_load_graphic(NULL, V_FILENAME_MINIMAPBG);
+    subwin->w = subwin->image->w;
+    subwin->h = subwin->image->h;
     subwin->x = win->w - (subwin->w + 6);
     subwin->y = 6;
     subwin->visible = vultures_opts.show_minimap;
@@ -1239,7 +1238,7 @@ int vultures_draw_img(struct window * win)
 {
     vultures_set_draw_region(win->abs_x, win->abs_y,
                         win->abs_x + win->w - 1, win->abs_y + win->h - 1);
-    vultures_put_img(win->abs_x, win->abs_y, win->pd.image);
+    vultures_put_img(win->abs_x, win->abs_y, win->image);
     vultures_set_draw_region(0, 0, vultures_screen->w-1, vultures_screen->h-1);
 
     vultures_invalidate_region(win->abs_x, win->abs_y, win->w, win->h);
@@ -1255,7 +1254,7 @@ int vultures_draw_messages(struct window * win)
     int pos_x, pos_y, i;
     char * message;
     int refresh_x, refresh_y, refresh_h, refresh_w;
-    SDL_Surface * shade = win->pd.image;
+    SDL_Surface * shade = win->image;
     int time_cur = moves;
 
     if (vultures_messages_getshown() != 0)
