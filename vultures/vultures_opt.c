@@ -247,7 +247,7 @@ void vultures_read_options(void)
     vultures_opts.use_standard_inventory = 0;
     vultures_opts.messagelines = 3;
     vultures_opts.no_key_translation = 0;
-    vultures_opts.highlight_cursor_square = 0;
+    vultures_opts.highlight_cursor_square = 1;
 
     strcpy(vultures_opts.macro[0], "n100.");
     strcpy(vultures_opts.macro[1], "n20s");
