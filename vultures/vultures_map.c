@@ -2358,9 +2358,9 @@ static int vultures_monster_to_tile(int mon_id, XCHAR_P x, XCHAR_P y)
 /* converts a mappos adjacent to the player to the dirkey pointing in that direction */
 static char vultures_mappos_to_dirkey(point mappos)
 {
-    const char chartable[3][3] = {{'1', '2', '3'},
+    const char chartable[3][3] = {{'7', '8', '9'},
                                   {'4', '.', '6'}, 
-                                  {'7', '8', '9'}};
+                                  {'1', '2', '3'}};
     int dx = mappos.x - u.ux;
     int dy = mappos.y - u.uy;
 
