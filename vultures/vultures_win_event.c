@@ -219,12 +219,47 @@ int vultures_eventh_enhance(struct window* handler, struct window* target,
 }
 
 
+static int vultures_handle_map_click(void* result, int button, point mappos)
+{
+    int retval, action_id = 0;
+
+    /* if vultures_whatis_active is set, we want a location (for look or teleport) */
+    if (vultures_whatis_active)
+    {
+        ((vultures_event*)result)->num = 0;
+        ((vultures_event*)result)->x = mappos.x;
+        ((vultures_event*)result)->y = mappos.y;
+        return V_EVENT_HANDLED_FINAL;
+    }
+
+    /* else  */
+    /* right click: try to resolve the click on the map to a default action */
+    if (button == SDL_BUTTON_LEFT)
+        action_id = vultures_get_map_action(mappos);
+    /* left click: allow the user to choose from a context menu */
+    else if (button == SDL_BUTTON_RIGHT)
+        action_id = vultures_get_map_contextmenu(mappos);
+
+    /* if an action was chosen, return it and leave the event loop */
+    if (action_id)
+    {
+        retval = vultures_perform_map_action(action_id, mappos);
+        if (retval)
+        {
+            ((vultures_event*)result)->num = retval;
+            return V_EVENT_HANDLED_FINAL;
+        }
+    }
+
+    return V_EVENT_HANDLED_NOREDRAW;
+}
+
 
 int vultures_eventh_level(struct window* handler, struct window* target,
                           void* result, SDL_Event* event)
 {
     int translated_key, key;
-    int action_id, retval, macronum, i;
+    int macronum, i;
     point mouse, mappos;
     char * ttext;
 
@@ -234,35 +269,7 @@ int vultures_eventh_level(struct window* handler, struct window* target,
     switch (event->type)
     {
         case SDL_MOUSEBUTTONUP:
-            /* if vultures_whatis_active is set, we want a location (for look or teleport) */
-            if (vultures_whatis_active)
-            {
-                ((vultures_event*)result)->num = 0;
-                ((vultures_event*)result)->x = mappos.x;
-                ((vultures_event*)result)->y = mappos.y;
-                return V_EVENT_HANDLED_FINAL;
-            }
-
-            /* else  */
-            action_id = 0;
-
-            /* right click: try to resolve the click on the map to a default action */
-            if (event->button.button == SDL_BUTTON_LEFT)
-                action_id = vultures_get_map_action(mappos);
-            /* left click: allow the user to choose from a context menu */
-            else if (event->button.button == SDL_BUTTON_RIGHT)
-                action_id = vultures_get_map_contextmenu(mappos);
-
-            /* if an action was chosen, return it and leave the event loop */
-            if (action_id)
-            {
-                retval = vultures_perform_map_action(action_id, mappos);
-                if (retval)
-                {
-                    ((vultures_event*)result)->num = retval;
-                    return V_EVENT_HANDLED_FINAL;
-                }
-            }
+            return vultures_handle_map_click(result, event->button.button, mappos);
             break;
 
         /* keyboard events */
@@ -444,7 +451,6 @@ int vultures_eventh_map(struct window* handler, struct window* target,
                         void* result, SDL_Event* event)
 {
     point mouse, mappos;
-    int action_id = 0, retval;
     char * ttext;
 
     mouse = vultures_get_mouse_pos();
@@ -471,34 +477,8 @@ int vultures_eventh_map(struct window* handler, struct window* target,
 
             /* only handle clicks on valid map locations */
             if (mappos.x != -1)
-            {
-                /* if vultures_whatis_active, return the target coordinates */
-                if (vultures_whatis_active)
-                {
-                    ((vultures_event*)result)->num = 0;
-                    ((vultures_event*)result)->x = mappos.x;
-                    ((vultures_event*)result)->y = mappos.y;
-                    return V_EVENT_HANDLED_FINAL;
-                }
+                return vultures_handle_map_click(result, event->button.button, mappos);
 
-                /* left click: get the default action */
-                if (event->button.button == SDL_BUTTON_LEFT)
-                    action_id = vultures_get_map_action(mappos);
-                /* right click: let the user choose an action from a context menu */
-                else if (event->button.button == SDL_BUTTON_RIGHT)
-                    action_id = vultures_get_map_contextmenu(mappos);
-
-                /* perform the chosen action */
-                if (action_id)
-                {
-                    retval = vultures_perform_map_action(action_id, mappos);
-                    if (retval)
-                    {
-                        ((vultures_event*)result)->num = retval;
-                        return V_EVENT_HANDLED_FINAL;
-                    }
-                }
-            }
             break;
 
         case SDL_TIMEREVENT:
