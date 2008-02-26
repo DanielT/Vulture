@@ -248,8 +248,9 @@ int vultures_translate_key(int cmd_key)
     if (vultures_opts.no_key_translation || cmd_key == '.')
         return cmd_key;
 
-    if (iflags.num_pad && isdigit(cmd_key)) {
-        return num_translation_table[cmd_key -'0' - 1];
+    if (iflags.num_pad) {
+        if (isdigit(cmd_key))
+            return num_translation_table[cmd_key -'0' - 1];
     }
     else
     {
