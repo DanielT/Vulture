@@ -342,7 +342,7 @@ int vultures_handle_global_event(SDL_Event * event)
             }
             else
             {
-                switch (vultures_yn_function("Save and quit?", "ync", 'n'))
+                switch (vultures_yn_function("Save and quit?", "yn", 'n'))
                 {
                     case 'y':
                         vultures_eventstack_add('y', -1 , -1, V_RESPOND_CHARACTER);
