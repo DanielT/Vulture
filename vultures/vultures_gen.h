@@ -41,5 +41,7 @@ extern void vultures_oom(int do_exit, const char *file, int line);
 extern int vultures_chdir_to_datadir(char * argv0);
 
 extern int vultures_translate_key(int cmd_key);
+extern int vultures_numpad_to_hjkl(int cmd_key, int shift);
+
 
 #endif

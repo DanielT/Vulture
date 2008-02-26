@@ -81,31 +81,31 @@ int vultures_convertkey_sdl2nh(SDL_keysym * keysym)
         /* make sure the keypad and arrow keys work no matter which options are set */
         case SDLK_KP8:
         case SDLK_UP:
-            return iflags.num_pad ? '8' : (shift) ? 'K' : 'k';
+            return vultures_numpad_to_hjkl('8', shift);
 
         case SDLK_KP2:
         case SDLK_DOWN:
-            return iflags.num_pad ? '2' : (shift) ? 'J' : 'j';
+            return vultures_numpad_to_hjkl('2', shift);
 
         case SDLK_KP4:
         case SDLK_LEFT:
-            return iflags.num_pad ? '4' : (shift) ? 'H' : 'h';
+            return vultures_numpad_to_hjkl('4', shift);
 
         case SDLK_KP6:
         case SDLK_RIGHT:
-            return iflags.num_pad ? '6' : (shift) ? 'L' : 'l';
+            return vultures_numpad_to_hjkl('6', shift);
 
         case SDLK_KP7:
-            return iflags.num_pad ? '7' : (shift) ? 'Y' : 'y';
+            return vultures_numpad_to_hjkl('7', shift);
 
         case SDLK_KP9:
-            return iflags.num_pad ? '9' : (shift) ? 'U' : 'u';
+            return vultures_numpad_to_hjkl('9', shift);
 
         case SDLK_KP1:
-            return iflags.num_pad ? '1' : (shift) ? 'B' : 'b';
+            return vultures_numpad_to_hjkl('1', shift);
 
         case SDLK_KP3:
-            return iflags.num_pad ? '3' : (shift) ? 'N' : 'n';
+            return vultures_numpad_to_hjkl('3', shift);
 
 
         /* prevent "enumeration value ... not handled in switch" warning */

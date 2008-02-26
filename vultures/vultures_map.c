@@ -12,6 +12,7 @@
 #include "vultures_tile.h"
 #include "vultures_txt.h"
 #include "vultures_opt.h"
+#include "vultures_gen.h"
 
 #include "epri.h"
 
@@ -2357,27 +2358,16 @@ static int vultures_monster_to_tile(int mon_id, XCHAR_P x, XCHAR_P y)
 /* converts a mappos adjacent to the player to the dirkey pointing in that direction */
 static char vultures_mappos_to_dirkey(point mappos)
 {
-    if (mappos.y == u.uy + 1)
-    {
-        if (mappos.x == u.ux - 1) return iflags.num_pad ? '1' : 'b';
-        if (mappos.x == u.ux)     return iflags.num_pad ? '2' : 'j';
-        if (mappos.x == u.ux + 1) return iflags.num_pad ? '3' : 'n';
-    }
-    else if (mappos.y == u.uy)
-    {
-        if (mappos.x == u.ux - 1) return iflags.num_pad ? '4' : 'h';
-        if (mappos.x == u.ux)     return '.';
-        if (mappos.x == u.ux + 1) return iflags.num_pad ? '6' : 'l';
-    }
-    else if (mappos.y == u.uy - 1)
-    {
-        if (mappos.x == u.ux - 1) return iflags.num_pad ? '7' : 'y';
-        if (mappos.x == u.ux)     return iflags.num_pad ? '8' : 'k';
-        if (mappos.x == u.ux + 1) return iflags.num_pad ? '9' : 'u';
-    }
+    const char chartable[3][3] = {{'1', '2', '3'},
+                                  {'4', '.', '6'}, 
+                                  {'7', '8', '9'}};
+    int dx = mappos.x - u.ux;
+    int dy = mappos.y - u.uy;
 
-    /* the caller should make sure we don't get here */
-    return 0;
+    if (dx < -1 || dx > 1 || dy < -1 || dy > 0)
+        return 0;
+
+    return vultures_numpad_to_hjkl(chartable[dy+1][dx+1], 0);
 }
 
 

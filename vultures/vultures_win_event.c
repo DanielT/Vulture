@@ -318,6 +318,9 @@ int vultures_eventh_level(struct window* handler, struct window* target,
             /* all other keys are converted and passed to the core */
             key = vultures_convertkey_sdl2nh(&event->key.keysym);
 
+            if (!key)
+                return V_EVENT_HANDLED_NOREDRAW;
+
             if (vultures_winid_map && isdigit(key))
                 translated_key = key;
             else
@@ -649,6 +652,10 @@ int vultures_eventh_query_direction(struct window* handler, struct window* targe
     int dir_x, dir_y;
     char choice = 0;
 
+    const char dirkeys[3][3] = {{'8', '9', '6'},
+                                {'7', '.', '3'},
+                                {'4', '1', '2'}};
+
     /* mouse motion events are merely used to set the correct cursor */
     if (event->type == SDL_MOUSEMOTION)
         vultures_set_mcursor(V_CURSOR_NORMAL);
@@ -680,24 +687,8 @@ int vultures_eventh_query_direction(struct window* handler, struct window* targe
 
             /* convert the chosen direction to a key */
             choice = 0;
-            if (dir_y == -1)
-            {
-                if (dir_x == -1) choice = iflags.num_pad ? '8' : 'k';
-                else if (dir_x == 0) choice = iflags.num_pad ? '9' : 'u';
-                else if (dir_x == 1) choice = iflags.num_pad ? '6' : 'l';
-            }
-            else if (dir_y == 0)
-            {
-                if (dir_x == -1) choice = iflags.num_pad ? '7' : 'y';
-                else if (dir_x == 0) choice = '.';
-                else if (dir_x == 1) choice = iflags.num_pad ? '3' : 'n';
-            }
-            if (dir_y == 1)
-            {
-                if (dir_x == -1) choice = iflags.num_pad ? '4' : 'h';
-                else if (dir_x == 0) choice = iflags.num_pad ? '1' : 'b';
-                else if (dir_x == 1) choice = iflags.num_pad ? '2' : 'j';
-            }
+            if (dir_y >= -1 && dir_y <= 1 && dir_x >= -1 && dir_x <= 1)
+                choice = vultures_numpad_to_hjkl(dirkeys[dir_y + 1][dir_x + 1], 0);
 
             if (dir_x >= 2 && mouse.x < target->w / 2 && mouse.y < target->h / 2)
                 choice = '>';
