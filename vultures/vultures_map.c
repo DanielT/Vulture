@@ -2364,7 +2364,7 @@ static char vultures_mappos_to_dirkey(point mappos)
     int dx = mappos.x - u.ux;
     int dy = mappos.y - u.uy;
 
-    if (dx < -1 || dx > 1 || dy < -1 || dy > 0)
+    if (dx < -1 || dx > 1 || dy < -1 || dy > 1)
         return 0;
 
     return vultures_numpad_to_hjkl(chartable[dy+1][dx+1], 0);
