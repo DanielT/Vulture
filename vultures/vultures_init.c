@@ -548,14 +548,11 @@ int vultures_init_graphics(void)
         vultures_winelem.scrollbutton_up = vultures_get_img_src(121, 107, 137, 123, image);
         vultures_winelem.scroll_indicator = vultures_get_img_src(1, 127, 17, 154, image);
         vultures_winelem.direction_arrows = vultures_get_img_src(242, 1, 576, 134, image);
-        vultures_winelem.invarrow_left = vultures_get_img_src(242, 138, 364, 175, image);
-        vultures_winelem.invarrow_right = vultures_get_img_src(368, 138, 490, 175, image);
+        vultures_winelem.invarrow_left = vultures_get_img_src(1, 158, 67, 174, image);
+        vultures_winelem.invarrow_right = vultures_get_img_src(1, 178, 67, 194, image);
+        vultures_winelem.closebutton = vultures_get_img_src(41, 127, 59, 145, image);
         SDL_FreeSurface(image);
     }
-
-    vultures_backpack_img =vultures_load_graphic(NULL, V_FILENAME_BACKPACK);
-    all_ok &= (vultures_backpack_img != NULL);
-
 
     /* Initialize the isometric tiles */
     all_ok &= vultures_init_map();  /* Initialize tile bitmaps */
@@ -608,6 +605,7 @@ void vultures_destroy_graphics(void)
     SDL_FreeSurface(vultures_winelem.corner_br);
     SDL_FreeSurface(vultures_winelem.checkbox_off);
     SDL_FreeSurface(vultures_winelem.checkbox_on);
+    SDL_FreeSurface(vultures_winelem.checkbox_count);
     SDL_FreeSurface(vultures_winelem.radiobutton_off);
     SDL_FreeSurface(vultures_winelem.radiobutton_on);
     SDL_FreeSurface(vultures_winelem.scrollbar);
@@ -617,9 +615,7 @@ void vultures_destroy_graphics(void)
     SDL_FreeSurface(vultures_winelem.direction_arrows);
     SDL_FreeSurface(vultures_winelem.invarrow_left);
     SDL_FreeSurface(vultures_winelem.invarrow_right);
-
-    /* free the inventory background */
-    SDL_FreeSurface(vultures_backpack_img);
+    SDL_FreeSurface(vultures_winelem.closebutton);
 
     /* free sound descriptions */
     for (i = 0; i < vultures_n_event_sounds; i++)

@@ -598,11 +598,8 @@ int vultures_select_menu(int winid, int how, menu_item ** menu_list)
     {
         win->visible = 1;
         win->need_redraw = 1;
-        win->draw = vultures_draw_inventory;
-        win->event_handler = vultures_eventh_inventory;
-        win->pd.inv_page = 0; /* current page number */
 
-        vultures_layout_inventory(win);
+        vultures_layout_itemwin(win);
 
         vultures_event_dispatcher(&response, V_RESPOND_INT, win);
 

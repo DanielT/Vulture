@@ -33,7 +33,6 @@
 #define V_FILENAME_FONT                 "VeraSe.ttf"
 #define V_FILENAME_WINDOW_STYLE         "winelem"
 #define V_FILENAME_MAP_PARCHMENT        "parchment"
-#define V_FILENAME_BACKPACK             "backpac5"
 
 /*
  * Ending scenes. Eventually these could
@@ -143,6 +142,7 @@ typedef struct {
     SDL_Surface * direction_arrows;
     SDL_Surface * invarrow_left;
     SDL_Surface * invarrow_right;
+    SDL_Surface * closebutton;
 } vultures_window_graphics;
 
 
@@ -194,9 +194,8 @@ extern int vultures_draw_img(struct window * win);
 extern int vultures_draw_messages(struct window * win);
 extern int vultures_draw_dirarrows(struct window * win);
 extern int vultures_draw_menu(struct window * win);
-extern int vultures_draw_inventory(struct window * win);
 
-extern void vultures_layout_inventory(struct window * win);
+extern void vultures_layout_itemwin(struct window * win);
 extern void vultures_layout_menu(struct window * win);
 extern void vultures_layout_dropdown(struct window *win);
 
@@ -232,7 +231,6 @@ extern int vultures_winid_map;
 extern int vultures_winid_minimap;
 extern int vultures_winid_enhance;
 extern SDL_Surface * vultures_statusbar;
-extern SDL_Surface * vultures_backpack_img;
 extern int vultures_whatis_singleshot;
 extern int vultures_windows_inited;
 

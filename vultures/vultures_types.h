@@ -9,7 +9,6 @@
 
 #include <SDL.h>
 
-
 enum wintypes {
     V_WINTYPE_NONE, /* only the root window has this type */
     V_WINTYPE_MAIN,
@@ -18,8 +17,17 @@ enum wintypes {
     V_WINTYPE_SCROLLBAR,
     V_WINTYPE_TEXT,
     V_WINTYPE_DROPDOWN,
+    
+    /* new-style inventory and object lists (ie multidrop, pickup, loot) */
+    V_WINTYPE_OBJWIN,
+    V_WINTYPE_OBJITEM,
+    V_WINTYPE_OBJITEMHEADER,
+    
     V_WINTYPE_CUSTOM
 };
+
+#define V_LISTITEM_WIDTH  300
+#define V_LISTITEM_HEIGHT  52
 
 struct window;
 
@@ -74,6 +82,11 @@ typedef struct window {
         int inv_page;   /* the currently displayed inventory page */
         int count;      /* query_anykey dialogs, menu items */
         Uint32 textcolor; /* text items */
+
+        int ow_vcols;
+        int ow_vrows;
+        int ow_ncols;
+        int ow_firstcol;
     } pd;
 
     /* Function pointers */

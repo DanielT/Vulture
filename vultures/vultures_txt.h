@@ -20,7 +20,8 @@ extern int vultures_put_text (int font_id, const char *str, SDL_Surface *dest,
 
 extern int vultures_put_text_shadow (int font_id, const char *str, SDL_Surface *dest,
                                      int x, int y, Uint32 textcolor, Uint32 shadowcolor);
-
+extern void vultures_put_text_multiline(int font_id, const char *str, SDL_Surface *dest,
+                                       int x, int y, Uint32 color, Uint32 shadowcolor, int maxlen);
 
 extern int vultures_text_length (int font_id, const char *str);
 

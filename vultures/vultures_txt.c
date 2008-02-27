@@ -115,6 +115,59 @@ int vultures_put_text_shadow (int font_id, const char *str, SDL_Surface *dest,
 }
 
 
+/* draw text over multiple lines if it's length exceeds maxlen */
+void vultures_put_text_multiline(int font_id, const char *str, SDL_Surface *dest,
+                                int x, int y, Uint32 color, Uint32 shadowcolor, int maxlen)
+{
+    char *str_copy;
+    int lastfit, txtlen, lineno, text_height, endpos, startpos;
+
+    lineno = 0;
+    lastfit = 0;
+    startpos = endpos = 0;
+    text_height = vultures_text_height(font_id, str);
+
+    /* lastfit is true when the last segment has been fit onto the surface (drawn) */
+    while (!lastfit)
+    {
+        lastfit = 1;
+
+        startpos = startpos + endpos;
+        str_copy = strdup(str + startpos);
+        endpos = strlen(str_copy) - 1;
+
+        txtlen = vultures_text_length(font_id, str_copy);
+
+        /* split word off the end of the string until it is short enough to fit */
+        while (txtlen > maxlen)
+        {
+            /* a piece will be split off the end, so this is not the last piece */
+            lastfit = 0;
+
+            /* find a suitable place to split */
+            while (endpos && !isspace(str_copy[endpos]))
+                endpos--;
+
+            /* prevent infinite loops if a long word doesn't fit */
+            if (endpos == 0)
+            {
+                endpos = strlen(str_copy) - 1;
+                lastfit = 1;
+                break;
+            }
+
+            /* truncate the text */
+            str_copy[endpos++] = '\0';
+            txtlen = vultures_text_length(font_id, str_copy);
+        }
+        vultures_put_text_shadow(font_id, str_copy, dest, x, y + lineno * text_height, color, shadowcolor);
+
+        free(str_copy);
+        lineno++;
+    }
+}
+
+
 
 int vultures_text_length (int font_id, const char *str)
 {

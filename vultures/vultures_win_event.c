@@ -1235,31 +1235,171 @@ int vultures_eventh_button(struct window* handler, struct window* target,
  * inventory handler
  ************************************************************/
 
+void vultures_update_invscroll(struct window * win, int newpos)
+{
+    struct window * winelem;
+    int itemcount = 0;
+    int itemcol;
+    int leftoffset = vultures_winelem.border_left->w;
+    int topoffset = vultures_winelem.border_top->h;
+    
+    topoffset += vultures_text_height(V_FONT_HEADLINE, win->caption)*2 + 2;
+
+
+    win->pd.ow_firstcol = newpos;
+
+    winelem = win->first_child;
+    while (winelem)
+    {
+        if (winelem->v_type == V_WINTYPE_OBJITEM || winelem->v_type == V_WINTYPE_OBJITEMHEADER)
+        {
+            itemcol = (itemcount / win->pd.ow_vrows);
+            
+            winelem->x = (itemcol - newpos) * (V_LISTITEM_WIDTH + 4) + leftoffset;
+            winelem->y = (itemcount % win->pd.ow_vrows) * V_LISTITEM_HEIGHT + topoffset;
+            
+            winelem->visible = (itemcol >= newpos && itemcol < newpos + win->pd.ow_vcols);
+
+            itemcount++;
+        }
+        
+        if (winelem->v_type == V_WINTYPE_BUTTON)
+        {
+            if (winelem->menu_id == 1)
+                winelem->visible = (newpos != 0);
+            else if (winelem->menu_id == 2)
+                winelem->visible = (newpos+win->pd.ow_vcols < win->pd.ow_ncols);
+        }
+        
+        winelem = winelem->sib_next;
+    }
+}
+
+
+int vultures_inventory_context_menu(struct window * target)
+{
+    int action = 0, key = 0;
+    struct window * menu;
+
+    menu = vultures_create_window_internal(0, NULL, V_WINTYPE_DROPDOWN);
+    vultures_create_button(menu, "Apply", V_INVACTION_APPLY);
+
+    if (!target->pd.obj->owornmask)
+    {
+        /* if you can wear it there's no way you can eat or drink it */
+        vultures_create_button(menu, "Drink", V_INVACTION_DRINK);
+        vultures_create_button(menu, "Eat", V_INVACTION_EAT);
+    }
+
+    vultures_create_button(menu, "Read", V_INVACTION_READ);
+
+    if (target->pd.obj->oclass == WAND_CLASS)
+        vultures_create_button(menu, "Zap", V_INVACTION_ZAP);
+
+    /* you could already be wearing it, then you can't wear it again */
+    if (!target->pd.obj->owornmask && target->pd.obj->oclass != WAND_CLASS)
+    {
+        if (target->pd.obj->oclass != RING_CLASS && target->pd.obj->oclass != AMULET_CLASS)
+            vultures_create_button(menu, "Wear", V_INVACTION_WEAR);
+
+        if (target->pd.obj->oclass != ARMOR_CLASS)
+            vultures_create_button(menu, "Put on", V_INVACTION_PUT_ON);
+    }
+
+    vultures_create_button(menu, "Wield", V_INVACTION_WIELD);
+
+    if (target->pd.obj->owornmask)
+        vultures_create_button(menu, "Remove", V_INVACTION_REMOVE);
+
+    if (!target->pd.obj->owornmask)
+        vultures_create_button(menu, "Drop", V_INVACTION_DROP);
+
+    if (!objects[target->pd.obj->otyp].oc_name_known)
+        vultures_create_button(menu, "Name", V_INVACTION_NAME);
+
+    vultures_layout_dropdown(menu);
+
+    vultures_event_dispatcher(&action, V_RESPOND_INT, menu);
+
+    vultures_destroy_window_internal(menu);
+
+    if (action)
+    {
+        vultures_eventstack_add('i', -1, -1, V_RESPOND_POSKEY);
+
+        switch (action)
+        {
+            case V_INVACTION_APPLY: key = 'a'; break;
+            case V_INVACTION_DRINK: key = 'q'; break;
+            case V_INVACTION_EAT:   key = 'e'; break;
+            case V_INVACTION_READ:  key = 'r'; break;
+            case V_INVACTION_ZAP:   key = 'z'; break;
+            case V_INVACTION_WEAR:  key = 'W'; break;
+            case V_INVACTION_PUT_ON:key = 'P'; break;
+            case V_INVACTION_WIELD: key = 'w'; break;
+            case V_INVACTION_REMOVE:
+                /* we call a bunch of functions in do_wear.c directly here;
+                    * we can do so safely because take_off() directly accounts for
+                    * elapsed turns */
+                select_off(target->pd.obj); /* sets takoff_mask */
+                if (takeoff_mask)
+                {
+                    /* default activity for armor and/or accessories,
+                        * possibly combined with weapons */
+                    disrobing = "disrobing";
+
+                    /* specific activity when handling weapons only */
+                    if (!(takeoff_mask & ~(W_WEP|W_SWAPWEP|W_QUIVER)))
+                        disrobing = "disarming";
+
+                    (void) take_off();
+                }
+                /* having performed an action we need to return to the main game loop
+                    * so that thing like AC and vision (because of helmets & amulets of ESP)
+                    * get recalculated.
+                    * However we do not want to perform any more actions or cause messages
+                    * to be printed. CTRL+r (redraw) is a suitable NOP */
+                key = CTRL('r');
+                return V_EVENT_HANDLED_FINAL;
+
+            case V_INVACTION_NAME:
+                vultures_eventstack_add(target->menu_id, -1, -1, V_RESPOND_ANY);
+                vultures_eventstack_add('n', -1,-1, V_RESPOND_ANY);
+                vultures_eventstack_add(META('n'), -1, -1, V_RESPOND_POSKEY);
+                return V_EVENT_HANDLED_FINAL;
+
+            case V_INVACTION_DROP:  key = 'd'; break;
+        }
+
+        vultures_eventstack_add(target->menu_id, -1, -1, V_RESPOND_CHARACTER);
+        vultures_eventstack_add(key, -1, -1, V_RESPOND_POSKEY);
+
+        return V_EVENT_HANDLED_FINAL;
+    }
+
+    return V_EVENT_HANDLED_NOREDRAW;
+}
+
+
 int vultures_eventh_inventory(struct window* handler, struct window* target,
                               void* result, SDL_Event* event)
 {
-    int action, key = 0;
-    struct window * menu;
+    point mouse;
 
     switch (event->type)
     {
         case SDL_MOUSEMOTION:
             vultures_set_mcursor(V_CURSOR_NORMAL);
-
-            if (target != handler && target->accelerator)
-                vultures_mouse_set_tooltip(target->caption);
-            else
-                vultures_mouse_invalidate_tooltip(1);
-
             break;
-
+        
         case SDL_MOUSEBUTTONUP:
             if (event->button.button == SDL_BUTTON_WHEELUP)
             {
-                if (handler->pd.inv_page > 0)
+                if (handler->pd.ow_firstcol > 0)
                 {
+                    /* scroll inventory backwards */
+                    vultures_update_invscroll(handler, handler->pd.ow_firstcol - 1);
                     handler->need_redraw = 1;
-                    handler->pd.inv_page--;
                     return V_EVENT_HANDLED_REDRAW;
                 }
                 return V_EVENT_HANDLED_NOREDRAW;
@@ -1267,137 +1407,54 @@ int vultures_eventh_inventory(struct window* handler, struct window* target,
 
             if (event->button.button == SDL_BUTTON_WHEELDOWN)
             {
-                if (handler->last_child->visible)
-                { /* handler->last_child is always the "next page" arrow */
-                    handler->pd.inv_page++;
+                if (handler->pd.ow_firstcol + handler->pd.ow_vcols < handler->pd.ow_ncols)
+                {
+                    /* scroll inventory forwards */
+                    vultures_update_invscroll(handler, handler->pd.ow_firstcol + 1);
                     handler->need_redraw = 1;
                     return V_EVENT_HANDLED_REDRAW;
                 }
                 return V_EVENT_HANDLED_NOREDRAW;
             }
 
-            if (event->button.button == SDL_BUTTON_RIGHT && target->scrollable)
-            {
-                action = 0;
-
-                menu = vultures_create_window_internal(0, NULL, V_WINTYPE_DROPDOWN);
-                vultures_create_button(menu, "Apply", V_INVACTION_APPLY);
-
-                if (!target->pd.obj->owornmask)
-                {
-                    /* if you can wear it there's no way you can eat or drink it */
-                    vultures_create_button(menu, "Drink", V_INVACTION_DRINK);
-                    vultures_create_button(menu, "Eat", V_INVACTION_EAT);
-                }
-
-                vultures_create_button(menu, "Read", V_INVACTION_READ);
-
-                if (target->pd.obj->oclass == WAND_CLASS)
-                    vultures_create_button(menu, "Zap", V_INVACTION_ZAP);
-
-                /* you could already be wearing it, then you can't wear it again */
-                if (!target->pd.obj->owornmask && target->pd.obj->oclass != WAND_CLASS)
-                {
-                    if (target->pd.obj->oclass != RING_CLASS && target->pd.obj->oclass != AMULET_CLASS)
-                        vultures_create_button(menu, "Wear", V_INVACTION_WEAR);
-
-                    if (target->pd.obj->oclass != ARMOR_CLASS)
-                        vultures_create_button(menu, "Put on", V_INVACTION_PUT_ON);
-                }
-
-                vultures_create_button(menu, "Wield", V_INVACTION_WIELD);
-
-                if (target->pd.obj->owornmask)
-                    vultures_create_button(menu, "Remove", V_INVACTION_REMOVE);
-
-                if (!target->pd.obj->owornmask)
-                    vultures_create_button(menu, "Drop", V_INVACTION_DROP);
-
-                if (!objects[target->pd.obj->otyp].oc_name_known)
-                    vultures_create_button(menu, "Name", V_INVACTION_NAME);
-
-                vultures_layout_dropdown(menu);
-
-                vultures_event_dispatcher(&action, V_RESPOND_INT, menu);
-
-                vultures_destroy_window_internal(menu);
-
-                if (action)
-                {
-                    vultures_eventstack_add('i', -1, -1, V_RESPOND_POSKEY);
-
-                    switch (action)
-                    {
-                        case V_INVACTION_APPLY: key = 'a'; break;
-                        case V_INVACTION_DRINK: key = 'q'; break;
-                        case V_INVACTION_EAT:   key = 'e'; break;
-                        case V_INVACTION_READ:  key = 'r'; break;
-                        case V_INVACTION_ZAP:   key = 'z'; break;
-                        case V_INVACTION_WEAR:  key = 'W'; break;
-                        case V_INVACTION_PUT_ON:key = 'P'; break;
-                        case V_INVACTION_WIELD: key = 'w'; break;
-                        case V_INVACTION_REMOVE:
-                            /* we call a bunch of functions in do_wear.c directly here;
-                             * we can do so safely because take_off() directly accounts for
-                             * elapsed turns */
-                            select_off(target->pd.obj); /* sets takoff_mask */
-                            if (takeoff_mask)
-                            {
-                                /* default activity for armor and/or accessories,
-                                 * possibly combined with weapons */
-                                disrobing = "disrobing";
-
-                                /* specific activity when handling weapons only */
-                                if (!(takeoff_mask & ~(W_WEP|W_SWAPWEP|W_QUIVER)))
-                                    disrobing = "disarming";
-
-                                (void) take_off();
-                            }
-                            /* having performed an action we need to return to the main game loop
-                             * so that thing like AC and vision (because of helmets & amulets of ESP)
-                             * get recalculated.
-                             * However we do not want to perform any more actions or cause messages
-                             * to be printed. CTRL+r (redraw) is a suitable NOP */
-                            key = CTRL('r');
-                            return V_EVENT_HANDLED_FINAL;
-
-                        case V_INVACTION_NAME:
-                            vultures_eventstack_add(target->menu_id, -1, -1, V_RESPOND_ANY);
-                            vultures_eventstack_add('n', -1,-1, V_RESPOND_ANY);
-                            vultures_eventstack_add(META('n'), -1, -1, V_RESPOND_POSKEY);
-                            return V_EVENT_HANDLED_FINAL;
-
-                        case V_INVACTION_DROP:  key = 'd'; break;
-                    }
-
-                    vultures_eventstack_add(target->menu_id, -1, -1, V_RESPOND_CHARACTER);
-                    vultures_eventstack_add(key, -1, -1, V_RESPOND_POSKEY);
-
-                    return V_EVENT_HANDLED_FINAL;
-                }
-            }
-            else if (event->button.button == SDL_BUTTON_LEFT &&
-                     target != handler && !target->scrollable && target->visible)
+            /* check whether a scrollbutton was clicked */
+            if (event->button.button == SDL_BUTTON_LEFT &&
+                     target != handler && target->v_type == V_WINTYPE_BUTTON)
             {
                 if (target->menu_id == 1)
-                    handler->pd.inv_page--;
-                if (target->menu_id == 2)
-                    handler->pd.inv_page++;
+                    vultures_update_invscroll(handler, handler->pd.ow_firstcol - 1);
+                else if (target->menu_id == 2)
+                    vultures_update_invscroll(handler, handler->pd.ow_firstcol + 1);
+
+                /* close button */
+                else if (target->menu_id == 3)
+                    return V_EVENT_HANDLED_FINAL;
 
                 handler->need_redraw = 1;
                 return V_EVENT_HANDLED_REDRAW;
             }
-            else
+
+            else  if (event->button.button == SDL_BUTTON_RIGHT && target->v_type == V_WINTYPE_OBJITEM)
+                return vultures_inventory_context_menu(target);
+
+            mouse = vultures_get_mouse_pos();
+            /* close the window if the user clicks outside it */
+            if (handler == target && (mouse.x < handler->abs_x || mouse.y < handler->abs_y ||
+                                      mouse.x > handler->abs_x + handler->w ||
+                                      mouse.y > handler->abs_y + handler->h))
                 return V_EVENT_HANDLED_FINAL;
+
+            return V_EVENT_HANDLED_NOREDRAW;
+
 
         case SDL_KEYDOWN:
             if (vultures_convertkey_sdl2nh(&event->key.keysym))
                 return V_EVENT_HANDLED_FINAL;
             break;
     }
+
     return V_EVENT_HANDLED_NOREDRAW;
 }
-
 
 
 

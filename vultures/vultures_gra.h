@@ -20,7 +20,8 @@ extern void vultures_rect_surface(SDL_Surface *,int, int, int, int, Uint32);
 extern void vultures_fill_rect_surface(SDL_Surface *,int, int, int, int, Uint32);
 extern SDL_Surface *vultures_get_img_src(int, int, int, int, SDL_Surface *);
 extern void vultures_put_img(int, int, SDL_Surface *);
-
+extern void vultures_draw_raised_frame(int x1, int y1, int x2, int y2);
+extern void vultures_draw_lowered_frame(int x1, int y1, int x2, int y2);
 
 extern SDL_PixelFormat * vultures_px_format;
 
