@@ -1470,68 +1470,77 @@ int vultures_draw_menu(struct window * win)
 
 static int vultures_draw_objitem(struct window * win)
 {
+    char tmpstr[12];
+    int text_start_x, text_start_y, txt_height;
+    int tile_x, tile_y;
     int x = win->abs_x;
     int y = win->abs_y;
-    char invlet[4] = "[ ]";
-    char weightstr[12];
+    int w = win->w;
+    int h = win->h;
 
-    vultures_set_draw_region(win->abs_x, win->abs_y, win->abs_x + win->w - 1, win->abs_y + win->h - 1);
+    vultures_set_draw_region(x, y, x + w - 1, y + h - 1);
 
     /* Outer edge */
-    vultures_draw_lowered_frame(x, y, x+win->w-1, y+win->h-1);
+    vultures_draw_lowered_frame(x, y, x+w-1, y+h-1);
     /* Inner edge */
-    vultures_draw_raised_frame(x+1, y+1, x+win->w-2, y+win->h-2);
+    vultures_draw_raised_frame(x+1, y+1, x+w-2, y+h-2);
 
-    /* draw text, leaving a win->h by win->h square on the left free for the object tile */
-    int text_start_x = win->abs_x + win->h;
-    int text_start_y = win->abs_y + 3;
-    int txt_height = vultures_text_height(V_FONT_MENU, win->caption);
-
+    /* draw text, leaving a h by h square on the left free for the object tile */
     /* line 1 and if necessary line 2 contain the item description */
-    vultures_put_text_multiline(V_FONT_MENU, win->caption, vultures_screen, text_start_x,
-                                text_start_y, CLR32_WHITE, CLR32_BLACK, win->w - win->h - 6);
+    vultures_put_text_multiline(V_FONT_MENU, win->caption, vultures_screen, x + h,
+                                y + 3, CLR32_WHITE, CLR32_BLACK, w - h - 6);
 
-    if (win->accelerator)
-        invlet[1] = win->accelerator;
-
-    /* invletter and weight are in line 3 */
-    text_start_y += txt_height*2 + 1;
-
-    /* draw the accelerator */
-    vultures_put_text_shadow(V_FONT_MENU, invlet, vultures_screen, text_start_x,
-                                text_start_y, CLR32_WHITE, CLR32_BLACK);
+    /* weight is in line 3 */
+    txt_height = vultures_text_height(V_FONT_MENU, win->caption);
+    text_start_y = y + txt_height*2 + 4;
 
     /* draw the object weight */
-    snprintf(weightstr, 11, "w: %d", win->pd.obj->owt);
-    text_start_x = win->abs_x + (win->w - vultures_text_length(V_FONT_MENU, weightstr))/2;
-    vultures_put_text_shadow(V_FONT_MENU, weightstr, vultures_screen, text_start_x,
+    snprintf(tmpstr, 11, "w: %d", win->pd.obj->owt);
+    text_start_x = x + (w - vultures_text_length(V_FONT_MENU, tmpstr))/2;
+    vultures_put_text_shadow(V_FONT_MENU, tmpstr, vultures_screen, text_start_x,
                                 text_start_y, CLR32_WHITE, CLR32_BLACK);
 
+    /* draw the tile itself */
     /* constrain the drawing region to the box for the object tile, so that large
      * tiles don't overlap */
-    vultures_set_draw_region(win->abs_x + 1, win->abs_y + 1, win->abs_x + win->h - 3, win->abs_y + win->h - 3);
+    vultures_set_draw_region(x + 1, y + 1, x + h - 3, y + h - 3);
 
     /* darken the background */
-    vultures_fill_rect(win->abs_x + 1, win->abs_y + 1,
-        win->abs_x + win->h - 3, win->abs_y + win->h - 3, CLR32_BLACK_A30);
+    vultures_fill_rect(x + 1, y + 1, x + h - 3, y + h - 3, CLR32_BLACK_A30);
 
     /* the tile is centered horizontally and placed at 3/4 vertically */
-    int tile_x = win->abs_x + win->h/2;
-    int tile_y = win->abs_y + win->h * 3 / 4;
+    tile_x = x + h/2;
+    tile_y = y + h * 3 / 4;
 
-    /* indicate blesse/cursed visually */
+    /* indicate blessed/cursed visually */
     if (win->pd.obj && win->pd.obj->bknown && win->pd.obj->blessed)
         vultures_put_tile(tile_x, tile_y, V_TILE_HIGHLIGHT_BLESS);
 
     if (win->pd.obj && win->pd.obj->bknown && win->pd.obj->cursed)
         vultures_put_tile(tile_x, tile_y, V_TILE_HIGHLIGHT_CURSE);
 
+    /* draw the object tile */
     vultures_put_tile(tile_x, tile_y, OBJECT_TO_VTILE(win->pd.obj->otyp));
+
+    /* draw the item letter on the top left corner of the object tile */
+    snprintf(tmpstr, 11, "%c", win->accelerator);
+    vultures_put_text_shadow(V_FONT_MENU, tmpstr, vultures_screen, x + 2,
+                                y + 2, CLR32_WHITE, CLR32_BLACK);
+
+    /* draw the quantity on the tile */
+    if (win->pd.obj && win->pd.obj->quan > 1)
+    {
+        snprintf(tmpstr, 11, "%ld", win->pd.obj->quan);
+        txt_height = vultures_text_height(V_FONT_MENU, tmpstr);
+        text_start_x = x + h - vultures_text_length(V_FONT_MENU, tmpstr) - 2;
+        vultures_put_text_shadow(V_FONT_MENU, tmpstr, vultures_screen, text_start_x,
+                                    y + h - txt_height, CLR32_WHITE, CLR32_BLACK);
+    }
 
     /* restore the drawing region */
     vultures_set_draw_region(0, 0, vultures_screen->w - 1, vultures_screen->h - 1);
 
-    vultures_invalidate_region(win->abs_x, win->abs_y, win->w, win->h);
+    vultures_invalidate_region(x, y, w, h);
 
     return 0;
 }
@@ -1544,9 +1553,9 @@ static int vultures_draw_objitemheader(struct window * win)
     int y = win->abs_y;
     
     /* constrain drawing to this window */
-    vultures_set_draw_region(win->abs_x, win->abs_y, win->abs_x + win->w - 1, win->abs_y + win->h - 1);
+    vultures_set_draw_region(x, y, x + win->w - 1, y + win->h - 1);
     
-    vultures_fill_rect(win->abs_x, win->abs_y, win->abs_x + win->w -1, win->abs_y + win->h-1, CLR32_BLACK_A50);
+    vultures_fill_rect(x, y, x + win->w -1, y + win->h-1, CLR32_BLACK_A50);
     
     /* Outer edge */
     vultures_draw_lowered_frame(x, y, x+win->w-1, y+win->h-1);
@@ -1556,13 +1565,13 @@ static int vultures_draw_objitemheader(struct window * win)
     /* draw the text centered in the window */
     int txt_width = vultures_text_length(V_FONT_MENU, win->caption);
     int txt_height = vultures_text_height(V_FONT_MENU, win->caption);
-    int text_start_x = win->abs_x + (win->w - txt_width)/2;
-    int text_start_y = win->abs_y + (win->h - txt_height)/2;
+    int text_start_x = x + (win->w - txt_width)/2;
+    int text_start_y = y + (win->h - txt_height)/2;
     
     vultures_put_text_shadow(V_FONT_MENU, win->caption, vultures_screen, text_start_x,
                             text_start_y, CLR32_WHITE, CLR32_BLACK);
 
-    vultures_invalidate_region(win->abs_x, win->abs_y, win->w, win->h);
+    vultures_invalidate_region(x, y, win->w, win->h);
 
     /* lift drawing region restriction */
     vultures_set_draw_region(0, 0, vultures_screen->w - 1, vultures_screen->h - 1);
@@ -1592,7 +1601,7 @@ static int vultures_draw_objwin(struct window * win)
     int headline_height = vultures_text_height(V_FONT_HEADLINE, win->caption);
     int headline_width = vultures_text_length(V_FONT_HEADLINE, win->caption);
 
-    vultures_fill_rect(x, y, x + w - 1, y + headline_height*2, CLR32_BLACK_A70);
+    vultures_fill_rect(x, y, x + w - 1, y + headline_height*2, CLR32_BLACK_A50);
         
     vultures_line(x, y, x + w - 1, y, CLR32_GRAY20);
     vultures_line(x, y + headline_height*2, x + w - 1, y + headline_height * 2, CLR32_GRAY20);
