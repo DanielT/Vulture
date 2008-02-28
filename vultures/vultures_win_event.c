@@ -1287,7 +1287,8 @@ int vultures_inventory_context_menu(struct window * target)
     if (!target->pd.obj->owornmask)
     {
         /* if you can wear it there's no way you can eat or drink it */
-        vultures_create_button(menu, "Drink", V_INVACTION_DRINK);
+        if (target->pd.obj->oclass == POTION_CLASS)
+            vultures_create_button(menu, "Drink", V_INVACTION_DRINK);
         vultures_create_button(menu, "Eat", V_INVACTION_EAT);
     }
 

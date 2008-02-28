@@ -255,11 +255,11 @@ png_byte ** grab_tile(png_byte ** img, png_uint_32 img_w, png_uint_32 img_h, int
 	int bordercolor = SDL_SwapLE32(0xff972787);
 
 	if (pximg[*tile_y-1][*tile_x-1] != bordercolor)
-		fprintf(stderr, "topleft: no border pixel found at (%d,%d). Wrong image dimensions? ",
-		        *tile_x-1, *tile_y-1);
+		fprintf(stderr, "topleft: no border pixel found at (%d,%d) [%08x instead of %08x]. Wrong image dimensions?\n",
+		        *tile_x-1, *tile_y-1, pximg[*tile_y-1][*tile_x-1], bordercolor);
 	if (pximg[*tile_y+*tile_h+1][*tile_x+*tile_w+1] != bordercolor)
-		fprintf(stderr, "bottom-right: no border pixel found at (%d,%d). Wrong image dimensions? ",
-		        *tile_x+*tile_w+1, *tile_y+*tile_h+1);
+		fprintf(stderr, "bottom-right: no border pixel found at (%d,%d) [%08x instead of %08x]. Wrong image dimensions?\n",
+		        *tile_x+*tile_w+1, *tile_y+*tile_h+1, pximg[*tile_y+*tile_h+1][*tile_x+*tile_w+1], bordercolor);
 	
 	/* find left hotspot relative to containing image */
 	for (i = *tile_y; i <= (*tile_y + *tile_h); i++)
@@ -473,7 +473,10 @@ void init_objnames()
 	for(i = 0; !i || objects[i].oc_class != ILLOBJ_CLASS; i++)
 		typecount[T_OBJECT]++;
 	
+	typecount[T_OBJICON] = typecount[T_OBJECT];
+	
 	typenames[T_OBJECT] = malloc(typecount[T_OBJECT] * sizeof(char*));
+	typenames[T_OBJICON] = malloc(typecount[T_OBJICON] * sizeof(char*));
 	
 	for(i = 0; !i || objects[i].oc_class != ILLOBJ_CLASS; i++)
 	{
@@ -535,7 +538,9 @@ void init_objnames()
 			if (*c >= 'a' && *c <= 'z') *c -= (char)('a' - 'A');
 			else if ((*c < 'A' || *c > 'Z') && !isdigit(*c)) *c = '_';
 		}
-	}	
+		
+		typenames[T_OBJICON][i] = typenames[T_OBJECT][i];
+	}
 }
 
 
@@ -622,6 +627,7 @@ void init_types()
 	}
 	
 	type_to_name[T_OBJECT]  = "OBJECTS";
+	type_to_name[T_OBJICON] = "ICONS";
 	type_to_name[T_SPECIAL] = "SPECIAL TILES";
 	type_to_name[T_EXPL]    = "EXPLOSION TILES";
 	type_to_name[T_DUNGEON] = "DUNGEON TILES";
@@ -644,6 +650,7 @@ void do_eqmap()
 	int i, j, x, y;
 	
 	int objfallback = getindex(T_OBJECT, "STRANGE_OBJECT");
+	int objiconfallback = getindex(T_OBJICON, "STRANGE_OBJECT");
 	int * objclassidx = malloc(MAXOCLASSES * sizeof(int));
 	
 	/* point all object entries that don't have a tile to a suitable fallback  */
@@ -657,12 +664,19 @@ void do_eqmap()
 	
 	for (i = typeoffset[T_OBJECT]; i < (typeoffset[T_OBJECT] + typecount[T_OBJECT]); i++)
 	{
+		j = i - typeoffset[T_OBJECT] + typeoffset[T_OBJICON];
 		if (gametiles[i].data_len == 0 && gametiles[i].ptr_to == -1)
+		{
 			gametiles[i].ptr_to = objclassidx[(int)objects[i - typeoffset[T_OBJECT]].oc_class] + typeoffset[T_OBJECT];
+			gametiles[j].ptr_to = objclassidx[(int)objects[i - typeoffset[T_OBJECT]].oc_class] + typeoffset[T_OBJICON];
+		}
 		
 		/* objclassidx[objects[i-objoffset].otyp] might give -1 if it was not set */
 		if (gametiles[i].data_len == 0 && gametiles[i].ptr_to == -1)
+		{
 			gametiles[i].ptr_to = objfallback + typeoffset[T_OBJECT];
+			gametiles[j].ptr_to = objiconfallback + typeoffset[T_OBJICON];
+		}
 	}
 	free (objclassidx);
 
@@ -936,6 +950,7 @@ void output()
 	fprintf(fp, "\n");
 		
 	fprintf(fp, "#define OBJECT_TO_VTILE(obj_id) ((obj_id) + OBJTILEOFFSET)\n");
+	fprintf(fp, "#define OBJICON_TO_VTILE(obj_id) ((obj_id) + ICOTILEOFFSET)\n");
 	fprintf(fp, "#define MONSTER_TO_VTILE(mon_id) ((mon_id) + MONTILEOFFSET)\n");
 	fprintf(fp, "#define STATUE_TO_VTILE(mon_id) ((mon_id) + STATILEOFFSET)\n");
 	fprintf(fp, "#define FIGURINE_TO_VTILE(mon_id) ((mon_id) + FIGTILEOFFSET)\n\n");

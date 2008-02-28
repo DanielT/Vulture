@@ -3,6 +3,7 @@
 
 enum tiletype {
 	T_OBJECT,
+	T_OBJICON,
 	T_SPECIAL,
 	T_EXPL,
 	T_DUNGEON,

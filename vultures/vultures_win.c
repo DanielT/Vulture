@@ -1503,7 +1503,7 @@ static int vultures_draw_objitem(struct window * win)
     /* draw the tile itself */
     /* constrain the drawing region to the box for the object tile, so that large
      * tiles don't overlap */
-    vultures_set_draw_region(x + 1, y + 1, x + h - 3, y + h - 3);
+    vultures_set_draw_region(x + 2, y + 2, x + h - 3, y + h - 3);
 
     /* darken the background */
     vultures_fill_rect(x + 1, y + 1, x + h - 3, y + h - 3, CLR32_BLACK_A30);
@@ -1520,7 +1520,7 @@ static int vultures_draw_objitem(struct window * win)
         vultures_put_tile(tile_x, tile_y, V_TILE_HIGHLIGHT_CURSE);
 
     /* draw the object tile */
-    vultures_put_tile(tile_x, tile_y, OBJECT_TO_VTILE(win->pd.obj->otyp));
+    vultures_put_tile(x+2, y+2, OBJICON_TO_VTILE(win->pd.obj->otyp));
 
     /* draw the item letter on the top left corner of the object tile */
     snprintf(tmpstr, 11, "%c", win->accelerator);
