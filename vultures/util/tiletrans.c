@@ -734,7 +734,11 @@ void do_eqmap()
 		if (x != -1 && gametiles[x].data_len == 0)
 		{
 			if (gametiles[y].data_len != 0)
+			{
 				gametiles[x].ptr_to = y;
+				if (tilemap[i].type == T_OBJECT)
+				    gametiles[x-typeoffset[T_OBJECT]+typeoffset[T_OBJICON]].ptr_to = y-typeoffset[T_OBJECT]+typeoffset[T_OBJICON];
+			}
 			else
 				printf("WARNING: Entry %d in tilemap maps %s to %s, which does not have a unique tile itself. Entry ignored\n", i, tilemap[i].mapfrom, tilemap[i].mapto);
 		}
