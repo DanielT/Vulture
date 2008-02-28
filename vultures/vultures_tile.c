@@ -72,6 +72,10 @@ vultures_tile * vultures_get_tile(int tile_id)
     {
         real_id = objects[real_id].oc_descr_idx;
         tile_id = real_id + shadelevel;
+    } else if (real_id >= ICOTILEOFFSET && real_id < ICOTILEOFFSET + ICOTILECOUNT)
+    {
+        real_id = objects[real_id - ICOTILEOFFSET].oc_descr_idx + ICOTILEOFFSET;
+        tile_id = real_id + shadelevel;
     }
 #endif
 
