@@ -826,19 +826,86 @@ static void select_menu_option(struct window * handler, struct window * target, 
 }
 
 
+int vultures_menu_mousescroll(struct window* handler, struct window* target, int is_drag)
+{
+    int scrollind_y, scrollpos;
+    point mouse;
+    int scrollarea_top = target->abs_y + vultures_winelem.scrollbutton_up->h;
+    int scrollarea_bottom = target->abs_y + target->h - vultures_winelem.scrollbutton_down->h;
+
+    scrollind_y = ((scrollarea_bottom - scrollarea_top -
+                    vultures_winelem.scroll_indicator->h) *
+                    (int)target->pd.scrollpos) / 8192.0;
+
+    mouse = vultures_get_mouse_pos();
+
+    /* click on the scroll-up button */
+    if (mouse.y <= scrollarea_top)
+    {
+        if (!is_drag)
+            return vultures_scrollto(handler, V_SCROLL_LINE_REL, -1);
+    }
+
+    /* click on the scroll-down button */
+    else if (mouse.y >= scrollarea_bottom)
+    {
+        if (!is_drag)
+            return vultures_scrollto(handler, V_SCROLL_LINE_REL, 1);
+    }
+
+    /* click on the scrollbar above the indicator */
+    else if (mouse.y <= scrollarea_top + scrollind_y)
+    {
+        scrollpos = ((mouse.y - scrollarea_top) * 8192.0 / 
+                        (scrollarea_bottom - scrollarea_top - 
+                        vultures_winelem.scroll_indicator->h));
+        target->pd.scrollpos = scrollpos;
+        handler->need_redraw = 1;
+        return V_EVENT_HANDLED_REDRAW;
+    }
+
+    /*click on the scrollbar below the indicator */
+    else if (mouse.y >= scrollarea_top + vultures_winelem.scroll_indicator->h + scrollind_y)
+    {
+        scrollpos = ((mouse.y - scrollarea_top - vultures_winelem.scroll_indicator->h) * 
+                        8192.0 / (scrollarea_bottom - scrollarea_top -
+                        vultures_winelem.scroll_indicator->h));
+        target->pd.scrollpos = scrollpos;
+        handler->need_redraw = 1;
+        return V_EVENT_HANDLED_REDRAW;
+    }
+
+    return V_EVENT_HANDLED_NOREDRAW;
+}
+
+
 /* event handler for scrollable menus */
 int vultures_eventh_menu(struct window* handler, struct window* target,
                          void* result, SDL_Event* event)
 {
     struct window * winelem;
-    point mouse;
-    int scrollind_y;
+    point mouse, oldpos;
     int key;
     char * str_to_find;
 
     /* menus use the normal cursor */
     if (event->type == SDL_MOUSEMOTION)
+    {
         vultures_set_mcursor(V_CURSOR_NORMAL);
+
+        if (event->motion.state == SDL_PRESSED && 
+            (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT)))
+        {
+            mouse = vultures_get_mouse_pos();
+            oldpos.x = mouse.x + event->motion.xrel;
+            oldpos.y = mouse.y + event->motion.yrel;
+            winelem = vultures_get_window_from_point(handler, oldpos);
+
+            if (target->v_type == V_WINTYPE_SCROLLBAR && winelem == target)
+                return vultures_menu_mousescroll(handler, target, 1);
+
+        }
+    }
 
     /* handle clicks and wheel events */
     else if (event->type == SDL_MOUSEBUTTONUP)
@@ -882,47 +949,8 @@ int vultures_eventh_menu(struct window* handler, struct window* target,
 
         /* a click on the scrollbar */
         else if (target->v_type == V_WINTYPE_SCROLLBAR)
-        {
-            int scrollarea_top = target->abs_y + vultures_winelem.scrollbutton_up->h;
-            int scrollarea_bottom = target->abs_y + target->h - vultures_winelem.scrollbutton_down->h;
-            int scrollpos;
+            return vultures_menu_mousescroll(handler, target, 0);
 
-            scrollind_y = ((scrollarea_bottom - scrollarea_top -
-                            vultures_winelem.scroll_indicator->h) *
-                            (int)target->pd.scrollpos) / 8192.0;
-
-            mouse = vultures_get_mouse_pos();
-
-            /* click on the scroll-up button */
-            if (mouse.y <= scrollarea_top)
-                return vultures_scrollto(handler, V_SCROLL_LINE_REL, -1);
-
-            /* click on the scroll-down button */
-            else if (mouse.y >= scrollarea_bottom)
-                return vultures_scrollto(handler, V_SCROLL_LINE_REL, 1);
-
-            /* click on the scrollbar above the indicator */
-            else if (mouse.y <= scrollarea_top + scrollind_y)
-            {
-                scrollpos = ((mouse.y - scrollarea_top) * 8192.0 / 
-                             (scrollarea_bottom - scrollarea_top - 
-                             vultures_winelem.scroll_indicator->h));
-                target->pd.scrollpos = scrollpos;
-                handler->need_redraw = 1;
-                return V_EVENT_HANDLED_REDRAW;
-            }
-
-            /*click on the scrollbar below the indicator */
-            else if (mouse.y >= scrollarea_top + vultures_winelem.scroll_indicator->h + scrollind_y)
-            {
-                scrollpos = ((mouse.y - scrollarea_top - vultures_winelem.scroll_indicator->h) * 
-                             8192.0 / (scrollarea_bottom - scrollarea_top -
-                             vultures_winelem.scroll_indicator->h));
-                target->pd.scrollpos = scrollpos;
-                handler->need_redraw = 1;
-                return V_EVENT_HANDLED_REDRAW;
-            }
-        }
     }
 
 
