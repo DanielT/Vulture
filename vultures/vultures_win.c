@@ -546,10 +546,15 @@ struct window * vultures_query_choices(const char * ques, const char *choices, c
         if (longdesc)
             len = strlen(str);
 
-        button = vultures_create_button(win, str, i);
+        button = vultures_create_window_internal(0, win, V_WINTYPE_BUTTON);
+
+        button->caption = malloc(len+1);
+        strncpy(button->caption, str, len);
+        button->caption[len] = '\0';
 
         button->accelerator = str[0];
         button->is_default = (str[0] == defchoice);
+        button->menu_id = i;
 
         if (longdesc)
             str += len;
