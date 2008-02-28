@@ -1480,10 +1480,16 @@ static int vultures_draw_objitem(struct window * win)
 
     vultures_set_draw_region(x, y, x + w - 1, y + h - 1);
 
-    /* Outer edge */
+    /* draw the outer edge of the frame */
     vultures_draw_lowered_frame(x, y, x+w-1, y+h-1);
     /* Inner edge */
     vultures_draw_raised_frame(x+1, y+1, x+w-2, y+h-2);
+
+
+    /* highlight worn objects with "golden" shading */
+    if (win->pd.obj && win->pd.obj->owornmask)
+        vultures_fill_rect(x+h-1, y+2, x+w-3, y+h-3, CLR32_GOLD_SHADE);
+
 
     /* draw text, leaving a h by h square on the left free for the object tile */
     /* line 1 and if necessary line 2 contain the item description */
@@ -1500,13 +1506,14 @@ static int vultures_draw_objitem(struct window * win)
     vultures_put_text_shadow(V_FONT_MENU, tmpstr, vultures_screen, text_start_x,
                                 text_start_y, CLR32_WHITE, CLR32_BLACK);
 
+
     /* draw the tile itself */
     /* constrain the drawing region to the box for the object tile, so that large
      * tiles don't overlap */
     vultures_set_draw_region(x + 2, y + 2, x + h - 3, y + h - 3);
 
     /* darken the background */
-    vultures_fill_rect(x + 1, y + 1, x + h - 3, y + h - 3, CLR32_BLACK_A30);
+    vultures_fill_rect(x + 2, y + 2, x + h - 3, y + h - 3, CLR32_BLACK_A30);
 
     /* the tile is centered horizontally and placed at 3/4 vertically */
     tile_x = x + h/2;
@@ -1514,10 +1521,10 @@ static int vultures_draw_objitem(struct window * win)
 
     /* indicate blessed/cursed visually */
     if (win->pd.obj && win->pd.obj->bknown && win->pd.obj->blessed)
-        vultures_put_tile(tile_x, tile_y, V_TILE_HIGHLIGHT_BLESS);
+        vultures_fill_rect(x + 2, y + 2, x + h - 3, y + h - 3, CLR32_BLESS_BLUE);
 
     if (win->pd.obj && win->pd.obj->bknown && win->pd.obj->cursed)
-        vultures_put_tile(tile_x, tile_y, V_TILE_HIGHLIGHT_CURSE);
+        vultures_fill_rect(x + 2, y + 2, x + h - 3, y + h - 3, CLR32_CURSE_RED);
 
     /* draw the object tile */
     vultures_put_tile(x+2, y+2, OBJICON_TO_VTILE(win->pd.obj->otyp));

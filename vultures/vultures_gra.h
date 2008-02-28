@@ -43,5 +43,8 @@ extern Uint32 CLR32_PURPLE44;
 extern Uint32 CLR32_LIGHTPINK;
 extern Uint32 CLR32_BROWN;
 extern Uint32 CLR32_WHITE;
+extern Uint32 CLR32_BLESS_BLUE;
+extern Uint32 CLR32_CURSE_RED;
+extern Uint32 CLR32_GOLD_SHADE;
 
 #endif /* _vultures_gra_h_ */
