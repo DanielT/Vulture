@@ -79,7 +79,6 @@ typedef struct window {
         int scrollpos;  /* for scrollbars */
         int ending_type;/* how you died */
         struct obj * obj; /* inventory items */
-        int inv_page;   /* the currently displayed inventory page */
         int count;      /* query_anykey dialogs, menu items */
         Uint32 textcolor; /* text items */
 
