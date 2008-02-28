@@ -394,18 +394,26 @@ int vultures_eventh_level(struct window* handler, struct window* target,
             /* hovering on a border: scroll */
             if (target != handler && target->menu_id)
             {
+                int increment = (event->user.code / 500) + 1;
                 switch (target->menu_id)
                 {
-                    case V_HOTSPOT_SCROLL_UPLEFT:    vultures_view_x--; break;
-                    case V_HOTSPOT_SCROLL_UP:        vultures_view_x--; vultures_view_y--; break;
-                    case V_HOTSPOT_SCROLL_UPRIGHT:   vultures_view_y--; break;
-                    case V_HOTSPOT_SCROLL_LEFT:      vultures_view_x--; vultures_view_y++; break;
-                    case V_HOTSPOT_SCROLL_RIGHT:     vultures_view_x++; vultures_view_y--; break;
-                    case V_HOTSPOT_SCROLL_DOWNLEFT:  vultures_view_y++; break;
-                    case V_HOTSPOT_SCROLL_DOWN:      vultures_view_x++; vultures_view_y++; break;
-                    case V_HOTSPOT_SCROLL_DOWNRIGHT: vultures_view_x++; break;
+                    case V_HOTSPOT_SCROLL_UPLEFT:
+                        vultures_view_x-=increment; break;
+                    case V_HOTSPOT_SCROLL_UP:
+                        vultures_view_x-=increment; vultures_view_y-=increment; break;
+                    case V_HOTSPOT_SCROLL_UPRIGHT:
+                        vultures_view_y-=increment; break;
+                    case V_HOTSPOT_SCROLL_LEFT:
+                        vultures_view_x-=increment; vultures_view_y+=increment; break;
+                    case V_HOTSPOT_SCROLL_RIGHT:
+                        vultures_view_x+=increment; vultures_view_y-=increment; break;
+                    case V_HOTSPOT_SCROLL_DOWNLEFT:
+                        vultures_view_y+=increment; break;
+                    case V_HOTSPOT_SCROLL_DOWN:
+                        vultures_view_x+=increment; vultures_view_y+=increment; break;
+                    case V_HOTSPOT_SCROLL_DOWNRIGHT:
+                        vultures_view_x+=increment; break;
                 }
-                event->user.code = 0;
 
                 vultures_view_x = (vultures_view_x < 0) ? 0 : vultures_view_x;
                 vultures_view_y = (vultures_view_y < 0) ? 0 : vultures_view_y;
