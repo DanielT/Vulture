@@ -703,8 +703,8 @@ void vultures_event_dispatcher(void * result, int resulttype, struct window * to
 
     while (event_result != V_EVENT_HANDLED_FINAL)
     {
-        /* Get next event OR wait 130ms */
-        vultures_wait_event(&event, 130);
+        /* Get next event OR wait 100ms */
+        vultures_wait_event(&event, 100);
 
         event_result = vultures_event_dispatcher_core(&event, result, topwin);
 
@@ -1622,13 +1622,13 @@ static int vultures_draw_objwin(struct window * win)
                             y+headline_height/2+2, CLR32_WHITE, CLR32_GRAY20);
 
     if (win->pd.ow_ncols > win->pd.ow_vcols) {
-        vultures_line(x, y+h-26, x+w-1, y+h-24, CLR32_GRAY77);
+        vultures_line(x, y+h-25, x+w-1, y+h-25, CLR32_GRAY77);
         
         snprintf(label, 32, "%d - %d / %d", win->pd.ow_firstcol + 1, win->pd.ow_firstcol + win->pd.ow_vcols, win->pd.ow_ncols);
         labelwidth = vultures_text_length(V_FONT_MENU, label);
 
         vultures_put_text_shadow(V_FONT_MENU, label, vultures_screen, x+(w-labelwidth)/2,
-                                y+h-19, CLR32_BLACK, CLR32_GRAY20);
+                                y+h-18, CLR32_BLACK, CLR32_GRAY20);
     }
 
     return 1;
@@ -1738,11 +1738,11 @@ void vultures_layout_itemwin(struct window *win)
 
     if (ncols > win->pd.ow_vcols)
     {
-        win->h += 27;
+        win->h += 25;
 
         winelem = vultures_create_button(win, NULL, 1);
         winelem->x = leftoffset;
-        winelem->y = win->h - vultures_winelem.border_bottom->h - 22;
+        winelem->y = win->h - vultures_winelem.border_bottom->h - 23;
         winelem->w = 100;
         winelem->h = 24;
         winelem->image = vultures_get_img_src(0, 0, vultures_winelem.invarrow_left->w,
@@ -1751,7 +1751,7 @@ void vultures_layout_itemwin(struct window *win)
 
         winelem = vultures_create_button(win, NULL, 2);
         winelem->x = win->w - vultures_winelem.border_right->w - 101;
-        winelem->y = win->h - vultures_winelem.border_bottom->h - 22;
+        winelem->y = win->h - vultures_winelem.border_bottom->h - 23;
         winelem->w = 100;
         winelem->h = 24;
         winelem->image = vultures_get_img_src(0, 0, vultures_winelem.invarrow_right->w,
