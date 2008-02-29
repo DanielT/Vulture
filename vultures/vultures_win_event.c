@@ -98,6 +98,9 @@ int vultures_eventh_status(struct window* handler, struct window* target,
 {
     if (event->type == SDL_MOUSEMOTION)
         vultures_set_mcursor(V_CURSOR_NORMAL);
+    else if (event->type == SDL_VIDEORESIZE)
+        /* x coordinate does not change */
+        handler->y = handler->parent->h - (handler->h + 6);
 
     return V_EVENT_HANDLED_NOREDRAW;
 }
@@ -173,6 +176,15 @@ int vultures_eventh_toolbar(struct window* handler, struct window* target,
                     return V_EVENT_HANDLED_FINAL;
             }
 
+
+        case SDL_VIDEORESIZE:
+            handler->x = handler->parent->w - (handler->w + 6);
+            if (handler->menu_id == V_WIN_TOOLBAR1)
+                handler->y = handler->parent->h - (handler->h*2 + 8);
+            else
+                handler->y = handler->parent->h - (handler->h + 6);
+            break;
+
         default: break;
     }
     return V_EVENT_HANDLED_NOREDRAW;
@@ -187,6 +199,9 @@ int vultures_eventh_messages(struct window* handler, struct window* target,
     point mouse;
     struct window *map, *new_target;
 
+    if (event->type == SDL_VIDEORESIZE)
+        return V_EVENT_HANDLED_NOREDRAW;
+
     map = vultures_get_window(0);
     mouse = vultures_get_mouse_pos();
     new_target = vultures_get_window_from_point(map, mouse);
@@ -200,6 +215,8 @@ int vultures_eventh_messages(struct window* handler, struct window* target,
 int vultures_eventh_enhance(struct window* handler, struct window* target,
                              void* result, SDL_Event* event)
 {
+    struct window *win;
+
     /* change the mouse cursor to indicate that this window is clickable */
     if (event->type == SDL_MOUSEMOTION)
         vultures_set_mcursor(V_CURSOR_NORMAL);
@@ -209,6 +226,16 @@ int vultures_eventh_enhance(struct window* handler, struct window* target,
     {
         ((vultures_event*)result)->num = META('e');
         return V_EVENT_HANDLED_FINAL;
+    }
+
+    else if (event->type == SDL_VIDEORESIZE)
+    {
+        /* this relies on the fact that the enhance window is created
+         * immediately after the status window */
+        win = handler->sib_prev;
+
+        /* x coordinate does not change */
+        handler->y = win->y - handler->h;
     }
 
     /* show a tooltip */
@@ -441,6 +468,11 @@ int vultures_eventh_level(struct window* handler, struct window* target,
             }
             break;
 
+        case SDL_VIDEORESIZE:
+            handler->w = event->resize.w;
+            handler->h = event->resize.h;
+            break;
+
         default:
             break;
     }
@@ -510,6 +542,11 @@ int vultures_eventh_map(struct window* handler, struct window* target,
         case SDL_MOUSEMOTION:
             vultures_set_mcursor(V_CURSOR_NORMAL);
             break;
+
+        case SDL_VIDEORESIZE:
+            handler->x = (handler->parent->w - handler->w) / 2;
+            handler->y = (handler->parent->h - handler->h) / 2;
+            break;
     }
 
     return V_EVENT_HANDLED_NOREDRAW;
@@ -531,6 +568,13 @@ int vultures_eventh_minimap(struct window* handler, struct window* target,
 
     mappos.x = ( offs_x + 2*offs_y)/4;
     mappos.y = (-offs_x + 2*offs_y)/4;
+    
+    
+    if (event->type == SDL_VIDEORESIZE)
+    {
+        handler->x = handler->parent->w - (handler->w + 6);
+        return V_EVENT_HANDLED_NOREDRAW;
+    }
 
     if (mappos.x < 1 || mappos.x > V_MAP_WIDTH ||
         mappos.y < 0 || mappos.y > V_MAP_HEIGHT)
@@ -627,6 +671,12 @@ int vultures_eventh_query_choices(struct window* handler, struct window* target,
                 }
         }
     }
+    else if (event->type == SDL_VIDEORESIZE)
+    {
+        handler->x = (handler->parent->w - handler->w) / 2;
+        handler->y = (handler->parent->h - handler->h) / 2;
+        return V_EVENT_HANDLED_NOREDRAW;
+    }
 
     return V_EVENT_HANDLED_NOREDRAW;
 }
@@ -684,6 +734,12 @@ int vultures_eventh_query_direction(struct window* handler, struct window* targe
             if (dir_x <= -2 && mouse.x > -target->w / 2 && mouse.y > -target->h / 2)
                 choice = '<';
         }
+    }
+    else if (event->type == SDL_VIDEORESIZE)
+    {
+        handler->x = (handler->parent->w - handler->w) / 2;
+        handler->y = (handler->parent->h - handler->h) / 2;
+        return V_EVENT_HANDLED_NOREDRAW;
     }
 
     if (choice)
@@ -778,6 +834,13 @@ int vultures_eventh_query_anykey(struct window* handler, struct window* target,
                 return V_EVENT_HANDLED_FINAL;
         }
     }
+    else if (event->type == SDL_VIDEORESIZE)
+    {
+        handler->x = (handler->parent->w - handler->w) / 2;
+        handler->y = (handler->parent->h - handler->h) / 2;
+        return V_EVENT_HANDLED_NOREDRAW;
+    }
+    
     return V_EVENT_HANDLED_NOREDRAW;
 }
 
@@ -805,6 +868,12 @@ int vultures_eventh_messagebox(struct window* handler, struct window* target,
             event->key.keysym.sym == SDLK_ESCAPE ||
             event->key.keysym.sym == SDLK_SPACE)
             return V_EVENT_HANDLED_FINAL;
+    }
+    else if (event->type == SDL_VIDEORESIZE)
+    {
+        handler->x = (handler->parent->w - handler->w) / 2;
+        handler->y = (handler->parent->h - handler->h) / 2;
+        return V_EVENT_HANDLED_NOREDRAW;
     }
     return V_EVENT_HANDLED_NOREDRAW;
 }
@@ -1146,6 +1215,11 @@ int vultures_eventh_menu(struct window* handler, struct window* target,
                 break;
         }
     }
+    else if (event->type == SDL_VIDEORESIZE)
+    {
+        vultures_layout_menu(handler);
+        return V_EVENT_HANDLED_NOREDRAW;
+    }
 
     return V_EVENT_HANDLED_NOREDRAW;
 }
@@ -1199,6 +1273,12 @@ int vultures_eventh_input(struct window* handler, struct window* target,
                 return V_EVENT_HANDLED_REDRAW;
         }
     }
+    else if (event->type == SDL_VIDEORESIZE)
+    {
+        handler->x = (handler->parent->w - handler->w) / 2;
+        handler->y = (handler->parent->h - handler->h) / 2;
+        return V_EVENT_HANDLED_NOREDRAW;
+    }
 
     return V_EVENT_HANDLED_NOREDRAW;
 }
@@ -1226,7 +1306,7 @@ int vultures_eventh_dropdown(struct window* handler, struct window* target,
     }
 
     /* keypresses or clicks outside the menu cancel it */
-    if (event->type == SDL_KEYDOWN || event->type == SDL_MOUSEBUTTONUP)
+    if (event->type == SDL_KEYDOWN || event->type == SDL_MOUSEBUTTONUP  || event->type == SDL_VIDEORESIZE)
     {
         *(int*)result = 0;
         return V_EVENT_HANDLED_FINAL;
@@ -1488,6 +1568,19 @@ int vultures_eventh_inventory(struct window* handler, struct window* target,
             if (vultures_convertkey_sdl2nh(&event->key.keysym))
                 return V_EVENT_HANDLED_FINAL;
             break;
+
+        case SDL_VIDEORESIZE:
+            /* hide_window takes care of the background */
+            vultures_hide_window(handler);
+
+            /* resize */
+            vultures_layout_itemwin(handler);
+
+            /* redraw */
+            handler->visible = 1;
+            handler->need_redraw = 1;
+
+            return V_EVENT_HANDLED_NOREDRAW;
     }
 
     return V_EVENT_HANDLED_NOREDRAW;

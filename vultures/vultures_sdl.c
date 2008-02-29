@@ -285,7 +285,7 @@ static void vultures_set_fullscreen(void)
 static void vultures_set_windowed()
 {
     vultures_screen = SDL_SetVideoMode(vultures_opts.width, vultures_opts.height, 0, 
-                                       SDL_SWSURFACE |SDL_ASYNCBLIT);
+                                       SDL_SWSURFACE |SDL_ASYNCBLIT | SDL_RESIZABLE);
     vultures_win_resize(vultures_opts.width, vultures_opts.height);
 }
 
@@ -304,6 +304,21 @@ void vultures_set_screensize(void)
 int vultures_handle_global_event(SDL_Event * event)
 {
     static int quitting = 0;
+    static int need_kludge = 0;
+    static point actual_winsize = {0,0};
+    
+    /* blarg. see the SDL_VIDEORESIZE case */
+    if (need_kludge &&
+        (actual_winsize.x != vultures_opts.width ||
+        actual_winsize.y != vultures_opts.height))
+    {
+        vultures_screen = SDL_SetVideoMode(vultures_opts.width, vultures_opts.height, 32,
+                                        SDL_SWSURFACE | SDL_RESIZABLE | SDL_ASYNCBLIT);
+        vultures_win_resize(vultures_opts.width, vultures_opts.height);
+        actual_winsize.x = vultures_opts.width;
+        actual_winsize.y = vultures_opts.height;
+        need_kludge = 0;
+    }
 
     switch (event->type)
     {
@@ -399,6 +414,31 @@ int vultures_handle_global_event(SDL_Event * event)
                 event->type = 0; /* we don't want to leave the event loop for this */
                 return 1;
             }
+            break;
+
+        case SDL_VIDEORESIZE:
+            actual_winsize.x = event->resize.w;
+            actual_winsize.y = event->resize.h;
+
+            vultures_opts.width = event->resize.w;
+            if (event->resize.w < 540)
+            {
+                need_kludge = 1;
+                vultures_opts.width = 540;
+            }
+            vultures_opts.height = event->resize.h;
+            if (event->resize.h < 510)
+            {
+                need_kludge = 1;
+                vultures_opts.height = 510;
+            }
+
+            /* SDL will not actually change the size of the window here, only the size of the buffer.
+             * therefore we may need_kludge to call SDL_SetVideoMode AGAIN to set the window size. */
+            vultures_screen = SDL_SetVideoMode(vultures_opts.width, vultures_opts.height, 32,
+                                           SDL_SWSURFACE | SDL_RESIZABLE | SDL_ASYNCBLIT);
+            vultures_win_resize(vultures_opts.width, vultures_opts.height);
+            break;
     }
 
     return 0;
@@ -433,7 +473,7 @@ void vultures_enter_graphics_mode()
                                            SDL_SWSURFACE | SDL_FULLSCREEN | SDL_ASYNCBLIT);
     else
         vultures_screen = SDL_SetVideoMode(vultures_opts.width, vultures_opts.height, 32,
-                                           SDL_SWSURFACE | SDL_ASYNCBLIT);
+                                           SDL_SWSURFACE | SDL_RESIZABLE | SDL_ASYNCBLIT);
 
     /* no screen: maybe the configured video mode didn't work */
     if (!vultures_screen) {

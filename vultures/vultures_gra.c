@@ -247,12 +247,17 @@ SDL_Surface *vultures_get_img_src
     int topoffset = (y1 < 0) ? -y1: 0;
     int bottomoffset = (y2 >= img_source->h) ? (y2 - img_source->h + 1) : 0;
 
+    int destwidth = x2+1-x1-leftoffset-rightoffset;
+    int destheight = y2+1-y1-topoffset-bottomoffset;
+    if (destwidth <= 0 || destheight <= 0)
+        return toSurface;
+
     /* Blitting would be a mistake here, because we need to preserve
      * the alpha channel, which blitting does not do */
     for (i = topoffset; i < (y2+1-y1-bottomoffset); i++)
         memcpy(toSurface->pixels + toSurface->pitch*i + (leftoffset * 4),
                &srcpixels[(i+y1)*img_source->pitch + (x1 + leftoffset)*4],
-               (x2+1-x1-leftoffset-rightoffset)*4);
+               destwidth*4);
 
     return toSurface;
 }

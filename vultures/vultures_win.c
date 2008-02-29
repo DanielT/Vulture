@@ -1637,7 +1637,7 @@ static int vultures_draw_objwin(struct window * win)
 
 void vultures_layout_itemwin(struct window *win)
 {
-    struct window * winelem;
+    struct window *winelem, *tmpwin;
     struct obj * invitem;
     int itemcount = 0;
     int ncols, nrows;
@@ -1670,6 +1670,16 @@ void vultures_layout_itemwin(struct window *win)
             itemcount++;
             vultures_init_wintype(winelem, V_WINTYPE_OBJITEMHEADER);
         }
+        else if (winelem->v_type == V_WINTYPE_OBJITEM || winelem->v_type == V_WINTYPE_OBJITEMHEADER)
+            itemcount++;
+        else if (winelem->v_type == V_WINTYPE_BUTTON && winelem->caption == NULL)
+        {
+            tmpwin = winelem;
+            winelem = winelem->sib_next;
+            vultures_destroy_window_internal(tmpwin);
+            continue;
+        }
+
         winelem = winelem->sib_next;
     }
 
@@ -1713,9 +1723,12 @@ void vultures_layout_itemwin(struct window *win)
                     invitem = invitem->nobj;
                 winelem->pd.obj = invitem;
 
-                newcaption = strdup(winelem->caption+6);
-                free(winelem->caption);
-                winelem->caption = newcaption;
+                if (winelem->caption[0] == '[')
+                {
+                    newcaption = strdup(winelem->caption+6);
+                    free(winelem->caption);
+                    winelem->caption = newcaption;
+                }
             }
 
             itemcount++;
@@ -1888,13 +1901,14 @@ int vultures_get_menuitem_width(struct window *item, int colwidths[8])
 
 void vultures_layout_menu(struct window *win)
 {
-    struct window * winelem, *coltxt;
+    struct window *winelem, *tmp, *coltxt;
     char *start, *sep;
     int i;
 
     int btncount = 0, btn_maxwidth = 0, btn_totalwidth = 0;
     int need_scrollbar = 0, enlarge_buttons = 0;
     int elem_maxwidth = 0;
+    int saved_scrollpos = 0;
     int pos_x = 0;
 
     int height = 0;
@@ -1914,6 +1928,15 @@ void vultures_layout_menu(struct window *win)
     winelem = win->first_child;
     while (winelem)
     {
+        if (winelem->v_type == V_WINTYPE_SCROLLBAR)
+        {
+            saved_scrollpos = winelem->pd.scrollpos;
+            tmp = winelem;
+            winelem = winelem->sib_next;
+            vultures_destroy_window_internal(tmp);
+            continue;
+        }
+
         winelem->w = vultures_get_menuitem_width(winelem, colwidths);
         winelem->h = vultures_text_height(V_FONT_MENU, winelem->caption);
 
@@ -1982,6 +2005,7 @@ void vultures_layout_menu(struct window *win)
         winelem->h = V_MENU_MAXHEIGHT;
         winelem->x = offset_left + width + 5;
         winelem->y = offset_top;
+        winelem->pd.scrollpos = saved_scrollpos;
 
         width += winelem->w + 5;
         height = V_MENU_MAXHEIGHT;
@@ -2618,74 +2642,38 @@ struct window * vultures_accel_to_win(struct window * parent, char accel)
 /* resize the vultures application window to the given width and height */
 void vultures_win_resize(int width, int height)
 {
-    struct window *win, *child;
+    struct window *current, *topwin;
+    SDL_Event event;
+    vultures_event dummy;
+    int descend = 1;
 
-    win = vultures_get_window(0);
-    win->w = width;
-    win->h = height;
+    current = topwin = vultures_get_window(0);
 
-    /* reposition child windows */
-    child = win->first_child;
-    while(child)
+    event.type = SDL_VIDEORESIZE;
+    event.resize.w = width;
+    event.resize.h = height;
+
+    current->event_handler(current, current, &dummy, &event);
+
+    do
     {
-        switch (child->menu_id)
+        current = vultures_walk_winlist(current, &descend);
+
+        if (current->event_handler)
+            current->event_handler(current, current, &dummy, &event);
+
+        /* recalc absolute position */
+        if (current->v_type != V_WINTYPE_NONE)
         {
-            case V_HOTSPOT_SCROLL_UP:
-                child->w = win->w - 40;
-                break;
-
-            case V_HOTSPOT_SCROLL_UPRIGHT:
-                child->x = win->w - 20;
-                break;
-
-            case V_HOTSPOT_SCROLL_LEFT:
-                child->h = win->h - 40;
-                break;
-
-            case V_HOTSPOT_SCROLL_RIGHT:
-                child->x = win->w - 20;
-                child->h = win->h - 40;
-                break;
-
-            case V_HOTSPOT_SCROLL_DOWNLEFT:
-                child->y = win->h - 20;
-                break;
-
-            case V_HOTSPOT_SCROLL_DOWN:
-                child->y = win->h - 20;
-                child->w = win->w - 40;
-                break;
-
-            case V_HOTSPOT_SCROLL_DOWNRIGHT:
-                child->y = win->h - 20;
-                child->x = win->w - 20;
-                break;
-
-            case V_WIN_MINIMAP:
-                child->x = win->w - 223;
-                break;
-
-            case V_WIN_STATUSBAR:
-                child->y = win->h - (child->h + 6);
-                break;
-
-            case V_WIN_TOOLBAR1:
-                child->x = win->w - (child->w + 6);
-                child->y = win->h - (child->h*2 + 8);
-                break;
-
-            case V_WIN_TOOLBAR2:
-                child->x = win->w - (child->w + 6);
-                child->y = win->h - (child->h + 6);
-                break;
+            current->abs_x = current->parent->abs_x + current->x;
+            current->abs_y = current->parent->abs_y + current->y;
         }
-
-        child = child->sib_next;
     }
+    while (current != topwin);
 
     /* redraw everything */
     vultures_map_force_redraw();
-    vultures_draw_windows(win);
+    vultures_draw_windows(topwin);
     vultures_refresh_window_region();
 }
 
