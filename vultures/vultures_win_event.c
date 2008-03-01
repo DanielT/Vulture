@@ -469,8 +469,49 @@ int vultures_eventh_level(struct window* handler, struct window* target,
             break;
 
         case SDL_VIDEORESIZE:
-            handler->w = event->resize.w;
-            handler->h = event->resize.h;
+            if (handler == target)
+            {
+                handler->w = event->resize.w;
+                handler->h = event->resize.h;
+            }
+            else
+            {
+                switch (target->menu_id)
+                {
+                    /* case V_HOTSPOT_SCROLL_UPLEFT: never needs updating on resize*/
+
+                    case V_HOTSPOT_SCROLL_UP:
+                        target->w = handler->w - 40;
+                        break;
+
+                    case V_HOTSPOT_SCROLL_UPRIGHT:
+                        target->x = handler->w - 20;
+                        break;
+
+                    case V_HOTSPOT_SCROLL_LEFT:
+                        target->h = handler->h - 40;
+                        break;
+
+                    case V_HOTSPOT_SCROLL_RIGHT:
+                        target->h = handler->h - 40;
+                        target->x = handler->w - 20;
+                        break;
+
+                    case V_HOTSPOT_SCROLL_DOWNLEFT:
+                        target->y = handler->h - 20;
+                        break;
+
+                    case V_HOTSPOT_SCROLL_DOWN:
+                        target->y = handler->h - 20;
+                        target->w = handler->w - 40;
+                        break;
+
+                    case V_HOTSPOT_SCROLL_DOWNRIGHT:
+                        target->x = handler->w - 20;
+                        target->y = handler->h - 20;
+                        break;
+                }
+            }
             break;
 
         default:
@@ -1570,16 +1611,18 @@ int vultures_eventh_inventory(struct window* handler, struct window* target,
             break;
 
         case SDL_VIDEORESIZE:
-            /* hide_window takes care of the background */
-            vultures_hide_window(handler);
+            if (handler->visible)
+            {
+                /* hide_window takes care of the background */
+                vultures_hide_window(handler);
 
-            /* resize */
-            vultures_layout_itemwin(handler);
+                /* resize */
+                vultures_layout_itemwin(handler);
 
-            /* redraw */
-            handler->visible = 1;
-            handler->need_redraw = 1;
-
+                /* redraw */
+                handler->visible = 1;
+                handler->need_redraw = 1;
+            }
             return V_EVENT_HANDLED_NOREDRAW;
     }
 

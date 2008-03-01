@@ -2661,6 +2661,8 @@ void vultures_win_resize(int width, int height)
 
         if (current->event_handler)
             current->event_handler(current, current, &dummy, &event);
+        else if (current->parent->event_handler)
+            current->parent->event_handler(current->parent, current, &dummy, &event);
 
         /* recalc absolute position */
         if (current->v_type != V_WINTYPE_NONE)
