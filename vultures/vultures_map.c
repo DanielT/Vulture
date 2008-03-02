@@ -1810,7 +1810,6 @@ int vultures_get_map_contextmenu(point mappos)
             case OILSKIN_SACK:
             case BAG_OF_HOLDING:
             case BAG_OF_TRICKS:
-            case (V_TILE_UNIDENTIFIED_BAG + OBJTILEOFFSET):
                 if ((u.ux == mappos. x) && (u.uy == mappos. y))
                 {
                     vultures_create_button(menu, "Loot", V_ACTION_LOOT);
