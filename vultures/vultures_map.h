@@ -91,6 +91,7 @@ extern int vultures_draw_map(struct window * win);
 extern int vultures_draw_minimap(struct window * win);
 extern void vultures_print_glyph(winid, XCHAR_P, XCHAR_P, int);
 extern int vultures_object_to_tile(int mon_id, int x, int y);
+extern int vultures_obfuscate_object(int obj_id);
 
 extern point vultures_mouse_to_map(point mouse);
 extern point vultures_map_to_mouse(point mappos);

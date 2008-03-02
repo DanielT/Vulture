@@ -2110,78 +2110,88 @@ int vultures_object_to_tile(int obj_id, int x, int y)
         return tile;
     }
 
-
     /* prevent visual identification of unknown objects */
-    if (!objects[obj_id].oc_name_known)
-    {
-        switch (obj_id)
-        {
-            case SACK:
-            case OILSKIN_SACK:
-            case BAG_OF_TRICKS:
-            case BAG_OF_HOLDING:
-                return V_TILE_UNIDENTIFIED_BAG;
+    return OBJECT_TO_VTILE(vultures_obfuscate_object(obj_id));
+}
 
-            case LOADSTONE:
-            case LUCKSTONE:
-            case FLINT:
-            case TOUCHSTONE: 
+
+/* prevent visual identification of unknown objects */
+int vultures_obfuscate_object(int obj_id)
+{
+    /* catch known objects */
+    if (objects[obj_id].oc_name_known)
+        return obj_id;
+
+    /* revert objects that could be identified by their tiles to a generic
+     * representation */
+    switch (obj_id)
+    {
+        case SACK:
+        case OILSKIN_SACK:
+        case BAG_OF_TRICKS:
+        case BAG_OF_HOLDING:
+            return SACK;
+
+        case LOADSTONE:
+        case LUCKSTONE:
+        case FLINT:
+        case TOUCHSTONE: 
 #ifdef HEALTHSTONE /* only in SlashEM */
-            case HEALTHSTONE:
+        case HEALTHSTONE:
 #endif
 #ifdef WHETSTONE /* only in SlashEM */
-            case WHETSTONE:
+        case WHETSTONE:
 #endif
-                return V_TILE_STONE;
-            
-            case OIL_LAMP:
-            case MAGIC_LAMP:
-                return OBJECT_TO_VTILE(OIL_LAMP);
+            return FLINT;
 
-            case TIN_WHISTLE:
-            case MAGIC_WHISTLE:
-                return OBJECT_TO_VTILE(TIN_WHISTLE);
+        case OIL_LAMP:
+        case MAGIC_LAMP:
+            return OIL_LAMP;
 
-            case DILITHIUM_CRYSTAL:
-            case DIAMOND:
-            case RUBY:
-            case JACINTH:
-            case SAPPHIRE:
-            case BLACK_OPAL:
-            case EMERALD:
-            case TURQUOISE:
-            case CITRINE:
-            case AQUAMARINE:
-            case AMBER:
-            case TOPAZ:
-            case JET:
-            case OPAL:
-            case CHRYSOBERYL:
-            case GARNET:
-            case AMETHYST:
-            case JASPER:
-            case FLUORITE:
-            case OBSIDIAN:
-            case AGATE:
-            case JADE:
-                switch (objects[obj_id].oc_color)
-                {
-                    case CLR_RED:     tile = GEM_RED_GLASS; break;
-                    case CLR_BLACK:   tile = GEM_BLACK_GLASS; break;
-                    case CLR_GREEN:   tile = GEM_GREEN_GLASS; break;
-                    case CLR_BROWN:   tile = GEM_BROWN_GLASS; break;
-                    case CLR_MAGENTA: tile = GEM_VIOLET_GLASS; break;
-                    case CLR_ORANGE:  tile = GEM_ORANGE_GLASS; break;
-                    case CLR_YELLOW:  tile = GEM_YELLOW_GLASS; break;
-                    case CLR_WHITE:   tile = GEM_WHITE_GLASS; break;
-                    case CLR_BLUE:    tile = GEM_BLUE_GLASS; break;
-                    default:          tile = GEM_BLACK_GLASS; break;
-                }
-                return OBJECT_TO_VTILE(tile);
-        }
+        case TIN_WHISTLE:
+        case MAGIC_WHISTLE:
+            return TIN_WHISTLE;
+
+        /* all gems initially look like pieces of glass */
+        case DILITHIUM_CRYSTAL:
+        case DIAMOND:
+        case RUBY:
+        case JACINTH:
+        case SAPPHIRE:
+        case BLACK_OPAL:
+        case EMERALD:
+        case TURQUOISE:
+        case CITRINE:
+        case AQUAMARINE:
+        case AMBER:
+        case TOPAZ:
+        case JET:
+        case OPAL:
+        case CHRYSOBERYL:
+        case GARNET:
+        case AMETHYST:
+        case JASPER:
+        case FLUORITE:
+        case OBSIDIAN:
+        case AGATE:
+        case JADE:
+            /* select the glass tile at runtime: gem colors get randomized */
+            switch (objects[obj_id].oc_color)
+            {
+                case CLR_RED:     return GEM_RED_GLASS; break;
+                case CLR_BLACK:   return GEM_BLACK_GLASS; break;
+                case CLR_GREEN:   return GEM_GREEN_GLASS; break;
+                case CLR_BROWN:   return GEM_BROWN_GLASS; break;
+                case CLR_MAGENTA: return GEM_VIOLET_GLASS; break;
+                case CLR_ORANGE:  return GEM_ORANGE_GLASS; break;
+                case CLR_YELLOW:  return GEM_YELLOW_GLASS; break;
+                case CLR_WHITE:   return GEM_WHITE_GLASS; break;
+                case CLR_BLUE:    return GEM_BLUE_GLASS; break;
+                default:          return GEM_BLACK_GLASS; break;
+            }
     }
-
-    return OBJECT_TO_VTILE(obj_id);
+    /* the vast majority of objects needs no special treatment */
+    return obj_id;
 }
 
 

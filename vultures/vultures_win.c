@@ -1532,7 +1532,7 @@ static int vultures_draw_objitem(struct window * win)
         vultures_fill_rect(x + 2, y + 2, x + h - 3, y + h - 3, CLR32_CURSE_RED);
 
     /* draw the object tile */
-    vultures_put_tile(x+2, y+2, OBJICON_TO_VTILE(win->pd.obj->otyp));
+    vultures_put_tile(x+2, y+2, OBJICON_TO_VTILE(vultures_obfuscate_object(win->pd.obj->otyp)));
 
     /* draw the item letter on the top left corner of the object tile */
     snprintf(tmpstr, 11, "%c", win->accelerator);
