@@ -600,7 +600,8 @@ int vultures_select_menu(int winid, int how, menu_item ** menu_list)
     win->select_how = how;
     *menu_list = NULL; /* realloc blows up if this contains a random memory location */
 
-    if (winid == WIN_INVEN && how == PICK_NONE && vultures_opts.use_standard_inventory)
+    if ((winid == WIN_INVEN && how == PICK_NONE && vultures_opts.use_standard_inventory) ||
+        (winid != WIN_INVEN && vultures_opts.use_standard_object_menus))
         win->is_objwin = 0;
 
     if (how != PICK_NONE)

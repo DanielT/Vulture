@@ -33,6 +33,7 @@ enum interface_opts_menu_ids {
     V_IOMID_ACTIONTB,
     V_IOMID_MINIMAP,
     V_IOMID_USESTANDARDINVENTORY,
+    V_IOMID_USESTANDARDOBJMENUS,
     V_IOMID_MESSAGELINES,
     V_IOMID_KEYROTATION,
     V_IOMID_HIGHLIGHT_CURSOR_SQUARE,
@@ -99,6 +100,8 @@ void vultures_read_main_config(FILE * fp)
             vultures_opts.show_minimap = atoi(param);
         else if (!strncmp(configline, "use_standard_inventory", optend - configline))
             vultures_opts.use_standard_inventory = atoi(param);
+        else if (!strncmp(configline, "use_standard_objmenus", optend - configline))
+            vultures_opts.use_standard_object_menus = atoi(param);
         else if (!strncmp(configline, "messagelines", optend - configline))
             vultures_opts.messagelines = atoi(param);
         else if (!strncmp(configline, "no_key_translation", optend - configline))
@@ -245,6 +248,7 @@ void vultures_read_options(void)
     vultures_opts.show_actiontb = 1;
     vultures_opts.show_minimap = 1;
     vultures_opts.use_standard_inventory = 0;
+    vultures_opts.use_standard_object_menus = 0;
     vultures_opts.messagelines = 3;
     vultures_opts.no_key_translation = 0;
     vultures_opts.highlight_cursor_square = 1;
@@ -396,6 +400,7 @@ void vultures_write_userconfig(void)
         fprintf(fp, "show_actionbar=%d\n", vultures_opts.show_actiontb);
         fprintf(fp, "show_minimap=%d\n", vultures_opts.show_minimap);
         fprintf(fp, "use_standard_inventory=%d\n", vultures_opts.use_standard_inventory);
+        fprintf(fp, "use_standard_objmenus=%d\n", vultures_opts.use_standard_object_menus);
         fprintf(fp, "messagelines=%d\n", vultures_opts.messagelines);
         fprintf(fp, "no_key_translation=%d\n", vultures_opts.no_key_translation);
         fprintf(fp, "highlight_cursor_square=%d\n", vultures_opts.highlight_cursor_square);
@@ -477,6 +482,10 @@ int vultures_iface_opts(void)
 
     any.a_int = V_IOMID_USESTANDARDINVENTORY;
     sprintf(str, "Use standard inventory\t[%s]", vultures_opts.use_standard_inventory ? "yes" : "no");
+    vultures_add_menu(winid, NO_GLYPH, &any, 0, 0, ATR_BOLD, str, MENU_UNSELECTED);
+
+    any.a_int = V_IOMID_USESTANDARDOBJMENUS;
+    sprintf(str, "Use standard object menus\t[%s]", vultures_opts.use_standard_object_menus ? "yes" : "no");
     vultures_add_menu(winid, NO_GLYPH, &any, 0, 0, ATR_BOLD, str, MENU_UNSELECTED);
 
     any.a_int = V_IOMID_MESSAGELINES;
@@ -639,6 +648,10 @@ int vultures_iface_opts(void)
 
             case V_IOMID_USESTANDARDINVENTORY:
                 vultures_opts.use_standard_inventory = ! vultures_opts.use_standard_inventory;
+                break;
+
+            case V_IOMID_USESTANDARDOBJMENUS:
+                vultures_opts.use_standard_object_menus = ! vultures_opts.use_standard_object_menus;
                 break;
 
             case V_IOMID_MESSAGELINES:
