@@ -481,11 +481,11 @@ int vultures_iface_opts(void)
     vultures_add_menu(winid, NO_GLYPH, &any, 0, 0, ATR_BOLD, str, MENU_UNSELECTED);
 
     any.a_int = V_IOMID_USESTANDARDINVENTORY;
-    sprintf(str, "Use standard inventory\t[%s]", vultures_opts.use_standard_inventory ? "yes" : "no");
+    sprintf(str, "Use plain inventory\t[%s]", vultures_opts.use_standard_inventory ? "yes" : "no");
     vultures_add_menu(winid, NO_GLYPH, &any, 0, 0, ATR_BOLD, str, MENU_UNSELECTED);
 
     any.a_int = V_IOMID_USESTANDARDOBJMENUS;
-    sprintf(str, "Use standard object menus\t[%s]", vultures_opts.use_standard_object_menus ? "yes" : "no");
+    sprintf(str, "Use plain object menus\t[%s]", vultures_opts.use_standard_object_menus ? "yes" : "no");
     vultures_add_menu(winid, NO_GLYPH, &any, 0, 0, ATR_BOLD, str, MENU_UNSELECTED);
 
     any.a_int = V_IOMID_MESSAGELINES;
