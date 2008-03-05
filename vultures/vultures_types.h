@@ -64,8 +64,11 @@ typedef struct window {
     unsigned is_input : 1; /* is the text writable? */
     unsigned visible : 1;
     unsigned is_default : 1;
-    unsigned scrollable : 1;
-    unsigned select_how : 2;
+    unsigned scrollable : 1; /* menus */
+    unsigned select_how : 2; /* menus */
+    unsigned is_objwin : 1; /* menus */
+    unsigned hover : 1; /* object items */
+    unsigned last_toggled : 1; /* object items */
 
     int accelerator;
     SDL_Surface * image; /* various windows want to keep image data around */
@@ -81,11 +84,13 @@ typedef struct window {
         struct obj * obj; /* inventory items */
         int count;      /* query_anykey dialogs, menu items */
         Uint32 textcolor; /* text items */
+        int glyph; /* menuitems */
 
         int ow_vcols;
         int ow_vrows;
         int ow_ncols;
         int ow_firstcol;
+        struct window * ow_lasttoggled;
     } pd;
 
     /* Function pointers */

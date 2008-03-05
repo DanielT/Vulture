@@ -920,7 +920,7 @@ int vultures_eventh_messagebox(struct window* handler, struct window* target,
 }
 
 
-static void select_menu_option(struct window * handler, struct window * target, int count)
+static void select_option(struct window * handler, struct window * target, int count)
 {
     struct window * winelem;
 
@@ -1044,11 +1044,11 @@ int vultures_eventh_menu(struct window* handler, struct window* target,
         /* click on an option / checkbox */
         if (target->v_type == V_WINTYPE_OPTION)
         {
-            select_menu_option(handler, target, handler->pd.count ? handler->pd.count : -1);
+            select_option(handler, target, handler->pd.count ? handler->pd.count : -1);
             handler->pd.count = 0;
             if (handler->select_how == PICK_ONE)
             {
-                *(int*)result = 1;
+                *(int*)result = V_MENU_ACCEPT;
                 return V_EVENT_HANDLED_FINAL;
             }
 
@@ -1081,12 +1081,12 @@ int vultures_eventh_menu(struct window* handler, struct window* target,
         {
             case SDLK_RETURN:
             case SDLK_KP_ENTER:
-                *(int*)result = 1;
+                *(int*)result = V_MENU_ACCEPT;
                 return V_EVENT_HANDLED_FINAL;
 
             case SDLK_SPACE:
             case SDLK_ESCAPE:
-                *(int*)result = (handler->content_is_text) ? 1 : -1;
+                *(int*)result = (handler->content_is_text) ? V_MENU_ACCEPT : V_MENU_CANCEL;
                 return V_EVENT_HANDLED_FINAL;
 
             /* handle menu control keys */
@@ -1238,11 +1238,11 @@ int vultures_eventh_menu(struct window* handler, struct window* target,
                 target = vultures_accel_to_win(handler, key);
                 if (target)
                 {
-                    select_menu_option(handler, target, handler->pd.count ? handler->pd.count : -1);
+                    select_option(handler, target, handler->pd.count ? handler->pd.count : -1);
                     handler->pd.count = 0;
                     if (handler->select_how == PICK_ONE)
                     {
-                        *(int*)result = 1;
+                        *(int*)result = V_MENU_ACCEPT;
                         return V_EVENT_HANDLED_FINAL;
                     }
 
@@ -1399,9 +1399,13 @@ void vultures_update_invscroll(struct window * win, int newpos)
     int itemcol;
     int leftoffset = vultures_winelem.border_left->w;
     int topoffset = vultures_winelem.border_top->h;
-    
-    topoffset += vultures_text_height(V_FONT_HEADLINE, win->caption)*2 + 2;
 
+    topoffset += vultures_get_lineheight(V_FONT_HEADLINE)*2 + 2;
+
+    if (newpos+win->pd.ow_vcols > win->pd.ow_ncols)
+        newpos = win->pd.ow_ncols - win->pd.ow_vcols;
+    else if (newpos < 0)
+        newpos = 0;
 
     win->pd.ow_firstcol = newpos;
 
@@ -1411,23 +1415,23 @@ void vultures_update_invscroll(struct window * win, int newpos)
         if (winelem->v_type == V_WINTYPE_OBJITEM || winelem->v_type == V_WINTYPE_OBJITEMHEADER)
         {
             itemcol = (itemcount / win->pd.ow_vrows);
-            
+
             winelem->x = (itemcol - newpos) * (V_LISTITEM_WIDTH + 4) + leftoffset;
             winelem->y = (itemcount % win->pd.ow_vrows) * V_LISTITEM_HEIGHT + topoffset;
-            
+
             winelem->visible = (itemcol >= newpos && itemcol < newpos + win->pd.ow_vcols);
 
             itemcount++;
         }
-        
+
         if (winelem->v_type == V_WINTYPE_BUTTON)
         {
-            if (winelem->menu_id == 1)
+            if (winelem->menu_id == V_INV_PREVPAGE)
                 winelem->visible = (newpos != 0);
-            else if (winelem->menu_id == 2)
+            else if (winelem->menu_id == V_INV_NEXTPAGE)
                 winelem->visible = (newpos+win->pd.ow_vcols < win->pd.ow_ncols);
         }
-        
+
         winelem = winelem->sib_next;
     }
 }
@@ -1543,13 +1547,101 @@ int vultures_eventh_inventory(struct window* handler, struct window* target,
                               void* result, SDL_Event* event)
 {
     point mouse;
+    int key;
+    int key_ok;
 
     switch (event->type)
     {
         case SDL_MOUSEMOTION:
             vultures_set_mcursor(V_CURSOR_NORMAL);
             break;
-        
+
+        case SDL_MOUSEBUTTONUP:
+            mouse = vultures_get_mouse_pos();
+            /* close the window if the user clicks outside it */
+            if (handler == target && (mouse.x < handler->abs_x || mouse.y < handler->abs_y ||
+                                      mouse.x > handler->abs_x + handler->w ||
+                                      mouse.y > handler->abs_y + handler->h))
+                return V_EVENT_HANDLED_FINAL;
+
+            /* left clicks on object items do nothing */
+            if (event->button.button == SDL_BUTTON_LEFT &&
+                     target != handler && target->v_type == V_WINTYPE_OBJITEM)
+                return V_EVENT_HANDLED_NOREDRAW;
+
+            /* right clicks on object items open a context menu */
+            else if (event->button.button == SDL_BUTTON_RIGHT && target->v_type == V_WINTYPE_OBJITEM)
+                return vultures_inventory_context_menu(target);
+
+            /* other functions are outsourced... */
+            else
+                return vultures_eventh_objwin(handler, target, result, event);
+
+
+        case SDL_KEYDOWN:
+            key_ok = 0;
+            key = event->key.keysym.unicode;
+            switch (event->key.keysym.sym)
+            {
+                case SDLK_HOME:
+                case SDLK_END:
+                case SDLK_PAGEDOWN:
+                case SDLK_KP2:
+                case SDLK_DOWN:
+                case SDLK_PAGEUP:
+                case SDLK_KP8:
+                case SDLK_UP:
+                case SDLK_LEFT:
+                case SDLK_RIGHT:
+                    key_ok = 1;
+                    break;
+
+                default: break;
+            }
+
+            switch (key)
+            {
+                case MENU_PREVIOUS_PAGE:
+                case MENU_NEXT_PAGE:
+                case MENU_FIRST_PAGE:
+                case MENU_LAST_PAGE:
+                case MENU_SEARCH:
+                    key_ok = 1;
+
+                default: break;
+            }
+
+            if (key_ok)
+                return vultures_eventh_objwin(handler, target, result, event);
+
+            else if (!key)
+                return V_EVENT_HANDLED_NOREDRAW;
+
+            else
+                return V_EVENT_HANDLED_FINAL;
+
+        case SDL_VIDEORESIZE:
+            return vultures_eventh_objwin(handler, target, result, event);
+    }
+
+    return V_EVENT_HANDLED_NOREDRAW;
+}
+
+
+
+int vultures_eventh_objwin(struct window* handler, struct window* target,
+                              void* result, SDL_Event* event)
+{
+    struct window * winelem;
+    char * str_to_find;
+    int key, itemcount, colno;
+
+    switch (event->type)
+    {
+        case SDL_MOUSEMOTION:
+            vultures_set_mcursor(V_CURSOR_NORMAL);
+            break;
+
         case SDL_MOUSEBUTTONUP:
             if (event->button.button == SDL_BUTTON_WHEELUP)
             {
@@ -1563,7 +1655,7 @@ int vultures_eventh_inventory(struct window* handler, struct window* target,
                 return V_EVENT_HANDLED_NOREDRAW;
             }
 
-            if (event->button.button == SDL_BUTTON_WHEELDOWN)
+            else if (event->button.button == SDL_BUTTON_WHEELDOWN)
             {
                 if (handler->pd.ow_firstcol + handler->pd.ow_vcols < handler->pd.ow_ncols)
                 {
@@ -1575,39 +1667,299 @@ int vultures_eventh_inventory(struct window* handler, struct window* target,
                 return V_EVENT_HANDLED_NOREDRAW;
             }
 
-            /* check whether a scrollbutton was clicked */
-            if (event->button.button == SDL_BUTTON_LEFT &&
-                     target != handler && target->v_type == V_WINTYPE_BUTTON)
+            else if (event->button.button == SDL_BUTTON_LEFT)
             {
-                if (target->menu_id == 1)
-                    vultures_update_invscroll(handler, handler->pd.ow_firstcol - 1);
-                else if (target->menu_id == 2)
-                    vultures_update_invscroll(handler, handler->pd.ow_firstcol + 1);
+                if (handler == target)
+                    break;
 
-                /* close button */
-                else if (target->menu_id == 3)
-                    return V_EVENT_HANDLED_FINAL;
+                if (target->v_type == V_WINTYPE_BUTTON)
+                {
+                    switch (target->menu_id)
+                    {
+                        case V_MENU_ACCEPT:
+                        case V_MENU_CANCEL:
+                        case V_INV_CLOSE:
+                            *(int*)result = target->menu_id;
+                            return V_EVENT_HANDLED_FINAL;
 
-                handler->need_redraw = 1;
-                return V_EVENT_HANDLED_REDRAW;
+                        case V_INV_PREVPAGE:
+                            vultures_update_invscroll(handler, handler->pd.ow_firstcol - 1);
+                            handler->need_redraw = 1;
+                            return V_EVENT_HANDLED_REDRAW;
+
+                        case V_INV_NEXTPAGE:
+                            vultures_update_invscroll(handler, handler->pd.ow_firstcol + 1);
+                            handler->need_redraw = 1;
+                            return V_EVENT_HANDLED_REDRAW;
+
+                    }
+                }
+
+                /* select a range of items from target (clicked item) to handler->pd.ow_lasttoggled (previously clicked item) */
+                if (target->v_type == V_WINTYPE_OBJITEM && (SDL_GetModState() & KMOD_LSHIFT) && 
+                    handler->select_how != PICK_ONE && handler->pd.ow_lasttoggled)
+                {
+                    int selectme = 0;
+                    for (winelem = handler->first_child; winelem; winelem = winelem->sib_next)
+                    {
+                        if (winelem == target || winelem == handler->pd.ow_lasttoggled)
+                        {
+                            selectme = !selectme;
+                            winelem->selected = 1;
+                            winelem->pd.count = -1;
+                        }
+
+                        if (selectme && winelem->v_type == V_WINTYPE_OBJITEM)
+                        {
+                            winelem->selected = 1;
+                            winelem->pd.count = -1;
+                        }
+                    }
+
+                    handler->pd.ow_lasttoggled->last_toggled = 0;
+                    handler->pd.ow_lasttoggled = target;
+                    target->last_toggled = 1;
+
+                    handler->need_redraw = 1;
+                    return V_EVENT_HANDLED_REDRAW;
+                }
+                else if (target->v_type == V_WINTYPE_OBJITEM)
+                {
+                    select_option(handler, target, -1);
+
+                    if (handler->pd.ow_lasttoggled)
+                        handler->pd.ow_lasttoggled->last_toggled = 0;
+                    handler->pd.ow_lasttoggled = target;
+                    target->last_toggled = 1;
+
+                    if (handler->select_how == PICK_ONE)
+                    {
+                        *(int*)result = V_MENU_ACCEPT;
+                        return V_EVENT_HANDLED_FINAL;
+                    }
+
+                    handler->need_redraw = 1;
+                    return V_EVENT_HANDLED_REDRAW;
+                }
             }
-
-            else  if (event->button.button == SDL_BUTTON_RIGHT && target->v_type == V_WINTYPE_OBJITEM)
-                return vultures_inventory_context_menu(target);
-
-            mouse = vultures_get_mouse_pos();
-            /* close the window if the user clicks outside it */
-            if (handler == target && (mouse.x < handler->abs_x || mouse.y < handler->abs_y ||
-                                      mouse.x > handler->abs_x + handler->w ||
-                                      mouse.y > handler->abs_y + handler->h))
-                return V_EVENT_HANDLED_FINAL;
-
-            return V_EVENT_HANDLED_NOREDRAW;
-
+            break;
 
         case SDL_KEYDOWN:
-            if (vultures_convertkey_sdl2nh(&event->key.keysym))
-                return V_EVENT_HANDLED_FINAL;
+            handler->need_redraw = 1;
+            key = event->key.keysym.unicode;
+            switch (event->key.keysym.sym)
+            {
+                case SDLK_RETURN:
+                case SDLK_KP_ENTER:
+                    *(int*)result = V_MENU_ACCEPT;
+                    return V_EVENT_HANDLED_FINAL;
+
+                case SDLK_SPACE:
+                case SDLK_ESCAPE:
+                    *(int*)result = (handler->content_is_text) ? V_MENU_ACCEPT : V_MENU_CANCEL;
+                    return V_EVENT_HANDLED_FINAL;
+
+                /* handle menu control keys */
+                case SDLK_HOME:     key = MENU_FIRST_PAGE;    /* '^' */ break;
+                case SDLK_END:      key = MENU_LAST_PAGE;     /* '|' */ break;
+
+                /* scroll via arrow keys */
+                case SDLK_PAGEDOWN:
+                case SDLK_KP2:
+                case SDLK_DOWN:
+                case SDLK_RIGHT:
+                    vultures_update_invscroll(handler, handler->pd.ow_firstcol + 1);
+                    return V_EVENT_HANDLED_REDRAW;
+
+                case SDLK_PAGEUP:
+                case SDLK_KP8:
+                case SDLK_UP:
+                case SDLK_LEFT:
+                    vultures_update_invscroll(handler, handler->pd.ow_firstcol - 1);
+                    return V_EVENT_HANDLED_REDRAW;
+
+                case SDLK_BACKSPACE:
+                    if (handler->pd.ow_lasttoggled)
+                        handler->pd.ow_lasttoggled->pd.count = handler->pd.ow_lasttoggled->pd.count / 10;
+                    return V_EVENT_HANDLED_REDRAW;
+
+                default: break;
+            }
+
+            if (!key)
+                /* a function or modifier key, but not one we recognize, was pressed */
+                return V_EVENT_HANDLED_NOREDRAW;
+
+            switch (key)
+            {
+                case MENU_PREVIOUS_PAGE:
+                    vultures_update_invscroll(handler, handler->pd.ow_firstcol - 1);
+                    return V_EVENT_HANDLED_REDRAW;
+
+                case MENU_NEXT_PAGE:
+                    vultures_update_invscroll(handler, handler->pd.ow_firstcol + 1);
+                    return V_EVENT_HANDLED_REDRAW;
+
+                case MENU_FIRST_PAGE:
+                    vultures_update_invscroll(handler, 0);
+                    return V_EVENT_HANDLED_REDRAW;
+
+                case MENU_LAST_PAGE:
+                    vultures_update_invscroll(handler, 999999);
+                    return V_EVENT_HANDLED_REDRAW;
+
+
+                case MENU_SELECT_ALL:
+                case MENU_UNSELECT_ALL:
+                    /* invalid for single selection menus */
+                    if (handler->select_how == PICK_ONE)
+                        return V_EVENT_HANDLED_NOREDRAW;
+
+                    winelem = handler->first_child;
+                    while (winelem)
+                    {
+                        if (winelem->v_type == V_WINTYPE_OBJITEM)
+                        {
+                            winelem->selected = (key == MENU_SELECT_ALL);
+                            winelem->pd.count = -1;
+                        }
+                        winelem = winelem->sib_next;
+                    }
+                    return V_EVENT_HANDLED_REDRAW;
+
+
+                case MENU_INVERT_ALL:
+                    /* invalid for single selection menus */
+                    if (handler->select_how == PICK_ONE)
+                        return V_EVENT_HANDLED_NOREDRAW;
+
+                    winelem = handler->first_child;
+                    while (winelem)
+                    {
+                        if (winelem->v_type == V_WINTYPE_OBJITEM)
+                        {
+                            winelem->selected = !winelem->selected;
+                            winelem->pd.count = -1;
+                        }
+                        winelem = winelem->sib_next;
+                    }
+                    return V_EVENT_HANDLED_REDRAW;
+
+
+                case MENU_SELECT_PAGE:
+                case MENU_UNSELECT_PAGE:
+                    /* invalid for single selection menus */
+                    if (handler->select_how == PICK_ONE)
+                        return V_EVENT_HANDLED_NOREDRAW;
+
+                    winelem = handler->first_child;
+                    while (winelem)
+                    {
+                        if (winelem->v_type == V_WINTYPE_OBJITEM && winelem->visible)
+                        {
+                            winelem->selected = (key == MENU_SELECT_PAGE);
+                            winelem->pd.count = -1;
+                        }
+                        winelem = winelem->sib_next;
+                    }
+                    return V_EVENT_HANDLED_REDRAW;
+
+
+                case MENU_INVERT_PAGE:
+                    /* invalid for single selection menus */
+                    if (handler->select_how == PICK_ONE)
+                        return V_EVENT_HANDLED_NOREDRAW;
+
+                    winelem = handler->first_child;
+                    while (winelem)
+                    {
+                        if (winelem->v_type == V_WINTYPE_OBJITEM && winelem->visible)
+                        {
+                            winelem->selected = !winelem->selected;
+                            winelem->pd.count = -1;
+                        }
+                        winelem = winelem->sib_next;
+                    }
+                    return V_EVENT_HANDLED_REDRAW;
+
+
+                case MENU_SEARCH:
+                    str_to_find = malloc(512);
+                    str_to_find[0] = '\0';
+                    if (vultures_get_input(-1, -1, "What are you looking for?", str_to_find) != -1)
+                    {
+                        itemcount = 0;
+                        winelem = handler->first_child;
+                        while (winelem)
+                        {
+                            itemcount++;
+                            if (winelem->caption && strstr(winelem->caption, str_to_find))
+                            {
+                                colno = itemcount / handler->pd.ow_vrows;
+                                vultures_update_invscroll(handler, colno);
+                                break;
+                            }
+
+                            winelem = winelem->sib_next;
+                        }
+
+                        if (handler->pd.ow_lasttoggled)
+                            handler->pd.ow_lasttoggled->last_toggled = 0;
+                        handler->pd.ow_lasttoggled = winelem;
+                        winelem->last_toggled = 1;
+                    }
+                    free(str_to_find);
+                    return V_EVENT_HANDLED_REDRAW;
+
+                default:
+                    /* numbers are part of a count */
+                    if (key >= '0' && key <= '9' && handler->pd.ow_lasttoggled && 
+                        handler->pd.ow_lasttoggled->pd.count < 1000000)
+                    {
+                        if (handler->pd.ow_lasttoggled->pd.count == -1)
+                            handler->pd.ow_lasttoggled->pd.count = 0;
+                        handler->pd.ow_lasttoggled->pd.count = handler->pd.ow_lasttoggled->pd.count * 10 + (key - '0');
+
+                        return V_EVENT_HANDLED_REDRAW;
+                    }
+
+                    /* try to match the key to an accelerator */
+                    target = vultures_accel_to_win(handler, key);
+                    if (target)
+                    {
+                        select_option(handler, target, -1);
+                        handler->pd.count = 0;
+                        if (handler->select_how == PICK_ONE)
+                        {
+                            *(int*)result = V_MENU_ACCEPT;
+                            return V_EVENT_HANDLED_FINAL;
+                        }
+
+                        if (handler->pd.ow_lasttoggled)
+                            handler->pd.ow_lasttoggled->last_toggled = 0;
+                        handler->pd.ow_lasttoggled = target;
+                        target->last_toggled = 1;
+
+
+                        /* if the selected element isn't visible bring it into view */
+                        if (!target->visible)
+                        {
+                            itemcount = 0;
+                            winelem = handler->first_child;
+                            while (winelem)
+                            {
+                                itemcount++;
+                                winelem = winelem->sib_next;
+                                if (winelem == target)
+                                    break;
+                            }
+                            colno = itemcount / handler->pd.ow_vrows;
+                            vultures_update_invscroll(handler, colno);
+                        }
+                        return V_EVENT_HANDLED_REDRAW;
+                    }
+                    break;
+            }
             break;
 
         case SDL_VIDEORESIZE:
@@ -1629,6 +1981,48 @@ int vultures_eventh_inventory(struct window* handler, struct window* target,
     return V_EVENT_HANDLED_NOREDRAW;
 }
 
+
+
+int vultures_eventh_objitem(struct window* handler, struct window* target,
+                              void* result, SDL_Event* event)
+{
+    int prevhover = 0;
+
+    switch (event->type)
+    {
+        case SDL_MOUSEMOTION:
+            vultures_set_mcursor(V_CURSOR_NORMAL);
+
+            prevhover = handler->hover;
+            handler->hover = 1;
+
+            if (handler->hover != prevhover)
+            {
+                handler->need_redraw = 1;
+                return V_EVENT_HANDLED_REDRAW;
+            }
+            return V_EVENT_HANDLED_NOREDRAW;
+
+        case SDL_MOUSEMOVEOUT:
+            prevhover = handler->hover;
+            handler->hover = 0;
+
+            if (handler->hover != prevhover)
+            {
+                handler->need_redraw = 1;
+                return V_EVENT_HANDLED_REDRAW;
+            }
+            return V_EVENT_HANDLED_NOREDRAW;
+
+        case SDL_MOUSEBUTTONUP:
+            if ((event->button.button == SDL_BUTTON_WHEELUP)||
+                (event->button.button == SDL_BUTTON_WHEELDOWN))
+                handler->hover = 0;
+            return V_EVENT_UNHANDLED;
+    }
+
+    return V_EVENT_UNHANDLED;
+}
 
 
 /********************************************************************

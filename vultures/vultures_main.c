@@ -516,6 +516,12 @@ void vultures_add_menu(int winid, int glyph, const ANY_P * identifier,
     if (identifier && identifier->a_void)
         elem->menu_id_v = identifier->a_void;
 
+    if (glyph)
+        elem->pd.glyph = glyph;
+
+    if (glyph_is_object(glyph))
+        win->is_objwin = 1;
+
     if (preselected)
         elem->selected = 1;
 
@@ -594,35 +600,27 @@ int vultures_select_menu(int winid, int how, menu_item ** menu_list)
     win->select_how = how;
     *menu_list = NULL; /* realloc blows up if this contains a random memory location */
 
-    if (winid == WIN_INVEN && how == PICK_NONE && !vultures_opts.use_standard_inventory)
+    if (winid == WIN_INVEN && how == PICK_NONE && vultures_opts.use_standard_inventory)
+        win->is_objwin = 0;
+
+    if (how != PICK_NONE)
     {
-        win->visible = 1;
-        win->need_redraw = 1;
-
-        vultures_layout_itemwin(win);
-
-        vultures_event_dispatcher(&response, V_RESPOND_INT, win);
-
-        vultures_hide_window(win);
-
-        return -1;
-    }
-
-    /* check for an autoresponse to this menu */
-    if ((queued_event = vultures_eventstack_get()) && queued_event->rtype == V_RESPOND_ANY)
-    {
-        win_elem = vultures_accel_to_win(win, (char)queued_event->num);
-        if (win_elem)
+        /* check for an autoresponse to this menu */
+        if ((queued_event = vultures_eventstack_get()) && queued_event->rtype == V_RESPOND_ANY)
         {
-            *menu_list = malloc(sizeof(menu_item));
-            (*menu_list)[0].item.a_void = win_elem->menu_id_v;
-            (*menu_list)[0].count = -1; 
-            return 1;
+            win_elem = vultures_accel_to_win(win, (char)queued_event->num);
+            if (win_elem)
+            {
+                *menu_list = malloc(sizeof(menu_item));
+                (*menu_list)[0].item.a_void = win_elem->menu_id_v;
+                (*menu_list)[0].count = -1; 
+                return 1;
+            }
         }
     }
-
-    /* if this is a PICK_NONE selection, all checkboxes need to be converted into normal text items */
-    if (how == PICK_NONE) {
+    else if (!win->is_objwin)
+    {
+        /* if this is a PICK_NONE menu, all checkboxes need to be converted into normal text items */
         /* info for vultures_layout_menu */
         win->content_is_text = 1;
 
@@ -637,25 +635,36 @@ int vultures_select_menu(int winid, int how, menu_item ** menu_list)
         }
     }
 
-    if ( win->content_is_text || how == PICK_NONE )
-        vultures_create_button(win, "Continue", 1);
+
+    if (!win->is_objwin)
+    {
+        if ( win->content_is_text || how == PICK_NONE )
+            vultures_create_button(win, "Continue", V_MENU_ACCEPT);
+        else
+        {
+            vultures_create_button(win, "Accept", V_MENU_ACCEPT);
+            vultures_create_button(win, "Cancel", V_MENU_CANCEL);
+        }
+
+        /* set up an event handler */
+        win->event_handler = vultures_eventh_menu;
+
+        /* assign sizes and positions; create scrollbar if necessary */
+        vultures_layout_menu(win);
+
+        win->visible = 1;
+        win->need_redraw = 1;
+        win->abs_x = win->parent->abs_x + win->x;
+        win->abs_y = win->parent->abs_y + win->y;
+    }
     else
     {
-        vultures_create_button(win, "Accept", 1);
-        vultures_create_button(win, "Cancel", -1);
+        win->visible = 1;
+        win->need_redraw = 1;
+
+        vultures_layout_itemwin(win);
     }
 
-
-    /* set up an event handler */
-    win->event_handler = vultures_eventh_menu;
-
-    /* assign sizes and positions; create scrollbar if necessary */
-    vultures_layout_menu(win);
-
-    win->visible = 1;
-    win->need_redraw = 1;
-    win->abs_x = win->parent->abs_x + win->x;
-    win->abs_y = win->parent->abs_y + win->y;
 
     vultures_event_dispatcher(&response, V_RESPOND_INT, win);
 
@@ -663,8 +672,8 @@ int vultures_select_menu(int winid, int how, menu_item ** menu_list)
      * or re-use it and call start_menu. However we do need to get it off the screen */
     vultures_hide_window(win);
 
-    if (response == -1)
-        /* canceled */
+    /* nothing selected, because the window was canceled or no selection was requested */
+    if (response == V_MENU_CANCEL || how == PICK_NONE)
         return -1;
 
     n_selected = 0;

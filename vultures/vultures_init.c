@@ -454,11 +454,12 @@ static void vultures_init_colors()
     CLR32_GRAY77     = SDL_MapRGBA(vultures_px_format, 0x43, 0x3b, 0x3b, 0xff);
     CLR32_PURPLE44   = SDL_MapRGBA(vultures_px_format, 0x4f, 0x43, 0x6f, 0xff);
     CLR32_LIGHTPINK  = SDL_MapRGBA(vultures_px_format, 0xcf, 0xbb, 0xd3, 0xff);
+    CLR32_LIGHTGREEN = SDL_MapRGBA(vultures_px_format, 0xaa, 0xff, 0xcc, 0xff);
     CLR32_BROWN      = SDL_MapRGBA(vultures_px_format, 0x9b, 0x6f, 0x57, 0xff);
     CLR32_WHITE      = SDL_MapRGBA(vultures_px_format, 0xff, 0xff, 0xff, 0xff);
     CLR32_BLESS_BLUE = SDL_MapRGBA(vultures_px_format, 0x96, 0xdc, 0xfe, 0x60);
     CLR32_CURSE_RED  = SDL_MapRGBA(vultures_px_format, 0x60, 0x00, 0x00, 0x50);
-    CLR32_GOLD_SHADE = SDL_MapRGBA(vultures_px_format, 0xf0, 0xe0, 0x57, 0x50);
+    CLR32_GOLD_SHADE = SDL_MapRGBA(vultures_px_format, 0xf0, 0xe0, 0x57, 0x40);
 
     /* Set warning colors */
     vultures_warn_colors[V_WARN_NONE] = V_COLOR_TEXT;

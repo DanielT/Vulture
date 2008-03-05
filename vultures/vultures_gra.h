@@ -41,6 +41,7 @@ extern Uint32 CLR32_GRAY70;
 extern Uint32 CLR32_GRAY77;
 extern Uint32 CLR32_PURPLE44;
 extern Uint32 CLR32_LIGHTPINK;
+extern Uint32 CLR32_LIGHTGREEN;
 extern Uint32 CLR32_BROWN;
 extern Uint32 CLR32_WHITE;
 extern Uint32 CLR32_BLESS_BLUE;

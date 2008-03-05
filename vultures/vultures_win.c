@@ -193,10 +193,10 @@ void vultures_init_wintype(struct window * win, int wintype)
 
         case V_WINTYPE_OBJITEM:
             win->draw = vultures_draw_objitem;
-//             win->event_handler = vultures_event_objitem;
             win->w = V_LISTITEM_WIDTH;
             win->h = V_LISTITEM_HEIGHT;
             win->scrollable = 0;
+            win->autobg = 1;
             break;
 
         case V_WINTYPE_OBJITEMHEADER:
@@ -1475,42 +1475,92 @@ int vultures_draw_menu(struct window * win)
 
 static int vultures_draw_objitem(struct window * win)
 {
-    char tmpstr[12];
+    char tmpstr[32];
     int text_start_x, text_start_y, txt_height;
     int tile_x, tile_y;
     int x = win->abs_x;
     int y = win->abs_y;
     int w = win->w;
     int h = win->h;
+    int obj_id = 0;
+    int weight = 0;
+    Uint32 textcolor;
+
+    if (win->pd.obj)
+    {
+        obj_id = vultures_obfuscate_object(win->pd.obj->otyp);
+        weight = win->pd.obj->owt;
+    }
 
     vultures_set_draw_region(x, y, x + w - 1, y + h - 1);
 
-    /* draw the outer edge of the frame */
-    vultures_draw_lowered_frame(x, y, x+w-1, y+h-1);
-    /* Inner edge */
-    vultures_draw_raised_frame(x+1, y+1, x+w-2, y+h-2);
+    /* re-set the background to prevent shadings from stacking repatedly until they become solid */
+    if (win->background)
+        vultures_put_img(x, y, win->background);
 
 
-    /* highlight worn objects with "golden" shading */
-    if (win->pd.obj && win->pd.obj->owornmask)
+    /* hovering gives an item a light blue frame */
+    if (win->hover)
+        vultures_rect(x+1, y+1, x+w-2, y+h-2, CLR32_BLESS_BLUE);
+
+    /* otherwise, if it is selected, the item has an orange frame */
+    else if (win->selected)
+        vultures_rect(x+1, y+1, x+w-2, y+h-2, CLR32_ORANGE);
+
+    /* all other items appear etched */
+    else
+    {
+        /* draw the outer edge of the frame */
+        vultures_draw_lowered_frame(x, y, x+w-1, y+h-1);
+        /* Inner edge */
+        vultures_draw_raised_frame(x+1, y+1, x+w-2, y+h-2);
+    }
+
+    /* the item that was toggled last has a white outer frame to indicate it's special status */
+    if (win->last_toggled)
+        vultures_rect(x, y, x+w-1, y+h-1, CLR32_WHITE);
+
+
+    /* selected items also have yellow background shading */
+    if (win->selected)
         vultures_fill_rect(x+h-1, y+2, x+w-3, y+h-3, CLR32_GOLD_SHADE);
+
+
+    /* use a different text color for worn objects */
+    if (win->pd.obj && win->pd.obj->owornmask)
+        textcolor = CLR32_LIGHTGREEN;
+    else
+        textcolor = CLR32_WHITE;
 
 
     /* draw text, leaving a h by h square on the left free for the object tile */
     /* line 1 and if necessary line 2 contain the item description */
     vultures_put_text_multiline(V_FONT_MENU, win->caption, vultures_screen, x + h,
-                                y + 3, CLR32_WHITE, CLR32_BLACK, w - h - 6);
+                                y + 3, textcolor, CLR32_BLACK, w - h - 6);
 
     /* weight is in line 3 */
     txt_height = vultures_text_height(V_FONT_MENU, win->caption);
     text_start_y = y + txt_height*2 + 4;
 
     /* draw the object weight */
-    snprintf(tmpstr, 11, "w: %d", win->pd.obj->owt);
+    tmpstr[0] = '\0';
+    if (weight)
+        snprintf(tmpstr, 32, "w: %d", weight);
     text_start_x = x + (w - vultures_text_length(V_FONT_MENU, tmpstr))/2;
     vultures_put_text_shadow(V_FONT_MENU, tmpstr, vultures_screen, text_start_x,
-                                text_start_y, CLR32_WHITE, CLR32_BLACK);
+                                text_start_y, textcolor, CLR32_BLACK);
 
+    if (win->selected)
+    {
+        tmpstr[0] = '\0';
+        if (win->pd.count <= 0 || (win->pd.obj && win->pd.count > win->pd.obj->quan))
+            snprintf(tmpstr, 32, "selected (all)");
+        else
+            snprintf(tmpstr, 32, "selected (%d)", win->pd.count);
+        text_start_x = x + w - vultures_text_length(V_FONT_MENU, tmpstr) - 6;
+        vultures_put_text_shadow(V_FONT_MENU, tmpstr, vultures_screen, text_start_x,
+                                    text_start_y, textcolor, CLR32_BLACK);
+    }
 
     /* draw the tile itself */
     /* constrain the drawing region to the box for the object tile, so that large
@@ -1532,12 +1582,12 @@ static int vultures_draw_objitem(struct window * win)
         vultures_fill_rect(x + 2, y + 2, x + h - 3, y + h - 3, CLR32_CURSE_RED);
 
     /* draw the object tile */
-    vultures_put_tile(x+2, y+2, OBJICON_TO_VTILE(vultures_obfuscate_object(win->pd.obj->otyp)));
+    vultures_put_tile(x+2, y+2, OBJICON_TO_VTILE(obj_id));
 
     /* draw the item letter on the top left corner of the object tile */
     snprintf(tmpstr, 11, "%c", win->accelerator);
     vultures_put_text_shadow(V_FONT_MENU, tmpstr, vultures_screen, x + 2,
-                                y + 2, CLR32_WHITE, CLR32_BLACK);
+                                y + 2, textcolor, CLR32_BLACK);
 
     /* draw the quantity on the tile */
     if (win->pd.obj && win->pd.obj->quan > 1)
@@ -1563,12 +1613,12 @@ static int vultures_draw_objitemheader(struct window * win)
 {
     int x = win->abs_x;
     int y = win->abs_y;
-    
+
     /* constrain drawing to this window */
     vultures_set_draw_region(x, y, x + win->w - 1, y + win->h - 1);
-    
-    vultures_fill_rect(x, y, x + win->w -1, y + win->h-1, CLR32_BLACK_A50);
-    
+
+    vultures_fill_rect(x+2, y+2, x + win->w - 3, y + win->h - 3, CLR32_BLACK_A50);
+
     /* Outer edge */
     vultures_draw_lowered_frame(x, y, x+win->w-1, y+win->h-1);
     /* Inner edge */
@@ -1579,7 +1629,7 @@ static int vultures_draw_objitemheader(struct window * win)
     int txt_height = vultures_text_height(V_FONT_MENU, win->caption);
     int text_start_x = x + (win->w - txt_width)/2;
     int text_start_y = y + (win->h - txt_height)/2;
-    
+
     vultures_put_text_shadow(V_FONT_MENU, win->caption, vultures_screen, text_start_x,
                             text_start_y, CLR32_WHITE, CLR32_BLACK);
 
@@ -1597,24 +1647,28 @@ static int vultures_draw_objwin(struct window * win)
 {
     char *stored_caption;
     char label[32];
-    int x ,y, w, h, labelwidth;
-    
+    int x ,y, w, h, labelwidth, buttonspace;
+
+    buttonspace = 0;
+    if (win->select_how != PICK_NONE)
+        buttonspace = vultures_get_lineheight(V_FONT_LARGE) + 14;
+
     /* draw the window, but prevent draw_mainwin from drawing the caption */
     stored_caption = win->caption;
     win->caption = NULL;
     vultures_draw_mainwin(win);
     win->caption = stored_caption;
-    
+
     x = win->abs_x + vultures_winelem.border_left->w;
     y = win->abs_y + vultures_winelem.border_top->h;
     w = win->w - vultures_winelem.border_left->w - vultures_winelem.border_right->w;
     h = win->h - vultures_winelem.border_top->h - vultures_winelem.border_bottom->h;
-    
-    int headline_height = vultures_text_height(V_FONT_HEADLINE, win->caption);
+
+    int headline_height = vultures_get_lineheight(V_FONT_HEADLINE);
     int headline_width = vultures_text_length(V_FONT_HEADLINE, win->caption);
 
     vultures_fill_rect(x, y, x + w - 1, y + headline_height*2, CLR32_BLACK_A50);
-        
+
     vultures_line(x, y, x + w - 1, y, CLR32_GRAY20);
     vultures_line(x, y + headline_height*2, x + w - 1, y + headline_height * 2, CLR32_GRAY20);
 
@@ -1622,13 +1676,13 @@ static int vultures_draw_objwin(struct window * win)
                             y+headline_height/2+2, CLR32_WHITE, CLR32_GRAY20);
 
     if (win->pd.ow_ncols > win->pd.ow_vcols) {
-        vultures_line(x, y+h-25, x+w-1, y+h-25, CLR32_GRAY77);
+        vultures_line(x, y+h-buttonspace-25, x+w-1, y+h-buttonspace-25, CLR32_GRAY77);
         
         snprintf(label, 32, "%d - %d / %d", win->pd.ow_firstcol + 1, win->pd.ow_firstcol + win->pd.ow_vcols, win->pd.ow_ncols);
         labelwidth = vultures_text_length(V_FONT_MENU, label);
 
         vultures_put_text_shadow(V_FONT_MENU, label, vultures_screen, x+(w-labelwidth)/2,
-                                y+h-18, CLR32_BLACK, CLR32_GRAY20);
+                                y+h-buttonspace-18, CLR32_BLACK, CLR32_GRAY20);
     }
 
     return 1;
@@ -1643,18 +1697,29 @@ void vultures_layout_itemwin(struct window *win)
     int ncols, nrows;
     char * newcaption;
     int maxitems_per_col, maxitems_per_row;
+    int textheight;
 
     if (!win->caption)
         win->caption = strdup("Inventory");
 
     int leftoffset = vultures_winelem.border_left->w;
     int topoffset = vultures_winelem.border_top->h;
+    int rightoffset = vultures_winelem.border_right->w;
+    int bottomoffset = 60; /* guesstimate for bottom border + page arrows + minimal spacing */
 
-    topoffset += vultures_text_height(V_FONT_HEADLINE, win->caption)*2 + 2;
+    textheight = vultures_get_lineheight(V_FONT_LARGE);
+    topoffset += textheight*2 + 2;
+
+    if (win->select_how != PICK_NONE)
+        bottomoffset += (textheight + 14);
 
     win->v_type = V_WINTYPE_OBJWIN;
     win->draw = vultures_draw_objwin;
-    win->event_handler = vultures_eventh_inventory;
+
+    if (win->select_how == PICK_NONE)
+        win->event_handler = vultures_eventh_inventory;
+    else
+        win->event_handler = vultures_eventh_objwin;
 
 
     winelem = win->first_child;
@@ -1664,6 +1729,8 @@ void vultures_layout_itemwin(struct window *win)
         {
             itemcount++;
             vultures_init_wintype(winelem, V_WINTYPE_OBJITEM);
+            if (win->select_how != PICK_NONE)
+                winelem->event_handler = vultures_eventh_objitem;
         }
         else if (winelem->v_type == V_WINTYPE_TEXT)
         {
@@ -1672,7 +1739,7 @@ void vultures_layout_itemwin(struct window *win)
         }
         else if (winelem->v_type == V_WINTYPE_OBJITEM || winelem->v_type == V_WINTYPE_OBJITEMHEADER)
             itemcount++;
-        else if (winelem->v_type == V_WINTYPE_BUTTON && winelem->caption == NULL)
+        else if (winelem->v_type == V_WINTYPE_BUTTON)
         {
             tmpwin = winelem;
             winelem = winelem->sib_next;
@@ -1684,7 +1751,7 @@ void vultures_layout_itemwin(struct window *win)
     }
 
     /* how many items will fit on the screen vertically */
-    maxitems_per_col = (win->parent->h - topoffset - 60) / V_LISTITEM_HEIGHT;
+    maxitems_per_col = (win->parent->h - topoffset - bottomoffset) / V_LISTITEM_HEIGHT;
 
     maxitems_per_row = (win->parent->w - 2*leftoffset - 10) / (V_LISTITEM_WIDTH + 4);
 
@@ -1715,13 +1782,22 @@ void vultures_layout_itemwin(struct window *win)
             winelem->y = (itemcount % win->pd.ow_vrows) * V_LISTITEM_HEIGHT + topoffset;
             winelem->visible = ((itemcount / win->pd.ow_vrows) < win->pd.ow_vcols);
 
+
             /* find the objects associated with the items */
             if (winelem->v_type == V_WINTYPE_OBJITEM)
             {
-                invitem = invent;
-                while (invitem && invitem->invlet != winelem->accelerator)
-                    invitem = invitem->nobj;
-                winelem->pd.obj = invitem;
+                /* nethack may have been nice and passed an object pointer in menu_id_v
+                 * Unforunately, we need this ugly hack to try to discern between
+                 * chars, small ints and pointers */
+                if (winelem->menu_id_v > (void*)0x10000)
+                    winelem->pd.obj = (struct obj *)winelem->menu_id_v; 
+                else if (win->id == WIN_INVEN)
+                {
+                    invitem = invent;
+                    while (invitem && invitem->invlet != winelem->accelerator)
+                        invitem = invitem->nobj;
+                    winelem->pd.obj = invitem;
+                }
 
                 if (winelem->caption[0] == '[')
                 {
@@ -1736,24 +1812,14 @@ void vultures_layout_itemwin(struct window *win)
         winelem = winelem->sib_next;
     }
 
-    win->w = win->pd.ow_vcols * (V_LISTITEM_WIDTH + 4) - 4 + leftoffset + vultures_winelem.border_right->w;
+    win->w = win->pd.ow_vcols * (V_LISTITEM_WIDTH + 4) - 4 + leftoffset + rightoffset;
     win->h = win->pd.ow_vrows * V_LISTITEM_HEIGHT + topoffset + vultures_winelem.border_bottom->h;
-
-    winelem = vultures_create_button(win, NULL, 3);
-    winelem->visible = 1;
-    winelem->x = win->w - vultures_winelem.border_right->w - 30;
-    winelem->y = vultures_winelem.border_top->h + 5;
-    winelem->w = 26;
-    winelem->h = 26;
-    winelem->image = vultures_get_img_src(0, 0, vultures_winelem.closebutton->w,
-                            vultures_winelem.closebutton->h, vultures_winelem.closebutton);
-
 
     if (ncols > win->pd.ow_vcols)
     {
         win->h += 25;
 
-        winelem = vultures_create_button(win, NULL, 1);
+        winelem = vultures_create_button(win, NULL, V_INV_PREVPAGE);
         winelem->x = leftoffset;
         winelem->y = win->h - vultures_winelem.border_bottom->h - 23;
         winelem->w = 100;
@@ -1762,14 +1828,47 @@ void vultures_layout_itemwin(struct window *win)
                                 vultures_winelem.invarrow_left->h, vultures_winelem.invarrow_left);
         winelem->visible = 0;
 
-        winelem = vultures_create_button(win, NULL, 2);
-        winelem->x = win->w - vultures_winelem.border_right->w - 101;
+        winelem = vultures_create_button(win, NULL, V_INV_NEXTPAGE);
+        winelem->x = win->w - rightoffset - 101;
         winelem->y = win->h - vultures_winelem.border_bottom->h - 23;
         winelem->w = 100;
         winelem->h = 24;
         winelem->image = vultures_get_img_src(0, 0, vultures_winelem.invarrow_right->w,
                                 vultures_winelem.invarrow_right->h, vultures_winelem.invarrow_right);
         winelem->visible = 1;
+    }
+
+    if (win->select_how != PICK_NONE)
+    {
+        int btn1_width = vultures_text_length(V_FONT_MENU, "Accept") + 14;
+        int btn2_width = vultures_text_length(V_FONT_MENU, "Cancel") + 14;
+        int max_width = (btn1_width > btn2_width) ? btn1_width : btn2_width;
+        int total_width = 2 * max_width + 10;
+
+        win->h += textheight + 14;
+
+        winelem = vultures_create_button(win, "Accept", V_MENU_ACCEPT);
+        winelem->h = textheight + 10;
+        winelem->y = win->h - vultures_winelem.border_bottom->h - (textheight + 12);
+        winelem->w = max_width;
+        winelem->x = (win->w - rightoffset - leftoffset - total_width) / 2 + leftoffset;
+
+        winelem = vultures_create_button(win, "Cancel", V_MENU_CANCEL);
+        winelem->h = textheight + 10;
+        winelem->y = win->h - vultures_winelem.border_bottom->h - (textheight + 12);
+        winelem->w = max_width;
+        winelem->x = (win->w - rightoffset - leftoffset - total_width) / 2 + leftoffset + max_width + 10;
+    }
+    else
+    {
+        winelem = vultures_create_button(win, NULL, V_INV_CLOSE);
+        winelem->visible = 1;
+        winelem->x = win->w - vultures_winelem.border_right->w - 28;
+        winelem->y = vultures_winelem.border_top->h + 2;
+        winelem->w = 26;
+        winelem->h = 26;
+        winelem->image = vultures_get_img_src(0, 0, vultures_winelem.closebutton->w,
+                                vultures_winelem.closebutton->h, vultures_winelem.closebutton);
     }
 
     win->x = (win->parent->w - win->w) / 2;

@@ -33,7 +33,14 @@ enum hotspots {
     V_HOTSPOT_BUTTON_MESSAGES,
     V_HOTSPOT_BUTTON_OPTIONS,
     V_HOTSPOT_BUTTON_IFOPTIONS,
-    V_HOTSPOT_BUTTON_HELP
+    V_HOTSPOT_BUTTON_HELP,
+
+    V_MENU_ACCEPT,
+    V_MENU_CANCEL = -1,
+
+    V_INV_NEXTPAGE,
+    V_INV_PREVPAGE,
+    V_INV_CLOSE
 };
 
 
@@ -82,6 +89,10 @@ extern int vultures_eventh_button(struct window* handler, struct window* target,
                                   void* result, SDL_Event* event);
 
 extern int vultures_eventh_inventory(struct window* handler, struct window* target,
+                                     void* result, SDL_Event* event);
+extern int vultures_eventh_objwin(struct window* handler, struct window* target,
+                                     void* result, SDL_Event* event);
+extern int vultures_eventh_objitem(struct window* handler, struct window* target,
                                      void* result, SDL_Event* event);
 
 #endif
