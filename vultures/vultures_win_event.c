@@ -1906,7 +1906,8 @@ int vultures_eventh_objwin(struct window* handler, struct window* target,
                         if (handler->pd.ow_lasttoggled)
                             handler->pd.ow_lasttoggled->last_toggled = 0;
                         handler->pd.ow_lasttoggled = winelem;
-                        winelem->last_toggled = 1;
+                        if (winelem)
+                            winelem->last_toggled = 1;
                     }
                     free(str_to_find);
                     return V_EVENT_HANDLED_REDRAW;
