@@ -689,6 +689,7 @@ void vultures_event_dispatcher(void * result, int resulttype, struct window * to
     vultures_mouse_invalidate_tooltip(1);
 
     /* fake a mousemotion event, to make the window set its preferred cursor before we draw */
+    memset(&event, 0, sizeof(event));
     event.type = SDL_MOUSEMOTION;
     mouse = vultures_get_mouse_pos();
     win = vultures_get_window_from_point(topwin, mouse);
