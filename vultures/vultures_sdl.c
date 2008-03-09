@@ -478,7 +478,7 @@ void vultures_enter_graphics_mode()
     /* no screen: maybe the configured video mode didn't work */
     if (!vultures_screen) {
         vultures_sdl_error(__FILE__, __LINE__, "Failed to set configured video mode, trying to fall back to 800x600 windowed");
-        vultures_screen = SDL_SetVideoMode(800, 600, 32, SDL_SWSURFACE | SDL_ASYNCBLIT);
+        vultures_screen = SDL_SetVideoMode(800, 600, 32, SDL_SWSURFACE | SDL_RESIZABLE | SDL_ASYNCBLIT);
         vultures_opts.fullscreen = 0;
     }
 
