@@ -38,14 +38,13 @@ static SDL_Surface * vultures_ftshade2;
 
 static vultures_tile *vultures_make_alpha_player_tile(int monnum, double op_scale);
 static vultures_tile * vultures_load_tile(int tile_id);
-static inline vultures_tile * vultures_shade_tile(int tile_id);
+static inline vultures_tile * vultures_shade_tile(int tile_id, int shadelevel);
 static inline vultures_tile *vultures_set_tile_alpha(vultures_tile *tile, double opacity);
 
 
 void vultures_put_tile_shaded(int x, int y, int tile_id, int shadelevel)
 {
     vultures_tile * tile = NULL;
-    shadelevel = 0;
 
     if (tile_id < 0)
         return;
@@ -60,28 +59,23 @@ void vultures_put_tile_shaded(int x, int y, int tile_id, int shadelevel)
 /* vultures_get_tile is responsible for tile "administration"
  * if the tile is already loaded it will return a pointer to it
  * otherwise it loads the tile, stores the pointer and returns it */
-vultures_tile * vultures_get_tile_shaded(int real_id, int shadelevel)
+vultures_tile * vultures_get_tile_shaded(int tile_id, int shadelevel)
 {
-    int tile_id;
-    shadelevel = 0;
-
-    if (real_id < 0)
+    if (tile_id < 0)
         return NULL;
 
 #ifndef EXPORT_TILES
     /* modifiying the tile_id: must come first */
     /* if we have an object, we manipulate the tile id to give shuffled objects */
-    if (TILE_IS_OBJECT(real_id))
-        real_id = objects[real_id].oc_descr_idx;
-    else if (TILE_IS_OBJICON(real_id))
-        real_id = objects[real_id - ICOTILEOFFSET].oc_descr_idx + ICOTILEOFFSET;
+    if (TILE_IS_OBJECT(tile_id))
+        tile_id = objects[tile_id].oc_descr_idx;
+    else if (TILE_IS_OBJICON(tile_id))
+        tile_id = objects[tile_id - ICOTILEOFFSET].oc_descr_idx + ICOTILEOFFSET;
 #endif
 
     /* if the tile is merely a pointer to another tile we modify the tile_id */
-    if (vultures_gametiles[real_id].ptr != -1)
-        real_id = vultures_gametiles[real_id].ptr;
-
-    tile_id = real_id + shadelevel * GAMETILECOUNT;
+    if (vultures_gametiles[tile_id].ptr != -1)
+        tile_id = vultures_gametiles[tile_id].ptr;
 
 
     /* specialized load functions: second */
@@ -90,8 +84,8 @@ vultures_tile * vultures_get_tile_shaded(int real_id, int shadelevel)
         vultures_tiles_cur[tile_id] = vultures_make_alpha_player_tile(u.umonnum, canseeself() ? 0.6 : 0.35);
 
     /* a shaded tile */
-    else if (tile_id >= GAMETILECOUNT)
-        return vultures_shade_tile(tile_id);
+    else if (shadelevel > 0)
+        return vultures_shade_tile(tile_id, shadelevel);
 
     /* check whether the tile was loaded last turn */
     if (!vultures_tiles_cur[tile_id] && vultures_tiles_prev[tile_id])
@@ -107,7 +101,6 @@ vultures_tile * vultures_get_tile_shaded(int real_id, int shadelevel)
  * it returns a pointer to the tile; the caller is expected to free it */
 static vultures_tile * vultures_load_tile(int tile_id)
 {
-    int real_id = tile_id % GAMETILECOUNT;
     vultures_tile * newtile;
     char * data;
     FILE *fp;
@@ -129,7 +122,7 @@ static vultures_tile * vultures_load_tile(int tile_id)
     if (!newtile)
         return NULL;
 
-    fp = fopen(vultures_gametiles[real_id].filename, "rb");
+    fp = fopen(vultures_gametiles[tile_id].filename, "rb");
 
         /* obtain file size. */
     fseek(fp, 0, SEEK_END);
@@ -139,27 +132,28 @@ static vultures_tile * vultures_load_tile(int tile_id)
     data = malloc(fsize);
     fread(data, fsize, 1, fp);
     newtile->graphic = vultures_load_surface(data, fsize);
-    newtile->xmod = vultures_gametiles[real_id].hs_x;
-    newtile->ymod = vultures_gametiles[real_id].hs_y;
+    newtile->xmod = vultures_gametiles[tile_id].hs_x;
+    newtile->ymod = vultures_gametiles[tile_id].hs_y;
 
     free(data);
     fclose(fp);
 
-//     if (TILE_IS_WALL(real_id))
-//         vultures_set_tile_alpha(newtile, vultures_opts.wall_opacity);
+    if (TILE_IS_WALL(tile_id))
+        vultures_set_tile_alpha(newtile, vultures_opts.wall_opacity);
 
     return newtile;
 }
 
 
 /* darken a tile; the amount of darkening is determined by the tile_id */
-static inline vultures_tile * vultures_shade_tile(int tile_id)
+static inline vultures_tile * vultures_shade_tile(int real_id, int shadelevel)
 {
     vultures_tile *tile, *orig;
-    int real_id = tile_id % GAMETILECOUNT;
-    SDL_Surface * blend = (tile_id/GAMETILECOUNT == 1) ? vultures_ftshade1 : vultures_ftshade2;
+    int tile_id = real_id + shadelevel * GAMETILECOUNT;
+    SDL_Surface * blend = (shadelevel == 1) ? vultures_ftshade1 : vultures_ftshade2;
 
-    if (vultures_gametiles[real_id].ptr == -1)
+    /* the base tile should not be a pointer to another tile */
+    if (vultures_gametiles[real_id].ptr != -1)
         return NULL;
 
     /* the tile was used last turn, no need to load & darken it */

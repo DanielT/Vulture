@@ -340,7 +340,7 @@ int vultures_draw_level(struct window * win)
     int i, j, dir_idx;
     vultures_tile * cur_tile;
     int x, y;
-    int tile_id;
+    int tile_id, shadelevel;
     int map_tr_x, map_tr_y, __i, __j, diff, sum;
     int map_centre_x = win->w / 2;
     int map_centre_y = win->h / 2;
@@ -480,17 +480,18 @@ int vultures_draw_level(struct window * win)
 
             /* 2. Floor */
             tile_id = vultures_map_back[i][j];
+            shadelevel = 0;
 
             if ((tile_id >= V_TILE_FLOOR_COBBLESTONE) &&
                 (tile_id <= V_TILE_FLOOR_DARK))
             {
                 tile_id = vultures_get_floor_tile(tile_id, i, j);
-                vultures_put_tile_shaded(x, y, tile_id, vultures_map_tile_is_dark[i][j]);
+                shadelevel = vultures_map_tile_is_dark[i][j];
             }
             else if(tile_id == V_TILE_NONE || tile_id == V_TILE_WALL_GENERIC)
                 tile_id = V_MISC_UNMAPPED_AREA;
 
-            vultures_put_tile(x, y, tile_id);
+            vultures_put_tile_shaded(x, y, tile_id, shadelevel);
 
             /* shortcut for unmapped case */
             if (tile_id == V_MISC_UNMAPPED_AREA)
