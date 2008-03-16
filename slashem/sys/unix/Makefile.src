@@ -637,7 +637,7 @@ objects.o:
 ../include/filename.h: $(MAKEDEFS)
 	../util/makedefs -f
 	
-../win/vultures/build_s/vultures.o: objects.o monst.o ../include/date.h ../win/vultures/* ../win/vultures/util/*
+../win/vultures/build_s/vultures.o: objects.o monst.o ../include/date.h ../win/vultures/*
 	@$(MAKE) -C ../win/vultures/ BUILD=slashem BASECFLAGS="$(VULTURESCFLAGS)"
 
 # Qt windowport meta-object-compiler output

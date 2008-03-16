@@ -479,7 +479,7 @@ objects.o:
 	$(CC) $(CFLAGS) -c objects.c
 	@rm -f $(MAKEDEFS)
 	
-../win/vultures/build_n/vultures.o: objects.o monst.o ../include/date.h ../win/vultures/* ../win/vultures/util/*
+../win/vultures/build_n/vultures.o: objects.o monst.o ../include/date.h ../win/vultures/*
 	@$(MAKE) -C ../win/vultures/ BUILD=nethack BASECFLAGS="$(VULTURESCFLAGS)"
 
 # Qt windowport meta-object-compiler output
