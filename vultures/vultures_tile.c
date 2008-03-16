@@ -2,6 +2,8 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
 #include <stdlib.h>
+#include <string.h>
+#include <errno.h>
 
 #include "hack.h"
 
@@ -16,12 +18,10 @@
 #include "vultures_map.h"
 #include "vultures_gen.h"
 #include "vultures_opt.h"
+#include "vultures_tileconfig.h"
 
 
 #define TILEARRAYLEN (GAMETILECOUNT*3)
-
-#define V_IS_FLOOR(x) (((x) >= FLOTILEOFFSET) &&((x) < (FLOTILEOFFSET + FLOTILECOUNT)))
-#define V_IS_WALL(x)  (((x) >= WALTILEOFFSET) &&((x) < (WALTILEOFFSET + WALTILECOUNT)))
 
 
 /* main tile arrays */
@@ -42,15 +42,15 @@ static inline vultures_tile * vultures_shade_tile(int tile_id);
 static inline vultures_tile *vultures_set_tile_alpha(vultures_tile *tile, double opacity);
 
 
-
-void vultures_put_tile(int x, int y, int tile_id)
+void vultures_put_tile_shaded(int x, int y, int tile_id, int shadelevel)
 {
     vultures_tile * tile = NULL;
+    shadelevel = 0;
 
-    if (tile_id == V_TILE_NONE)
+    if (tile_id < 0)
         return;
 
-    tile = vultures_get_tile(tile_id);
+    tile = vultures_get_tile_shaded(tile_id, shadelevel);
 
     if (tile != NULL)
         vultures_put_img(x + tile->xmod, y + tile->ymod, tile->graphic);
@@ -60,37 +60,33 @@ void vultures_put_tile(int x, int y, int tile_id)
 /* vultures_get_tile is responsible for tile "administration"
  * if the tile is already loaded it will return a pointer to it
  * otherwise it loads the tile, stores the pointer and returns it */
-vultures_tile * vultures_get_tile(int tile_id)
+vultures_tile * vultures_get_tile_shaded(int real_id, int shadelevel)
 {
-    int real_id = tile_id % GAMETILECOUNT;
-    int shadelevel = tile_id - real_id; /* shadelevel is an even multiple of GAMETILECOUNT */
+    int tile_id;
+    shadelevel = 0;
+
+    if (real_id < 0)
+        return NULL;
 
 #ifndef EXPORT_TILES
     /* modifiying the tile_id: must come first */
     /* if we have an object, we manipulate the tile id to give shuffled objects */
-    if (real_id < NUM_OBJECTS)
-    {
+    if (TILE_IS_OBJECT(real_id))
         real_id = objects[real_id].oc_descr_idx;
-        tile_id = real_id + shadelevel;
-    } else if (real_id >= ICOTILEOFFSET && real_id < ICOTILEOFFSET + ICOTILECOUNT)
-    {
+    else if (TILE_IS_OBJICON(real_id))
         real_id = objects[real_id - ICOTILEOFFSET].oc_descr_idx + ICOTILEOFFSET;
-        tile_id = real_id + shadelevel;
-    }
 #endif
 
     /* if the tile is merely a pointer to another tile we modify the tile_id */
-    if (!vultures_gametiles[real_id].data_len &&
-        vultures_gametiles[real_id].ptr != -1)
-    {
+    if (vultures_gametiles[real_id].ptr != -1)
         real_id = vultures_gametiles[real_id].ptr;
-        tile_id = real_id + shadelevel;
-    }
+
+    tile_id = real_id + shadelevel * GAMETILECOUNT;
 
 
     /* specialized load functions: second */
     /* if you are invisible you have the V_TILE_PLAYER_INVIS. here we give that tile a meaning */
-    if (tile_id == V_TILE_PLAYER_INVIS)
+    if (tile_id == V_MISC_PLAYER_INVIS)
         vultures_tiles_cur[tile_id] = vultures_make_alpha_player_tile(u.umonnum, canseeself() ? 0.6 : 0.35);
 
     /* a shaded tile */
@@ -114,6 +110,8 @@ static vultures_tile * vultures_load_tile(int tile_id)
     int real_id = tile_id % GAMETILECOUNT;
     vultures_tile * newtile;
     char * data;
+    FILE *fp;
+    int fsize;
 
     /* check whether the tile was loaded last turn */
     if (vultures_tiles_prev[tile_id])
@@ -124,20 +122,31 @@ static vultures_tile * vultures_load_tile(int tile_id)
         return vultures_tiles_cur[tile_id];
 
     /* if data_len is 0 the tile doesn't have a graphic */
-    if (!vultures_gametiles[tile_id].data_len)
+    if (!vultures_gametiles[tile_id].filename)
         return NULL;
 
     newtile = malloc(sizeof(vultures_tile));
     if (!newtile)
         return NULL;
 
-    data = (char *)&vultures_srcfile[vultures_gametiles[real_id].file_offset];
-    newtile->graphic = vultures_load_surface(data, vultures_gametiles[real_id].data_len);
+    fp = fopen(vultures_gametiles[real_id].filename, "rb");
+
+        /* obtain file size. */
+    fseek(fp, 0, SEEK_END);
+    fsize = ftell(fp);
+    rewind(fp);
+
+    data = malloc(fsize);
+    fread(data, fsize, 1, fp);
+    newtile->graphic = vultures_load_surface(data, fsize);
     newtile->xmod = vultures_gametiles[real_id].hs_x;
     newtile->ymod = vultures_gametiles[real_id].hs_y;
 
-    if (V_IS_WALL(real_id))
-        vultures_set_tile_alpha(newtile, vultures_opts.wall_opacity);
+    free(data);
+    fclose(fp);
+
+//     if (TILE_IS_WALL(real_id))
+//         vultures_set_tile_alpha(newtile, vultures_opts.wall_opacity);
 
     return newtile;
 }
@@ -200,39 +209,21 @@ void vultures_flip_tile_arrays(void)
 
 int vultures_load_gametiles(void)
 {
-    int fsize;
     char * filename;
     FILE * fp;
 
     /* load gametiles.bin */
-    filename = vultures_make_filename(V_GRAPHICS_DIRECTORY, NULL, "gametiles.bin");
+    filename = vultures_make_filename(V_CONFIG_DIRECTORY, NULL, "vultures_tiles.conf");
     fp = fopen(filename, "rb");
     free(filename);
-
     if (!fp)
-        panic("FATAL: cannot open gametiles.bin\n");
+    {
+        printf("FATAL: Could not read tile configuration (vultures_tiles.conf) file: %s", strerror(errno));
+        exit(1);
+    }
 
-    /* obtain file size. */
-    fseek(fp , 0 , SEEK_END);
-    fsize = ftell(fp);
-    rewind(fp);
-    
-    if (fsize != V_BINFILESIZE)
-        panic("FATAL: Actual size of gametiles.bin does not match the expected size!\nAre you sure you are using the gametiles.bin that was built together with this executable?\n");
+    vultures_parse_tileconf(fp);
 
-
-#if !defined WIN32
-    vultures_srcfile = mmap(0, fsize, PROT_READ, MAP_SHARED, fileno(fp), 0);
-    if (!vultures_srcfile)
-        return 0;
-
-#else
-    vultures_srcfile = malloc(fsize);
-    if (!vultures_srcfile)
-        return 0;
-
-    fread(vultures_srcfile, fsize, 1, fp);
-#endif
     fclose(fp);
 
     /* initialize the two tile arrays */
@@ -291,10 +282,10 @@ static vultures_tile *vultures_make_alpha_player_tile(int monnum, double op_scal
     vultures_tile *tile = NULL;
     int x, y;
 
-    if (vultures_tiles_cur[V_TILE_PLAYER_INVIS])
-        tile = vultures_tiles_cur[V_TILE_PLAYER_INVIS];
-    else if (vultures_tiles_prev[V_TILE_PLAYER_INVIS])
-        tile = vultures_tiles_prev[V_TILE_PLAYER_INVIS];
+    if (vultures_tiles_cur[V_MISC_PLAYER_INVIS])
+        tile = vultures_tiles_cur[V_MISC_PLAYER_INVIS];
+    else if (vultures_tiles_prev[V_MISC_PLAYER_INVIS])
+        tile = vultures_tiles_prev[V_MISC_PLAYER_INVIS];
 
     /*
      * monnum may change if player polymorphs...
@@ -303,11 +294,11 @@ static vultures_tile *vultures_make_alpha_player_tile(int monnum, double op_scal
     {
         lastscale = op_scale;
 
-        if (vultures_tiles_cur[V_TILE_PLAYER_INVIS] != NULL)
+        if (vultures_tiles_cur[V_MISC_PLAYER_INVIS] != NULL)
         {
-            SDL_FreeSurface(vultures_tiles_cur[V_TILE_PLAYER_INVIS]->graphic);
-            free(vultures_tiles_cur[V_TILE_PLAYER_INVIS]);
-            vultures_tiles_cur[V_TILE_PLAYER_INVIS] = NULL;
+            SDL_FreeSurface(vultures_tiles_cur[V_MISC_PLAYER_INVIS]->graphic);
+            free(vultures_tiles_cur[V_MISC_PLAYER_INVIS]);
+            vultures_tiles_cur[V_MISC_PLAYER_INVIS] = NULL;
         }
 
         montile = vultures_get_tile(MONSTER_TO_VTILE(monnum));

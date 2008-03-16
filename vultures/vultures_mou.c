@@ -13,7 +13,6 @@
 #include "vultures_sdl.h"
 #include "vultures_txt.h"
 #include "vultures_tile.h"
-#include "vultures_gametiles.h"
 
 
 static struct {

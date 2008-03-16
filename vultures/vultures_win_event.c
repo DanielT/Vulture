@@ -15,6 +15,7 @@
 #include "vultures_gfl.h"
 #include "vultures_opt.h"
 #include "vultures_gen.h"
+#include "vultures_tile.h"
 
 
 #define META(c) (0x80 | (c))

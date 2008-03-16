@@ -7,7 +7,6 @@
 
 #include "vultures_win.h"
 #include "vultures_map.h"
-#include "vultures_gametiles.h"
 #include "vultures_gra.h"
 #include "vultures_gen.h"
 #include "vultures_sdl.h"

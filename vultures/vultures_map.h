@@ -7,7 +7,6 @@
 
 #include <SDL.h>
 #include "hack.h"
-#include "vultures_gametiles.h"
 #include "vultures_win.h"
 
 /* Map dimensions in glyphs */
