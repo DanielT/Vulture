@@ -274,7 +274,7 @@ typedef xchar	boolean;		/* 0 or 1 */
 #  define PORT_ID	"ST"
 # endif
 # ifdef VULTURES_GRAPHICS
-#  include "vulturev.h"
+#  include "vultures_version.h"
 # endif
 # ifdef UNIX
 #  define PORT_ID	"Unix"

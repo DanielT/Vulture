@@ -463,7 +463,7 @@ CONFIG_H = $(INCL)/config.h $(INCL)/config1.h $(INCL)/tradstdc.h \
 	       $(INCL)/system.h $(INCL)/unixconf.h $(INCL)/os2conf.h \
 	       $(INCL)/micro.h $(INCL)/pcconf.h $(INCL)/tosconf.h \
 	       $(INCL)/amiconf.h $(INCL)/macconf.h $(INCL)/beconf.h \
-	       $(INCL)/ntconf.h $(INCL)/nhlan.h ../win/vultures/vulturev.h
+	       $(INCL)/ntconf.h $(INCL)/nhlan.h ../win/vultures/vultures_version.h
 
 HACK_H = $(INCL)/hack.h $(CONFIG_H) $(INCL)/align.h \
 	       $(INCL)/dungeon.h $(INCL)/monsym.h $(INCL)/mkroom.h \

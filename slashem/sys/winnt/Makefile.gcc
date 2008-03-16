@@ -587,7 +587,7 @@ CONFIG_H   = $(GLOBAL_H)	$(INCL)\tradstdc.h  $(INCL)\config1.h \
 DECL_H	   = $(YOU_H)		$(INCL)\spell.h	    $(INCL)\color.h   \
 	     $(INCL)\obj.h	$(INCL)\onames.h    $(INCL)\pm.h      \
 	     $(INCL)\decl.h
-GLOBAL_H   = $(NTCONF_H)	$(INCL)\coord.h	    $(INCL)\global.h ..\win\vultures\vulturev.h
+GLOBAL_H   = $(NTCONF_H)	$(INCL)\coord.h	    $(INCL)\global.h ..\win\vultures\vultures_version.h
 HACK_H	   = $(CONFIG_H)	$(DUNGEON_H)	    $(DECL_H)	      \
 	     $(DISPLAY_H)	$(INCL)\monsym.h    $(INCL)\mkroom.h  \
 	     $(INCL)\objclass.h $(INCL)\trap.h	    $(INCL)\flag.h    \

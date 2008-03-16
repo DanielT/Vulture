@@ -7,5 +7,5 @@
 #  define VULTURES_PORT_ID_NAME "Marula"
 # endif
 #endif
-#include "vulturesversion.h"
+#define VULTURES_PORT_VERSION "UNSTABLE repo build"
 #define VULTURES_SUB_ID "[Vultures " VULTURES_PORT_ID_NAME " - " VULTURES_PORT_VERSION "]"
