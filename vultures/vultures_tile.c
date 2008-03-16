@@ -64,14 +64,12 @@ vultures_tile * vultures_get_tile_shaded(int tile_id, int shadelevel)
     if (tile_id < 0)
         return NULL;
 
-#ifndef EXPORT_TILES
     /* modifiying the tile_id: must come first */
     /* if we have an object, we manipulate the tile id to give shuffled objects */
     if (TILE_IS_OBJECT(tile_id))
         tile_id = objects[tile_id].oc_descr_idx;
     else if (TILE_IS_OBJICON(tile_id))
         tile_id = objects[tile_id - ICOTILEOFFSET].oc_descr_idx + ICOTILEOFFSET;
-#endif
 
     /* if the tile is merely a pointer to another tile we modify the tile_id */
     if (vultures_gametiles[tile_id].ptr != -1)
