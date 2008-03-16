@@ -1,4 +1,4 @@
-/* Copyright (c) Daniel Thaler, 2006                              */
+/* Copyright (c) Daniel Thaler, 2006, 2008                        */
 /* NetHack may be freely redistributed.  See license for details. */
 
 #ifndef _vultures_tile_h_
@@ -13,6 +13,7 @@ extern int vultures_load_gametiles(void);
 extern void vultures_unload_gametiles(void);
 extern vultures_tile * vultures_get_tile_shaded(int tile_id, int shadelevel);
 extern void vultures_flip_tile_arrays(void);
+extern int glassgems[CLR_MAX];
 
 #define vultures_put_tile(x, y, tile_id) vultures_put_tile_shaded(x, y, tile_id, 0)
 #define vultures_get_tile(tile_id) vultures_get_tile_shaded(tile_id, 0)
@@ -314,16 +315,6 @@ extern struct fedges flooredges[];
 extern struct fstyles floorstyles[];
 extern struct gametiles *vultures_gametiles;
 
-/* define glass gem names */
-#define GEM_WHITE_GLASS 413
-#define GEM_BLUE_GLASS 414
-#define GEM_RED_GLASS 415
-#define GEM_BROWN_GLASS 416
-#define GEM_ORANGE_GLASS 417
-#define GEM_YELLOW_GLASS 418
-#define GEM_BLACK_GLASS 419
-#define GEM_GREEN_GLASS 420
-#define GEM_VIOLET_GLASS 421
 
 /* The maximum distance to the left/bottom from the hotspot in any tile */
 #define V_MAX_TILE_XOFFS 146

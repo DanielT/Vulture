@@ -1,3 +1,6 @@
+/* Copyright (c) Daniel Thaler, 2008                              */
+/* NetHack may be freely redistributed.  See license for details. */
+
 #include "hack.h"
 
 #include "vultures_types.h"
@@ -12,22 +15,23 @@ typedef struct {
 } tmp_tile;
 
 
-
-int vultures_typecount[NUM_TILETYPES];
 char ** tilenames[NUM_TILETYPES];
-
 int tmp_wallstyles[V_WALL_STYLE_MAX][8];
 int tmp_flooredges[V_FLOOR_EDGE_MAX][12];
 tmp_tile * tmp_gametiles[NUM_TILETYPES];
 tmp_tile deftiles[NUM_TILETYPES];
 
+/* things that get used by vultures later */
 struct walls walls_full[V_WALL_STYLE_MAX];
 struct walls walls_half[V_WALL_STYLE_MAX];
 struct gametiles *vultures_gametiles;
 struct fedges flooredges[V_FLOOR_EDGE_MAX];
 struct fstyles floorstyles[V_FLOOR_STYLE_MAX];
+int vultures_typecount[NUM_TILETYPES];
+int glassgems[CLR_MAX];
 
-const char *typenames[NUM_TILETYPES] = {
+/* names for the various tiletypes */
+static const char *typenames[NUM_TILETYPES] = {
     [TT_OBJECT] = "object",
     [TT_OBJICON] = "objicon",
     [TT_MONSTER] = "monster",
@@ -41,7 +45,9 @@ const char *typenames[NUM_TILETYPES] = {
     [TT_CURSOR] = "cursor"
 };
 
-const char * floorstylenames[V_FLOOR_STYLE_MAX] = {
+/* names for various types of tiles need to be given explicitly */
+
+static const char * floorstylenames[V_FLOOR_STYLE_MAX] = {
     [V_FLOOR_COBBLESTONE] = "COBBLESTONE",
     [V_FLOOR_ROUGH] = "ROUGH",
     [V_FLOOR_CERAMIC] = "CERAMIC",
@@ -58,7 +64,7 @@ const char * floorstylenames[V_FLOOR_STYLE_MAX] = {
     [V_FLOOR_DARK] = "DARK"
 };
 
-const char * wallstylenames[V_WALL_STYLE_MAX] = {
+static const char * wallstylenames[V_WALL_STYLE_MAX] = {
     [V_WALL_BRICK] = "BRICK",
     [V_WALL_BRICK_BANNER] = "BRICK_BANNER",
     [V_WALL_BRICK_PAINTING] = "BRICK_PAINTING",
@@ -72,12 +78,15 @@ const char * wallstylenames[V_WALL_STYLE_MAX] = {
     [V_WALL_LIGHT] = "LIGHT"
 };
 
-const char * edgestylenames[V_FLOOR_EDGE_MAX] = {
+static const char * edgestylenames[V_FLOOR_EDGE_MAX] = {
     [V_FLOOR_EDGE_COBBLESTONE] = "COBBLESTONE"
 };
 
-char *miscnames[MISCTILECOUNT] = {
-    [V_MISC_PLAYER_INVIS - MISCTILEOFFSET] = "",
+/* the enum for the misc tiles starts at MISCTILEOFFSET so that the enumerated
+ * names can be used diretly in the code; here however this means we need to
+ * subtract MISCTILEOFFSET everywhere to get usable array indices */
+static char *miscnames[MISCTILECOUNT] = {
+    [V_MISC_PLAYER_INVIS - MISCTILEOFFSET] = "", /* make it impossible to assign a tile to V_MISC_PLAYER_INVIS */
     [V_MISC_FLOOR_NOT_VISIBLE - MISCTILEOFFSET] = "FLOOR_NOT_VISIBLE",
     [V_MISC_DOOR_WOOD_BROKEN - MISCTILEOFFSET] = "DOOR_WOOD_BROKEN",
     [V_MISC_HDOOR_WOOD_CLOSED - MISCTILEOFFSET] = "HDOOR_WOOD_CLOSED",
@@ -216,19 +225,22 @@ char *cursornames[V_CURSOR_MAX] = {
 
 
 
-void init_objnames();
-void init_monnames();
-void init_explnames();
+static void init_objnames();
+static void init_monnames();
+static void init_explnames();
 
 
+/* parse the configuration file and prepare the data arrays needed by the rest of vultures 
+ * This function is the only one that should be called from outside */
 void vultures_parse_tileconf(FILE *fp)
 {
     int i, j, tilenum;
     int typeoffset[NUM_TILETYPES];
 
-    init_objnames();
-    init_monnames();
-    init_explnames();
+    /* init the names for all types of tiles except walls, floors and edges, where the names are dynamic */
+    init_objnames(); /* init TT_OBJECT and TT_OBJICON */
+    init_monnames(); /* init TT_MONSTER, TT_STATUE and TT_FIGURINE */
+    init_explnames();/* TT_EXPL */
 
     vultures_typecount[TT_MISC] = MISCTILECOUNT;
     tilenames[TT_MISC] = miscnames;
@@ -248,10 +260,12 @@ void vultures_parse_tileconf(FILE *fp)
         memset(tmp_gametiles[i], 0, vultures_typecount[i] * sizeof(tmp_tile));
     }
 
+    /* tell the lexer about the input file and start the parser */
     yyrestart(fp);
     yyparse();
 
-
+    /* the config has now been read and we know how many tiles of each type
+     * there are, so offsets into the final tile array can be computed */
     typeoffset[0] = 0;
     for (i = 1; i < NUM_TILETYPES; i++)
         typeoffset[i] = typeoffset[i-1] + vultures_typecount[i-1];
@@ -260,6 +274,7 @@ void vultures_parse_tileconf(FILE *fp)
     vultures_gametiles = malloc(GAMETILECOUNT * sizeof(struct gametiles));
     memset(vultures_gametiles, 0, GAMETILECOUNT * sizeof(struct gametiles));
 
+    /* build vultures_gametiles from the info in tmp_gametiles */
     for (i = 0; i < NUM_TILETYPES; i++)
     {
         for (j = 0; j < vultures_typecount[i]; j++)
@@ -289,9 +304,6 @@ void vultures_parse_tileconf(FILE *fp)
                 vultures_gametiles[tilenum].hs_x = deftiles[i].hs_x;
                 vultures_gametiles[tilenum].hs_y = deftiles[i].hs_y;
             }
-            /* this shouldn't happen */
-            else
-                printf("WOOT. unanticipated case!! (%d, %d)\n", i, j);
 
             /* free walls etc */
             if (i == TT_WALL || i == TT_FLOOR || i == TT_EDGE)
@@ -304,12 +316,14 @@ void vultures_parse_tileconf(FILE *fp)
     }
 
 
+    /* build wall arrays */
     for (i = 0; i < V_WALL_STYLE_MAX; i++)
     {
         walls_full[i].west = tmp_wallstyles[i][0] + typeoffset[TT_WALL];
         walls_full[i].north = tmp_wallstyles[i][1] + typeoffset[TT_WALL];
         walls_full[i].south = tmp_wallstyles[i][2] + typeoffset[TT_WALL];
         walls_full[i].east = tmp_wallstyles[i][3] + typeoffset[TT_WALL];
+
         walls_half[i].west = tmp_wallstyles[i][4] + typeoffset[TT_WALL];
         walls_half[i].north = tmp_wallstyles[i][5] + typeoffset[TT_WALL];
         walls_half[i].south = tmp_wallstyles[i][6] + typeoffset[TT_WALL];
@@ -327,6 +341,8 @@ void vultures_parse_tileconf(FILE *fp)
             floorstyles[i].array[j] = floorstyles[i].array[j] + typeoffset[TT_FLOOR];
 }
 
+
+/* the following functions are called by the parser */
 
 int vultures_get_tiletype_from_name(char* name)
 {
@@ -429,7 +445,8 @@ void vultures_redirect_tile(int tiletype, char *tilename, int redir_tiletype, ch
     if (dst == -1)
         return;
 
-    if (strcmp("default", tilename) == 0) {
+    if (strcmp("default", tilename) == 0)
+    {
         deftiles[tiletype].filename = NULL;
         deftiles[tiletype].ptr_type = redir_tiletype;
         deftiles[tiletype].ptr_num = dst;
@@ -504,7 +521,7 @@ void vultures_setup_floorstyle(int style_id, int x, int y, int *tilearray)
 }
 
 
-void init_objnames()
+static void init_objnames()
 {
     int i;
     char *c, *nameptr, nonamebuf[16];
@@ -560,6 +577,7 @@ void init_objnames()
                         case CLR_GREEN:  snprintf(tilenames[TT_OBJECT][i], 30, "GEM_GREEN_GLASS"); break;
                         case CLR_MAGENTA:snprintf(tilenames[TT_OBJECT][i], 30, "GEM_VIOLET_GLASS");break;
                     }
+                    glassgems[objects[i].oc_color] = i;
                 }
                 else
                     snprintf(tilenames[TT_OBJECT][i], 30, "%s", nameptr); break;
@@ -576,13 +594,17 @@ void init_objnames()
 
     }
 
+    /* fix up the slime mold as it's name varies and we can't count on it being called "slime mold" */
+    free(tilenames[TT_OBJECT][SLIME_MOLD]);
+    tilenames[TT_OBJECT][SLIME_MOLD] = strdup("SLIME_MOLD");
+
     vultures_typecount[TT_OBJICON] = vultures_typecount[TT_OBJECT];
     tilenames[TT_OBJICON] = tilenames[TT_OBJECT];
 }
 
 
 
-void init_monnames()
+static void init_monnames()
 {
     char * c;
     int i;
@@ -615,7 +637,7 @@ void init_monnames()
 
 
 
-void init_explnames()
+static void init_explnames()
 {
     int i, j;
     const char * explosion_names[] = {"DARK", "NOXIOUS", "MUDDY", "WET", "MAGICAL", "FIERY", "FROSTY"};

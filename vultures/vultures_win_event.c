@@ -1,4 +1,4 @@
-/* Copyright (c) Daniel Thaler, 2006				  */
+/* Copyright (c) Daniel Thaler, 2006, 2008			  */
 /* NetHack may be freely redistributed.  See license for details. */
 
 #include <ctype.h>

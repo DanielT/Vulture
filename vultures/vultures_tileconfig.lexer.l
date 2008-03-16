@@ -1,3 +1,5 @@
+/* Copyright (c) Daniel Thaler, 2008                              */
+/* NetHack may be freely redistributed.  See license for details. */
 %{
 
 #include "vultures_types.h"
@@ -10,18 +12,17 @@ int line_number = 1;
 %}
 
 %%
-
 =>                      { return REFERENCE; }
 WALLSTYLE               { return WALLSTYLE; }
 EDGESTYLE               { return EDGESTYLE; }
 FLOORSTYLE              { return FLOORSTYLE; }
 
-#[^\n]*                 ; /* a comment */
+#[^\n]*                 ; /* a comment (discarded) */
 ([+]|[-])?[0-9]+        { yylval.number = atoi(yytext); return NUMBER; }
 [a-zA-Z][a-zA-Z0-9_]+   { yylval.string = strdup(yytext); return IDENTIFIER; }
 \"[^"\n]*\"             { yylval.string = strdup(yytext+1); yylval.string[yyleng-2] = '\0'; return STRING; }
-[ \t]                   ;
+[ \t]                   ; /* whitespace (discarded) */
 \\\r?\n                 { line_number++; } /* escaped line break */
 \r?\n                   { line_number++; return EOL; }
-.                       { return (int) yytext[0]; }
+.                       { return (int) yytext[0]; } /* everything else is passed to the parser character-by-character */
 %%

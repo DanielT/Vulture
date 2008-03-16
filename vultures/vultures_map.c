@@ -487,11 +487,10 @@ int vultures_draw_level(struct window * win)
                 tile_id = vultures_get_floor_tile(tile_id, i, j);
                 vultures_put_tile_shaded(x, y, tile_id, vultures_map_tile_is_dark[i][j]);
             }
-            else
-            {
+            else if(tile_id == V_TILE_NONE || tile_id == V_TILE_WALL_GENERIC)
                 tile_id = V_MISC_UNMAPPED_AREA;
-                vultures_put_tile(x, y, tile_id);
-            }
+
+            vultures_put_tile(x, y, tile_id);
 
             /* shortcut for unmapped case */
             if (tile_id == V_MISC_UNMAPPED_AREA)
@@ -2080,7 +2079,7 @@ int vultures_object_to_tile(int obj_id, int x, int y)
                 if (objects[obj_id].oc_material == MINERAL)
                     return OBJECT_TO_VTILE(ROCK);
                 else
-                    return OBJECT_TO_VTILE(GEM_BLUE_GLASS);
+                    return OBJECT_TO_VTILE(glassgems[CLR_BLUE]);
         }
     }
 
@@ -2181,16 +2180,16 @@ int vultures_obfuscate_object(int obj_id)
             /* select the glass tile at runtime: gem colors get randomized */
             switch (objects[obj_id].oc_color)
             {
-                case CLR_RED:     return GEM_RED_GLASS; break;
-                case CLR_BLACK:   return GEM_BLACK_GLASS; break;
-                case CLR_GREEN:   return GEM_GREEN_GLASS; break;
-                case CLR_BROWN:   return GEM_BROWN_GLASS; break;
-                case CLR_MAGENTA: return GEM_VIOLET_GLASS; break;
-                case CLR_ORANGE:  return GEM_ORANGE_GLASS; break;
-                case CLR_YELLOW:  return GEM_YELLOW_GLASS; break;
-                case CLR_WHITE:   return GEM_WHITE_GLASS; break;
-                case CLR_BLUE:    return GEM_BLUE_GLASS; break;
-                default:          return GEM_BLACK_GLASS; break;
+                case CLR_RED:     return glassgems[CLR_RED]; break;
+                case CLR_BLACK:   return glassgems[CLR_BLACK]; break;
+                case CLR_GREEN:   return glassgems[CLR_GREEN]; break;
+                case CLR_BROWN:   return glassgems[CLR_BROWN]; break;
+                case CLR_MAGENTA: return glassgems[CLR_MAGENTA]; break;
+                case CLR_ORANGE:  return glassgems[CLR_ORANGE]; break;
+                case CLR_YELLOW:  return glassgems[CLR_YELLOW]; break;
+                case CLR_WHITE:   return glassgems[CLR_WHITE]; break;
+                case CLR_BLUE:    return glassgems[CLR_BLUE]; break;
+                default:          return glassgems[CLR_BLACK]; break;
             }
     }
     /* the vast majority of objects needs no special treatment */

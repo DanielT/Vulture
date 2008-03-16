@@ -1,3 +1,15 @@
+/* Copyright (c) Daniel Thaler, 2008                              */
+/* NetHack may be freely redistributed.  See license for details. */
+
+/*
+ * this is the parser for the tile configuration file; it recognizes the following
+ * constructs and calls an associated function in vultures_tileconfig.c for each
+ *  - tile specification (vultures_add_tile)
+ *  - tile redirection (vultures_redirect_tile)
+ *  - wall style specification (vultures_setup_wallstyle)
+ *  - edge style specification (vultures_setup_wallstyle)
+ *  - floor style specification (vultures_setup_wallstyle)
+ */
 %{
 #include <stdio.h>
 #include "vultures_types.h"
@@ -89,7 +101,7 @@ wallsline       : WALLSTYLE '(' STRING ')' '=' '(' IDENTIFIER IDENTIFIER IDENTIF
 
                 /* edgestyle specification: takes 12 tiles as parameters */
 edgeline        : EDGESTYLE '(' STRING ')' '=' '(' IDENTIFIER IDENTIFIER IDENTIFIER IDENTIFIER IDENTIFIER IDENTIFIER
-                    IDENTIFIER IDENTIFIER IDENTIFIER IDENTIFIER IDENTIFIER IDENTIFIER')' EOL
+                                                   IDENTIFIER IDENTIFIER IDENTIFIER IDENTIFIER IDENTIFIER IDENTIFIER')' EOL
                 {
                     vultures_setup_edgestyle(vultures_get_edgestyle_from_name($3), $7,  $8,  $9,  $10, $11, $12, $13, $14, $15, $16, $17, $18);
                     free($3);
@@ -97,7 +109,8 @@ edgeline        : EDGESTYLE '(' STRING ')' '=' '(' IDENTIFIER IDENTIFIER IDENTIF
                 }
                 ;
 
-floorline       : FLOORSTYLE '(' STRING ')' '=' '(' NUMBER NUMBER floortilearray ')'
+                /* define a floorstyle, ie an X*Y pattern of tiles */
+floorline       : FLOORSTYLE '(' STRING ')' '=' '(' NUMBER NUMBER floortilearray ')' EOL
                 {
                     int i, j, style_id;
 
@@ -123,13 +136,13 @@ floorline       : FLOORSTYLE '(' STRING ')' '=' '(' NUMBER NUMBER floortilearray
                 }
                 ;
 
-floortilearray  : '(' floortilerow ')'
+floortilearray  : '(' floortilerow ')' /* first or only row of a floor array */
                 {
                     $$.rowcount = 1;
                     $$.rows = malloc(sizeof(floortilerow));
                     $$.rows[0] = $2;
                 }
-                | floortilearray '(' floortilerow ')'
+                | floortilearray '(' floortilerow ')' /* following rows */
                 {
                     $$.rows = $1.rows;
                     $$.rowcount = $1.rowcount;
@@ -146,6 +159,8 @@ floortilerow    : IDENTIFIER
                     $$.tiles = malloc(sizeof(int));
                     $$.tiles[0] = vultures_get_tile_index(TT_FLOOR, $1, 0);
                     free($1);
+
+                    /* get tile index returns -1 for unknown identifiers */
                     if ($$.tiles[$$.length - 1] == -1)
                         YYERROR;
                 }
@@ -153,7 +168,7 @@ floortilerow    : IDENTIFIER
                 {
                     $$.length = $1.length;
                     $$.tiles = $1.tiles;
-                    
+
                     $$.length++;
                     $$.tiles = realloc($$.tiles, $$.length * sizeof(int));
                     $$.tiles[$$.length - 1] = vultures_get_tile_index(TT_FLOOR, $2, 0);
@@ -163,6 +178,7 @@ floortilerow    : IDENTIFIER
                 }
                 ;
 
+                /* tiles are referred to in the form foo.bar (object.SPEAR, monster.PM_MASTER_LICH, etc) */
 tile_id         : IDENTIFIER '.' IDENTIFIER
                 {
                     $$.type = vultures_get_tiletype_from_name($1);
