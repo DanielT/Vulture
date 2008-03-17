@@ -16,6 +16,8 @@ Section ""
   File ..\..\nethack\binary\config\*
   SetOutPath $INSTDIR\graphics
   File ..\..\nethack\binary\graphics\*
+  SetOutPath $INSTDIR\tiles
+  File ..\..\nethack\binary\tiles\*
   SetOutPath $INSTDIR\manual
   File ..\..\nethack\binary\manual\*
   SetOutPath $INSTDIR\manual\img
@@ -55,6 +57,7 @@ Section "Uninstall"
   Delete $INSTDIR\graphics\*
   Delete $INSTDIR\manual\img\*
   Delete $INSTDIR\manual\*
+  Delete $INSTDIR\tiles\*
   Delete $INSTDIR\sound\*
   Delete $INSTDIR\music\*
   Delete $INSTDIR\fonts\*
@@ -63,6 +66,7 @@ Section "Uninstall"
   RMDir "$INSTDIR\graphics"
   RMDir "$INSTDIR\manual\img"
   RMDir "$INSTDIR\manual"
+  RMDir "$INSTDIR\tiles"
   RMDir "$INSTDIR\sound"
   RMDir "$INSTDIR\music"
   RMDir "$INSTDIR\fonts"
