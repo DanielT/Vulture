@@ -133,6 +133,8 @@ floorline       : FLOORSTYLE '(' STRING ')' '=' '(' NUMBER NUMBER floortilearray
                     free($9.rows);
 
                     vultures_setup_floorstyle(style_id, $7, $8, tilearray);
+
+                    free($3);
                 }
                 ;
 

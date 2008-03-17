@@ -878,7 +878,7 @@ void vultures_add_to_clipregion(int tl_x, int tl_y, int br_x, int br_y)
 static void vultures_set_map_data(int ** data_array, int x, int y, int newval, int force)
 {
     int pixel_x, pixel_y;
-    int tl_x, tl_y, br_x, br_y;
+    int tl_x = 0, tl_y = 0, br_x = 0, br_y = 0;
     int oldval = vultures_remap_tile_id(data_array[y][x]);
     int tmp_newval = vultures_remap_tile_id(newval);
     struct window * map = vultures_get_window(0);
@@ -890,13 +890,21 @@ static void vultures_set_map_data(int ** data_array, int x, int y, int newval, i
         pixel_x = (map->w / 2) + V_MAP_XMOD*(x - y + vultures_view_y - vultures_view_x);
         pixel_y = (map->h / 2) + V_MAP_YMOD*(x + y - vultures_view_y - vultures_view_x);
 
-        if (data_array != vultures_map_back)
+        if (data_array != vultures_map_back && oldval >= 0)
         {
-            tl_x = (vultures_gametiles[tmp_newval].hs_x < vultures_gametiles[oldval].hs_x) ? 
-                    vultures_gametiles[tmp_newval].hs_x : vultures_gametiles[oldval].hs_x;
+            if (oldval > 0)
+            {
+                tl_x = vultures_gametiles[oldval].hs_x;
+                tl_y = vultures_gametiles[oldval].hs_y;
+            }
+
+            if (tmp_newval > 0)
+            {
+                tl_x = (vultures_gametiles[tmp_newval].hs_x < tl_x) ? vultures_gametiles[tmp_newval].hs_x : tl_x;
+                tl_y = (vultures_gametiles[tmp_newval].hs_y < tl_y) ? vultures_gametiles[tmp_newval].hs_y : tl_y;
+            }
+
             tl_x += pixel_x;
-            tl_y = (vultures_gametiles[tmp_newval].hs_y < vultures_gametiles[oldval].hs_y) ? 
-                    vultures_gametiles[tmp_newval].hs_y : vultures_gametiles[oldval].hs_y;
             tl_y += pixel_y;
             br_x = pixel_x + V_MAX_TILE_XOFFS;
             br_y = pixel_y + V_MAX_TILE_YOFFS;
