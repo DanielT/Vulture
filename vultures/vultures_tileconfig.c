@@ -305,8 +305,6 @@ void vultures_parse_tileconf(FILE *fp)
                 vultures_gametiles[tilenum].hs_y = deftiles[i].hs_y;
             }
         }
-
-        free(tmp_gametiles[i]);
     }
 
     /* free tilenames etc */
@@ -325,6 +323,7 @@ void vultures_parse_tileconf(FILE *fp)
                 free(tmp_gametiles[i][j].filename);
             tmp_gametiles[i][j].filename = NULL;
         }
+        free(tmp_gametiles[i]);
     }
 
     free(tilenames[TT_OBJECT]);
