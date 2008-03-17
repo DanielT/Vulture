@@ -304,16 +304,35 @@ void vultures_parse_tileconf(FILE *fp)
                 vultures_gametiles[tilenum].hs_x = deftiles[i].hs_x;
                 vultures_gametiles[tilenum].hs_y = deftiles[i].hs_y;
             }
-
-            /* free walls etc */
-            if (i == TT_WALL || i == TT_FLOOR || i == TT_EDGE)
-                free(tilenames[i][j]);
-            if (tmp_gametiles[i][j].filename)
-                free(tmp_gametiles[i][j].filename);
         }
 
         free(tmp_gametiles[i]);
     }
+
+    /* free tilenames etc */
+    for (i = 0; i < NUM_TILETYPES; i++)
+    {
+        for (j = 0; j < vultures_typecount[i]; j++)
+        {
+            if (i != TT_MISC && i != TT_CURSOR)
+            {
+                if (tilenames[i][j])
+                    free(tilenames[i][j]);
+                tilenames[i][j] = NULL;
+            }
+
+            if (tmp_gametiles[i][j].filename)
+                free(tmp_gametiles[i][j].filename);
+            tmp_gametiles[i][j].filename = NULL;
+        }
+    }
+
+    free(tilenames[TT_OBJECT]);
+    free(tilenames[TT_MONSTER]);
+    free(tilenames[TT_EXPL]);
+    free(tilenames[TT_WALL]);
+    free(tilenames[TT_FLOOR]);
+    free(tilenames[TT_EDGE]);
 
 
     /* build wall arrays */

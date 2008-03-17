@@ -247,6 +247,8 @@ int vultures_load_gametiles(void)
 
 void vultures_unload_gametiles(void)
 {
+    int i;
+
     /* calling flip twice will unload all the tiles... */
     vultures_flip_tile_arrays();
     vultures_flip_tile_arrays();
@@ -261,7 +263,14 @@ void vultures_unload_gametiles(void)
 #endif
 
     SDL_FreeSurface(vultures_ftshade1);
-    SDL_FreeSurface(vultures_ftshade2);    
+    SDL_FreeSurface(vultures_ftshade2);
+
+    for (i = 0; i < GAMETILECOUNT; i++)
+    {
+        if (vultures_gametiles[i].filename)
+            free(vultures_gametiles[i].filename);
+    }
+    free(vultures_gametiles);
 }
 
 
