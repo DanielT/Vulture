@@ -292,7 +292,7 @@ void vultures_parse_tileconf(FILE *fp)
                 vultures_gametiles[tilenum].hs_y = tmp_gametiles[i][j].hs_y;
             }
             /* redirect to another tile */
-            else if (tmp_gametiles[i][j].ptr_type != -1 && tmp_gametiles[i][j].ptr_num != -1)
+            else if (tmp_gametiles[i][j].ptr_type != 0 || tmp_gametiles[i][j].ptr_num != 0)
             {
                 vultures_gametiles[tilenum].filename = NULL;
                 vultures_gametiles[tilenum].ptr = typeoffset[tmp_gametiles[i][j].ptr_type] + tmp_gametiles[i][j].ptr_num;
@@ -578,8 +578,17 @@ void vultures_setup_floorstyle(int style_id, int x, int y, int *tilearray)
 static void init_objnames()
 {
     int i;
-    char *c, *nameptr, nonamebuf[16];
-    int unnamed_cnt = 0;
+    char *c, *nameptr;
+    int unnamed_cnt[MAXOCLASSES];
+
+    static const char *objclassnames[] = { 0,
+            "Illegal objects", "Weapons", "Armor", "Rings", "Amulets",
+            "Tools", "Comestibles", "Potions", "Scrolls", "Spellbooks",
+            "Wands", "Coins", "Gems", "Boulders/Statues", "Iron balls",
+            "Chains", "Venoms"
+    };
+
+    memset(unnamed_cnt, 0, MAXOCLASSES * sizeof(int));
 
     vultures_typecount[TT_OBJECT] = OBJTILECOUNT;
 
@@ -587,57 +596,60 @@ static void init_objnames()
 
     for(i = 0; !i || objects[i].oc_class != ILLOBJ_CLASS; i++)
     {
-        tilenames[TT_OBJECT][i] = malloc(31 * sizeof(char)); /* makedefs uses max 30 chars + '\0' */
+        tilenames[TT_OBJECT][i] = malloc(41 * sizeof(char)); /* makedefs uses max 30 chars + '\0' */
         tilenames[TT_OBJECT][i][0] = '\0';
-        tilenames[TT_OBJECT][i][30] = '\0';
+        tilenames[TT_OBJECT][i][40] = '\0';
 
         if (!obj_descr[i].oc_name)
         {
-            snprintf(nonamebuf, 16, "unnamed %d", ++unnamed_cnt);
-            nameptr = nonamebuf;
+            unnamed_cnt[(int)objects[i].oc_class]++;
+            snprintf(tilenames[TT_OBJECT][i], 40, "%3.3s unnamed %d",
+                     objclassnames[(int)objects[i].oc_class], unnamed_cnt[(int)objects[i].oc_class]);
         }
         else
+        {
             nameptr = (char*)obj_descr[i].oc_name;
 
-        switch (objects[i].oc_class)
-        {
-            case WAND_CLASS:
-                snprintf(tilenames[TT_OBJECT][i], 30, "WAN_%s", nameptr); break;
-            case RING_CLASS:
-                snprintf(tilenames[TT_OBJECT][i], 30, "RIN_%s", nameptr); break;
-            case POTION_CLASS:
-                snprintf(tilenames[TT_OBJECT][i], 30, "POT_%s", nameptr); break;
-            case SPBOOK_CLASS:
-                snprintf(tilenames[TT_OBJECT][i], 30, "SPE_%s", nameptr); break;
-            case SCROLL_CLASS:
-                snprintf(tilenames[TT_OBJECT][i], 30, "SCR_%s", nameptr); break;
-            case AMULET_CLASS:
-                if(objects[i].oc_material == PLASTIC)
-                    snprintf(tilenames[TT_OBJECT][i], 30, "FAKE_AMULET_OF_YENDOR");
-                else
-                    snprintf(tilenames[TT_OBJECT][i], 30, "%s", obj_descr[i].oc_name); break;
-            case GEM_CLASS:
-                if (objects[i].oc_material == GLASS)
-                {
-                    switch (objects[i].oc_color)
+            switch (objects[i].oc_class)
+            {
+                case WAND_CLASS:
+                    snprintf(tilenames[TT_OBJECT][i], 40, "WAN_%s", nameptr); break;
+                case RING_CLASS:
+                    snprintf(tilenames[TT_OBJECT][i], 40, "RIN_%s", nameptr); break;
+                case POTION_CLASS:
+                    snprintf(tilenames[TT_OBJECT][i], 40, "POT_%s", nameptr); break;
+                case SPBOOK_CLASS:
+                    snprintf(tilenames[TT_OBJECT][i], 40, "SPE_%s", nameptr); break;
+                case SCROLL_CLASS:
+                    snprintf(tilenames[TT_OBJECT][i], 40, "SCR_%s", nameptr); break;
+                case AMULET_CLASS:
+                    if(objects[i].oc_material == PLASTIC)
+                        snprintf(tilenames[TT_OBJECT][i], 40, "FAKE_AMULET_OF_YENDOR");
+                    else
+                        snprintf(tilenames[TT_OBJECT][i], 40, "%s", obj_descr[i].oc_name); break;
+                case GEM_CLASS:
+                    if (objects[i].oc_material == GLASS)
                     {
-                        case CLR_WHITE:  snprintf(tilenames[TT_OBJECT][i], 30, "GEM_WHITE_GLASS"); break;
-                        case CLR_BLUE:   snprintf(tilenames[TT_OBJECT][i], 30, "GEM_BLUE_GLASS");  break;
-                        case CLR_RED:    snprintf(tilenames[TT_OBJECT][i], 30, "GEM_RED_GLASS");   break;
-                        case CLR_BROWN:  snprintf(tilenames[TT_OBJECT][i], 30, "GEM_BROWN_GLASS"); break;
-                        case CLR_ORANGE: snprintf(tilenames[TT_OBJECT][i], 30, "GEM_ORANGE_GLASS");break;
-                        case CLR_YELLOW: snprintf(tilenames[TT_OBJECT][i], 30, "GEM_YELLOW_GLASS");break;
-                        case CLR_BLACK:  snprintf(tilenames[TT_OBJECT][i], 30, "GEM_BLACK_GLASS"); break;
-                        case CLR_GREEN:  snprintf(tilenames[TT_OBJECT][i], 30, "GEM_GREEN_GLASS"); break;
-                        case CLR_MAGENTA:snprintf(tilenames[TT_OBJECT][i], 30, "GEM_VIOLET_GLASS");break;
+                        switch (objects[i].oc_color)
+                        {
+                            case CLR_WHITE:  snprintf(tilenames[TT_OBJECT][i], 40, "GEM_WHITE_GLASS"); break;
+                            case CLR_BLUE:   snprintf(tilenames[TT_OBJECT][i], 40, "GEM_BLUE_GLASS");  break;
+                            case CLR_RED:    snprintf(tilenames[TT_OBJECT][i], 40, "GEM_RED_GLASS");   break;
+                            case CLR_BROWN:  snprintf(tilenames[TT_OBJECT][i], 40, "GEM_BROWN_GLASS"); break;
+                            case CLR_ORANGE: snprintf(tilenames[TT_OBJECT][i], 40, "GEM_ORANGE_GLASS");break;
+                            case CLR_YELLOW: snprintf(tilenames[TT_OBJECT][i], 40, "GEM_YELLOW_GLASS");break;
+                            case CLR_BLACK:  snprintf(tilenames[TT_OBJECT][i], 40, "GEM_BLACK_GLASS"); break;
+                            case CLR_GREEN:  snprintf(tilenames[TT_OBJECT][i], 40, "GEM_GREEN_GLASS"); break;
+                            case CLR_MAGENTA:snprintf(tilenames[TT_OBJECT][i], 40, "GEM_VIOLET_GLASS");break;
+                        }
+                        glassgems[objects[i].oc_color] = i;
                     }
-                    glassgems[objects[i].oc_color] = i;
-                }
-                else
-                    snprintf(tilenames[TT_OBJECT][i], 30, "%s", nameptr); break;
-                break;
-            default:
-                snprintf(tilenames[TT_OBJECT][i], 30, "%s", nameptr); break;
+                    else
+                        snprintf(tilenames[TT_OBJECT][i], 40, "%s", nameptr); break;
+                    break;
+                default:
+                    snprintf(tilenames[TT_OBJECT][i], 40, "%s", nameptr); break;
+            }
         }
 
         for (c = tilenames[TT_OBJECT][i]; *c; c++)
