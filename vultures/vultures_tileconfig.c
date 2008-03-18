@@ -6,6 +6,7 @@
 #include "vultures_types.h"
 #include "vultures_tile.h"
 #include "vultures_tileconfig.h"
+#include "vultures_gen.h"
 
 
 typedef struct {
@@ -234,8 +235,9 @@ static void init_explnames();
  * This function is the only one that should be called from outside */
 void vultures_parse_tileconf(FILE *fp)
 {
-    int i, j, tilenum;
+    int i, j, tilenum, loadnum;
     int typeoffset[NUM_TILETYPES];
+    char messagebuf[512];
 
     /* init the names for all types of tiles except walls, floors and edges, where the names are dynamic */
     init_objnames(); /* init TT_OBJECT and TT_OBJICON */
@@ -298,7 +300,9 @@ void vultures_parse_tileconf(FILE *fp)
                 vultures_gametiles[tilenum].hs_y = 0;
             }
             /* use default tile */
-            else if (!tmp_gametiles[i][j].filename && tmp_gametiles[i][j].ptr_type == 0 && tmp_gametiles[i][j].ptr_num == 0)
+            else if (!tmp_gametiles[i][j].filename &&
+                      tmp_gametiles[i][j].ptr_type == 0 &&
+                      tmp_gametiles[i][j].ptr_num == 0)
             {
                 vultures_gametiles[tilenum].ptr = typeoffset[deftiles[i].ptr_type] + deftiles[i].ptr_num;
                 vultures_gametiles[tilenum].hs_x = deftiles[i].hs_x;
@@ -306,6 +310,38 @@ void vultures_parse_tileconf(FILE *fp)
             }
         }
     }
+
+
+    /* validate all the tiles. this must be done in a separate loop as there may be
+     * forward references which won't work until vultures_gametiles is fully initialized */
+    for (i = 0; i < NUM_TILETYPES; i++)
+    {
+        for (j = 0; j < vultures_typecount[i]; j++)
+        {
+            tilenum = typeoffset[i] + j;
+            loadnum = tilenum;
+            if (!vultures_gametiles[tilenum].filename && vultures_gametiles[tilenum].ptr != -1)
+                loadnum = vultures_gametiles[tilenum].ptr;
+
+            if (!vultures_load_tile(loadnum))
+            {
+                if (vultures_gametiles[tilenum].filename)
+                    snprintf(messagebuf, sizeof(messagebuf), "%s.%s: \"%s\" cannot be loaded",
+                             typenames[i], tilenames[i][j], vultures_gametiles[tilenum].filename);
+                else
+                    snprintf(messagebuf, sizeof(messagebuf), "%s.%s: invalid redirection",
+                             typenames[i], tilenames[i][j]);
+
+                if (iflags.window_inited == TRUE)
+                    pline(messagebuf);
+                else
+                    printf("Tile config: %s\n", messagebuf);
+
+                vultures_write_log(V_LOG_NOTE, __FILE__, __LINE__, "Tile config: %s\n", messagebuf);
+            }
+        }
+    }
+
 
     /* free tilenames etc */
     for (i = 0; i < NUM_TILETYPES; i++)

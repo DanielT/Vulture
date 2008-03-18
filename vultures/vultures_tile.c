@@ -28,16 +28,12 @@
 static vultures_tile ** vultures_tiles_cur;
 static vultures_tile ** vultures_tiles_prev;
 
-/* data buffer containing gametiles.bin */
-static unsigned char * vultures_srcfile;
-
 /* semi-transparent black areas used to shade floortiles */
 static SDL_Surface * vultures_ftshade1;
 static SDL_Surface * vultures_ftshade2;
 
 
 static vultures_tile *vultures_make_alpha_player_tile(int monnum, double op_scale);
-static vultures_tile * vultures_load_tile(int tile_id);
 static inline vultures_tile * vultures_shade_tile(int tile_id, int shadelevel);
 static inline vultures_tile *vultures_set_tile_alpha(vultures_tile *tile, double opacity);
 
@@ -85,8 +81,10 @@ vultures_tile * vultures_get_tile_shaded(int tile_id, int shadelevel)
     else if (shadelevel > 0)
         return vultures_shade_tile(tile_id, shadelevel);
 
+    if (vultures_tiles_cur[tile_id])
+        ; /* don't need to do anything: the tile is loaded */
     /* check whether the tile was loaded last turn */
-    if (!vultures_tiles_cur[tile_id] && vultures_tiles_prev[tile_id])
+    else if (!vultures_tiles_cur[tile_id] && vultures_tiles_prev[tile_id])
         vultures_tiles_cur[tile_id] = vultures_tiles_prev[tile_id];
     else
         vultures_tiles_cur[tile_id] = vultures_load_tile(tile_id);
@@ -97,38 +95,37 @@ vultures_tile * vultures_get_tile_shaded(int tile_id, int shadelevel)
 
 /* vultures_load_tile is the actual tile loader
  * it returns a pointer to the tile; the caller is expected to free it */
-static vultures_tile * vultures_load_tile(int tile_id)
+vultures_tile * vultures_load_tile(int tile_id)
 {
     vultures_tile * newtile;
     char * data;
     FILE *fp;
     int fsize;
 
-    /* check whether the tile was loaded last turn */
-    if (vultures_tiles_prev[tile_id])
-        return vultures_tiles_prev[tile_id];
-
-    /* check whether the tile was loaded THIS turn (shouldn't be called then, though) */
-    if (vultures_tiles_cur[tile_id])
-        return vultures_tiles_cur[tile_id];
-
     /* if data_len is 0 the tile doesn't have a graphic */
     if (!vultures_gametiles[tile_id].filename)
         return NULL;
 
-    newtile = malloc(sizeof(vultures_tile));
-    if (!newtile)
+    fp = fopen(vultures_gametiles[tile_id].filename, "rb");
+    if (!fp)
         return NULL;
 
-    fp = fopen(vultures_gametiles[tile_id].filename, "rb");
-
-        /* obtain file size. */
+    /* obtain file size. */
     fseek(fp, 0, SEEK_END);
     fsize = ftell(fp);
     rewind(fp);
 
+    /* load the tile */
     data = malloc(fsize);
     fread(data, fsize, 1, fp);
+
+    newtile = malloc(sizeof(vultures_tile));
+    if (!newtile)
+    {
+        free(data);
+        return NULL;
+    }
+
     newtile->graphic = vultures_load_surface(data, fsize);
     newtile->xmod = vultures_gametiles[tile_id].hs_x;
     newtile->ymod = vultures_gametiles[tile_id].hs_y;
@@ -218,15 +215,10 @@ int vultures_load_gametiles(void)
 
     fclose(fp);
 
-    /* initialize the two tile arrays */
-    /* the extra 2*FLOORTILECOUNT elements will contain pre-shaded floor tiles */
+    /* initialize the two tile arrays. must happen after reading the config file,
+     * as GAMETILECOUNT and TILEARRAYLEN are not know before */
     vultures_tiles_cur  = malloc(TILEARRAYLEN * sizeof(vultures_tile *));
     vultures_tiles_prev = malloc(TILEARRAYLEN * sizeof(vultures_tile *));
-    if (!vultures_tiles_cur || !vultures_tiles_prev)
-    {
-        free(vultures_srcfile);
-        return 0;
-    }
     memset(vultures_tiles_cur, 0, TILEARRAYLEN * sizeof(vultures_tile *));
     memset(vultures_tiles_prev, 0, TILEARRAYLEN * sizeof(vultures_tile *));
 
@@ -255,12 +247,6 @@ void vultures_unload_gametiles(void)
     
     free(vultures_tiles_cur);
     free(vultures_tiles_prev);
-    
-#if !defined WIN32
-    munmap(vultures_srcfile, 0);
-#else
-    free(vultures_srcfile);
-#endif
 
     SDL_FreeSurface(vultures_ftshade1);
     SDL_FreeSurface(vultures_ftshade2);
