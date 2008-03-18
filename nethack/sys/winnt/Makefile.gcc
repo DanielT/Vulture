@@ -1246,11 +1246,11 @@ $(O)vultures_tileconfig.o: ../win/vultures/vultures_tileconfig.c ../win/vultures
 
 $(O)vultures_tileconfig.parser.o: ../win/vultures/vultures_tileconfig.parser.c ../win/vultures/vultures_tileconfig.h 
 	$(cc) $(CFLAGS) -o$@ -I$(JTP) -DUSE_SDL_SYSCALLS -c ../win/vultures/vultures_tileconfig.parser.c 
-$(O)vultures_tileconfig.lexer.o: ../win/vultures/vultures_tileconfig.lexer.c ../win/vultures/vultures_tileconfig.h 
+$(O)vultures_tileconfig.lexer.o: ../win/vultures/vultures_tileconfig.lexer.c ../win/vultures/vultures_tileconfig.h  ../win/vultures/vultures_tileconfig.parser.h
 	$(cc) $(CFLAGS) -o$@ -I$(JTP) -DUSE_SDL_SYSCALLS -c ../win/vultures/vultures_tileconfig.lexer.c 
 
-../win/vultures/vultures_tileconfig.parser.c: ../win/vultures/vultures_tileconfig.parser.y 
-	bison --no-lines -d $< -o $@
+../win/vultures/vultures_tileconfig.parser.c ../win/vultures/vultures_tileconfig.parser.h: ../win/vultures/vultures_tileconfig.parser.y 
+	bison --no-lines -d $< -o ../win/vultures/vultures_tileconfig.parser.c
 ../win/vultures/vultures_tileconfig.lexer.c: ../win/vultures/vultures_tileconfig.lexer.l 
 	flex -o../win/vultures/vultures_tileconfig.lexer.c ../win/vultures/vultures_tileconfig.lexer.l
 
