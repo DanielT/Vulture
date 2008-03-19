@@ -656,9 +656,6 @@ int vultures_draw_level(struct window * win)
 
     /* Restore drawing region */
     vultures_set_draw_region(0, 0, vultures_screen->w-1, vultures_screen->h-1);
-    
-    vultures_rect(vultures_map_clip_tl_x, vultures_map_clip_tl_y,
-                  vultures_map_clip_br_x - 1, vultures_map_clip_br_y - 1, CLR32_RED);
 
     vultures_invalidate_region(vultures_map_clip_tl_x, vultures_map_clip_tl_y,
                                vultures_map_clip_br_x - vultures_map_clip_tl_x,
