@@ -1483,14 +1483,24 @@ static int vultures_draw_objitem(struct window * win)
     int y = win->abs_y;
     int w = win->w;
     int h = win->h;
-    int obj_id = 0;
+    int tile = 0;
     int weight = 0;
     Uint32 textcolor;
 
     if (win->pd.obj)
     {
-        obj_id = vultures_obfuscate_object(win->pd.obj->otyp);
+        tile = vultures_object_to_tile(win->pd.obj->otyp, -1, -1, win->pd.obj);
         weight = win->pd.obj->owt;
+
+        tile_x = x + h/2;
+        tile_y = y + h * 3 / 4;
+
+        if (TILE_IS_OBJECT(tile))
+        {
+            tile = tile - OBJTILEOFFSET + ICOTILEOFFSET;
+            tile_x = x + 2;
+            tile_y = y + 2;
+        }
     }
 
     vultures_set_draw_region(x, y, x + w - 1, y + h - 1);
@@ -1571,10 +1581,6 @@ static int vultures_draw_objitem(struct window * win)
     /* darken the background */
     vultures_fill_rect(x + 2, y + 2, x + h - 3, y + h - 3, CLR32_BLACK_A30);
 
-    /* the tile is centered horizontally and placed at 3/4 vertically */
-    tile_x = x + h/2;
-    tile_y = y + h * 3 / 4;
-
     /* indicate blessed/cursed visually */
     if (win->pd.obj && win->pd.obj->bknown && win->pd.obj->blessed)
         vultures_fill_rect(x + 2, y + 2, x + h - 3, y + h - 3, CLR32_BLESS_BLUE);
@@ -1583,7 +1589,7 @@ static int vultures_draw_objitem(struct window * win)
         vultures_fill_rect(x + 2, y + 2, x + h - 3, y + h - 3, CLR32_CURSE_RED);
 
     /* draw the object tile */
-    vultures_put_tile(x+2, y+2, OBJICON_TO_VTILE(obj_id));
+    vultures_put_tile(tile_x, tile_y, tile);
 
     /* draw the item letter on the top left corner of the object tile */
     snprintf(tmpstr, 11, "%c", win->accelerator);

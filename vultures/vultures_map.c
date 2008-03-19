@@ -1021,12 +1021,12 @@ void vultures_print_glyph(winid window, XCHAR_P x, XCHAR_P y, int glyph)
             /* glyph_to_obj(obj_to_glyph(foo)) looks like nonsense, but is actually an elegant
              * way of handling hallucination, especially the complicated matter of hallucinated
              * corpses... */
-            map_obj = vultures_object_to_tile(glyph_to_obj(obj_to_glyph( obj)), x, y);
+            map_obj = vultures_object_to_tile(glyph_to_obj(obj_to_glyph( obj)), x, y, NULL);
         }
         /* just to make things interesting, the above does not handle thrown/kicked objects... */
         else if (glyph_is_object(glyph))
         {
-            map_obj = vultures_object_to_tile(glyph_to_obj(glyph), x, y);
+            map_obj = vultures_object_to_tile(glyph_to_obj(glyph), x, y, NULL);
         }
         else
             map_obj = V_TILE_NONE;
@@ -1121,7 +1121,7 @@ void vultures_print_glyph(winid window, XCHAR_P x, XCHAR_P y, int glyph)
         /* same as above, for objects */
         else if (glyph_is_object(glyph))
         {
-            map_obj = vultures_object_to_tile(glyph_to_obj(glyph), x, y);
+            map_obj = vultures_object_to_tile(glyph_to_obj(glyph), x, y, NULL);
             if (map_back == V_MISC_UNMAPPED_AREA && level.locations[x][y].typ != STONE)
                 map_back = V_MISC_FLOOR_NOT_VISIBLE;
         }
@@ -2133,7 +2133,7 @@ int vultures_get_map_cursor(point mappos)
  * 6) misc utility functions
  *****************************************************************************/
 
-int vultures_object_to_tile(int obj_id, int x, int y)
+int vultures_object_to_tile(int obj_id, int x, int y, struct obj *in_obj)
 {
     struct obj *obj;
     int tile;
@@ -2147,14 +2147,18 @@ int vultures_object_to_tile(int obj_id, int x, int y)
 
 
     /* try to find the actual object corresponding to the given obj_id */
-    if (x >= 0)
-        obj = level.objects[x][y];
+    if (in_obj)
+        obj = in_obj;
     else
-        obj = invent;
+    {
+        if (x >= 0)
+            obj = level.objects[x][y];
+        else
+            obj = invent;
 
-    while (obj && !(obj->otyp == obj_id && (x >= 0 || obj->invlet == y)))
-        obj = (x >= 0) ? obj->nexthere : obj->nobj;
-
+        while (obj && !(obj->otyp == obj_id && (x >= 0 || obj->invlet == y)))
+            obj = (x >= 0) ? obj->nexthere : obj->nobj;
+    }
 
     /* all amulets, potions, etc look the same when the player is blind */
     if (obj && Blind && !obj->dknown)
