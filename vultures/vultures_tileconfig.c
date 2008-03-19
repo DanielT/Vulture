@@ -237,6 +237,7 @@ void vultures_parse_tileconf(FILE *fp)
 {
     int i, j, tilenum, loadnum;
     int typeoffset[NUM_TILETYPES];
+    vultures_tile *tile;
     char messagebuf[512];
 
     /* init the names for all types of tiles except walls, floors and edges, where the names are dynamic */
@@ -323,7 +324,8 @@ void vultures_parse_tileconf(FILE *fp)
             if (!vultures_gametiles[tilenum].filename && vultures_gametiles[tilenum].ptr != -1)
                 loadnum = vultures_gametiles[tilenum].ptr;
 
-            if (!vultures_load_tile(loadnum))
+            tile = vultures_load_tile(loadnum);
+            if (!tile)
             {
                 if (vultures_gametiles[tilenum].filename)
                     snprintf(messagebuf, sizeof(messagebuf), "%s.%s: \"%s\" cannot be loaded",
@@ -338,6 +340,11 @@ void vultures_parse_tileconf(FILE *fp)
                     printf("Tile config: %s\n", messagebuf);
 
                 vultures_write_log(V_LOG_NOTE, __FILE__, __LINE__, "Tile config: %s\n", messagebuf);
+            }
+            else
+            {
+                SDL_FreeSurface(tile->graphic);
+                free(tile);
             }
         }
     }
