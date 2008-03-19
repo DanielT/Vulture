@@ -656,6 +656,9 @@ int vultures_draw_level(struct window * win)
 
     /* Restore drawing region */
     vultures_set_draw_region(0, 0, vultures_screen->w-1, vultures_screen->h-1);
+    
+    vultures_rect(vultures_map_clip_tl_x, vultures_map_clip_tl_y,
+                  vultures_map_clip_br_x - 1, vultures_map_clip_br_y - 1, CLR32_RED);
 
     vultures_invalidate_region(vultures_map_clip_tl_x, vultures_map_clip_tl_y,
                                vultures_map_clip_br_x - vultures_map_clip_tl_x,
@@ -890,7 +893,7 @@ static void vultures_set_map_data(int ** data_array, int x, int y, int newval, i
         pixel_x = (map->w / 2) + V_MAP_XMOD*(x - y + vultures_view_y - vultures_view_x);
         pixel_y = (map->h / 2) + V_MAP_YMOD*(x + y - vultures_view_y - vultures_view_x);
 
-        if (data_array != vultures_map_back && oldval >= 0)
+        if (data_array != vultures_map_back)
         {
             if (oldval > 0)
             {
