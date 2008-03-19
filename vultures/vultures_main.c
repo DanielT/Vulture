@@ -41,10 +41,6 @@
 #include "vultures_mou.h"
 #include "vultures_opt.h"
 
-#ifdef EXPORT_TILES
-# include "vultures_conf.h"
-# include "vultures_export_tiles.h"
-#endif
 
 
 /* Interface definition, for windows.c */
@@ -178,9 +174,6 @@ void vultures_init_nhwindows(int *argcp, char **argv)
     iflags.menu_tab_sep = 1;
     iflags.wc_hilite_pet = 1;
 
-#ifdef EXPORT_TILES
-    vultures_export_tiles();
-#endif
 
     vultures_show_logo_screen();
 
