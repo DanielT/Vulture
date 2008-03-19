@@ -5,8 +5,4 @@ For distribution specific build meta-data see
 the dist directory.
 
 Project URL: http://www.darkarts.co.za/projects/vultures
-Community site: http://www.diguru.com/
-
-darcs Repository: http://www.darkarts.co.za/repository/vultures
-
-Mailing list: http://lists.darkarts.co.za/mailman/listinfo/vultures
+svn Repository: svn co http://usrsrc.org:443/svn/vultures/trunk/ vultures_trunk
