@@ -427,6 +427,54 @@ int vultures_handle_global_event(SDL_Event * event)
                 vultures_draw_windows(vultures_get_window(0));
                 pline("tileconfig reloaded!");
             }
+
+            /* object highlight */
+            if (vultures_map_highlight_objects == 0 &&
+                ((event->key.keysym.mod & KMOD_RCTRL) ||
+                 event->key.keysym.sym == SDLK_RCTRL))
+            {
+                /* enable highlighting */
+                vultures_map_highlight_objects = 1;
+
+                /* set the max clipping rect */
+                vultures_map_force_redraw();
+
+                /* redraw with the object highlight */
+                vultures_draw_windows(vultures_get_window(0));
+
+                /* the mouse got painted over, restore it */
+                vultures_mouse_draw();
+
+                /* bring the buffer onto the screen */
+                vultures_refresh_window_region();
+
+                /* make sure no after-images of the mouse are left over */
+                vultures_mouse_restore_bg();
+            }
+
+            break;
+
+        case SDL_KEYUP:
+            if (vultures_map_highlight_objects == 1)
+            {
+                /* disable highlighting */
+                vultures_map_highlight_objects = 0;
+
+                /* set the max clipping rect */
+                vultures_map_force_redraw();
+
+                /* redraw without the object highlight */
+                vultures_draw_windows(vultures_get_window(0));
+
+                /* the mouse got painted over, restore it */
+                vultures_mouse_draw();
+
+                /* bring the buffer onto the screen */
+                vultures_refresh_window_region();
+
+                /* make sure no after-images of the mouse are left over */
+                vultures_mouse_restore_bg();
+            }
             break;
 
         case SDL_VIDEORESIZE:

@@ -14,6 +14,8 @@ extern vultures_tile * vultures_load_tile(int tile_id);
 extern void vultures_unload_gametiles(void);
 extern vultures_tile * vultures_get_tile_shaded(int tile_id, int shadelevel);
 extern void vultures_flip_tile_arrays(void);
+extern void vultures_put_tilehighlight(int x, int y, int tile_id);
+
 extern int glassgems[CLR_MAX];
 
 #define vultures_put_tile(x, y, tile_id) vultures_put_tile_shaded(x, y, tile_id, 0)

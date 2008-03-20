@@ -195,6 +195,57 @@ void vultures_flip_tile_arrays(void)
 }
 
 
+void vultures_put_tilehighlight(int x, int y, int tile_id)
+{
+    vultures_tile *tile;
+    unsigned int *srcdata, *destdata, alpha;
+    SDL_Surface *highlight;
+    SDL_PixelFormat *pxf;
+    int i, j;
+
+    if (tile_id < 0)
+        return;
+
+    /* get the base tile */
+    tile = vultures_tiles_cur[tile_id];
+    if (!tile)
+        tile = vultures_get_tile_shaded(tile_id, 0);
+
+    pxf = tile->graphic->format;
+
+    highlight = SDL_CreateRGBSurface(SDL_SWSURFACE | SDL_SRCALPHA, tile->graphic->w, tile->graphic->h,
+                                     pxf->BitsPerPixel, pxf->Rmask, pxf->Gmask, pxf->Bmask, pxf->Amask);
+
+    srcdata = tile->graphic->pixels;
+    destdata = highlight->pixels;
+
+    for (i = 0; i < highlight->h; i++)
+    {
+        for (j = 0; j < highlight->w; j++)
+        {
+            alpha = (srcdata[i * highlight->w + j] & pxf->Amask) >> pxf->Ashift;
+            /*respect src transparency, but cap it at 50% */
+            alpha = (alpha < 0x80) ? alpha : 0x80;
+
+            if (srcdata[i * highlight->w + j] & ~(pxf->Amask))
+            {
+                destdata[i * highlight->w + j] |= alpha << pxf->Ashift;
+                destdata[i * highlight->w + j] |= 0x20 << pxf->Rshift;
+                destdata[i * highlight->w + j] |= 0x80 << pxf->Gshift;
+                destdata[i * highlight->w + j] |= 0xff << pxf->Bshift;
+            }
+        }
+    }
+
+    /* draw the highlight */
+    vultures_put_img(x + tile->xmod, y + tile->ymod, highlight);
+
+    /* free the highlight. no caching, as this shouldn't be a hot path */
+    SDL_FreeSurface(highlight);
+}
+
+
+
 
 int vultures_load_gametiles(void)
 {

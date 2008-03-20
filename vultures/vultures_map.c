@@ -92,6 +92,8 @@ int vultures_map_draw_msecs = 0;
 int vultures_map_draw_lastmove = 0;
 point vultures_map_highlight = {-1, -1};
 
+int vultures_map_highlight_objects = 0;
+
 
 static const int vultures_tilemap_misc[MAXPCHARS] = {
 #ifdef VULTURESCLAW
@@ -653,7 +655,28 @@ int vultures_draw_level(struct window * win)
         }
     }
 
+    /* draw object highlights if requested */
+    if (vultures_map_highlight_objects)
+    {
+        for (__i = - map_tr_y; __i <= map_tr_y; __i++)
+        {
+            i = vultures_view_y + __i;
+            if (i < 0 || i >= V_MAP_HEIGHT)
+                continue;
 
+            for (__j = diff + __i; __j + __i <= sum; __j++)
+            {
+                j = vultures_view_x + __j;
+                if (j < 1 || j >= V_MAP_WIDTH)
+                    continue;
+
+                x = map_centre_x + V_MAP_XMOD*(__j - __i);
+                y = map_centre_y + V_MAP_YMOD*(__j + __i);
+
+                vultures_put_tilehighlight(x, y, vultures_map_obj[i][j]);
+            }
+        }
+    }
     /* Restore drawing region */
     vultures_set_draw_region(0, 0, vultures_screen->w-1, vultures_screen->h-1);
 
