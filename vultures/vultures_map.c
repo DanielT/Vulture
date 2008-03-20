@@ -454,12 +454,10 @@ int vultures_draw_level(struct window * win)
     }
     else
     {
-        vultures_map_clip_tl_x = vultures_map_clip_tl_x >= 0 ? vultures_map_clip_tl_x : 0;
-        vultures_map_clip_tl_y = vultures_map_clip_tl_y >= 0 ? vultures_map_clip_tl_y : 0;
-        vultures_map_clip_br_x = (vultures_map_clip_br_x < win->abs_x + win->w) ?
-                                  vultures_map_clip_br_x : win->abs_x + win->w - 1;
-        vultures_map_clip_br_y = (vultures_map_clip_br_y < win->abs_y + win->h) ?
-                                  vultures_map_clip_br_y : win->abs_y + win->h - 1;
+        vultures_map_clip_tl_x = min(vultures_map_clip_tl_x, 0);
+        vultures_map_clip_tl_y = min(vultures_map_clip_tl_y, 0);
+        vultures_map_clip_br_x = max(vultures_map_clip_br_x, win->abs_x + win->w - 1);
+        vultures_map_clip_br_y = max(vultures_map_clip_br_y, win->abs_y + win->h - 1);
     }
 
     if (vultures_map_clip_tl_x >= win->w + win->abs_x || vultures_map_clip_tl_y >= win->h + win->abs_y)
@@ -891,10 +889,10 @@ void vultures_clear_map()
 
 void vultures_add_to_clipregion(int tl_x, int tl_y, int br_x, int br_y)
 {
-    vultures_map_clip_tl_x = (vultures_map_clip_tl_x < tl_x) ? vultures_map_clip_tl_x : tl_x;
-    vultures_map_clip_tl_y = (vultures_map_clip_tl_y < tl_y) ? vultures_map_clip_tl_y : tl_y;
-    vultures_map_clip_br_x = (vultures_map_clip_br_x > br_x) ? vultures_map_clip_br_x : br_x;
-    vultures_map_clip_br_y = (vultures_map_clip_br_y > br_y) ? vultures_map_clip_br_y : br_y;
+    vultures_map_clip_tl_x = min(vultures_map_clip_tl_x, tl_x);
+    vultures_map_clip_tl_y = min(vultures_map_clip_tl_y, tl_y);
+    vultures_map_clip_br_x = max(vultures_map_clip_br_x, br_x);
+    vultures_map_clip_br_y = max(vultures_map_clip_br_y, br_y);
 }
 
 
@@ -926,9 +924,9 @@ static void vultures_set_map_data(int ** data_array, int x, int y, int newval, i
 
             if (tmp_newval > 0)
             {
-                tl_x = (vultures_gametiles[tmp_newval].hs_x < tl_x) ? vultures_gametiles[tmp_newval].hs_x : tl_x;
-                tl_y = (vultures_gametiles[tmp_newval].hs_y < tl_y) ? vultures_gametiles[tmp_newval].hs_y : tl_y;
-                
+                tl_x = min(vultures_gametiles[tmp_newval].hs_x, tl_x);
+                tl_y = min(vultures_gametiles[tmp_newval].hs_y, tl_y);
+
                 br_x = max(br_x, vultures_gametiles[tmp_newval].hs_x + vultures_gametiles[tmp_newval].w);
                 br_y = max(br_y, vultures_gametiles[tmp_newval].hs_y + vultures_gametiles[tmp_newval].h);
             }
