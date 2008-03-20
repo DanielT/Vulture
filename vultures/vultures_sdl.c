@@ -25,6 +25,8 @@
 #include "vultures_sound.h"
 #include "vultures_mou.h"
 #include "vultures_opt.h"
+#include "vultures_tile.h"
+#include "vultures_map.h"
 
 #include "date.h"
 
