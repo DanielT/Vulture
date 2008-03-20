@@ -414,6 +414,17 @@ int vultures_handle_global_event(SDL_Event * event)
                 event->type = 0; /* we don't want to leave the event loop for this */
                 return 1;
             }
+            /* magic tileconfig reload key */
+            else if (event->key.keysym.sym == SDLK_F11 &&
+                     (event->key.keysym.mod & KMOD_ALT) &&
+                     (event->key.keysym.mod & KMOD_SHIFT))
+            {
+                vultures_unload_gametiles();
+                vultures_load_gametiles();
+                vultures_map_force_redraw();
+                vultures_draw_windows(vultures_get_window(0));
+                pline("tileconfig reloaded!");
+            }
             break;
 
         case SDL_VIDEORESIZE:
