@@ -343,6 +343,10 @@ void vultures_parse_tileconf(FILE *fp)
             }
             else
             {
+                /* remember width and height, so that more precise clipping can be done later */
+                vultures_gametiles[tilenum].w = tile->graphic->w;
+                vultures_gametiles[tilenum].h = tile->graphic->h;
+
                 SDL_FreeSurface(tile->graphic);
                 free(tile);
             }

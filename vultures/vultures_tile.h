@@ -252,6 +252,7 @@ struct gametiles {
     int ptr;
     int hs_x;
     int hs_y;
+    int w, h;
 };
 
 struct fstyles {
@@ -317,14 +318,6 @@ extern struct walls walls_half[];
 extern struct fedges flooredges[];
 extern struct fstyles floorstyles[];
 extern struct gametiles *vultures_gametiles;
-
-
-/* The maximum distance to the left/bottom from the hotspot in any tile */
-#define V_MAX_TILE_XOFFS 146
-#define V_MAX_TILE_YOFFS 62
-
-
-
 
 
 #endif

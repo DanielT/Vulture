@@ -919,18 +919,24 @@ static void vultures_set_map_data(int ** data_array, int x, int y, int newval, i
             {
                 tl_x = vultures_gametiles[oldval].hs_x;
                 tl_y = vultures_gametiles[oldval].hs_y;
+
+                br_x = vultures_gametiles[oldval].hs_x + vultures_gametiles[oldval].w;
+                br_y = vultures_gametiles[oldval].hs_y + vultures_gametiles[oldval].h;
             }
 
             if (tmp_newval > 0)
             {
                 tl_x = (vultures_gametiles[tmp_newval].hs_x < tl_x) ? vultures_gametiles[tmp_newval].hs_x : tl_x;
                 tl_y = (vultures_gametiles[tmp_newval].hs_y < tl_y) ? vultures_gametiles[tmp_newval].hs_y : tl_y;
+                
+                br_x = max(br_x, vultures_gametiles[tmp_newval].hs_x + vultures_gametiles[tmp_newval].w);
+                br_y = max(br_y, vultures_gametiles[tmp_newval].hs_y + vultures_gametiles[tmp_newval].h);
             }
 
             tl_x += pixel_x;
             tl_y += pixel_y;
-            br_x = pixel_x + V_MAX_TILE_XOFFS;
-            br_y = pixel_y + V_MAX_TILE_YOFFS;
+            br_x += pixel_x;
+            br_y += pixel_y;
 
             if (data_array == vultures_map_mon)
                 /* allow for the heart icon on pets */
