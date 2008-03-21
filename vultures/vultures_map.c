@@ -687,7 +687,7 @@ int vultures_draw_level(struct window * win)
     vultures_map_clip_br_x = 0;
     vultures_map_clip_br_y = 0;
 
-    vultures_flip_tile_arrays();
+    vultures_tilecache_age();
 
     vultures_map_draw_msecs = SDL_GetTicks() - startticks;
     vultures_map_draw_lastmove = moves;

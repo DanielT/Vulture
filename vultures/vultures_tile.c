@@ -23,10 +23,18 @@
 
 #define TILEARRAYLEN (GAMETILECOUNT*3)
 
+#define TILECACHE_MAXAGE 4
+
+typedef struct {
+    vultures_tile *tile;
+    int age;
+} vultures_tilecache_entry;
+
 
 /* main tile arrays */
-static vultures_tile ** vultures_tiles_cur;
-static vultures_tile ** vultures_tiles_prev;
+// static vultures_tile ** vultures_tiles_cur;
+// static vultures_tile ** vultures_tiles_prev;
+static vultures_tilecache_entry *vultures_tilecache;
 
 /* semi-transparent black areas used to shade floortiles */
 static SDL_Surface * vultures_ftshade1;
@@ -34,8 +42,62 @@ static SDL_Surface * vultures_ftshade2;
 
 
 static vultures_tile *vultures_make_alpha_player_tile(int monnum, double op_scale);
-static inline vultures_tile * vultures_shade_tile(int tile_id, int shadelevel);
-static inline vultures_tile *vultures_set_tile_alpha(vultures_tile *tile, double opacity);
+static inline vultures_tile * vultures_shade_tile(vultures_tile *orig, int shadelevel);
+static inline void vultures_set_tile_alpha(vultures_tile *tile, double opacity);
+
+
+
+inline static void vultures_free_tile(vultures_tile *tile)
+{
+    SDL_FreeSurface(tile->graphic);
+    free(tile);
+}
+
+
+/* flip the tile arrays and unload all tiles that were not used for 2 turns */
+void vultures_tilecache_discard(void)
+{
+    int i;
+    for (i = 0; i < TILEARRAYLEN; i++)
+    {
+        if (vultures_tilecache[i].tile)
+            vultures_free_tile(vultures_tilecache[i].tile);
+        vultures_tilecache[i].tile = NULL;
+        vultures_tilecache[i].age = 0;
+    }
+}
+
+void vultures_tilecache_age(void)
+{
+    int i;
+    for (i = 0; i < TILEARRAYLEN; i++)
+    {
+        vultures_tilecache[i].age++;
+        if (vultures_tilecache[i].tile && vultures_tilecache[i].age > TILECACHE_MAXAGE)
+        {
+            vultures_free_tile(vultures_tilecache[i].tile);
+            vultures_tilecache[i].tile = NULL;
+        }
+    }
+}
+
+void vultures_tilecache_add(vultures_tile *tile, int tile_id)
+{
+    if (vultures_tilecache[tile_id].tile && vultures_tilecache[tile_id].tile != tile)
+        vultures_free_tile(vultures_tilecache[tile_id].tile);
+
+    vultures_tilecache[tile_id].tile = tile;
+    vultures_tilecache[tile_id].age = 0;
+}
+
+
+vultures_tile *vultures_tilecache_get(int tile_id)
+{
+    vultures_tilecache[tile_id].age = 0;
+    if (vultures_tilecache[tile_id].tile)
+        return vultures_tilecache[tile_id].tile;
+    return NULL;
+}
 
 
 void vultures_put_tile_shaded(int x, int y, int tile_id, int shadelevel)
@@ -57,6 +119,9 @@ void vultures_put_tile_shaded(int x, int y, int tile_id, int shadelevel)
  * otherwise it loads the tile, stores the pointer and returns it */
 vultures_tile * vultures_get_tile_shaded(int tile_id, int shadelevel)
 {
+    vultures_tile *tile;
+    int shaded_id = tile_id + shadelevel * GAMETILECOUNT;
+
     if (tile_id < 0)
         return NULL;
 
@@ -75,21 +140,26 @@ vultures_tile * vultures_get_tile_shaded(int tile_id, int shadelevel)
     /* specialized load functions: second */
     /* if you are invisible you have the V_TILE_PLAYER_INVIS. here we give that tile a meaning */
     if (tile_id == V_MISC_PLAYER_INVIS)
-        vultures_tiles_cur[tile_id] = vultures_make_alpha_player_tile(u.umonnum, canseeself() ? 0.6 : 0.35);
+        tile = vultures_make_alpha_player_tile(u.umonnum, canseeself() ? 0.6 : 0.35);
 
-    /* a shaded tile */
-    else if (shadelevel > 0)
-        return vultures_shade_tile(tile_id, shadelevel);
-
-    if (vultures_tiles_cur[tile_id])
-        ; /* don't need to do anything: the tile is loaded */
-    /* check whether the tile was loaded last turn */
-    else if (!vultures_tiles_cur[tile_id] && vultures_tiles_prev[tile_id])
-        vultures_tiles_cur[tile_id] = vultures_tiles_prev[tile_id];
     else
-        vultures_tiles_cur[tile_id] = vultures_load_tile(tile_id);
+        /* if shadelevel == 0 then shaded_id == tile_id */
+        tile = vultures_tilecache_get(shaded_id);
 
-    return vultures_tiles_cur[tile_id];
+    if (!tile) /* never true if tile_id == V_MISC_PLAYER_INVIS */
+    {
+        if (shadelevel > 0)
+        {
+            tile = vultures_get_tile_shaded(tile_id, 0);
+            tile = vultures_shade_tile(tile, shadelevel);
+        }
+        else
+            tile = vultures_load_tile(tile_id);
+    }
+
+    vultures_tilecache_add(tile, shaded_id);
+
+    return tile;
 }
 
 
@@ -141,58 +211,19 @@ vultures_tile * vultures_load_tile(int tile_id)
 
 
 /* darken a tile; the amount of darkening is determined by the tile_id */
-static inline vultures_tile * vultures_shade_tile(int real_id, int shadelevel)
+static inline vultures_tile * vultures_shade_tile(vultures_tile *orig, int shadelevel)
 {
-    vultures_tile *tile, *orig;
-    int tile_id = real_id + shadelevel * GAMETILECOUNT;
     SDL_Surface * blend = (shadelevel == 1) ? vultures_ftshade1 : vultures_ftshade2;
+    vultures_tile *tile = malloc(sizeof(vultures_tile));
 
-    /* the base tile should not be a pointer to another tile */
-    if (vultures_gametiles[real_id].ptr != -1)
-        return NULL;
+    tile->xmod = orig->xmod;
+    tile->ymod = orig->ymod;
+    tile->graphic = vultures_get_img_src(0,0, orig->graphic->w-1, orig->graphic->h-1, orig->graphic);
+    SDL_BlitSurface(blend, NULL, tile->graphic, NULL);
 
-    /* the tile was used last turn, no need to load & darken it */
-    if (!vultures_tiles_cur[tile_id] && vultures_tiles_prev[tile_id])
-        vultures_tiles_cur[tile_id] = vultures_tiles_prev[tile_id];
-
-    if (!vultures_tiles_cur[tile_id])
-    {
-        /* load the tile */
-        orig = vultures_get_tile(real_id);
-
-        tile = malloc(sizeof(vultures_tile));
-        tile->xmod = orig->xmod;
-        tile->ymod = orig->ymod;
-        tile->graphic = vultures_get_img_src(0,0, orig->graphic->w-1, orig->graphic->h-1, orig->graphic);
-        SDL_BlitSurface(blend, NULL, tile->graphic, NULL);
-
-        vultures_tiles_cur[tile_id] = tile;
-    }
-
-    return vultures_tiles_cur[tile_id];
+    return tile;
 }
 
-
-/* flip the tile arrays and unload all tiles that were not used for 2 turns */
-void vultures_flip_tile_arrays(void)
-{
-    int i;
-    vultures_tile ** temp;
-
-    for (i = 0; i < TILEARRAYLEN; i++)
-    {
-        if (vultures_tiles_prev[i] && !vultures_tiles_cur[i])
-        {
-            SDL_FreeSurface(vultures_tiles_prev[i]->graphic);
-            free(vultures_tiles_prev[i]);
-        }
-    }
-
-    temp = vultures_tiles_prev;
-    vultures_tiles_prev = vultures_tiles_cur;
-    vultures_tiles_cur = temp;
-    memset(vultures_tiles_cur, 0, TILEARRAYLEN * sizeof(vultures_tile *));
-}
 
 
 void vultures_put_tilehighlight(int x, int y, int tile_id)
@@ -207,9 +238,7 @@ void vultures_put_tilehighlight(int x, int y, int tile_id)
         return;
 
     /* get the base tile */
-    tile = vultures_tiles_cur[tile_id];
-    if (!tile)
-        tile = vultures_get_tile_shaded(tile_id, 0);
+    tile = vultures_get_tile_shaded(tile_id, 0);
 
     pxf = tile->graphic->format;
 
@@ -268,10 +297,8 @@ int vultures_load_gametiles(void)
 
     /* initialize the two tile arrays. must happen after reading the config file,
      * as GAMETILECOUNT and TILEARRAYLEN are not know before */
-    vultures_tiles_cur  = malloc(TILEARRAYLEN * sizeof(vultures_tile *));
-    vultures_tiles_prev = malloc(TILEARRAYLEN * sizeof(vultures_tile *));
-    memset(vultures_tiles_cur, 0, TILEARRAYLEN * sizeof(vultures_tile *));
-    memset(vultures_tiles_prev, 0, TILEARRAYLEN * sizeof(vultures_tile *));
+    vultures_tilecache = malloc(TILEARRAYLEN * sizeof(vultures_tilecache_entry));
+    memset(vultures_tilecache, 0, TILEARRAYLEN * sizeof(vultures_tilecache_entry));
 
 
     /* create the surfaces used to shade floor tiles */
@@ -293,11 +320,8 @@ void vultures_unload_gametiles(void)
     int i;
 
     /* calling flip twice will unload all the tiles... */
-    vultures_flip_tile_arrays();
-    vultures_flip_tile_arrays();
-    
-    free(vultures_tiles_cur);
-    free(vultures_tiles_prev);
+    vultures_tilecache_discard();
+    free(vultures_tilecache);
 
     SDL_FreeSurface(vultures_ftshade1);
     SDL_FreeSurface(vultures_ftshade2);
@@ -318,12 +342,8 @@ static vultures_tile *vultures_make_alpha_player_tile(int monnum, double op_scal
     static double lastscale = 0;
     vultures_tile *montile;
     vultures_tile *tile = NULL;
-    int x, y;
 
-    if (vultures_tiles_cur[V_MISC_PLAYER_INVIS])
-        tile = vultures_tiles_cur[V_MISC_PLAYER_INVIS];
-    else if (vultures_tiles_prev[V_MISC_PLAYER_INVIS])
-        tile = vultures_tiles_prev[V_MISC_PLAYER_INVIS];
+    tile = vultures_tilecache_get(V_MISC_PLAYER_INVIS);
 
     /*
      * monnum may change if player polymorphs...
@@ -332,30 +352,19 @@ static vultures_tile *vultures_make_alpha_player_tile(int monnum, double op_scal
     {
         lastscale = op_scale;
 
-        if (vultures_tiles_cur[V_MISC_PLAYER_INVIS] != NULL)
-        {
-            SDL_FreeSurface(vultures_tiles_cur[V_MISC_PLAYER_INVIS]->graphic);
-            free(vultures_tiles_cur[V_MISC_PLAYER_INVIS]);
-            vultures_tiles_cur[V_MISC_PLAYER_INVIS] = NULL;
-        }
-
         montile = vultures_get_tile(MONSTER_TO_VTILE(monnum));
         tile = malloc(sizeof(*tile));
         if (tile == NULL)
             return montile;
 
         /* set tile->graphic to be an exact copy of montile->graphic */
-        tile->graphic = vultures_get_img_src(0,0,montile->graphic->w-1, montile->graphic->h-1, montile->graphic);
+        tile->graphic = vultures_get_img_src(0, 0, montile->graphic->w-1,
+                                 montile->graphic->h-1, montile->graphic);
         tile->xmod = montile->xmod;
         tile->ymod = montile->ymod;
 
-        /* scale opacity of every pixel by op_scale. This works nicely, because
-         * complete transparency has a numeric value of 0, so it will remain unchanged,
-         * while all other pixels transparency will depend on their current transparency */
-        unsigned char * rawdata = tile->graphic->pixels;
-        for (y = 0; y < tile->graphic->h; y++)
-            for (x = 0; x < tile->graphic->pitch; x += 4)
-                rawdata[y*tile->graphic->pitch+x+3] *= op_scale;
+        vultures_set_tile_alpha(tile, op_scale);
+
         tilenum = monnum;
     }
 
@@ -363,18 +372,19 @@ static vultures_tile *vultures_make_alpha_player_tile(int monnum, double op_scal
 }
 
 /* makes a tile (partially) transparent */
-static inline vultures_tile *vultures_set_tile_alpha(vultures_tile *tile, double opacity)
+static inline void vultures_set_tile_alpha(vultures_tile *tile, double opacity)
 {
     unsigned char * rawdata;
     int x, y;
 
+    /* scale opacity of every pixel. This works nicely, because
+     * complete transparency has a numeric value of 0, so it will remain unchanged,
+     * while all other pixels transparency will depend on their current transparency */
     rawdata = tile->graphic->pixels;
     for (y = 0; y < tile->graphic->h; y++)
         for (x = 0; x < tile->graphic->pitch; x += 4)
             /* multiply the alpha component by the opacity */
             rawdata[y*tile->graphic->pitch+x+3] *= opacity;
-
-    return tile;
 }
 
 

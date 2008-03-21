@@ -572,8 +572,7 @@ int vultures_iface_opts(void)
                         vultures_opts.wall_opacity = 1.0;
                 }
                 /* flush tile arrays to ensure the new transparency gets used */
-                vultures_flip_tile_arrays();
-                vultures_flip_tile_arrays();
+                vultures_tilecache_discard();
                 /* force redraw */
                 vultures_map_force_redraw();
                 vultures_display_nhwindow(WIN_MAP, 0);
