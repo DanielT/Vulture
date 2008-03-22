@@ -1015,6 +1015,7 @@ void vultures_print_glyph(winid window, XCHAR_P x, XCHAR_P y, int glyph)
         if (x == u.ux && y == u.uy && !canseeself())
         {
             vultures_map_glyph[y][x] = monnum_to_glyph(u.umonnum);
+            vultures_map_specialattr[y][x] = 0; /* you can't be your own pet */
             map_mon = V_MISC_PLAYER_INVIS;
         }
         /* We rely on the glyph for monsters, as they are never covered by anything
