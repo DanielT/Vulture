@@ -353,6 +353,10 @@ void vultures_parse_tileconf(FILE *fp)
         }
     }
 
+    /* special fixup for V_MISC_PLAYER_INVIS: it does not have a tile image,
+     * nor should it redirect as it is handled specially */
+    vultures_gametiles[V_MISC_PLAYER_INVIS].ptr = -1;
+
 
     /* free tilenames etc */
     for (i = 0; i < NUM_TILETYPES; i++)

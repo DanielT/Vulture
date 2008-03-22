@@ -32,8 +32,6 @@ typedef struct {
 
 
 /* main tile arrays */
-// static vultures_tile ** vultures_tiles_cur;
-// static vultures_tile ** vultures_tiles_prev;
 static vultures_tilecache_entry *vultures_tilecache;
 
 /* semi-transparent black areas used to shade floortiles */
@@ -319,7 +317,6 @@ void vultures_unload_gametiles(void)
 {
     int i;
 
-    /* calling flip twice will unload all the tiles... */
     vultures_tilecache_discard();
     free(vultures_tilecache);
 
@@ -345,9 +342,7 @@ static vultures_tile *vultures_make_alpha_player_tile(int monnum, double op_scal
 
     tile = vultures_tilecache_get(V_MISC_PLAYER_INVIS);
 
-    /*
-     * monnum may change if player polymorphs...
-     */
+    /* monnum may change if player polymorphs... */
     if (monnum != tilenum || lastscale != op_scale || !tile)
     {
         lastscale = op_scale;
