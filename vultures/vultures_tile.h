@@ -253,7 +253,6 @@ struct gametiles {
     int ptr;
     int hs_x;
     int hs_y;
-    int w, h;
 };
 
 struct fstyles {
@@ -318,7 +317,6 @@ extern struct walls walls_full[];
 extern struct walls walls_half[];
 extern struct fedges flooredges[];
 extern struct fstyles floorstyles[];
-extern struct gametiles *vultures_gametiles;
 
 
 #endif

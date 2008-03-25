@@ -23,7 +23,7 @@ int vultures_get_tiletype_from_name(char* name);
 
 int vultures_get_tile_index(int type, char * name, int allow_expand);
 
-void vultures_parse_tileconf(FILE *fp);
+void vultures_parse_tileconf(FILE *fp, struct gametiles **gt_ptr);
 
 extern void yyerror(const char *str);
 extern int yyparse();

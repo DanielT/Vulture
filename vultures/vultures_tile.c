@@ -38,6 +38,7 @@ static vultures_tilecache_entry *vultures_tilecache;
 static SDL_Surface * vultures_ftshade1;
 static SDL_Surface * vultures_ftshade2;
 
+static struct gametiles *vultures_gametiles;
 
 static vultures_tile *vultures_make_alpha_player_tile(int monnum, double op_scale);
 static inline vultures_tile * vultures_shade_tile(vultures_tile *orig, int shadelevel);
@@ -289,7 +290,7 @@ int vultures_load_gametiles(void)
         exit(1);
     }
 
-    vultures_parse_tileconf(fp);
+    vultures_parse_tileconf(fp, &vultures_gametiles);
 
     fclose(fp);
 

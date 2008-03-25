@@ -41,6 +41,8 @@
 #define V_COLOR_MINI_YOU      CLR32_WHITE
 
 
+#define VULTURES_CLIPMARGIN 200
+
 enum actions {
     V_ACTION_NONE,
     V_ACTION_TRAVEL,

@@ -25,7 +25,6 @@ tmp_tile deftiles[NUM_TILETYPES];
 /* things that get used by vultures later */
 struct walls walls_full[V_WALL_STYLE_MAX];
 struct walls walls_half[V_WALL_STYLE_MAX];
-struct gametiles *vultures_gametiles;
 struct fedges flooredges[V_FLOOR_EDGE_MAX];
 struct fstyles floorstyles[V_FLOOR_STYLE_MAX];
 int vultures_typecount[NUM_TILETYPES];
@@ -233,12 +232,13 @@ static void init_explnames();
 
 /* parse the configuration file and prepare the data arrays needed by the rest of vultures 
  * This function is the only one that should be called from outside */
-void vultures_parse_tileconf(FILE *fp)
+void vultures_parse_tileconf(FILE *fp, struct gametiles **gt_ptr)
 {
     int i, j, tilenum, loadnum;
     int typeoffset[NUM_TILETYPES];
     vultures_tile *tile;
     char messagebuf[512];
+    struct gametiles * gametiles;
 
     /* init the names for all types of tiles except walls, floors and edges, where the names are dynamic */
     init_objnames(); /* init TT_OBJECT and TT_OBJICON */
@@ -274,10 +274,11 @@ void vultures_parse_tileconf(FILE *fp)
         typeoffset[i] = typeoffset[i-1] + vultures_typecount[i-1];
 
 
-    vultures_gametiles = malloc(GAMETILECOUNT * sizeof(struct gametiles));
-    memset(vultures_gametiles, 0, GAMETILECOUNT * sizeof(struct gametiles));
+    *gt_ptr = malloc(GAMETILECOUNT * sizeof(struct gametiles));
+    gametiles = *gt_ptr;
+    memset(gametiles, 0, GAMETILECOUNT * sizeof(struct gametiles));
 
-    /* build vultures_gametiles from the info in tmp_gametiles */
+    /* build gametiles from the info in tmp_gametiles */
     for (i = 0; i < NUM_TILETYPES; i++)
     {
         for (j = 0; j < vultures_typecount[i]; j++)
@@ -287,49 +288,49 @@ void vultures_parse_tileconf(FILE *fp)
             /* use given tile */
             if (tmp_gametiles[i][j].filename && tmp_gametiles[i][j].ptr_type == -1 && tmp_gametiles[i][j].ptr_num == -1)
             {
-                vultures_gametiles[tilenum].filename = strdup(tmp_gametiles[i][j].filename);
-                vultures_gametiles[tilenum].ptr = -1;
-                vultures_gametiles[tilenum].hs_x = tmp_gametiles[i][j].hs_x;
-                vultures_gametiles[tilenum].hs_y = tmp_gametiles[i][j].hs_y;
+                gametiles[tilenum].filename = strdup(tmp_gametiles[i][j].filename);
+                gametiles[tilenum].ptr = -1;
+                gametiles[tilenum].hs_x = tmp_gametiles[i][j].hs_x;
+                gametiles[tilenum].hs_y = tmp_gametiles[i][j].hs_y;
             }
             /* redirect to another tile */
             else if (tmp_gametiles[i][j].ptr_type != 0 || tmp_gametiles[i][j].ptr_num != 0)
             {
-                vultures_gametiles[tilenum].filename = NULL;
-                vultures_gametiles[tilenum].ptr = typeoffset[tmp_gametiles[i][j].ptr_type] + tmp_gametiles[i][j].ptr_num;
-                vultures_gametiles[tilenum].hs_x = 0;
-                vultures_gametiles[tilenum].hs_y = 0;
+                gametiles[tilenum].filename = NULL;
+                gametiles[tilenum].ptr = typeoffset[tmp_gametiles[i][j].ptr_type] + tmp_gametiles[i][j].ptr_num;
+                gametiles[tilenum].hs_x = 0;
+                gametiles[tilenum].hs_y = 0;
             }
             /* use default tile */
             else if (!tmp_gametiles[i][j].filename &&
                       tmp_gametiles[i][j].ptr_type == 0 &&
                       tmp_gametiles[i][j].ptr_num == 0)
             {
-                vultures_gametiles[tilenum].ptr = typeoffset[deftiles[i].ptr_type] + deftiles[i].ptr_num;
-                vultures_gametiles[tilenum].hs_x = deftiles[i].hs_x;
-                vultures_gametiles[tilenum].hs_y = deftiles[i].hs_y;
+                gametiles[tilenum].ptr = typeoffset[deftiles[i].ptr_type] + deftiles[i].ptr_num;
+                gametiles[tilenum].hs_x = deftiles[i].hs_x;
+                gametiles[tilenum].hs_y = deftiles[i].hs_y;
             }
         }
     }
 
 
     /* validate all the tiles. this must be done in a separate loop as there may be
-     * forward references which won't work until vultures_gametiles is fully initialized */
+     * forward references which won't work until gametiles is fully initialized */
     for (i = 0; i < NUM_TILETYPES; i++)
     {
         for (j = 0; j < vultures_typecount[i]; j++)
         {
             tilenum = typeoffset[i] + j;
             loadnum = tilenum;
-            if (!vultures_gametiles[tilenum].filename && vultures_gametiles[tilenum].ptr != -1)
-                loadnum = vultures_gametiles[tilenum].ptr;
+            if (!gametiles[tilenum].filename && gametiles[tilenum].ptr != -1)
+                loadnum = gametiles[tilenum].ptr;
 
             tile = vultures_load_tile(loadnum);
             if (!tile)
             {
-                if (vultures_gametiles[tilenum].filename)
+                if (gametiles[tilenum].filename)
                     snprintf(messagebuf, sizeof(messagebuf), "%s.%s: \"%s\" cannot be loaded",
-                             typenames[i], tilenames[i][j], vultures_gametiles[tilenum].filename);
+                             typenames[i], tilenames[i][j], gametiles[tilenum].filename);
                 else
                     snprintf(messagebuf, sizeof(messagebuf), "%s.%s: invalid redirection",
                              typenames[i], tilenames[i][j]);
@@ -343,10 +344,6 @@ void vultures_parse_tileconf(FILE *fp)
             }
             else
             {
-                /* remember width and height, so that more precise clipping can be done later */
-                vultures_gametiles[tilenum].w = tile->graphic->w;
-                vultures_gametiles[tilenum].h = tile->graphic->h;
-
                 SDL_FreeSurface(tile->graphic);
                 free(tile);
             }
@@ -355,7 +352,7 @@ void vultures_parse_tileconf(FILE *fp)
 
     /* special fixup for V_MISC_PLAYER_INVIS: it does not have a tile image,
      * nor should it redirect as it is handled specially */
-    vultures_gametiles[V_MISC_PLAYER_INVIS].ptr = -1;
+    gametiles[V_MISC_PLAYER_INVIS].ptr = -1;
 
 
     /* free tilenames etc */

@@ -194,7 +194,6 @@ static int vultures_monster_to_tile(int mon_id, XCHAR_P x, XCHAR_P y);
 static char vultures_mappos_to_dirkey(point mappos);
 static void vultures_clear_walls(int y, int x);
 static void vultures_build_tilemap(void);
-static int vultures_remap_tile_id(int tile_id);
 
 
 
@@ -900,9 +899,8 @@ static void vultures_set_map_data(int ** data_array, int x, int y, int newval, i
 {
     int pixel_x, pixel_y;
     int tl_x = 0, tl_y = 0, br_x = 0, br_y = 0;
-    int oldval = vultures_remap_tile_id(data_array[y][x]);
-    int tmp_newval = vultures_remap_tile_id(newval);
     struct window * map = vultures_get_window(0);
+    vultures_tile *oldtile, *newtile;
 
     if (data_array[y][x] != newval || force)
     {
@@ -911,24 +909,33 @@ static void vultures_set_map_data(int ** data_array, int x, int y, int newval, i
         pixel_x = (map->w / 2) + V_MAP_XMOD*(x - y + vultures_view_y - vultures_view_x);
         pixel_y = (map->h / 2) + V_MAP_YMOD*(x + y - vultures_view_y - vultures_view_x);
 
+        if (pixel_x < -VULTURES_CLIPMARGIN ||
+            pixel_y < -VULTURES_CLIPMARGIN ||
+            pixel_x > vultures_screen->w + VULTURES_CLIPMARGIN ||
+            pixel_y > vultures_screen->h + VULTURES_CLIPMARGIN)
+            return;
+
+        oldtile = vultures_get_tile(data_array[y][x]);
+        newtile = vultures_get_tile(newval);
+
         if (data_array != vultures_map_back)
         {
-            if (oldval > 0)
+            if (oldtile)
             {
-                tl_x = vultures_gametiles[oldval].hs_x;
-                tl_y = vultures_gametiles[oldval].hs_y;
+                tl_x = oldtile->xmod;
+                tl_y = oldtile->ymod;
 
-                br_x = vultures_gametiles[oldval].hs_x + vultures_gametiles[oldval].w;
-                br_y = vultures_gametiles[oldval].hs_y + vultures_gametiles[oldval].h;
+                br_x = oldtile->xmod + oldtile->graphic->w;
+                br_y = oldtile->ymod + oldtile->graphic->h;
             }
 
-            if (tmp_newval > 0)
+            if (newtile)
             {
-                tl_x = min(vultures_gametiles[tmp_newval].hs_x, tl_x);
-                tl_y = min(vultures_gametiles[tmp_newval].hs_y, tl_y);
+                tl_x = min(newtile->xmod, tl_x);
+                tl_y = min(newtile->ymod, tl_y);
 
-                br_x = max(br_x, vultures_gametiles[tmp_newval].hs_x + vultures_gametiles[tmp_newval].w);
-                br_y = max(br_y, vultures_gametiles[tmp_newval].hs_y + vultures_gametiles[tmp_newval].h);
+                br_x = max(br_x, newtile->xmod + newtile->graphic->w);
+                br_y = max(br_y, newtile->ymod + newtile->graphic->h);
             }
 
             tl_x += pixel_x;
@@ -1281,7 +1288,7 @@ void vultures_print_glyph(winid window, XCHAR_P x, XCHAR_P y, int glyph)
                 break;
         }
     }
-    
+
     /* write new map data */
 
     vultures_set_map_data(vultures_map_mon, x, y, map_mon, force_update);
@@ -2533,24 +2540,3 @@ static void vultures_build_tilemap(void)
     /* build "special tile" array: these are the tiles for dungeon glyphs */
 
 }
-
-
-
-static int vultures_remap_tile_id(int tile_id)
-{
-    if (tile_id == V_MISC_PLAYER_INVIS)
-        tile_id = MONSTER_TO_VTILE(u.umonnum);
-
-    if (tile_id < 0)
-        return tile_id;
-
-    if (TILE_IS_OBJECT(tile_id))
-        tile_id = objects[tile_id].oc_descr_idx;
-
-    /* if the tile is merely a pointer to another tile we modify the tile_id */
-    if (vultures_gametiles[tile_id].ptr != -1)
-        tile_id = vultures_gametiles[tile_id].ptr;
-
-    return tile_id;
-}
-
