@@ -7,6 +7,7 @@
 #include "vultures_tile.h"
 #include "vultures_tileconfig.h"
 #include "vultures_gen.h"
+#include "vultures_opt.h"
 
 
 typedef struct {
@@ -314,38 +315,41 @@ void vultures_parse_tileconf(FILE *fp, struct gametiles **gt_ptr)
     }
 
 
-    /* validate all the tiles. this must be done in a separate loop as there may be
-     * forward references which won't work until gametiles is fully initialized */
-    for (i = 0; i < NUM_TILETYPES; i++)
+    if (vultures_opts.debug)
     {
-        for (j = 0; j < vultures_typecount[i]; j++)
+        /* validate all the tiles. this must be done in a separate loop as there may be
+        * forward references which won't work until gametiles is fully initialized */
+        for (i = 0; i < NUM_TILETYPES; i++)
         {
-            tilenum = typeoffset[i] + j;
-            loadnum = tilenum;
-            if (!gametiles[tilenum].filename && gametiles[tilenum].ptr != -1)
-                loadnum = gametiles[tilenum].ptr;
-
-            tile = vultures_load_tile(loadnum);
-            if (!tile)
+            for (j = 0; j < vultures_typecount[i]; j++)
             {
-                if (gametiles[tilenum].filename)
-                    snprintf(messagebuf, sizeof(messagebuf), "%s.%s: \"%s\" cannot be loaded",
-                             typenames[i], tilenames[i][j], gametiles[tilenum].filename);
-                else
-                    snprintf(messagebuf, sizeof(messagebuf), "%s.%s: invalid redirection",
-                             typenames[i], tilenames[i][j]);
+                tilenum = typeoffset[i] + j;
+                loadnum = tilenum;
+                if (!gametiles[tilenum].filename && gametiles[tilenum].ptr != -1)
+                    loadnum = gametiles[tilenum].ptr;
 
-                if (iflags.window_inited == TRUE)
-                    pline(messagebuf);
-                else
-                    printf("Tile config: %s\n", messagebuf);
+                tile = vultures_load_tile(loadnum);
+                if (!tile)
+                {
+                    if (gametiles[tilenum].filename)
+                        snprintf(messagebuf, sizeof(messagebuf), "%s.%s: \"%s\" cannot be loaded",
+                                typenames[i], tilenames[i][j], gametiles[tilenum].filename);
+                    else
+                        snprintf(messagebuf, sizeof(messagebuf), "%s.%s: invalid redirection",
+                                typenames[i], tilenames[i][j]);
 
-                vultures_write_log(V_LOG_NOTE, __FILE__, __LINE__, "Tile config: %s\n", messagebuf);
-            }
-            else
-            {
-                SDL_FreeSurface(tile->graphic);
-                free(tile);
+                    if (iflags.window_inited == TRUE)
+                        pline(messagebuf);
+                    else
+                        printf("Tile config: %s\n", messagebuf);
+
+                    vultures_write_log(V_LOG_NOTE, __FILE__, __LINE__, "Tile config: %s\n", messagebuf);
+                }
+                else
+                {
+                    SDL_FreeSurface(tile->graphic);
+                    free(tile);
+                }
             }
         }
     }

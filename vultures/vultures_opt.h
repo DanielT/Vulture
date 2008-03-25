@@ -31,6 +31,7 @@ struct vultures_optstruct {
     int use_standard_inventory;
     int use_standard_object_menus;
     int highlight_cursor_square;
+    int debug;
     char macro[6][10];
     double wall_opacity;
 };

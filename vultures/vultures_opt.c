@@ -37,6 +37,7 @@ enum interface_opts_menu_ids {
     V_IOMID_MESSAGELINES,
     V_IOMID_KEYROTATION,
     V_IOMID_HIGHLIGHT_CURSOR_SQUARE,
+    V_IOMID_DEBUG,
     V_IOMID_MACROS = 99
 };
 
@@ -108,6 +109,8 @@ void vultures_read_main_config(FILE * fp)
             vultures_opts.no_key_translation = atoi(param);
         else if (!strncmp(configline, "highlight_cursor_square", optend - configline))
             vultures_opts.highlight_cursor_square = atoi(param);
+        else if (!strncmp(configline, "debug", optend - configline))
+            vultures_opts.debug = atoi(param);
         else if (!strncmp(configline, "macro", 5))
         {
             macronum = atoi(configline+5);
@@ -252,6 +255,7 @@ void vultures_read_options(void)
     vultures_opts.messagelines = 3;
     vultures_opts.no_key_translation = 0;
     vultures_opts.highlight_cursor_square = 1;
+    vultures_opts.debug = 0;
 
     strcpy(vultures_opts.macro[0], "n100.");
     strcpy(vultures_opts.macro[1], "n20s");
@@ -404,6 +408,7 @@ void vultures_write_userconfig(void)
         fprintf(fp, "messagelines=%d\n", vultures_opts.messagelines);
         fprintf(fp, "no_key_translation=%d\n", vultures_opts.no_key_translation);
         fprintf(fp, "highlight_cursor_square=%d\n", vultures_opts.highlight_cursor_square);
+        fprintf(fp, "debug=%d\n", vultures_opts.debug);
 
         for (i = 0; i < 6; i++)
             if (vultures_opts.macro[i][0] != '\0')
@@ -498,6 +503,10 @@ int vultures_iface_opts(void)
 
     any.a_int = V_IOMID_HIGHLIGHT_CURSOR_SQUARE;
     sprintf(str, "Highlight under the cursor\t[%s]", vultures_opts.highlight_cursor_square ? "yes" : "no");
+    vultures_add_menu(winid, NO_GLYPH, &any, 0, 0, ATR_BOLD, str, MENU_UNSELECTED);
+
+    any.a_int = V_IOMID_DEBUG;
+    sprintf(str, "Run-time debugging\t[%s]", vultures_opts.debug ? "yes" : "no");
     vultures_add_menu(winid, NO_GLYPH, &any, 0, 0, ATR_BOLD, str, MENU_UNSELECTED);
 
     for (i = 0; i < 6; i++)
@@ -668,6 +677,10 @@ int vultures_iface_opts(void)
 
             case V_IOMID_HIGHLIGHT_CURSOR_SQUARE:
                 vultures_opts.highlight_cursor_square = !vultures_opts.highlight_cursor_square;
+                break;
+
+            case V_IOMID_DEBUG:
+                vultures_opts.debug = !vultures_opts.debug;
                 break;
 
             default:
