@@ -14,6 +14,7 @@
 #include "vultures_txt.h"
 #include "vultures_opt.h"
 #include "vultures_gen.h"
+#include "vultures_mou.h"
 
 #include "epri.h"
 
@@ -493,6 +494,9 @@ int vultures_draw_level(struct window * win)
     else
         vultures_map_swallow = V_TILE_NONE;
 
+
+    /* prevent double redraws if the map view just moved under the mouse cursor */
+    vultures_map_highlight = vultures_mouse_to_map(vultures_get_mouse_pos());
 
     /* coords of the top right corner */
     map_tr_x = (-V_MAP_YMOD * (map_centre_x + 50) + V_MAP_XMOD * (map_centre_y + 50) +
