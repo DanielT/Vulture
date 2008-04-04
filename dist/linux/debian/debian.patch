@@ -1,0 +1,1306 @@
+diff -Naur vultures/debian/changelog vultures.debian/debian/changelog
+--- vultures/debian/changelog	1970-01-01 01:00:00.000000000 +0100
++++ vultures.debian/debian/changelog	2008-04-03 09:22:43.000000000 +0200
+@@ -0,0 +1,7 @@
++vultures (2.1.90-1) unstable; urgency=low
++
++  * Built the initial package for vultures using heavy-handed copying of large parts of the debian/
++    directory in the falconseye package.
++
++ -- Daniel Thaler <daniel@dthaler.de>  Wed, 2 Apr 2008 16:16:16 +0200
++
+diff -Naur vultures/debian/compat vultures.debian/debian/compat
+--- vultures/debian/compat	1970-01-01 01:00:00.000000000 +0100
++++ vultures.debian/debian/compat	2008-04-03 09:22:43.000000000 +0200
+@@ -0,0 +1 @@
++5
+diff -Naur vultures/debian/control vultures.debian/debian/control
+--- vultures/debian/control	1970-01-01 01:00:00.000000000 +0100
++++ vultures.debian/debian/control	2008-04-03 09:22:43.000000000 +0200
+@@ -0,0 +1,52 @@
++Source: vultures
++Section: games
++Priority: optional
++Maintainer: Daniel Thaler <daniel@dthaler.de>
++Build-Depends: debhelper (>= 5.0.0), libsdl1.2-dev (>= 1.2.3+cvs20020303-1), libncurses5-dev, bison, bsdmainutils, groff-base, flex, libpng12-dev, libsdl-mixer1.2-dev, libsdl-ttf2.0-dev
++Standards-Version: 3.6.2
++
++Package: vultureseye
++Architecture: any
++Depends: vultures-data (>= 2.1.90), ${shlibs:Depends}
++Replaces: falconseye
++Description: A port of NetHack using SDL
++ Vultureseye is a mouse-driven interface for NetHack that enhances the visuals,
++ audio and accessibility of the game, yet retains all the original gameplay and 
++ game features.
++ .
++ NetHack is a single player dungeon exploration game that runs on a wide variety
++ of computer systems, with a variety of graphical and text interfaces all using
++ the same game engine. Unlike many other Dungeons & Dragons-inspired games, the
++ emphasis in NetHack is on discovering the detail of the dungeon and not simply
++ killing everything in sight - in fact, killing everything in sight is a good
++ way to die quickly. Each game presents a different landscape - the random
++ number generator provides an essentially unlimited number of variations of the
++ dungeon and its denizens to be discovered by the player in one of a number of
++ characters: you can pick your race, your role, and your gender.
++
++Package: vulturesclaw
++Architecture: any
++Depends: vultures-data (>= 2.1.90), ${shlibs:Depends}
++Description: A port of SLASH'em using SDL
++ Vulturesclaw is a mouse-driven interface for SLASH'em that enhances the visuals,
++ audio and accessibility of the game, yet retains all the original gameplay and 
++ game features.
++
++
++Package: vultures-data
++Architecture: all
++Description: Data files for Vultureseye and Vulturesclaw
++ Vultureseye and Vulturesclaw are mouse-driven interfaces for NetHack and SLASH'em
++ that enhance the visuals, audio and accessibility of the game, yet retain all the
++ original gameplay and game features.
++ .
++ NetHack is a single player dungeon exploration game that runs on a wide variety
++ of computer systems, with a variety of graphical and text interfaces all using
++ the same game engine. Unlike many other Dungeons & Dragons-inspired games, the
++ emphasis in NetHack is on discovering the detail of the dungeon and not simply
++ killing everything in sight - in fact, killing everything in sight is a good
++ way to die quickly. Each game presents a different landscape - the random
++ number generator provides an essentially unlimited number of variations of the
++ dungeon and its denizens to be discovered by the player in one of a number of
++ characters: you can pick your race, your role, and your gender.
++
+diff -Naur vultures/debian/copyright vultures.debian/debian/copyright
+--- vultures/debian/copyright	1970-01-01 01:00:00.000000000 +0100
++++ vultures.debian/debian/copyright	2008-04-03 09:22:43.000000000 +0200
+@@ -0,0 +1,109 @@
++This package was debianized by Daniel Thaler <daniel@dthaler.de> on
++Wed, 2 Apr 2008 16:16:16 +0200.
++(based on the falconseye package by Jonathan Hseu <vomjom@debian.org>)
++
++It was downloaded from http://darkarts.co.za/project/vultures/download/
++
++Upstream Authors:
++	Daniel Thaler <daniel@dthaler.de>
++	Clive Crous <clive@crous.co.za>
++	Jaakko Peltonen <jaakko.peltonen@hut.fi>
++
++Copyright:
++
++                    NETHACK GENERAL PUBLIC LICENSE
++                    (Copyright 1989 M. Stephenson)
++.
++               (Based on the BISON general public license,
++                   copyright 1988 Richard M. Stallman)
++
++ Everyone is permitted to copy and distribute verbatim copies of this
++ license, but changing it is not allowed.  You can also use this wording to
++ make the terms for other programs.
++
++  The license agreements of most software companies keep you at the mercy of
++those companies.  By contrast, our general public license is intended to give
++everyone the right to share NetHack.  To make sure that you get the rights we
++want you to have, we need to make restrictions that forbid anyone to deny you
++these rights or to ask you to surrender the rights.  Hence this license
++agreement.
++
++  Specifically, we want to make sure that you have the right to give away
++copies of NetHack, that you receive source code or else can get it if you
++want it, that you can change NetHack or use pieces of it in new free
++programs, and that you know you can do these things.
++
++  To make sure that everyone has such rights, we have to forbid you to
++deprive anyone else of these rights.  For example, if you distribute copies
++of NetHack, you must give the recipients all the rights that you have.  You
++must make sure that they, too, receive or can get the source code.  And you
++must tell them their rights.
++
++  Also, for our own protection, we must make certain that everyone finds out
++that there is no warranty for NetHack.  If NetHack is modified by someone
++else and passed on, we want its recipients to know that what they have is
++not what we distributed.
++
++  Therefore we (Mike Stephenson and other holders of NetHack copyrights) make
++the following terms which say what you must do to be allowed to distribute or
++change NetHack.
++
++
++                        COPYING POLICIES
++
++  1. You may copy and distribute verbatim copies of NetHack source code as
++you receive it, in any medium, provided that you keep intact the notices on
++all files that refer to copyrights, to this License Agreement, and to the
++absence of any warranty; and give any other recipients of the NetHack
++program a copy of this License Agreement along with the program.
++
++  2. You may modify your copy or copies of NetHack or any portion of it, and
++copy and distribute such modifications under the terms of Paragraph 1 above
++(including distributing this License Agreement), provided that you also do the
++following:
++
++    a) cause the modified files to carry prominent notices stating that you
++    changed the files and the date of any change; and
++
++    b) cause the whole of any work that you distribute or publish, that in
++    whole or in part contains or is a derivative of NetHack or any part
++    thereof, to be licensed at no charge to all third parties on terms
++    identical to those contained in this License Agreement (except that you
++    may choose to grant more extensive warranty protection to some or all
++    third parties, at your option)
++
++    c) You may charge a distribution fee for the physical act of
++    transferring a copy, and you may at your option offer warranty protection
++    in exchange for a fee.
++
++  3. You may copy and distribute NetHack (or a portion or derivative of it,
++under Paragraph 2) in object code or executable form under the terms of
++Paragraphs 1 and 2 above provided that you also do one of the following:
++
++    a) accompany it with the complete machine-readable source code, which
++    must be distributed under the terms of Paragraphs 1 and 2 above; or,
++
++    b) accompany it with full information as to how to obtain the complete
++    machine-readable source code from an appropriate archive site.  (This
++    alternative is allowed only for noncommercial distribution.)
++
++For these purposes, complete source code means either the full source
++distribution as originally released over Usenet or updated copies of the
++files in this distribution used to create the object code or executable.
++
++  4. You may not copy, sublicense, distribute or transfer NetHack except as
++expressly provided under this License Agreement.  Any attempt otherwise to
++copy, sublicense, distribute or transfer NetHack is void and your rights to
++use the program under this License agreement shall be automatically
++terminated.  However, parties who have received computer software programs
++from you with this License Agreement will not have their licenses terminated
++so long as such parties remain in full compliance.
++
++
++Stated plainly:  You are permitted to modify NetHack, or otherwise use parts
++of NetHack, provided that you comply with the conditions specified above;
++in particular, your modified NetHack or program containing parts of NetHack
++must remain freely available as provided in this License Agreement.  In
++other words, go ahead and share NetHack, but don't try to stop anyone else
++from sharing it farther.
++
+diff -Naur vultures/debian/README.Debian vultures.debian/debian/README.Debian
+--- vultures/debian/README.Debian	1970-01-01 01:00:00.000000000 +0100
++++ vultures.debian/debian/README.Debian	2008-04-03 09:22:43.000000000 +0200
+@@ -0,0 +1,13 @@
++vultures for Debian
++---------------------
++
++NetHack is one of the oldest computer role-playing games still played and
++developed. The latest version of the game, NetHack 3.4.3, was released in December
++2003.
++
++Vultureseye is a mouse-driven interface for NetHack that enhances the visuals,
++audio and accessibility of the game, yet retains all the original gameplay and
++game features.
++Vulturesclaw is the same interface running on the SLASH'em core.
++
++ -- Jonathan Hseu <vomjom@debian.org>, Sat, 23 Jun 2001 16:16:49 -0500
+diff -Naur vultures/debian/rules vultures.debian/debian/rules
+--- vultures/debian/rules	1970-01-01 01:00:00.000000000 +0100
++++ vultures.debian/debian/rules	2008-04-03 09:22:43.000000000 +0200
+@@ -0,0 +1,214 @@
++#!/usr/bin/make -f
++# Sample debian/rules that uses debhelper.
++# GNU copyright 1997 to 1999 by Joey Hess.
++#
++# Modified to make a template file for a multi-binary package with separated
++# build-arch and build-indep targets  by Bill Allombert 2001
++
++# Uncomment this to turn on verbose mode.
++#export DH_VERBOSE=1
++
++# This has to be exported to make some magic below work.
++export DH_OPTIONS
++
++#DPKG_ARCH#
++
++CFLAGS = -Wall -g
++
++ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
++	CFLAGS += -O0
++else
++	CFLAGS += -O2
++endif
++ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
++	INSTALL_PROGRAM += -s
++endif
++
++#CONFIGURE#
++
++#Architecture 
++build: build-arch build-indep
++
++build-arch: build-arch-stamp
++build-arch-stamp: #CONFIGURE_STAMP# #CONFIG_STATUS#
++
++	# build vultureseye
++	cd nethack && sh sys/unix/setup.sh 1
++	-@cd nethack/win && ln -s ../../vultures/ vultures
++	$(MAKE) -C nethack all
++
++	# build vulturesclaw
++	cd slashem && sh sys/unix/setup.sh 1
++	-@cd slashem/win && ln -s ../../vultures/ vultures
++	$(MAKE) -C slashem all
++
++build-indep: build-indep-stamp
++build-indep-stamp: #CONFIGURE_STAMP# #CONFIG_STATUS#
++	
++	# Add here commands to compile the indep part of the package.
++	#$(MAKE) doc
++
++clean:
++	dh_testdir
++	dh_testroot
++	rm -f build-arch-stamp build-indep-stamp config-stamp
++
++	# Add here commands to clean up after the build process.
++	-$(MAKE) -C nethack spotless
++	-$(MAKE) -C slashem spotless
++	-find nethack/ -name Makefile -print0 | xargs -r -0 rm
++	-find slashem/ -name Makefile -print0 | xargs -r -0 rm
++	-@rm -f nethack/win/vultures slashem/win/vultures
++	
++	# this file may be created during parallel make, remove it
++	-@rm -f vultures/vultures
++	
++	dh_clean
++
++install: install-indep install-arch
++
++install-indep:
++	dh_testdir
++	dh_testroot
++	dh_clean -k -i
++	dh_installdirs -i
++	
++	# Add here commands to install the indep part of the package into
++	# debian/<package>-doc.
++	#INSTALLDOC#
++
++	for file in vultures_intro.txt vultures_tiles.conf vultures_sounds.conf vultures.conf; \
++	do \
++	install -m 0644 -o root -g root vultures/gamedata/config/$$file \
++	  debian/vultures-data/usr/share/games/vultures/config/; \
++	done
++
++	install -m 0644 -o root -g root vultures/gamedata/tiles/* \
++	  debian/vultures-data/usr/share/games/vultures/tiles/
++										
++	install -m 0644 -o root -g root vultures/gamedata/graphics/* \
++	  debian/vultures-data/usr/share/games/vultures/graphics/
++										
++	install -m 0644 -o root -g root vultures/gamedata/music/* \
++	  debian/vultures-data/usr/share/games/vultures/music/
++										
++	install -m 0644 -o root -g root vultures/gamedata/sound/*.ogg \
++	  debian/vultures-data/usr/share/games/vultures/sound/
++										
++	install -m 0644 -o root -g root vultures/gamedata/fonts/* \
++	  debian/vultures-data/usr/share/games/vultures/fonts/
++
++	install -m 644 -o root -g root vultures/gamedata/manual/*.* \
++	  debian/vultures-data/usr/share/doc/vultures/manual/
++
++	install -m 644 -o root -g root vultures/gamedata/manual/img/* \
++	  debian/vultures-data/usr/share/doc/vultures/manual/img/
++	
++	# Symlink all files just installed to /usr/lib so that vultures,
++	# which has not been modified to look in /usr/share for any of its
++	# files, will still find them. This symlinking is easier than
++	# actually patching the source, since vultures expects to find
++	# all its support files in one directory.
++
++	for x in debian/vultures-data/usr/share/games/vultures/*; do \
++		ln -s /usr/share/games/vultures/`basename $$x` \
++		debian/vultures-data/usr/lib/games/vultureseye/; \
++		ln -s /usr/share/games/vultures/`basename $$x` \
++		debian/vultures-data/usr/lib/games/vulturesclaw/; \
++	done
++
++install-arch:
++	dh_testdir
++	dh_testroot
++	dh_clean -k -a
++	dh_installdirs -a
++
++	# Add here commands to install the arch part of the package into 
++	# debian/tmp.
++	#INSTALL#
++
++	#install vultureseye
++	chgrp -R games debian/vultureseye/var/games/vultureseye
++	chmod -R 770 debian/vultureseye/var/games/vultureseye
++
++	for file in license nhdat; \
++	do \
++	  install -m 0644 -o root -g root nethack/dat/$$file \
++	  debian/vultureseye/usr/lib/games/vultureseye/; \
++	done
++
++	install -m 2755 -o root -g games debian/vultureseye.sh \
++	  debian/vultureseye/usr/games/vultureseye
++										
++	install -m 2755 -o root -g games nethack/src/vultureseye \
++	  debian/vultureseye/usr/lib/games/vultureseye/vultureseye
++										
++	install -m 755 -o root -g root nethack/util/recover \
++	  debian/vultureseye/usr/lib/games/vultureseye/recover
++										
++	install -m 644 -o root -g root debian/vultureseyerc \
++	  debian/vultureseye/etc/vultures/vultureseyerc
++										
++	install -m 644 -o root -g root vultures/gamedata/nh_icon.png \
++	  debian/vultureseye/usr/share/pixmaps/vultureseye.png
++
++	install -m 644 debian/vultureseye.desktop $(CURDIR)/debian/vultureseye/usr/share/applications
++
++
++	#install vulturesclaw
++	chgrp -R games debian/vulturesclaw/var/games/vulturesclaw
++	chmod -R 770 debian/vulturesclaw/var/games/vulturesclaw
++
++	for file in license nhshare nhushare; \
++	do \
++	  install -m 0644 -o root -g root slashem/dat/$$file \
++	  debian/vulturesclaw/usr/lib/games/vulturesclaw/; \
++	done
++
++	install -m 2755 -o root -g games debian/vulturesclaw.sh \
++	  debian/vulturesclaw/usr/games/vulturesclaw
++										
++	install -m 2755 -o root -g games slashem/src/vulturesclaw \
++	  debian/vulturesclaw/usr/lib/games/vulturesclaw/vulturesclaw
++										
++	install -m 755 -o root -g root slashem/util/recover \
++	  debian/vulturesclaw/usr/lib/games/vulturesclaw/recover
++										
++	install -m 644 -o root -g root debian/vulturesclawrc \
++	  debian/vulturesclaw/etc/vultures/vulturesclawrc
++										
++	install -m 644 -o root -g root vultures/gamedata/se_icon.png \
++	  debian/vulturesclaw/usr/share/pixmaps/vulturesclaw.png
++
++	install -m 644 debian/vulturesclaw.desktop $(CURDIR)/debian/vulturesclaw/usr/share/applications
++# Must not depend on anything. This is to be called by
++# binary-arch/binary-multi
++# in another 'make' thread.
++binary-common:
++	dh_testdir
++	dh_testroot
++#	dh_installdebconf	
++	dh_installdocs
++	dh_installman
++	dh_installmenu
++	dh_installchangelogs #CHANGELOGS#
++	dh_link
++	dh_strip
++	dh_compress 
++#	dh_fixperms -Xvultures
++	dh_installdeb
++	dh_shlibdeps
++#	dh_perl
++	dh_gencontrol
++	dh_md5sums
++	dh_builddeb
++# Build architecture independant packages using the common target.
++binary-indep: build-indep install-indep
++	$(MAKE) -f debian/rules DH_OPTIONS=-i binary-common
++
++# Build architecture dependant packages using the common target.
++binary-arch: build-arch install-arch
++	$(MAKE) -f debian/rules DH_OPTIONS=-a binary-common
++
++binary: binary-arch binary-indep
++.PHONY: build clean binary-indep binary-arch binary install install-indep install-arch #PHONY_CONFIGURE#
+diff -Naur vultures/debian/vulturesclaw.6 vultures.debian/debian/vulturesclaw.6
+--- vultures/debian/vulturesclaw.6	1970-01-01 01:00:00.000000000 +0100
++++ vultures.debian/debian/vulturesclaw.6	2008-04-03 09:22:43.000000000 +0200
+@@ -0,0 +1,89 @@
++.TH VULTURESCLAW 6 "April 2008"
++.SH NAME
++vulturesclaw \- play SLASH'em using a mouse-driven isometric graphical interface
++.SH SYNOPSIS
++.B vulturesclaw
++[-d \fIdirectory\fR] [-n] [-p \fIprofession (role)\fR] [-r \fIrace\fR] [-D] [-X] [-u \fIplayername\fR]
++
++.B vulturesclaw
++[-d \fIdirectory\fR] -s [-v] [-p \fIprofession (role)\fR] [-r \fIrace\fR] [\fIplayer_name\fR] [\fIOPTION\fR]
++
++.SH DESCRIPTION
++Vultures 2.2.0 is an enhanced, highly graphical window port (user
++interface) for SLASH'em. It adds a lot of eye candy and multimedia to the
++game while keeping the original gameplay of SLASH'em.
++
++Here's a brief list of features:
++
++High-res, 32-bit isometric graphics with real-time lighting 
++
++Customizable digitized sound effects 
++
++Symphonic soundtracks
++
++Mouse-driven interface (keyboard play also works)
++
++HTML manual 
++
++Command-line options are the same as SLASH'em:
++
++.TP
++\fB\-d\fR \fIdirectory\fR
++Use the given directory as the playground. Help files, top scorers and saved games are stored in this directory.
++This must be the first argument, if specified.
++.TP
++\fB\-n\fR
++Suppress news from the administrator.
++.TP
++\fB\-p\fR \fIprofession\fR
++Set your character's profession.
++.TP
++\fB\-r\fR \fIrace\fR
++Set your character's race.
++.TP
++\fB\-D\fR
++Start the game in wizard mode. You cannot switch to a normal game while
++wizard mode is active, and your score will not be listed in the top scores.
++You need to be root to enter wizard mode. Normal users will get explore mode instead.
++.TP
++\fB\-X\fR
++Start the game in explore mode. You cannot switch to a normal game while
++explore mode is active, and your score will not be listed in the top scores.
++.TP
++\fB\-u\fR \fIplayer_name\fR
++Set your character's name.
++.TP
++\fB\-s\fR
++Display top scores for the current version of NetHack, filtered by
++professions, races or player names if specified.
++.TP
++\fB\-v\fR
++Display top scores for all versions. Should immediately follow \fB-s\fR.
++
++.SH "AUTHORS"
++
++Daniel Thaler, <daniel@dthaler.de>
++
++Clive Crous, <clive@crous.co.za>
++
++Based on Falcon's Eye by:
++Jaakko Peltonen, <jaakko.peltonen@hut.fi>
++
++.SH "REPORTING BUGS"
++
++Report Vultures-specific bugs on track.darkarts.co.za and
++NetHack bugs to <nethack-bugs@nethack.org>.
++
++.SH "SEE ALSO"
++
++NetHack is documented in \fBnethack(6)\fR.
++
++The full documentation for Vultures is maintained in HTML at
++/usr/share/doc/vultures/manual/index.html
++
++The Vultures project page is http://darkarts.co.za/project/vultures
++
++The NetHack project page is http://www.nethack.org
++
++The SLASH'em project page is http://www.slashem.org
++
+diff -Naur vultures/debian/vulturesclaw.desktop vultures.debian/debian/vulturesclaw.desktop
+--- vultures/debian/vulturesclaw.desktop	1970-01-01 01:00:00.000000000 +0100
++++ vultures.debian/debian/vulturesclaw.desktop	2008-04-03 09:22:43.000000000 +0200
+@@ -0,0 +1,11 @@
++[Desktop Entry]
++Type=Application
++Encoding=UTF-8
++Name=Vulture's Claw
++GenericName=
++Comment=Dungeons and dragons inspired role play game
++Comment[de_DE]=Rollenspiel im Sinne von Dungeons und Dragons
++Icon=vulturesclaw.png
++Exec=/usr/games/vulturesclaw
++Terminal=false
++Categories=Application;Game;
+diff -Naur vultures/debian/vulturesclaw.dirs vultures.debian/debian/vulturesclaw.dirs
+--- vultures/debian/vulturesclaw.dirs	1970-01-01 01:00:00.000000000 +0100
++++ vultures.debian/debian/vulturesclaw.dirs	2008-04-03 09:22:43.000000000 +0200
+@@ -0,0 +1,6 @@
++usr/games
++var/games/vulturesclaw/save
++usr/lib/games/vulturesclaw
++etc/vultures
++usr/share/pixmaps
++usr/share/applications
+diff -Naur vultures/debian/vulturesclaw.manpages vultures.debian/debian/vulturesclaw.manpages
+--- vultures/debian/vulturesclaw.manpages	1970-01-01 01:00:00.000000000 +0100
++++ vultures.debian/debian/vulturesclaw.manpages	2008-04-03 09:22:43.000000000 +0200
+@@ -0,0 +1 @@
++debian/vulturesclaw.6
+diff -Naur vultures/debian/vulturesclaw.menu vultures.debian/debian/vulturesclaw.menu
+--- vultures/debian/vulturesclaw.menu	1970-01-01 01:00:00.000000000 +0100
++++ vultures.debian/debian/vulturesclaw.menu	2008-04-03 09:22:43.000000000 +0200
+@@ -0,0 +1,4 @@
++?package(vultureseye):needs="X11" section="Games/Adventure"\
++  title="Vulture's Eye" \
++  	icon="/usr/share/pixmaps/vultureseye.png" \
++	command="/usr/games/vultureseye"
+diff -Naur vultures/debian/vulturesclaw.postinst vultures.debian/debian/vulturesclaw.postinst
+--- vultures/debian/vulturesclaw.postinst	1970-01-01 01:00:00.000000000 +0100
++++ vultures.debian/debian/vulturesclaw.postinst	2008-04-03 09:22:43.000000000 +0200
+@@ -0,0 +1,56 @@
++#! /bin/sh
++# postinst script for vultures
++#
++# see: dh_installdeb(1)
++
++set -e
++
++# summary of how this script can be called:
++#        * <postinst> `configure' <most-recently-configured-version>
++#        * <old-postinst> `abort-upgrade' <new version>
++#        * <conflictor's-postinst> `abort-remove' `in-favour' <package>
++#          <new-version>
++#        * <deconfigured's-postinst> `abort-deconfigure' `in-favour'
++#          <failed-install-package> <version> `removing'
++#          <conflicting-package> <version>
++# for details, see /usr/share/doc/packaging-manual/
++#
++# quoting from the policy:
++#     Any necessary prompting should almost always be confined to the
++#     post-installation script, and should be protected with a conditional
++#     so that unnecessary prompting doesn't happen if a package's
++#     installation fails and the `postinst' is called with `abort-upgrade',
++#     `abort-remove' or `abort-deconfigure'.
++
++case "$1" in
++    configure)
++
++    ;;
++
++    abort-upgrade|abort-remove|abort-deconfigure)
++
++    ;;
++
++    *)
++        echo "postinst called with unknown argument \`$1'" >&2
++        exit 0
++    ;;
++esac
++
++for file in vultures_log.txt logfile perm record; \
++do \
++  if [ ! -f /var/games/vulturesclaw/$file ]; then
++    touch /var/games/vulturesclaw/$file
++    chown root:games /var/games/vulturesclaw/$file
++    chmod 664 /var/games/vulturesclaw/$file
++  fi; \
++done
++
++# dh_installdeb will replace this with shell code automatically
++# generated by other debhelper scripts.
++
++#DEBHELPER#
++
++exit 0
++
++
+diff -Naur vultures/debian/vulturesclaw.postrm vultures.debian/debian/vulturesclaw.postrm
+--- vultures/debian/vulturesclaw.postrm	1970-01-01 01:00:00.000000000 +0100
++++ vultures.debian/debian/vulturesclaw.postrm	2008-04-03 09:22:43.000000000 +0200
+@@ -0,0 +1,42 @@
++#! /bin/sh
++# postrm script for vultures
++#
++# see: dh_installdeb(1)
++
++set -e
++
++# summary of how this script can be called:
++#        * <postrm> `remove'
++#        * <postrm> `purge'
++#        * <old-postrm> `upgrade' <new-version>
++#        * <new-postrm> `failed-upgrade' <old-version>
++#        * <new-postrm> `abort-install'
++#        * <new-postrm> `abort-install' <old-version>
++#        * <new-postrm> `abort-upgrade' <old-version>
++#        * <disappearer's-postrm> `disappear' <r>overwrit>r> <new-version>
++# for details, see /usr/share/doc/packaging-manual/
++
++case "$1" in
++       purge|remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
++
++
++        ;;
++
++    *)
++        echo "postrm called with unknown argument \`$1'" >&2
++        exit 0
++
++esac
++
++if [ "$1" = "purge" ]; then
++    echo -n "Purging high-scores and save-files for vulturesclaw... "
++    rm -rf /var/games/vulturesclaw/
++    echo "done."
++fi
++
++# dh_installdeb will replace this with shell code automatically
++# generated by other debhelper scripts.
++
++#DEBHELPER#
++
++
+diff -Naur vultures/debian/vulturesclawrc vultures.debian/debian/vulturesclawrc
+--- vultures/debian/vulturesclawrc	1970-01-01 01:00:00.000000000 +0100
++++ vultures.debian/debian/vulturesclawrc	2008-04-03 09:22:43.000000000 +0200
+@@ -0,0 +1,72 @@
++# A '#' at the beginning of a line means the rest of the line is a comment.
++#
++# Some options MUST be set in this file, other options can be toggled while
++# playing.  For a list of options available see the <opthelp.> file.
++#
++# If you want to customize the configuration, you should copy this file
++# (/etc/vultures/vultureseyerc) to ~/.vultureseyerc and modify that
++#
++# To change the configuration, comment out the unwanted lines, and
++# uncomment the configuration you want.
++
++# Use the vultures window port
++OPTIONS=windowtype:vultures
++
++# *** OPTIONS ***
++# Some options to set personal preferences.  Uncomment and change these to
++# suit your personal preference.  If several people are to use the same
++# configuration, options like these should not be set.
++#
++#OPTIONS=name:Janet,role:Valkyrie,race:Human,gender:female,align:lawful
++#OPTIONS=dogname:Fido,catname:Morris,fruit:guava
++#OPTIONS=horsename:Silver
++#OPTIONS=autopickup,pickup_types:$"=/!?+
++#OPTIONS=packorder:")[%?+/=!(*0_`
++#OPTIONS=scores:10 top/2 around/own
++#OPTIONS=nolegacy,noverbose
++
++# verbose help messages make no sense for vultures
++OPTIONS=noverbose
++
++OPTIONS=toptenwin
++
++#
++# General options.  You might also set "silent" so as not to attract
++# the boss's attention.
++OPTIONS=time,number_pad:2,lit_corridor,rest_on_space,nomail
++
++# *** LOCATIONS ***
++# IMPORTANT: If you change any of these locations, the directories they
++# point at must exist.  NetHack will not create them for you.
++#
++# HACKDIR is the default location for everything.
++# Note: On Windows HACKDIR defaults to the location 
++#       of the NetHack.exe or NetHackw.exe file so
++#       setting HACKDIR below to override that is 
++#       not usually necessary or recommended.
++#HACKDIR=c:\games\nethack
++#
++# The location that level files in progress are stored (default=HACKDIR, writeable)
++#LEVELDIR=c:\nethack\levels
++#
++# The location where saved games are kept (default=HACKDIR, writeable)
++#SAVEDIR=c:\nethack\save
++#
++# The location that bones files are kept (default=HACKDIR, writeable)
++#BONESDIR=c:\nethack\save
++#
++# The location that file synchronization locks are stored (default=HACKDIR, writeable)
++#LOCKDIR=c:\nethack\levels
++#
++# The location that a record of game aborts and self-diagnosed game problems
++# is kept (default=HACKDIR, writeable)
++#TROUBLEDIR=c:\nethack\trouble
++
++# Finnish keyboards might need these modifications uncommented. 
++# For  \, @, $, [, |
++#OPTIONS=subkeyvalue:171/92
++#OPTIONS=subkeyvalue:178/64
++#OPTIONS=subkeyvalue:180/36
++#OPTIONS=subkeyvalue:184/91
++#OPTIONS=subkeyvalue:188/124
++
+diff -Naur vultures/debian/vulturesclaw.sh vultures.debian/debian/vulturesclaw.sh
+--- vultures/debian/vulturesclaw.sh	1970-01-01 01:00:00.000000000 +0100
++++ vultures.debian/debian/vulturesclaw.sh	2008-04-03 09:22:43.000000000 +0200
+@@ -0,0 +1,66 @@
++#!/bin/sh
++#	SCCS Id: @(#)nethack.sh	3.3	90/02/26
++
++HACKDIR=/usr/lib/games/vulturesclaw
++export HACKDIR
++HACK=$HACKDIR/vulturesclaw
++MAXNROFPLAYERS=4
++if [ -f ~/.vulturesclawrc ]
++then
++	NETHACKOPTIONS=~/.vulturesclawrc
++else
++	NETHACKOPTIONS=/etc/vultures/vulturesclawrc
++fi
++export NETHACKOPTIONS
++
++# see if we can find the full path name of PAGER, so help files work properly
++# assume that if someone sets up a special variable (HACKPAGER) for NetHack,
++# it will already be in a form acceptable to NetHack
++# ideas from brian@radio.astro.utoronto.ca
++if test \( "xxx$PAGER" != xxx \) -a \( "xxx$HACKPAGER" = xxx \)
++then
++
++	HACKPAGER=$PAGER
++
++#	use only the first word of the pager variable
++#	this prevents problems when looking for file names with trailing
++#	options, but also makes the options unavailable for later use from
++#	NetHack
++	for i in $HACKPAGER
++	do
++		HACKPAGER=$i
++		break
++	done
++
++	if test ! -f $HACKPAGER
++	then
++		IFS=:
++		for i in $PATH
++		do
++			if test -f $i/$HACKPAGER
++			then
++				HACKPAGER=$i/$HACKPAGER
++				export HACKPAGER
++				break
++			fi
++		done
++		IFS=' 	'
++	fi
++	if test ! -f $HACKPAGER
++	then
++		echo Cannot find $PAGER -- unsetting PAGER.
++		unset HACKPAGER
++		unset PAGER
++	fi
++fi
++
++
++cd $HACKDIR
++case $1 in
++	-s*)
++		exec $HACK "$@"
++		;;
++	*)
++		exec $HACK "$@" $MAXNROFPLAYERS
++		;;
++esac
+diff -Naur vultures/debian/vultures-data.dirs vultures.debian/debian/vultures-data.dirs
+--- vultures/debian/vultures-data.dirs	1970-01-01 01:00:00.000000000 +0100
++++ vultures.debian/debian/vultures-data.dirs	2008-04-03 09:22:43.000000000 +0200
+@@ -0,0 +1,12 @@
++usr/lib/games/vultureseye
++usr/lib/games/vulturesclaw
++usr/share/games/vultures
++usr/share/games/vultures/config
++usr/share/games/vultures/graphics
++usr/share/games/vultures/music
++usr/share/games/vultures/sound
++usr/share/games/vultures/tiles
++usr/share/games/vultures/fonts
++usr/share/doc/vultures/manual
++usr/share/doc/vultures/manual/img
++usr/share/applications
+diff -Naur vultures/debian/vultureseye.6 vultures.debian/debian/vultureseye.6
+--- vultures/debian/vultureseye.6	1970-01-01 01:00:00.000000000 +0100
++++ vultures.debian/debian/vultureseye.6	2008-04-03 09:22:43.000000000 +0200
+@@ -0,0 +1,87 @@
++.TH VULTURESEYE 6 "April 2008"
++.SH NAME
++vultureseye \- play NetHack using a mouse-driven isometric graphical interface
++.SH SYNOPSIS
++.B vultureseye
++[-d \fIdirectory\fR] [-n] [-p \fIprofession (role)\fR] [-r \fIrace\fR] [-D] [-X] [-u \fIplayername\fR]
++
++.B vultureseye
++[-d \fIdirectory\fR] -s [-v] [-p \fIprofession (role)\fR] [-r \fIrace\fR] [\fIplayer_name\fR] [\fIOPTION\fR]
++
++.SH DESCRIPTION
++Vultures 2.2.0 is an enhanced, highly graphical window port (user
++interface) for NetHack. It adds a lot of eye candy and multimedia to the
++game while keeping the original gameplay of NetHack.
++
++Here's a brief list of features:
++
++High-res, 32-bit isometric graphics with real-time lighting 
++
++Customizable digitized sound effects 
++
++Symphonic soundtracks
++
++Mouse-driven interface (keyboard play also works)
++
++HTML manual 
++
++Command-line options are the same as NetHack:
++
++.TP
++\fB\-d\fR \fIdirectory\fR
++Use the given directory as the playground. Help files, top scorers and saved games are stored in this directory.
++This must be the first argument, if specified.
++.TP
++\fB\-n\fR
++Suppress news from the administrator.
++.TP
++\fB\-p\fR \fIprofession\fR
++Set your character's profession.
++.TP
++\fB\-r\fR \fIrace\fR
++Set your character's race.
++.TP
++\fB\-D\fR
++Start the game in wizard mode. You cannot switch to a normal game while
++wizard mode is active, and your score will not be listed in the top scores.
++You need to be root to enter wizard mode. Normal users will get explore mode instead.
++.TP
++\fB\-X\fR
++Start the game in explore mode. You cannot switch to a normal game while
++explore mode is active, and your score will not be listed in the top scores.
++.TP
++\fB\-u\fR \fIplayer_name\fR
++Set your character's name.
++.TP
++\fB\-s\fR
++Display top scores for the current version of NetHack, filtered by
++professions, races or player names if specified.
++.TP
++\fB\-v\fR
++Display top scores for all versions. Should immediately follow \fB-s\fR.
++
++.SH "AUTHORS"
++
++Daniel Thaler, <daniel@dthaler.de>
++
++Clive Crous, <clive@crous.co.za>
++
++Based on Falcon's Eye by:
++Jaakko Peltonen, <jaakko.peltonen@hut.fi>
++
++.SH "REPORTING BUGS"
++
++Report Vultures-specific bugs on track.darkarts.co.za and
++NetHack bugs to <nethack-bugs@nethack.org>.
++
++.SH "SEE ALSO"
++
++NetHack is documented in \fBnethack(6)\fR.
++
++The full documentation for Vultures is maintained in HTML at
++/usr/share/doc/vultures/manual/index.html
++
++The Vultures project page is http://darkarts.co.za/project/vultures
++
++The NetHack project page is http://www.nethack.org
++
+diff -Naur vultures/debian/vultureseye.desktop vultures.debian/debian/vultureseye.desktop
+--- vultures/debian/vultureseye.desktop	1970-01-01 01:00:00.000000000 +0100
++++ vultures.debian/debian/vultureseye.desktop	2008-04-03 09:22:43.000000000 +0200
+@@ -0,0 +1,11 @@
++[Desktop Entry]
++Type=Application
++Encoding=UTF-8
++Name=Vulture's Eye
++GenericName=
++Comment=Dungeons and dragons inspired role play game
++Comment[de_DE]=Rollenspiel im Sinne von Dungeons und Dragons
++Icon=vultureseye.png
++Exec=/usr/games/vultureseye
++Terminal=false
++Categories=Application;Game;
+diff -Naur vultures/debian/vultureseye.dirs vultures.debian/debian/vultureseye.dirs
+--- vultures/debian/vultureseye.dirs	1970-01-01 01:00:00.000000000 +0100
++++ vultures.debian/debian/vultureseye.dirs	2008-04-03 09:22:43.000000000 +0200
+@@ -0,0 +1,6 @@
++usr/games
++var/games/vultureseye/save
++usr/lib/games/vultureseye
++etc/vultures
++usr/share/pixmaps
++usr/share/applications
+diff -Naur vultures/debian/vultureseye.manpages vultures.debian/debian/vultureseye.manpages
+--- vultures/debian/vultureseye.manpages	1970-01-01 01:00:00.000000000 +0100
++++ vultures.debian/debian/vultureseye.manpages	2008-04-03 09:22:43.000000000 +0200
+@@ -0,0 +1 @@
++debian/vultureseye.6
+diff -Naur vultures/debian/vultureseye.menu vultures.debian/debian/vultureseye.menu
+--- vultures/debian/vultureseye.menu	1970-01-01 01:00:00.000000000 +0100
++++ vultures.debian/debian/vultureseye.menu	2008-04-03 09:22:43.000000000 +0200
+@@ -0,0 +1,4 @@
++?package(vultureseye):needs="X11" section="Games/Adventure"\
++  title="Vulture's Eye" \
++  	icon="/usr/share/pixmaps/vultureseye.png" \
++	command="/usr/games/vultureseye"
+diff -Naur vultures/debian/vultureseye.postinst vultures.debian/debian/vultureseye.postinst
+--- vultures/debian/vultureseye.postinst	1970-01-01 01:00:00.000000000 +0100
++++ vultures.debian/debian/vultureseye.postinst	2008-04-03 09:22:43.000000000 +0200
+@@ -0,0 +1,56 @@
++#! /bin/sh
++# postinst script for vultures
++#
++# see: dh_installdeb(1)
++
++set -e
++
++# summary of how this script can be called:
++#        * <postinst> `configure' <most-recently-configured-version>
++#        * <old-postinst> `abort-upgrade' <new version>
++#        * <conflictor's-postinst> `abort-remove' `in-favour' <package>
++#          <new-version>
++#        * <deconfigured's-postinst> `abort-deconfigure' `in-favour'
++#          <failed-install-package> <version> `removing'
++#          <conflicting-package> <version>
++# for details, see /usr/share/doc/packaging-manual/
++#
++# quoting from the policy:
++#     Any necessary prompting should almost always be confined to the
++#     post-installation script, and should be protected with a conditional
++#     so that unnecessary prompting doesn't happen if a package's
++#     installation fails and the `postinst' is called with `abort-upgrade',
++#     `abort-remove' or `abort-deconfigure'.
++
++case "$1" in
++    configure)
++
++    ;;
++
++    abort-upgrade|abort-remove|abort-deconfigure)
++
++    ;;
++
++    *)
++        echo "postinst called with unknown argument \`$1'" >&2
++        exit 0
++    ;;
++esac
++
++for file in vultures_log.txt logfile perm record; \
++do \
++  if [ ! -f /var/games/vultureseye/$file ]; then
++    touch /var/games/vultureseye/$file
++    chown root:games /var/games/vultureseye/$file
++    chmod 664 /var/games/vultureseye/$file
++  fi; \
++done
++
++# dh_installdeb will replace this with shell code automatically
++# generated by other debhelper scripts.
++
++#DEBHELPER#
++
++exit 0
++
++
+diff -Naur vultures/debian/vultureseye.postrm vultures.debian/debian/vultureseye.postrm
+--- vultures/debian/vultureseye.postrm	1970-01-01 01:00:00.000000000 +0100
++++ vultures.debian/debian/vultureseye.postrm	2008-04-03 09:22:43.000000000 +0200
+@@ -0,0 +1,42 @@
++#! /bin/sh
++# postrm script for vultures
++#
++# see: dh_installdeb(1)
++
++set -e
++
++# summary of how this script can be called:
++#        * <postrm> `remove'
++#        * <postrm> `purge'
++#        * <old-postrm> `upgrade' <new-version>
++#        * <new-postrm> `failed-upgrade' <old-version>
++#        * <new-postrm> `abort-install'
++#        * <new-postrm> `abort-install' <old-version>
++#        * <new-postrm> `abort-upgrade' <old-version>
++#        * <disappearer's-postrm> `disappear' <r>overwrit>r> <new-version>
++# for details, see /usr/share/doc/packaging-manual/
++
++case "$1" in
++       purge|remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
++
++
++        ;;
++
++    *)
++        echo "postrm called with unknown argument \`$1'" >&2
++        exit 0
++
++esac
++
++if [ "$1" = "purge" ]; then
++    echo -n "Purging high-scores and save-files for vultureseye... "
++    rm -rf /var/games/vultureseye/
++    echo "done."
++fi
++
++# dh_installdeb will replace this with shell code automatically
++# generated by other debhelper scripts.
++
++#DEBHELPER#
++
++
+diff -Naur vultures/debian/vultureseyerc vultures.debian/debian/vultureseyerc
+--- vultures/debian/vultureseyerc	1970-01-01 01:00:00.000000000 +0100
++++ vultures.debian/debian/vultureseyerc	2008-04-03 09:22:43.000000000 +0200
+@@ -0,0 +1,52 @@
++# A '#' at the beginning of a line means the rest of the line is a comment.
++#
++# Some options MUST be set in this file, other options can be toggled while
++# playing.  For a list of options available see the <opthelp.> file.
++#
++# If you want to customize the configuration, you should copy this file
++# (/etc/vultures/vultureseyerc) to ~/.vultureseyerc and modify that
++#
++# To change the configuration, comment out the unwanted lines, and
++# uncomment the configuration you want.
++
++# Use the vultures window port
++OPTIONS=windowtype:vultures
++
++# *** OPTIONS ***
++# Some options to set personal preferences.  Uncomment and change these to
++# suit your personal preference.  If several people are to use the same
++# configuration, options like these should not be set.
++#
++#OPTIONS=name:Janet,role:Valkyrie,race:Human,gender:female,align:lawful
++#OPTIONS=dogname:Fido,catname:Morris,fruit:guava
++#OPTIONS=horsename:Silver
++#OPTIONS=autopickup,pickup_types:$"=/!?+
++#OPTIONS=packorder:")[%?+/=!(*0_`
++#OPTIONS=scores:10 top/2 around/own
++#OPTIONS=nolegacy,noverbose
++
++# verbose help messages make no sense for vultures
++OPTIONS=noverbose
++
++OPTIONS=toptenwin
++
++#
++# General options.  You might also set "silent" so as not to attract
++# the boss's attention.
++OPTIONS=time,number_pad,lit_corridor,rest_on_space,nomail
++
++# If you want to get rid of "use #quit to quit..." use:
++OPTIONS=suppress_alert:3.3.1
++#
++
++#
++#HACKDIR=c:\games\nethack
++# 
++# Note: Under MSDOS ports HACKDIR defaults to the location 
++#       of the NetHack.exe file. Setting HACKDIR above will override that.
++#
++#   LEVELS and SAVE default to HACKDIR
++#
++#LEVELS=c:\games\nethack\bones
++#SAVE=c:\games\nethack\bones
++
+diff -Naur vultures/debian/vultureseye.sh vultures.debian/debian/vultureseye.sh
+--- vultures/debian/vultureseye.sh	1970-01-01 01:00:00.000000000 +0100
++++ vultures.debian/debian/vultureseye.sh	2008-04-03 09:22:43.000000000 +0200
+@@ -0,0 +1,66 @@
++#!/bin/sh
++#	SCCS Id: @(#)nethack.sh	3.3	90/02/26
++
++HACKDIR=/usr/lib/games/vultureseye
++export HACKDIR
++HACK=$HACKDIR/vultureseye
++MAXNROFPLAYERS=4
++if [ -f ~/.vultureseyerc ]
++then
++	NETHACKOPTIONS=~/.vultureseyerc
++else
++	NETHACKOPTIONS=/etc/vultures/vultureseyerc
++fi
++export NETHACKOPTIONS
++
++# see if we can find the full path name of PAGER, so help files work properly
++# assume that if someone sets up a special variable (HACKPAGER) for NetHack,
++# it will already be in a form acceptable to NetHack
++# ideas from brian@radio.astro.utoronto.ca
++if test \( "xxx$PAGER" != xxx \) -a \( "xxx$HACKPAGER" = xxx \)
++then
++
++	HACKPAGER=$PAGER
++
++#	use only the first word of the pager variable
++#	this prevents problems when looking for file names with trailing
++#	options, but also makes the options unavailable for later use from
++#	NetHack
++	for i in $HACKPAGER
++	do
++		HACKPAGER=$i
++		break
++	done
++
++	if test ! -f $HACKPAGER
++	then
++		IFS=:
++		for i in $PATH
++		do
++			if test -f $i/$HACKPAGER
++			then
++				HACKPAGER=$i/$HACKPAGER
++				export HACKPAGER
++				break
++			fi
++		done
++		IFS=' 	'
++	fi
++	if test ! -f $HACKPAGER
++	then
++		echo Cannot find $PAGER -- unsetting PAGER.
++		unset HACKPAGER
++		unset PAGER
++	fi
++fi
++
++
++cd $HACKDIR
++case $1 in
++	-s*)
++		exec $HACK "$@"
++		;;
++	*)
++		exec $HACK "$@" $MAXNROFPLAYERS
++		;;
++esac
+diff -Naur vultures/nethack/include/config.h vultures.debian/nethack/include/config.h
+--- vultures/nethack/include/config.h	2008-03-29 00:52:19.000000000 +0100
++++ vultures.debian/nethack/include/config.h	2008-04-03 09:14:52.000000000 +0200
+@@ -153,7 +153,7 @@
+ 
+ #ifndef WIZARD		/* allow for compile-time or Makefile changes */
+ # ifndef KR1ED
+-#  define WIZARD  "wizard" /* the person allowed to use the -D option */
++#  define WIZARD  "root" /* the person allowed to use the -D option */
+ # else
+ #  define WIZARD
+ #  define WIZARD_NAME "wizard"
+@@ -179,11 +179,11 @@
+ 
+ #ifdef UNIX
+ /* path and file name extension for compression program */
+-#define COMPRESS "/usr/bin/compress"   /* Lempel-Ziv compression */                                      
+-#define COMPRESS_EXTENSION ".Z"        /* compress's extension */                                        
++/* #define COMPRESS "/usr/bin/compress" */   /* Lempel-Ziv compression */
++/* #define COMPRESS_EXTENSION ".Z" */        /* compress's extension */
+ /* An example of one alternative you might want to use: */
+-/* #define COMPRESS "/usr/local/bin/gzip" */   /* FSF gzip compression */                                
+-/* #define COMPRESS_EXTENSION ".gz" */     /* normal gzip extension */                                   
++#define COMPRESS "/bin/gzip"   /* FSF gzip compression */
++#define COMPRESS_EXTENSION ".gz"     /* normal gzip extension */                                   
+ #endif
+ 
+ #ifndef COMPRESS
+@@ -214,7 +214,7 @@
+  * otherwise it will be the current directory.
+  */
+ # ifndef HACKDIR
+-#  define HACKDIR "/usr/games/lib/nethackdir"
++#  define HACKDIR "/usr/lib/games/vultureseye"
+ # endif
+ 
+ /*
+@@ -329,7 +329,7 @@
+ #define SINKS		/* Kitchen sinks - Janet Walz */
+ /* dungeon levels */
+ #define WALLIFIED_MAZE	/* Fancy mazes - Jean-Christophe Collet */
+-#define REINCARNATION	/* Special Rogue-like levels */
++/* #define REINCARNATION */	/* Special Rogue-like levels */
+ /* monsters & objects */
+ #define KOPS		/* Keystone Kops by Scott R. Turner */
+ #define SEDUCE		/* Succubi/incubi seduction, by KAA, suggested by IM */
+@@ -359,7 +359,7 @@
+  */
+ 
+ /*#define GOLDOBJ */	/* Gold is kept on obj chains - Helge Hafting */
+-/*#define AUTOPICKUP_EXCEPTIONS */ /* exceptions to autopickup */
++#define AUTOPICKUP_EXCEPTIONS /* exceptions to autopickup */
+ #define DUMP_LOG        /* Dump game end information to a file */
+ /* #define DUMP_FN "/tmp/%n.nh" */      /* Fixed dumpfile name, if you want
+                                          * to prevent definition by users */
+diff -Naur vultures/nethack/include/unixconf.h vultures.debian/nethack/include/unixconf.h
+--- vultures/nethack/include/unixconf.h	2008-03-29 00:52:19.000000000 +0100
++++ vultures.debian/nethack/include/unixconf.h	2008-04-03 09:16:21.000000000 +0200
+@@ -37,7 +37,7 @@
+ #define NETWORK		/* if running on a networked system */
+ 			/* e.g. Suns sharing a playground through NFS */
+ /* #define SUNOS4 */	/* SunOS 4.x */
+-/* #define LINUX */     /* Another Unix clone */
++#define LINUX     /* Another Unix clone */
+ /* #define CYGWIN32 */	/* Unix on Win32 -- use with case sensitive defines */
+ /* #define GENIX */	/* Yet Another Unix Clone */
+ /* #define HISX */	/* Bull Unix for XPS Machines */
+@@ -102,7 +102,7 @@
+  * If you want the static parts of your playground on a read-only file
+  * system, define VAR_PLAYGROUND to be where the variable parts are kept.
+  */
+-/* #define VAR_PLAYGROUND "/var/lib/games/nethack" */
++#define VAR_PLAYGROUND "/var/games/vultureseye"
+ 
+ 
+ /*
+diff -Naur vultures/slashem/include/config.h vultures.debian/slashem/include/config.h
+--- vultures/slashem/include/config.h	2008-03-29 00:52:03.000000000 +0100
++++ vultures.debian/slashem/include/config.h	2008-04-03 09:19:16.000000000 +0200
+@@ -209,7 +209,7 @@
+ 
+ #ifndef WIZARD		/* allow for compile-time or Makefile changes */
+ # ifndef KR1ED
+-#  define WIZARD  "wizard" /* the person allowed to use the -D option */
++#  define WIZARD  "root" /* the person allowed to use the -D option */
+ # else
+ #  define WIZARD
+ #  define WIZARD_NAME "wizard"
+@@ -237,12 +237,12 @@
+ 
+ #ifdef UNIX
+ /* path and file name extension for compression program */
+-# define COMPRESS "/usr/bin/compress" /* Lempel-Ziv compression */
+-# define COMPRESS_EXTENSION ".Z"	     /* compress's extension */
++/* # define COMPRESS "/usr/bin/compress" */ /* Lempel-Ziv compression */
++/* # define COMPRESS_EXTENSION ".Z" */	     /* compress's extension */
+ 
+ /* An example of one alternative you might want to use: */
+-/* # define COMPRESS "/usr/local/bin/gzip" */   /* FSF gzip compression */
+-/* # define COMPRESS_EXTENSION ".gz" */	     /* normal gzip extension */
++# define COMPRESS "/bin/gzip"   /* FSF gzip compression */
++# define COMPRESS_EXTENSION ".gz"	     /* normal gzip extension */
+ 
+ /* # define COMPRESS "/usr/bin/bzip2"	*//* bzip2 compression */
+ /* # define COMPRESS_EXTENSION ".bz2"	*//* bzip2 extension */
+@@ -494,7 +494,7 @@
+  */
+ 
+ /*#define GOLDOBJ */	/* Gold is kept on obj chains - Helge Hafting */
+-/*#define AUTOPICKUP_EXCEPTIONS */ /* exceptions to autopickup */
++#define AUTOPICKUP_EXCEPTIONS /* exceptions to autopickup */
+ 
+ /* End of Section 5 */
+ 
+diff -Naur vultures/slashem/include/unixconf.h vultures.debian/slashem/include/unixconf.h
+--- vultures/slashem/include/unixconf.h	2008-03-29 00:52:03.000000000 +0100
++++ vultures.debian/slashem/include/unixconf.h	2008-04-03 09:19:53.000000000 +0200
+@@ -174,7 +174,7 @@
+  * If you want the static parts of your playground on a read-only file
+  * system, define VAR_PLAYGROUND to be where the variable parts are kept.
+  */
+-/* #define VAR_PLAYGROUND "/var/lib/games/nethack" */
++#define VAR_PLAYGROUND "/var/games/vulturesclaw"
+ 
+ 
+ 
