@@ -1,0 +1,3 @@
+[submodule "nethack"]
+	path = nethack
+	url = git@github.com:clivecrous/nethack.git
