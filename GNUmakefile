@@ -14,8 +14,8 @@ SLASHEM = claw
 GAMENETHACK = $(GAME)$(NETHACK)
 GAMESLASHEM = $(GAME)$(SLASHEM)
 DATE := $(shell date +%Y%m%d%H%M%S)
-SVNVERSION := $(shell svnversion -n .|sed s/:/_/)
-VERSION = snapshot-$(SVNVERSION)-$(DATE)
+GITVERSION := $(shell git-rev-list --all -1)
+VERSION = snapshot-$(GITVERSION)-$(DATE)
 RELEASE = 1
 FULLNAME = $(GAME)-$(VERSION)
 DISTDIR = dist/$(FULLNAME)
@@ -91,8 +91,10 @@ spotless:
 	-$(MAKE) -C nethack spotless
 	-$(MAKE) -C slashem spotless
 	-rm -rf dist/$(GAME)*
+	-rm -rf snapshot
 
 snapshot: $(DISTDIR)/$(FULLNAME)-full.tar.gz
+	-mkdir snapshot
 	-mv $(DISTDIR)/$(FULLNAME)-full.tar.gz* snapshot/.
 	-rm -rf $(DISTDIR)
 
@@ -202,8 +204,14 @@ $(DISTDIR)/Unix\ Installer/$(FULLNAME)-$(SLASHEM)_unix-$(RELEASE).bin.sh: $(DIST
 	cd $(DISTDIR)/Unix\ Installer; $(SHA256) $(FULLNAME)-$(SLASHEM)_unix-$(RELEASE).bin.sh > $(FULLNAME)-$(SLASHEM)_unix-$(RELEASE).bin.sh.sha256
 
 $(DISTDIR)/$(FULLNAME): $(DISTDIR)
-	svn export ./@HEAD $@
-	rm -rf $@/future
+	git-submodule init
+	git-submodule update
+	git clone ./ $@
+	rm -rf $@/nethack
+	git clone ./nethack/ $@/nethack
+	rm -rf $@/.git
+	rm -rf $@/.gitmodules
+	rm -rf $@/nethack/.git
 	echo "#define $(GAMEDEF)_PORT_VERSION \"$(VERSION)\"">$@/$(GAME)/$(GAME)version.h
 	ln -s ../../$(GAME) $@/nethack/win/$(GAME)
 	ln -s ../../$(GAME) $@/slashem/win/$(GAME)
