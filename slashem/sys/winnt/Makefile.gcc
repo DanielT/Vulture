@@ -287,7 +287,7 @@ MINGW = /mingw
 GNUWIN32 = $(MINGW)/GnuWin32/gnuwin32/
 # MSYS = /msys/1.0/local
 VULTURESTILESRC = ../win/vultures/gamedata/graphics/tilesrc
-WINVULTURESCFLAGS= -I$(MINGW)/include -I$(MINGW)/include/SDL
+WINVULTURESCFLAGS= -I$(GNUWIN32)/include -I$(MSYS)/include -I$(MINGW)/include -I$(MINGW)/include/SDL -I$(GNUWIN32)/include/SDL -I$(MSYS)/include/SDL
 WINVULTURESSRC = $(WVULTURES)/vultures_gen.c $(WVULTURES)/vultures_gfl.c $(WVULTURES)/vultures_init.c \
 	$(WVULTURES)/vultures_gra.c $(WVULTURES)/vultures_mou.c \
 	$(WVULTURES)/vultures_sdl.c $(WVULTURES)/vultures_txt.c $(WVULTURES)/vultures_win.c \
@@ -358,7 +358,7 @@ LFLAGS += -mwindows
 else	# USE_GTK
 ifeq ($(USE_VULTURES),Y)
 WINSRC += $(WINVULTURESSRC)
-LFLAGS += -L$(MINGW)/lib -mwindows
+LFLAGS += -L$(GNUWIN32)/lib -L$(MSYS)/lib -L$(MINGW)/lib -mwindows
 ifneq ($(USE_PROXY),Y)
 WINSRC += $(PROXYUTLSRC) $(PROXYSHRSRC)
 WOBJ04 += tile.o
