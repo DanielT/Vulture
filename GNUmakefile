@@ -14,8 +14,8 @@ SLASHEM = claw
 GAMENETHACK = $(GAME)$(NETHACK)
 GAMESLASHEM = $(GAME)$(SLASHEM)
 DATE := $(shell date +%Y%m%d%H%M%S)
-GITVERSION := $(shell git-rev-list --all -1)
-VERSION = snapshot-$(GITVERSION)-$(DATE)
+GITREVISION := $(shell git-rev-list `git-describe --tags --abbrev=0`..master|wc -l)
+VERSION = 2.2.$(GITREVISION)
 RELEASE = 1
 FULLNAME = $(GAME)-$(VERSION)
 DISTDIR = dist/$(FULLNAME)
