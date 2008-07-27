@@ -70,7 +70,7 @@ void vultures_init_sound(void)
     Mix_AllocateChannels(4);
 
     /* Create the sound cache */
-    vultures_cached_sounds = malloc(V_MAX_CACHED_SOUNDS*sizeof(vultures_cached_sound));
+    vultures_cached_sounds = (vultures_cached_sound *)malloc(V_MAX_CACHED_SOUNDS*sizeof(vultures_cached_sound));
     for (i = 0; i < V_MAX_CACHED_SOUNDS; i++)
     {
         vultures_cached_sounds[i].chunk = NULL;
@@ -215,7 +215,7 @@ static void vultures_play_sound(char * wavefilename)
         if (vultures_cached_sounds[i].chunk)
             Mix_FreeChunk(vultures_cached_sounds[i].chunk);
 
-        vultures_cached_sounds[i].filename = malloc(strlen(wavefilename)+1);
+        vultures_cached_sounds[i].filename = (char*)malloc(strlen(wavefilename)+1);
         strcpy(vultures_cached_sounds[i].filename, wavefilename);
 
         vultures_cached_sounds[i].chunk = Mix_LoadWAV(wavefilename);

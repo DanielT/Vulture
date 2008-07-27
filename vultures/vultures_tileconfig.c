@@ -252,15 +252,15 @@ void vultures_parse_tileconf(FILE *fp, struct gametiles **gt_ptr)
     tilenames[TT_CURSOR] = cursornames;
 
     vultures_typecount[TT_WALL] = 0;
-    tilenames[TT_WALL] = malloc(0);
+    tilenames[TT_WALL] = (char **)malloc(0);
     vultures_typecount[TT_FLOOR] = 0;
-    tilenames[TT_FLOOR] = malloc(0);
+    tilenames[TT_FLOOR] = (char **)malloc(0);
     vultures_typecount[TT_EDGE] = 0;
-    tilenames[TT_EDGE] = malloc(0);
+    tilenames[TT_EDGE] = (char **)malloc(0);
 
     for (i = 0; i < NUM_TILETYPES; i++)
     {
-        tmp_gametiles[i] = malloc(vultures_typecount[i] * sizeof(tmp_tile));
+        tmp_gametiles[i] = (tmp_tile *)malloc(vultures_typecount[i] * sizeof(tmp_tile));
         memset(tmp_gametiles[i], 0, vultures_typecount[i] * sizeof(tmp_tile));
     }
 
@@ -275,7 +275,7 @@ void vultures_parse_tileconf(FILE *fp, struct gametiles **gt_ptr)
         typeoffset[i] = typeoffset[i-1] + vultures_typecount[i-1];
 
 
-    *gt_ptr = malloc(GAMETILECOUNT * sizeof(struct gametiles));
+    *gt_ptr = (struct gametiles *)malloc(GAMETILECOUNT * sizeof(struct gametiles));
     gametiles = *gt_ptr;
     memset(gametiles, 0, GAMETILECOUNT * sizeof(struct gametiles));
 
@@ -480,8 +480,8 @@ int vultures_get_tile_index(int type, char * name, int allow_expand)
             index = vultures_typecount[type];
 
             vultures_typecount[type]++;
-            tilenames[type] = realloc(tilenames[type], vultures_typecount[type] * sizeof(char*));
-            tmp_gametiles[type] = realloc(tmp_gametiles[type], vultures_typecount[type] * sizeof(tmp_tile));
+            tilenames[type] = (char **)realloc(tilenames[type], vultures_typecount[type] * sizeof(char*));
+            tmp_gametiles[type] = (tmp_tile *)realloc(tmp_gametiles[type], vultures_typecount[type] * sizeof(tmp_tile));
             memset(&tmp_gametiles[type][index], 0, sizeof(tmp_tile));
 
             tilenames[type][index] = strdup(name);
@@ -608,11 +608,11 @@ static void init_objnames()
 
     vultures_typecount[TT_OBJECT] = OBJTILECOUNT;
 
-    tilenames[TT_OBJECT] = malloc(vultures_typecount[TT_OBJECT] * sizeof(char*));
+    tilenames[TT_OBJECT] = (char **)malloc(vultures_typecount[TT_OBJECT] * sizeof(char*));
 
     for(i = 0; !i || objects[i].oc_class != ILLOBJ_CLASS; i++)
     {
-        tilenames[TT_OBJECT][i] = malloc(41 * sizeof(char)); /* makedefs uses max 30 chars + '\0' */
+        tilenames[TT_OBJECT][i] = (char *)malloc(41 * sizeof(char)); /* makedefs uses max 30 chars + '\0' */
         tilenames[TT_OBJECT][i][0] = '\0';
         tilenames[TT_OBJECT][i][40] = '\0';
 
@@ -693,11 +693,11 @@ static void init_monnames()
 
     vultures_typecount[TT_MONSTER] = MONTILECOUNT;
 
-    tilenames[TT_MONSTER] = malloc(vultures_typecount[TT_MONSTER] * sizeof(char*));
+    tilenames[TT_MONSTER] = (char **)malloc(vultures_typecount[TT_MONSTER] * sizeof(char*));
 
     for (i = 0; mons[i].mlet; i++)
     {
-        tilenames[TT_MONSTER][i] = malloc(64 * sizeof(char));
+        tilenames[TT_MONSTER][i] = (char *)malloc(64 * sizeof(char));
         if (mons[i].mlet == S_HUMAN && !strncmp(mons[i].mname, "were", 4))
             snprintf(tilenames[TT_MONSTER][i], 64, "PM_HUMAN_%s", mons[i].mname);
         else
@@ -726,13 +726,13 @@ static void init_explnames()
 
     vultures_typecount[TT_EXPL] = EXPL_MAX * 9;
 
-    tilenames[TT_EXPL] = malloc(vultures_typecount[TT_EXPL] * sizeof(char*));
+    tilenames[TT_EXPL] = (char **)malloc(vultures_typecount[TT_EXPL] * sizeof(char*));
 
     for (i = 0; i < EXPL_MAX; i++)
     {
         for (j = 0; j < 9; j++)
         {
-            tilenames[TT_EXPL][i*9+j] = malloc(64 * sizeof(char));
+            tilenames[TT_EXPL][i*9+j] = (char *)malloc(64 * sizeof(char));
             snprintf(tilenames[TT_EXPL][i*9+j], 64, "%s_%d", explosion_names[i], j+1);
         }
     }

@@ -180,7 +180,7 @@ static void vultures_show_intro(const char *introscript_name)
           
           nScenes++;
           scene_images = (char **)realloc(scene_images, nScenes*sizeof(char *));
-          scene_images[nScenes-1] = malloc((i + 1) * sizeof(*tempbuffer));
+          scene_images[nScenes-1] = (char *)malloc((i + 1) * sizeof(*tempbuffer));
           if (!scene_images[nScenes - 1])
           {
             OOM(1);
@@ -220,7 +220,7 @@ static void vultures_show_intro(const char *introscript_name)
             i++;
           trimright(&tempbuffer[i]);
           /* Copy line to subtitle array */
-          subtitles[nScenes - 1][subtitle_rows[nScenes - 1] - 1] = malloc(strlen(tempbuffer + i) + 1);
+          subtitles[nScenes - 1][subtitle_rows[nScenes - 1] - 1] = (char *)malloc(strlen(tempbuffer + i) + 1);
           if (!subtitles[nScenes - 1][subtitle_rows[nScenes - 1] - 1])
           {
             OOM(1);
@@ -427,7 +427,7 @@ static void vultures_init_colors()
                                   0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
     SDL_Surface * reformatted = SDL_DisplayFormatAlpha(pixel);
 
-    vultures_px_format = malloc(sizeof(SDL_PixelFormat));
+    vultures_px_format = (SDL_PixelFormat *)malloc(sizeof(SDL_PixelFormat));
     memcpy(vultures_px_format, reformatted->format, sizeof(SDL_PixelFormat));
 
     SDL_FreeSurface(reformatted);

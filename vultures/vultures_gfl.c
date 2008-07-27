@@ -116,7 +116,7 @@ SDL_Surface *vultures_load_surface(char *srcbuf, unsigned int buflen)
         goto out;
 
     /* Create the array of pointers to image data */
-    row_pointers = malloc(sizeof(png_bytep) * height);
+    row_pointers = (png_byte**)malloc(sizeof(png_bytep) * height);
     if (!row_pointers)
     {
         SDL_FreeSurface(img);
@@ -179,7 +179,7 @@ SDL_Surface *vultures_load_graphic(const char *subdir, const char *name)
     fsize = ftell(fp);
     rewind(fp);
 
-    srcbuf = malloc(fsize);
+    srcbuf = (char*)malloc(fsize);
     if (!srcbuf)
         return 0;
 
@@ -203,9 +203,9 @@ void vultures_save_png(SDL_Surface * surface, char* filename, int with_alpha)
     png_structp png_ptr;
     png_infop info_ptr;
     FILE * fp;
-    unsigned int i, j, *in_pixels = surface->pixels;
-    unsigned char *output = malloc(surface->w * surface->h * (with_alpha ? 4 : 3) );
-    png_byte ** image = malloc(surface->h * sizeof(png_byte*));
+    unsigned int i, j, *in_pixels = (unsigned int*)surface->pixels;
+    unsigned char *output = (unsigned char*)malloc(surface->w * surface->h * (with_alpha ? 4 : 3) );
+    png_byte ** image = (png_byte**)malloc(surface->h * sizeof(png_byte*));
 
     /* strip out alpha bytes if neccessary and reorder the image bytes to RGB */
     for (j = 0; j < surface->h; j++)
@@ -265,7 +265,7 @@ void vultures_save_screenshot(void)
         if (access(filename, R_OK) != 0)
         {
             vultures_save_png(vultures_screen,filename,0);
-            msg = malloc(256);
+            msg = (char *)malloc(256);
             snprintf(msg, 256, "Screenshot saved as %s.", namebuf);
 
             if (vultures_windows_inited)

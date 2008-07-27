@@ -52,7 +52,7 @@ char *vultures_make_filename(const char *subdir1, const char *subdir2, const cha
 {
     char *filename;
 
-    filename = malloc(strlen(vultures_game_path) + 1 +
+    filename = (char*)malloc(strlen(vultures_game_path) + 1 +
         (subdir1 ? strlen(subdir1) + 2 : 0) +
         (subdir2 ? strlen(subdir2) + 2 : 0) +
         strlen(name) + 1);

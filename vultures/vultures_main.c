@@ -542,7 +542,7 @@ void vultures_end_menu(int winid, const char *prompt)
     /* we (ab)use the prompt as the window title */
     if (prompt)
     {
-        win->caption = malloc(strlen(prompt)+1);
+        win->caption = (char *)malloc(strlen(prompt)+1);
         strcpy(win->caption, prompt);
     }
 
@@ -565,7 +565,7 @@ void vultures_end_menu(int winid, const char *prompt)
             /* make the accelerator part of the caption */
             if (win_elem->caption && win_elem->accelerator)
             {
-                str = malloc(strlen(win_elem->caption) + 7);
+                str = (char *)malloc(strlen(win_elem->caption) + 7);
                 sprintf(str, "[%c] - %s", win_elem->accelerator, win_elem->caption);
                 free(win_elem->caption);
                 win_elem->caption = str;
@@ -604,7 +604,7 @@ int vultures_select_menu(int winid, int how, menu_item ** menu_list)
             win_elem = vultures_accel_to_win(win, (char)queued_event->num);
             if (win_elem)
             {
-                *menu_list = malloc(sizeof(menu_item));
+                *menu_list = (menu_item *)malloc(sizeof(menu_item));
                 (*menu_list)[0].item.a_void = win_elem->menu_id_v;
                 (*menu_list)[0].count = -1; 
                 return 1;
@@ -677,7 +677,7 @@ int vultures_select_menu(int winid, int how, menu_item ** menu_list)
         if (win_elem->selected)
         {
             n_selected++;
-            *menu_list = realloc(*menu_list, n_selected*sizeof(menu_item));
+            *menu_list = (menu_item *)realloc(*menu_list, n_selected*sizeof(menu_item));
             (*menu_list)[n_selected-1].item.a_void = win_elem->menu_id_v;
             (*menu_list)[n_selected-1].count = win_elem->pd.count;
         }

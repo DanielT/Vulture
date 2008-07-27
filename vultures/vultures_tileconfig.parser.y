@@ -123,7 +123,7 @@ floorline       : FLOORSTYLE '(' STRING ')' '=' '(' NUMBER NUMBER floortilearray
                         if ($9.rows[i].length != $7)
                             YYERROR;
 
-                    int *tilearray = malloc($7 * $8 * sizeof(int));
+                    int *tilearray = (int *)malloc($7 * $8 * sizeof(int));
                     for (i = 0; i < $8; i++)
                     {
                         for (j = 0; j < $7; j++)
@@ -141,7 +141,7 @@ floorline       : FLOORSTYLE '(' STRING ')' '=' '(' NUMBER NUMBER floortilearray
 floortilearray  : '(' floortilerow ')' /* first or only row of a floor array */
                 {
                     $$.rowcount = 1;
-                    $$.rows = malloc(sizeof(floortilerow));
+                    $$.rows = (floortilerow *)malloc(sizeof(floortilerow));
                     $$.rows[0] = $2;
                 }
                 | floortilearray '(' floortilerow ')' /* following rows */
@@ -150,7 +150,7 @@ floortilearray  : '(' floortilerow ')' /* first or only row of a floor array */
                     $$.rowcount = $1.rowcount;
 
                     $$.rowcount++;
-                    $$.rows = realloc($$.rows, $$.rowcount * sizeof(floortilerow));
+                    $$.rows = (floortilerow *)realloc($$.rows, $$.rowcount * sizeof(floortilerow));
                     $$.rows[$$.rowcount - 1] = $3;
                 }
                 ;
@@ -158,7 +158,7 @@ floortilearray  : '(' floortilerow ')' /* first or only row of a floor array */
 floortilerow    : IDENTIFIER
                 {
                     $$.length = 1;
-                    $$.tiles = malloc(sizeof(int));
+                    $$.tiles = (int *)malloc(sizeof(int));
                     $$.tiles[0] = vultures_get_tile_index(TT_FLOOR, $1, 0);
                     free($1);
 
@@ -172,7 +172,7 @@ floortilerow    : IDENTIFIER
                     $$.tiles = $1.tiles;
 
                     $$.length++;
-                    $$.tiles = realloc($$.tiles, $$.length * sizeof(int));
+                    $$.tiles = (int *)realloc($$.tiles, $$.length * sizeof(int));
                     $$.tiles[$$.length - 1] = vultures_get_tile_index(TT_FLOOR, $2, 0);
                     free($2);
                     if ($$.tiles[$$.length - 1] == -1)

@@ -1209,7 +1209,7 @@ int vultures_eventh_menu(struct window* handler, struct window* target,
 
 
             case MENU_SEARCH:
-                str_to_find = malloc(512);
+                str_to_find = (char *)malloc(512);
                 str_to_find[0] = '\0';
                 if (vultures_get_input(-1, -1, "What are you looking for?", str_to_find) != -1)
                 {
@@ -1885,7 +1885,7 @@ int vultures_eventh_objwin(struct window* handler, struct window* target,
 
 
                 case MENU_SEARCH:
-                    str_to_find = malloc(512);
+                    str_to_find = (char *)malloc(512);
                     str_to_find[0] = '\0';
                     if (vultures_get_input(-1, -1, "What are you looking for?", str_to_find) != -1)
                     {
@@ -2198,7 +2198,7 @@ static void vultures_toggle_map(void)
         txt = vultures_create_window_internal(0, map, V_WINTYPE_TEXT);
         txt->x = map->w/2;
         txt->y = 48;
-        txt->caption = malloc(128);
+        txt->caption = (char *)malloc(128);
         txt->caption[0] = 0;
 
         vultures_create_hotspot(598, 11, 28, 24, 1, map, "Close map");

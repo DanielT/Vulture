@@ -34,7 +34,7 @@ int vultures_load_font (int font_id, const char * ttf_filename, int fontindex, i
             return FALSE;
 
         if (!vultures_fonts)
-            vultures_fonts = calloc(VULTURES_MAX_FONTS, sizeof(struct vultures_font));
+            vultures_fonts = (struct vultures_font *)calloc(VULTURES_MAX_FONTS, sizeof(struct vultures_font));
     }
 
     /* font_id should always be passed as a #define, which is always <  VULTURES_MAX_FONTS */
@@ -70,7 +70,7 @@ int vultures_put_text (int font_id, const char *str, SDL_Surface *dest, int x, i
 
     /* sanitize the input string of unprintable characters */
     len = strlen(str);
-    cleaned_str = malloc(len+1);
+    cleaned_str = (char *)malloc(len+1);
     strcpy(cleaned_str, str);
     for (i = 0; i < len; i++)
         if (!isprint(cleaned_str[i]))

@@ -162,14 +162,15 @@ void vultures_read_sound_config(FILE * fp)
 
 
         vultures_n_event_sounds++;
-        vultures_event_sounds = realloc(vultures_event_sounds,
+        vultures_event_sounds = (vultures_event_sound **)realloc(vultures_event_sounds,
                                 vultures_n_event_sounds * sizeof(vultures_event_sound *));
-        vultures_event_sounds[vultures_n_event_sounds-1] = malloc(sizeof(vultures_event_sound));
+        vultures_event_sounds[vultures_n_event_sounds-1] = 
+                             (vultures_event_sound *)malloc(sizeof(vultures_event_sound));
         (vultures_event_sounds[vultures_n_event_sounds-1])->filename = 
-                                                    malloc(V_MAX_FILENAME_LENGTH*sizeof(char));
+                                       (char *)malloc(V_MAX_FILENAME_LENGTH*sizeof(char));
 
         (vultures_event_sounds[vultures_n_event_sounds-1])->searchpattern = 
-                                                    malloc(V_MAX_FILENAME_LENGTH*sizeof(char));
+                                       (char *)malloc(V_MAX_FILENAME_LENGTH*sizeof(char));
         memcpy((vultures_event_sounds[vultures_n_event_sounds-1])->searchpattern,
                 configline+1, tok-configline-1);
         (vultures_event_sounds[vultures_n_event_sounds-1])->searchpattern[tok-configline-1] = '\0';
@@ -181,7 +182,7 @@ void vultures_read_sound_config(FILE * fp)
             vultures_n_background_songs++;
             free((vultures_event_sounds[vultures_n_event_sounds-1])->searchpattern);
             (vultures_event_sounds[vultures_n_event_sounds-1])->searchpattern =
-                                                    malloc(strlen("nhfe_music_background")+4);
+                                               (char *)malloc(strlen("nhfe_music_background")+4);
             sprintf((vultures_event_sounds[vultures_n_event_sounds-1])->searchpattern,
                                     "nhfe_music_background%03d", vultures_n_background_songs-1);
         }
@@ -218,7 +219,7 @@ void vultures_read_sound_config(FILE * fp)
 char * vultures_get_userdir(void)
 {
     char *userdir;
-    userdir = malloc(512);
+    userdir = (char *)malloc(512);
     
 #ifdef WIN32
     /* %appdir% = X:\Documents and Settings\<username>\Application Data */
@@ -279,7 +280,7 @@ void vultures_read_options(void)
     free(filename);
 
     /* user's config file */
-    filename = malloc(512);
+    filename = (char *)malloc(512);
     strncpy(filename, userdir, 512);
     strncat(filename, V_FILENAME_OPTIONS, 512);
     fp = fopen(filename, "rb");
@@ -323,7 +324,7 @@ void vultures_read_options(void)
 
 
     /* user's sound config file */
-    filename = malloc(512);
+    filename = (char *)malloc(512);
     strncpy(filename, userdir, 512);
     strncat(filename, V_FILENAME_SOUNDS_CONFIG, 512);
     fp = fopen(filename, "rb");
@@ -383,7 +384,7 @@ void vultures_write_userconfig(void)
     }
 #endif
         
-    filename = malloc(512);
+    filename = (char *)malloc(512);
     strncpy(filename, dir, 512);
     strncat(filename, V_FILENAME_OPTIONS, 512);
     free(dir);
@@ -438,7 +439,7 @@ int vultures_iface_opts(void)
     winid = vultures_create_nhwindow(NHW_MENU);
     vultures_start_menu(winid);
     
-    str = malloc(256);
+    str = (char *)malloc(256);
 
     any.a_int = V_IOMID_RECENTER;
     sprintf(str, "Recenter after movement\t[%s]", vultures_opts.recenter ? "yes" : "no");

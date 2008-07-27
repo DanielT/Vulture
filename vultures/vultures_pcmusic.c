@@ -89,7 +89,7 @@ int pcmusic_load_instrument_file( void )
     pcmusic_instrument_buffer_size = ftell( instrument_file );
     fseek( instrument_file, 0, SEEK_SET );
 
-    pcmusic_instrument_buffer = malloc( pcmusic_instrument_buffer_size );
+    pcmusic_instrument_buffer = (unsigned char *)malloc( pcmusic_instrument_buffer_size );
     if ( pcmusic_instrument_buffer == NULL )
     {
         fclose( instrument_file );

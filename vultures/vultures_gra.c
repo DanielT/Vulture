@@ -138,7 +138,7 @@ void vultures_rect_surface
     Uint32 *screen;
 
     if (SDL_MUSTLOCK(surface)) SDL_LockSurface(surface);
-    screen = surface->pixels;
+    screen = (Uint32 *)surface->pixels;
 
     for (i = x1; i <= x2; i++)
     {

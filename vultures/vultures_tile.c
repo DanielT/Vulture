@@ -185,10 +185,10 @@ vultures_tile * vultures_load_tile(int tile_id)
     rewind(fp);
 
     /* load the tile */
-    data = malloc(fsize);
+    data = (char *)malloc(fsize);
     fread(data, fsize, 1, fp);
 
-    newtile = malloc(sizeof(vultures_tile));
+    newtile = (vultures_tile *)malloc(sizeof(vultures_tile));
     if (!newtile)
     {
         free(data);
@@ -213,7 +213,7 @@ vultures_tile * vultures_load_tile(int tile_id)
 static inline vultures_tile * vultures_shade_tile(vultures_tile *orig, int shadelevel)
 {
     SDL_Surface * blend = (shadelevel == 1) ? vultures_ftshade1 : vultures_ftshade2;
-    vultures_tile *tile = malloc(sizeof(vultures_tile));
+    vultures_tile *tile = (vultures_tile *)malloc(sizeof(vultures_tile));
 
     tile->xmod = orig->xmod;
     tile->ymod = orig->ymod;
@@ -244,8 +244,8 @@ void vultures_put_tilehighlight(int x, int y, int tile_id)
     highlight = SDL_CreateRGBSurface(SDL_SWSURFACE | SDL_SRCALPHA, tile->graphic->w, tile->graphic->h,
                                      pxf->BitsPerPixel, pxf->Rmask, pxf->Gmask, pxf->Bmask, pxf->Amask);
 
-    srcdata = tile->graphic->pixels;
-    destdata = highlight->pixels;
+    srcdata = (unsigned int *)tile->graphic->pixels;
+    destdata = (unsigned int *)highlight->pixels;
 
     for (i = 0; i < highlight->h; i++)
     {
@@ -296,7 +296,7 @@ int vultures_load_gametiles(void)
 
     /* initialize the two tile arrays. must happen after reading the config file,
      * as GAMETILECOUNT and TILEARRAYLEN are not know before */
-    vultures_tilecache = malloc(TILEARRAYLEN * sizeof(vultures_tilecache_entry));
+    vultures_tilecache = (vultures_tilecache_entry *)malloc(TILEARRAYLEN * sizeof(vultures_tilecache_entry));
     memset(vultures_tilecache, 0, TILEARRAYLEN * sizeof(vultures_tilecache_entry));
 
 
@@ -349,7 +349,7 @@ static vultures_tile *vultures_make_alpha_player_tile(int monnum, double op_scal
         lastscale = op_scale;
 
         montile = vultures_get_tile(MONSTER_TO_VTILE(monnum));
-        tile = malloc(sizeof(*tile));
+        tile = (vultures_tile *)malloc(sizeof(vultures_tile));
         if (tile == NULL)
             return montile;
 
@@ -376,7 +376,7 @@ static inline void vultures_set_tile_alpha(vultures_tile *tile, double opacity)
     /* scale opacity of every pixel. This works nicely, because
      * complete transparency has a numeric value of 0, so it will remain unchanged,
      * while all other pixels transparency will depend on their current transparency */
-    rawdata = tile->graphic->pixels;
+    rawdata = (unsigned char *)tile->graphic->pixels;
     for (y = 0; y < tile->graphic->h; y++)
         for (x = 0; x < tile->graphic->pitch; x += 4)
             /* multiply the alpha component by the opacity */

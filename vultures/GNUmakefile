@@ -68,7 +68,7 @@ $(OUTPUT_OBJ): $(VOBJ)
 $(BUILDDIR)/vultures_tileconfig.parser.c $(BUILDDIR)/vultures_tileconfig.parser.h: vultures_tileconfig.parser.y
 	@echo generating parser
 	@mkdir -p $(BUILDDIR)
-	@bison --no-lines -d vultures_tileconfig.parser.y -o $(BUILDDIR)/vultures_tileconfig.parser.tmp.c
+	@bison -d vultures_tileconfig.parser.y -o $(BUILDDIR)/vultures_tileconfig.parser.tmp.c
 	@mv $(BUILDDIR)/vultures_tileconfig.parser.tmp.c $(BUILDDIR)/vultures_tileconfig.parser.c
 	@mv $(BUILDDIR)/vultures_tileconfig.parser.tmp.h $(BUILDDIR)/vultures_tileconfig.parser.h
 

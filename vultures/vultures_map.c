@@ -270,23 +270,23 @@ int vultures_init_map(void)
     }
 
     /* Initialize map */
-    vultures_map_glyph       = malloc(V_MAP_HEIGHT * sizeof(int *));
-    vultures_map_back        = malloc(V_MAP_HEIGHT * sizeof(int *));
-    vultures_map_obj         = malloc(V_MAP_HEIGHT * sizeof(int *));
-    vultures_map_trap        = malloc(V_MAP_HEIGHT * sizeof(int *));
-    vultures_map_furniture   = malloc(V_MAP_HEIGHT * sizeof(int *));
-    vultures_map_specialeff  = malloc(V_MAP_HEIGHT * sizeof(int *));
-    vultures_map_mon         = malloc(V_MAP_HEIGHT * sizeof(int *));
-    vultures_map_specialattr = malloc(V_MAP_HEIGHT * sizeof(unsigned int**));
-    vultures_map_deco        = malloc(V_MAP_HEIGHT * sizeof(unsigned char *));
+    vultures_map_glyph       = (int **)malloc(V_MAP_HEIGHT * sizeof(int *));
+    vultures_map_back        = (int **)malloc(V_MAP_HEIGHT * sizeof(int *));
+    vultures_map_obj         = (int **)malloc(V_MAP_HEIGHT * sizeof(int *));
+    vultures_map_trap        = (int **)malloc(V_MAP_HEIGHT * sizeof(int *));
+    vultures_map_furniture   = (int **)malloc(V_MAP_HEIGHT * sizeof(int *));
+    vultures_map_specialeff  = (int **)malloc(V_MAP_HEIGHT * sizeof(int *));
+    vultures_map_mon         = (int **)malloc(V_MAP_HEIGHT * sizeof(int *));
+    vultures_map_specialattr = (unsigned int **)malloc(V_MAP_HEIGHT * sizeof(unsigned int**));
+    vultures_map_deco        = (unsigned char **)malloc(V_MAP_HEIGHT * sizeof(unsigned char *));
 
-    vultures_maptile_wall       = malloc(V_MAP_HEIGHT*sizeof(struct walls *));
-    vultures_maptile_floor_edge = malloc(V_MAP_HEIGHT*sizeof(struct fedges *));
+    vultures_maptile_wall       = (struct walls **)malloc(V_MAP_HEIGHT*sizeof(struct walls *));
+    vultures_maptile_floor_edge = (struct fedges **)malloc(V_MAP_HEIGHT*sizeof(struct fedges *));
 
-    vultures_map_tile_is_dark = malloc(V_MAP_HEIGHT*sizeof(char *));
-    vultures_room_indices     = malloc(V_MAP_HEIGHT*sizeof(char *));
+    vultures_map_tile_is_dark = (char **)malloc(V_MAP_HEIGHT*sizeof(char *));
+    vultures_room_indices     = (char **)malloc(V_MAP_HEIGHT*sizeof(char *));
 
-    vultures_minimap_syms     = malloc(V_MAP_HEIGHT*sizeof(char *));
+    vultures_minimap_syms     = (char **)malloc(V_MAP_HEIGHT*sizeof(char *));
 
     if ((!vultures_map_back) || (!vultures_map_obj) || (!vultures_map_trap) || (!vultures_map_glyph) ||
         (!vultures_map_furniture) || (!vultures_map_mon) || (!vultures_map_specialeff) ||
@@ -296,23 +296,23 @@ int vultures_init_map(void)
 
     for (i = 0; i < V_MAP_HEIGHT; i++)
     {
-        vultures_map_glyph[i]       = malloc(V_MAP_WIDTH * sizeof(int));
-        vultures_map_back[i]        = malloc(V_MAP_WIDTH * sizeof(int));
-        vultures_map_obj[i]         = malloc(V_MAP_WIDTH * sizeof(int));
-        vultures_map_trap[i]        = malloc(V_MAP_WIDTH * sizeof(int));
-        vultures_map_furniture[i]   = malloc(V_MAP_WIDTH * sizeof(int));
-        vultures_map_specialeff[i]  = malloc(V_MAP_WIDTH * sizeof(int));
-        vultures_map_mon[i]         = malloc(V_MAP_WIDTH * sizeof(int));
-        vultures_map_specialattr[i] = malloc(V_MAP_WIDTH * sizeof(unsigned int));
-        vultures_map_deco[i]        = malloc(V_MAP_WIDTH * sizeof(unsigned char));
+        vultures_map_glyph[i]       = (int *)malloc(V_MAP_WIDTH * sizeof(int));
+        vultures_map_back[i]        = (int *)malloc(V_MAP_WIDTH * sizeof(int));
+        vultures_map_obj[i]         = (int *)malloc(V_MAP_WIDTH * sizeof(int));
+        vultures_map_trap[i]        = (int *)malloc(V_MAP_WIDTH * sizeof(int));
+        vultures_map_furniture[i]   = (int *)malloc(V_MAP_WIDTH * sizeof(int));
+        vultures_map_specialeff[i]  = (int *)malloc(V_MAP_WIDTH * sizeof(int));
+        vultures_map_mon[i]         = (int *)malloc(V_MAP_WIDTH * sizeof(int));
+        vultures_map_specialattr[i] = (unsigned int *)malloc(V_MAP_WIDTH * sizeof(unsigned int));
+        vultures_map_deco[i]        = (unsigned char *)malloc(V_MAP_WIDTH * sizeof(unsigned char));
 
-        vultures_maptile_wall[i]       = malloc(V_MAP_WIDTH*sizeof(struct walls));
-        vultures_maptile_floor_edge[i] = malloc(V_MAP_WIDTH*sizeof(struct fedges));
+        vultures_maptile_wall[i]       = (struct walls *)malloc(V_MAP_WIDTH*sizeof(struct walls));
+        vultures_maptile_floor_edge[i] = (struct fedges *)malloc(V_MAP_WIDTH*sizeof(struct fedges));
 
-        vultures_map_tile_is_dark[i] = malloc(V_MAP_WIDTH*sizeof(char));
-        vultures_room_indices[i] = malloc(V_MAP_WIDTH*sizeof(char));
+        vultures_map_tile_is_dark[i] = (char *)malloc(V_MAP_WIDTH*sizeof(char));
+        vultures_room_indices[i] = (char *)malloc(V_MAP_WIDTH*sizeof(char));
 
-        vultures_minimap_syms[i] = malloc(V_MAP_WIDTH*sizeof(char));
+        vultures_minimap_syms[i] = (char *)malloc(V_MAP_WIDTH*sizeof(char));
 
         if ((!vultures_map_back[i]) || (!vultures_map_obj[i]) || (!vultures_map_trap[i]) ||
             (!vultures_map_furniture[i]) || (!vultures_map_mon[i]) || (!vultures_map_specialeff[i]) ||
@@ -816,8 +816,8 @@ int vultures_draw_minimap(struct window * win)
                 destrect.x = 40 + 2*map_x - 2*map_y;
                 destrect.y = map_x + map_y;
 
-                pixels = win->image->pixels + 
-                         win->image->pitch * (destrect.y+6) + (destrect.x+6) * 4;
+                pixels = (Uint32 *)(win->image->pixels + 
+                         win->image->pitch * (destrect.y+6) + (destrect.x+6) * 4);
 
                 /* A minimap symbol has this shape: _ C _
                  *                                  C C C
@@ -829,8 +829,8 @@ int vultures_draw_minimap(struct window * win)
                  /* pixels[2] = transparent -> dont write */
 
                 /* row 2 */
-                pixels = win->image->pixels + 
-                         win->image->pitch * (destrect.y+7) + (destrect.x+6) * 4;
+                pixels = (Uint32 *)(win->image->pixels + 
+                         win->image->pitch * (destrect.y+7) + (destrect.x+6) * 4);
                 pixels[0] = minimap_colors[sym];
                 pixels[1] = minimap_colors[sym];
                 pixels[2] = minimap_colors[sym];
@@ -1698,7 +1698,7 @@ char * vultures_map_square_description(point target, int include_seen)
     /* All of monsters, objects, traps and furniture get descriptions */
     if ((vultures_map_mon[target.y][target.x] != V_TILE_NONE))
     {
-        out_str = malloc(BUFSZ);
+        out_str = (char *)malloc(BUFSZ);
         out_str[0] = '\0';
 
         look_buf[0] = '\0';
@@ -1723,7 +1723,7 @@ char * vultures_map_square_description(point target, int include_seen)
     }
     else if (vultures_map_obj[target.y][target.x] != V_TILE_NONE)
     {
-        out_str = malloc(BUFSZ);
+        out_str = (char *)malloc(BUFSZ);
         look_buf[0] = '\0';
         monbuf[0] = '\0';
         lookat(target.x, target.y, look_buf, monbuf);
@@ -1746,7 +1746,7 @@ char * vultures_map_square_description(point target, int include_seen)
     else if ((vultures_map_trap[target.y][target.x] != V_TILE_NONE) ||
              (vultures_map_furniture[target.y][target.x] != V_TILE_NONE))
     {
-        out_str = malloc(BUFSZ);
+        out_str = (char *)malloc(BUFSZ);
         lookat(target.x, target.y, out_str, monbuf);
 
         return out_str;
@@ -2522,7 +2522,7 @@ static char vultures_mappos_to_dirkey(point mappos)
 static void vultures_build_tilemap(void)
 {
     int i;
-    vultures_tilemap_engulf = malloc(NUMMONS*sizeof(int));
+    vultures_tilemap_engulf = (int *)malloc(NUMMONS*sizeof(int));
 
     /* build engulf tile array */
     for (i = 0; i < NUMMONS; i++)
