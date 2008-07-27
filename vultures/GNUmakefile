@@ -20,7 +20,7 @@ ifndef SDL_CFLAGS
 	SDL_CFLAGS = $(shell $(SDL_CONFIG) --cflags)
 endif
 
-CFLAGS := $(BASECFLAGS) $(SDL_CFLAGS) -DUSE_SDL_SYSCALLS -g3
+CFLAGS := $(BASECFLAGS) $(SDL_CFLAGS) -DUSE_SDL_SYSCALLS -g3 -Wc++-compat
 
 ifeq ($(BUILD), nethack)
 	BUILDDIR := build_n
