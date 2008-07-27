@@ -5,8 +5,12 @@
 #ifndef _vultures_main_h
 #define _vultures_main_h
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "hack.h"
+
 
 extern struct window_procs vultures_procs;
 
@@ -71,5 +75,11 @@ extern void vultures_bail(const char *mesg);
 
 
 extern int vultures_whatis_active;
+
+
+
+#ifdef __cplusplus
+}
+#endif 
 
 #endif /* _vultures_main_h */
