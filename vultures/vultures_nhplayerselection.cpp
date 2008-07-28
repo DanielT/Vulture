@@ -1,4 +1,9 @@
+#include <string.h>
+
+extern "C" {
 #include "hack.h"
+}
+
 #include "vultures_main.h"
 
 /* ------------------------------------------------------------------------- */

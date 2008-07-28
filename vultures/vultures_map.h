@@ -6,7 +6,11 @@
 #define _vultures_map_h_
 
 #include <SDL.h>
-#include "hack.h"
+
+extern "C" {
+	#include "hack.h"
+}
+
 #include "vultures_win.h"
 
 /* Map dimensions in glyphs */

@@ -9,6 +9,8 @@
 #include "SDL_video.h"
 
 /* nethack headers */
+extern "C" {
+
 #include "hack.h"
 #include "rm.h"
 #include "display.h"
@@ -20,6 +22,8 @@
 #endif
 
 #include "func_tab.h" /* For extended commands list */
+
+}
 
 #define TRAVEL_HACK /* XXX This is to be removed once Slash'EM (NetHack?)  fixes the problem of infinite loops */
 
@@ -489,7 +493,7 @@ void vultures_add_menu(int winid, int glyph, const ANY_P * identifier,
                        CHAR_P accelerator, CHAR_P groupacc, int attr,
                        const char *str, BOOLEAN_P preselected)
 {
-    int type;
+    enum wintypes type;
     struct window * win = vultures_get_window(winid);
     struct window * elem;
 
@@ -1149,7 +1153,7 @@ static int vultures_find_menu_accelerator(char *used_accelerators)
 {
     char acc_found;
     int cur_accelerator;
-    int i, j;
+    unsigned int i, j;
     char acclist[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ";
 
     /* Find an unused accelerator */

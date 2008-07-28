@@ -19,8 +19,8 @@
 #include "epri.h"
 
 /* lookat isn't in the nethack headers, but we use it here ... */
-extern struct permonst * lookat(int, int, char *, char *);
-extern short glyph2tile[];
+extern "C" struct permonst * lookat(int, int, char *, char *);
+extern "C" short glyph2tile[];
 
 #define CMD_TRAVEL (char)0x90
 #define META(c) (0x80 | (c))
@@ -735,7 +735,7 @@ int vultures_draw_minimap(struct window * win)
                 destrect.x = 40 + 2*map_x - 2*map_y;
                 destrect.y = map_x + map_y;
 
-                pixels = (Uint32 *)(win->image->pixels + 
+                pixels = (Uint32 *)((char*)win->image->pixels + 
                          win->image->pitch * (destrect.y+6) + (destrect.x+6) * 4);
 
                 /* A minimap symbol has this shape: _ C _
@@ -748,7 +748,7 @@ int vultures_draw_minimap(struct window * win)
                  /* pixels[2] = transparent -> dont write */
 
                 /* row 2 */
-                pixels = (Uint32 *)(win->image->pixels + 
+                pixels = (Uint32 *)((char*)win->image->pixels + 
                          win->image->pitch * (destrect.y+7) + (destrect.x+6) * 4);
                 pixels[0] = minimap_colors[sym];
                 pixels[1] = minimap_colors[sym];
@@ -2462,83 +2462,83 @@ static void vultures_build_tilemap(void)
 
     /* build "special tile" array: these are the tiles for dungeon glyphs */
 #ifdef VULTURESCLAW
-    vultures_tilemap_misc[S_toilet] = V_MISC_TOILET,
+    vultures_tilemap_misc[S_toilet] = V_MISC_TOILET;
 #endif
 
-    vultures_tilemap_misc[S_stone] = V_MISC_UNMAPPED_AREA,
-    vultures_tilemap_misc[S_vwall] = V_TILE_WALL_GENERIC,
-    vultures_tilemap_misc[S_hwall] = V_TILE_WALL_GENERIC,
-    vultures_tilemap_misc[S_tlcorn] = V_TILE_WALL_GENERIC,
-    vultures_tilemap_misc[S_trcorn] = V_TILE_WALL_GENERIC,
-    vultures_tilemap_misc[S_blcorn] = V_TILE_WALL_GENERIC,
-    vultures_tilemap_misc[S_brcorn] = V_TILE_WALL_GENERIC,
-    vultures_tilemap_misc[S_crwall] = V_TILE_WALL_GENERIC,
-    vultures_tilemap_misc[S_tuwall] = V_TILE_WALL_GENERIC,
-    vultures_tilemap_misc[S_tdwall] = V_TILE_WALL_GENERIC,
-    vultures_tilemap_misc[S_tlwall] = V_TILE_WALL_GENERIC,
-    vultures_tilemap_misc[S_trwall] = V_TILE_WALL_GENERIC,
-    vultures_tilemap_misc[S_ndoor] = V_MISC_DOOR_WOOD_BROKEN,
-    vultures_tilemap_misc[S_vodoor] = V_MISC_VDOOR_WOOD_OPEN,
-    vultures_tilemap_misc[S_hodoor] = V_MISC_HDOOR_WOOD_OPEN,
-    vultures_tilemap_misc[S_vcdoor] = V_MISC_VDOOR_WOOD_CLOSED,
-    vultures_tilemap_misc[S_hcdoor] = V_MISC_HDOOR_WOOD_CLOSED,
-    vultures_tilemap_misc[S_room] = V_TILE_FLOOR_COBBLESTONE,
-    vultures_tilemap_misc[S_corr] = V_TILE_FLOOR_ROUGH,
-    vultures_tilemap_misc[S_upstair] = V_MISC_STAIRS_UP,
-    vultures_tilemap_misc[S_dnstair] = V_MISC_STAIRS_DOWN,
-    vultures_tilemap_misc[S_fountain] = V_MISC_FOUNTAIN,
-    vultures_tilemap_misc[S_altar] = V_MISC_ALTAR,
-    vultures_tilemap_misc[S_teleportation_trap] = V_MISC_TRAP_TELEPORTER,
-    vultures_tilemap_misc[S_tree] = V_MISC_TREE,
-    vultures_tilemap_misc[S_cloud] = V_MISC_CLOUD,
-    vultures_tilemap_misc[S_air] = V_TILE_FLOOR_AIR,
-    vultures_tilemap_misc[S_grave] = V_MISC_GRAVE,
-    vultures_tilemap_misc[S_sink] = V_MISC_SINK,
-    vultures_tilemap_misc[S_bear_trap] = V_MISC_TRAP_BEAR,
-    vultures_tilemap_misc[S_rust_trap] = V_MISC_TRAP_WATER,
-    vultures_tilemap_misc[S_pit] = V_MISC_TRAP_PIT,
-    vultures_tilemap_misc[S_hole] = V_MISC_TRAP_PIT,
-    vultures_tilemap_misc[S_trap_door] = V_MISC_TRAP_DOOR,
-    vultures_tilemap_misc[S_water] = V_TILE_FLOOR_WATER,
-    vultures_tilemap_misc[S_pool] = V_TILE_FLOOR_WATER,
-    vultures_tilemap_misc[S_ice] = V_TILE_FLOOR_ICE,
-    vultures_tilemap_misc[S_lava] = V_TILE_FLOOR_LAVA,
-    vultures_tilemap_misc[S_throne] = V_MISC_THRONE,
-    vultures_tilemap_misc[S_bars] = V_MISC_BARS,
-    vultures_tilemap_misc[S_upladder] = V_MISC_LADDER_UP,
-    vultures_tilemap_misc[S_dnladder] = V_MISC_LADDER_DOWN,
-    vultures_tilemap_misc[S_arrow_trap] = V_MISC_TRAP_ARROW,
-    vultures_tilemap_misc[S_rolling_boulder_trap] = V_MISC_ROLLING_BOULDER_TRAP,
-    vultures_tilemap_misc[S_sleeping_gas_trap] = V_MISC_GAS_TRAP,
-    vultures_tilemap_misc[S_fire_trap] = V_MISC_TRAP_FIRE,
-    vultures_tilemap_misc[S_web] = V_MISC_WEB_TRAP,
-    vultures_tilemap_misc[S_statue_trap] = OBJECT_TO_VTILE(STATUE),
-    vultures_tilemap_misc[S_anti_magic_trap] = V_MISC_TRAP_ANTI_MAGIC,
-    vultures_tilemap_misc[S_polymorph_trap] = V_MISC_TRAP_POLYMORPH,
-    vultures_tilemap_misc[S_vbeam] = V_MISC_ZAP_VERTICAL,
-    vultures_tilemap_misc[S_hbeam] = V_MISC_ZAP_HORIZONTAL,
-    vultures_tilemap_misc[S_lslant] = V_MISC_ZAP_SLANT_LEFT,
-    vultures_tilemap_misc[S_rslant] = V_MISC_ZAP_SLANT_RIGHT,
-    vultures_tilemap_misc[S_litcorr] = V_TILE_FLOOR_ROUGH_LIT,
-    vultures_tilemap_misc[S_ss1] = V_MISC_RESIST_SPELL_1,
-    vultures_tilemap_misc[S_ss2] = V_MISC_RESIST_SPELL_2,
-    vultures_tilemap_misc[S_ss3] = V_MISC_RESIST_SPELL_3,
-    vultures_tilemap_misc[S_ss4] = V_MISC_RESIST_SPELL_4,
-    vultures_tilemap_misc[S_dart_trap] = V_MISC_DART_TRAP,
-    vultures_tilemap_misc[S_falling_rock_trap] = V_MISC_FALLING_ROCK_TRAP,
-    vultures_tilemap_misc[S_squeaky_board] = V_MISC_SQUEAKY_BOARD,
-    vultures_tilemap_misc[S_land_mine] = V_MISC_LAND_MINE,
-    vultures_tilemap_misc[S_magic_portal] = V_MISC_MAGIC_PORTAL,
-    vultures_tilemap_misc[S_spiked_pit] = V_MISC_SPIKED_PIT,
-    vultures_tilemap_misc[S_hole] = V_MISC_HOLE,
-    vultures_tilemap_misc[S_level_teleporter] = V_MISC_LEVEL_TELEPORTER,
-    vultures_tilemap_misc[S_magic_trap] = V_MISC_MAGIC_TRAP,
-    vultures_tilemap_misc[S_digbeam] = V_MISC_DIGBEAM,
-    vultures_tilemap_misc[S_flashbeam] = V_MISC_FLASHBEAM,
-    vultures_tilemap_misc[S_boomleft] = V_MISC_BOOMLEFT,
-    vultures_tilemap_misc[S_boomright] = V_MISC_BOOMRIGHT,
-    vultures_tilemap_misc[S_hcdbridge] = V_MISC_HCDBRIDGE,
-    vultures_tilemap_misc[S_vcdbridge] = V_MISC_VCDBRIDGE,
-    vultures_tilemap_misc[S_hodbridge] = V_MISC_HODBRIDGE,
-    vultures_tilemap_misc[S_vodbridge] = V_MISC_VODBRIDGE
+    vultures_tilemap_misc[S_stone] = V_MISC_UNMAPPED_AREA;
+    vultures_tilemap_misc[S_vwall] = V_TILE_WALL_GENERIC;
+    vultures_tilemap_misc[S_hwall] = V_TILE_WALL_GENERIC;
+    vultures_tilemap_misc[S_tlcorn] = V_TILE_WALL_GENERIC;
+    vultures_tilemap_misc[S_trcorn] = V_TILE_WALL_GENERIC;
+    vultures_tilemap_misc[S_blcorn] = V_TILE_WALL_GENERIC;
+    vultures_tilemap_misc[S_brcorn] = V_TILE_WALL_GENERIC;
+    vultures_tilemap_misc[S_crwall] = V_TILE_WALL_GENERIC;
+    vultures_tilemap_misc[S_tuwall] = V_TILE_WALL_GENERIC;
+    vultures_tilemap_misc[S_tdwall] = V_TILE_WALL_GENERIC;
+    vultures_tilemap_misc[S_tlwall] = V_TILE_WALL_GENERIC;
+    vultures_tilemap_misc[S_trwall] = V_TILE_WALL_GENERIC;
+    vultures_tilemap_misc[S_ndoor] = V_MISC_DOOR_WOOD_BROKEN;
+    vultures_tilemap_misc[S_vodoor] = V_MISC_VDOOR_WOOD_OPEN;
+    vultures_tilemap_misc[S_hodoor] = V_MISC_HDOOR_WOOD_OPEN;
+    vultures_tilemap_misc[S_vcdoor] = V_MISC_VDOOR_WOOD_CLOSED;
+    vultures_tilemap_misc[S_hcdoor] = V_MISC_HDOOR_WOOD_CLOSED;
+    vultures_tilemap_misc[S_room] = V_TILE_FLOOR_COBBLESTONE;
+    vultures_tilemap_misc[S_corr] = V_TILE_FLOOR_ROUGH;
+    vultures_tilemap_misc[S_upstair] = V_MISC_STAIRS_UP;
+    vultures_tilemap_misc[S_dnstair] = V_MISC_STAIRS_DOWN;
+    vultures_tilemap_misc[S_fountain] = V_MISC_FOUNTAIN;
+    vultures_tilemap_misc[S_altar] = V_MISC_ALTAR;
+    vultures_tilemap_misc[S_teleportation_trap] = V_MISC_TRAP_TELEPORTER;
+    vultures_tilemap_misc[S_tree] = V_MISC_TREE;
+    vultures_tilemap_misc[S_cloud] = V_MISC_CLOUD;
+    vultures_tilemap_misc[S_air] = V_TILE_FLOOR_AIR;
+    vultures_tilemap_misc[S_grave] = V_MISC_GRAVE;
+    vultures_tilemap_misc[S_sink] = V_MISC_SINK;
+    vultures_tilemap_misc[S_bear_trap] = V_MISC_TRAP_BEAR;
+    vultures_tilemap_misc[S_rust_trap] = V_MISC_TRAP_WATER;
+    vultures_tilemap_misc[S_pit] = V_MISC_TRAP_PIT;
+    vultures_tilemap_misc[S_hole] = V_MISC_TRAP_PIT;
+    vultures_tilemap_misc[S_trap_door] = V_MISC_TRAP_DOOR;
+    vultures_tilemap_misc[S_water] = V_TILE_FLOOR_WATER;
+    vultures_tilemap_misc[S_pool] = V_TILE_FLOOR_WATER;
+    vultures_tilemap_misc[S_ice] = V_TILE_FLOOR_ICE;
+    vultures_tilemap_misc[S_lava] = V_TILE_FLOOR_LAVA;
+    vultures_tilemap_misc[S_throne] = V_MISC_THRONE;
+    vultures_tilemap_misc[S_bars] = V_MISC_BARS;
+    vultures_tilemap_misc[S_upladder] = V_MISC_LADDER_UP;
+    vultures_tilemap_misc[S_dnladder] = V_MISC_LADDER_DOWN;
+    vultures_tilemap_misc[S_arrow_trap] = V_MISC_TRAP_ARROW;
+    vultures_tilemap_misc[S_rolling_boulder_trap] = V_MISC_ROLLING_BOULDER_TRAP;
+    vultures_tilemap_misc[S_sleeping_gas_trap] = V_MISC_GAS_TRAP;
+    vultures_tilemap_misc[S_fire_trap] = V_MISC_TRAP_FIRE;
+    vultures_tilemap_misc[S_web] = V_MISC_WEB_TRAP;
+    vultures_tilemap_misc[S_statue_trap] = OBJECT_TO_VTILE(STATUE);
+    vultures_tilemap_misc[S_anti_magic_trap] = V_MISC_TRAP_ANTI_MAGIC;
+    vultures_tilemap_misc[S_polymorph_trap] = V_MISC_TRAP_POLYMORPH;
+    vultures_tilemap_misc[S_vbeam] = V_MISC_ZAP_VERTICAL;
+    vultures_tilemap_misc[S_hbeam] = V_MISC_ZAP_HORIZONTAL;
+    vultures_tilemap_misc[S_lslant] = V_MISC_ZAP_SLANT_LEFT;
+    vultures_tilemap_misc[S_rslant] = V_MISC_ZAP_SLANT_RIGHT;
+    vultures_tilemap_misc[S_litcorr] = V_TILE_FLOOR_ROUGH_LIT;
+    vultures_tilemap_misc[S_ss1] = V_MISC_RESIST_SPELL_1;
+    vultures_tilemap_misc[S_ss2] = V_MISC_RESIST_SPELL_2;
+    vultures_tilemap_misc[S_ss3] = V_MISC_RESIST_SPELL_3;
+    vultures_tilemap_misc[S_ss4] = V_MISC_RESIST_SPELL_4;
+    vultures_tilemap_misc[S_dart_trap] = V_MISC_DART_TRAP;
+    vultures_tilemap_misc[S_falling_rock_trap] = V_MISC_FALLING_ROCK_TRAP;
+    vultures_tilemap_misc[S_squeaky_board] = V_MISC_SQUEAKY_BOARD;
+    vultures_tilemap_misc[S_land_mine] = V_MISC_LAND_MINE;
+    vultures_tilemap_misc[S_magic_portal] = V_MISC_MAGIC_PORTAL;
+    vultures_tilemap_misc[S_spiked_pit] = V_MISC_SPIKED_PIT;
+    vultures_tilemap_misc[S_hole] = V_MISC_HOLE;
+    vultures_tilemap_misc[S_level_teleporter] = V_MISC_LEVEL_TELEPORTER;
+    vultures_tilemap_misc[S_magic_trap] = V_MISC_MAGIC_TRAP;
+    vultures_tilemap_misc[S_digbeam] = V_MISC_DIGBEAM;
+    vultures_tilemap_misc[S_flashbeam] = V_MISC_FLASHBEAM;
+    vultures_tilemap_misc[S_boomleft] = V_MISC_BOOMLEFT;
+    vultures_tilemap_misc[S_boomright] = V_MISC_BOOMRIGHT;
+    vultures_tilemap_misc[S_hcdbridge] = V_MISC_HCDBRIDGE;
+    vultures_tilemap_misc[S_vcdbridge] = V_MISC_VCDBRIDGE;
+    vultures_tilemap_misc[S_hodbridge] = V_MISC_HODBRIDGE;
+    vultures_tilemap_misc[S_vodbridge] = V_MISC_VODBRIDGE;
 }

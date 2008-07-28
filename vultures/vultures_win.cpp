@@ -5,8 +5,10 @@
 
 #include "SDL.h"
 
+extern "C" {
 #include "hack.h"
 #include "skills.h"
+}
 
 #include "vultures_win.h"
 #include "vultures_win_event.h"
@@ -89,13 +91,14 @@ static int vultures_handle_event(struct window * topwin, struct window * win,
                                  void * result, SDL_Event * event, int * redraw);
 static void vultures_check_enhance(void);
 
-extern boolean can_advance(int skill, int speedy);
+
+extern "C" boolean can_advance(int skill, int speedy);
 
 /******************************
  * window management functions
  ******************************/
 
-struct window * vultures_create_window_internal(int nh_type, struct window * parent, int wintype)
+struct window * vultures_create_window_internal(int nh_type, struct window * parent, enum wintypes wintype)
 {
     int winid = 1;
     struct window * newwin;
@@ -155,7 +158,7 @@ struct window * vultures_create_window_internal(int nh_type, struct window * par
 
 /* set the correct values for various window vars depending on the window type,
  * in particular draw and event_handler */
-void vultures_init_wintype(struct window * win, int wintype)
+void vultures_init_wintype(struct window * win, enum wintypes wintype)
 {
     win->v_type = wintype;
 
@@ -391,7 +394,7 @@ struct window * vultures_get_window(int winid)
 
 
 /* create a hotspot. a hotspot is an invisible window, whose purpose is recieving events */
-int vultures_create_hotspot(int x, int y, int w, int h, int menu_id, struct window * parent, char * name)
+int vultures_create_hotspot(int x, int y, int w, int h, int menu_id, struct window * parent, const char * name)
 {
     struct window * win;
 
@@ -520,7 +523,7 @@ struct window * vultures_query_choices(const char * ques, const char *choices, c
     struct window *win, *button;
     int nbuttons = 0, longdesc = 0;
     int i, len;
-    char * str = (char*)choices;
+    const char * str = (char*)choices;
 
     win = vultures_create_window_internal(0, NULL, V_WINTYPE_MAIN);
     win->event_handler = vultures_eventh_query_choices;

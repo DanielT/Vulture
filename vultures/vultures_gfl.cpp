@@ -25,7 +25,7 @@
 
 static void vultures_png_read_callback(png_structp png_ptr, png_bytep area, png_size_t size)
 {
-    void *mem = png_ptr->io_ptr;
+    char *mem = (char *)png_ptr->io_ptr;
     memcpy(area, mem, size);
     png_ptr->io_ptr = (mem + size);
 }
@@ -203,7 +203,8 @@ void vultures_save_png(SDL_Surface * surface, char* filename, int with_alpha)
     png_structp png_ptr;
     png_infop info_ptr;
     FILE * fp;
-    unsigned int i, j, *in_pixels = (unsigned int*)surface->pixels;
+    int i, j;
+    unsigned int *in_pixels = (unsigned int*)surface->pixels;
     unsigned char *output = (unsigned char*)malloc(surface->w * surface->h * (with_alpha ? 4 : 3) );
     png_byte ** image = (png_byte**)malloc(surface->h * sizeof(png_byte*));
 

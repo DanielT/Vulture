@@ -63,14 +63,14 @@ all: $(OUTPUT_OBJ)
 
 $(OUTPUT_OBJ): $(VOBJ)
 	@echo combining objects to $@
-	@$(LD) -r $(VOBJ) -o $(OUTPUT_OBJ)
+	@$(CXX) -nostdlib -Xlinker -r $(VOBJ) -lstdc++ -o $(OUTPUT_OBJ)
 
 $(BUILDDIR)/vultures_tileconfig.parser.cpp $(BUILDDIR)/vultures_tileconfig.parser.h: vultures_tileconfig.parser.y
 	@echo generating parser
 	@mkdir -p $(BUILDDIR)
 	@bison -d vultures_tileconfig.parser.y -o $(BUILDDIR)/vultures_tileconfig.parser.tmp.cpp
 	@mv $(BUILDDIR)/vultures_tileconfig.parser.tmp.cpp $(BUILDDIR)/vultures_tileconfig.parser.cpp
-	@mv $(BUILDDIR)/vultures_tileconfig.parser.tmp.h $(BUILDDIR)/vultures_tileconfig.parser.h
+	@mv $(BUILDDIR)/vultures_tileconfig.parser.tmp.hpp $(BUILDDIR)/vultures_tileconfig.parser.h
 
 $(BUILDDIR)/vultures_tileconfig.lexer.cpp: vultures_tileconfig.lexer.l
 	@echo generating lexer

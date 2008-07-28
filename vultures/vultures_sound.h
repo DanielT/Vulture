@@ -13,7 +13,7 @@
 
 
 /* Event sound types */
-enum vultures_event_sound {
+enum vultures_event_sound_enum {
     V_EVENT_SOUND_TYPE_NONE = 0,
     V_EVENT_SOUND_TYPE_SND,
     V_EVENT_SOUND_TYPE_MUS,

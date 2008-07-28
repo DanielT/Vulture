@@ -19,7 +19,7 @@
 #define V_LOG_FILENAME "vultures_log.txt"
 
 
-extern void append_slash(char *);
+extern "C" void append_slash(char *);
 
 
 char vultures_game_path[1024];

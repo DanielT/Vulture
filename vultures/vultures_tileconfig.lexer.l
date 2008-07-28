@@ -7,6 +7,8 @@
 #include "vultures_tileconfig.h"
 #include "vultures_tileconfig.parser.h"
 
+#define YY_SKIP_YYWRAP
+extern int yywrap();
 int line_number = 1;
 
 %}

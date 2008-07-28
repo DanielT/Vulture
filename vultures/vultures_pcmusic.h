@@ -9,6 +9,6 @@ enum
 
 extern void vultures_pcmusic_init( void );
 
-extern void pc_speaker(struct obj *instr, char *tune);
+extern "C" void pc_speaker(struct obj *instr, char *tune);
 
 #endif

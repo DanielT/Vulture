@@ -21,10 +21,10 @@
 #define META(c) (0x80 | (c))
 #define CTRL(c) (0x1f & (c))
 
-extern int take_off();
-extern int select_off(struct obj *);
-extern long takeoff_mask;
-extern const char *disrobing;
+extern "C" int take_off();
+extern "C" int select_off(struct obj *);
+extern "C" long takeoff_mask;
+extern "C" const char *disrobing;
 
 enum scrolltypes {
     V_SCROLL_LINE_REL,
@@ -241,7 +241,7 @@ int vultures_eventh_enhance(struct window* handler, struct window* target,
 
     /* show a tooltip */
     else if (event->type == SDL_TIMEREVENT && event->user.code > HOVERTIMEOUT)
-        vultures_mouse_set_tooltip("Enhance a skill");
+        vultures_mouse_set_tooltip((char *)"Enhance a skill");
 
     return V_EVENT_HANDLED_NOREDRAW;
 }
