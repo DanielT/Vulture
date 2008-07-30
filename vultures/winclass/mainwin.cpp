@@ -2,10 +2,11 @@
 #include "mainwin.h"
 
 
-mainwin::mainwin(window *p, int nh_wt) : window(p, nh_wt, V_WINTYPE_MAIN)
+mainwin::mainwin(window *p, int nh_wt, window_type wt) : window(p, nh_wt, wt)
 {
 
 }
+
 
 int mainwin::draw()
 {

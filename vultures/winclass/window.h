@@ -7,7 +7,9 @@
 
 typedef enum {
     V_WINTYPE_NONE, /* only the root window has this type */
+    V_WINTYPE_MAP,
     V_WINTYPE_MAIN,
+    V_WINTYPE_MENU,
     V_WINTYPE_BUTTON,
     V_WINTYPE_OPTION,
     V_WINTYPE_SCROLLBAR,
