@@ -14,7 +14,7 @@ SLASHEM = claw
 GAMENETHACK = $(GAME)$(NETHACK)
 GAMESLASHEM = $(GAME)$(SLASHEM)
 DATE := $(shell date +%Y%m%d%H%M%S)
-GITREVISION := $(shell git-rev-list `git-describe --tags --abbrev=0`..master|wc -l)
+GITREVISION := $(shell git rev-list `git describe --tags --abbrev=0`..master|wc -l)
 VERSION = 2.2.$(GITREVISION)
 RELEASE = 1
 FULLNAME = $(GAME)-$(VERSION)
@@ -204,8 +204,8 @@ $(DISTDIR)/Unix\ Installer/$(FULLNAME)-$(SLASHEM)_unix-$(RELEASE).bin.sh: $(DIST
 	cd $(DISTDIR)/Unix\ Installer; $(SHA256) $(FULLNAME)-$(SLASHEM)_unix-$(RELEASE).bin.sh > $(FULLNAME)-$(SLASHEM)_unix-$(RELEASE).bin.sh.sha256
 
 $(DISTDIR)/$(FULLNAME): $(DISTDIR)
-	git-submodule init
-	git-submodule update
+	git submodule init
+	git submodule update
 	git clone ./ $@
 	rm -rf $@/nethack
 	git clone ./nethack/ $@/nethack
