@@ -176,7 +176,7 @@ floortilerow    : IDENTIFIER
                     $$.tiles[$$.length - 1] = vultures_get_tile_index(TT_FLOOR, $2, 0);
                     free($2);
                     if ($$.tiles[$$.length - 1] == -1)
-                        YYERROR
+                        YYERROR;
                 }
                 ;
 
