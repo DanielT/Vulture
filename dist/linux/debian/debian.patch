@@ -83,7 +83,7 @@ diff -Naur vultures/debian/copyright vultures.debian/debian/copyright
 +Upstream Authors:
 +	Daniel Thaler <daniel@dthaler.de>
 +	Clive Crous <clive@crous.co.za>
-+	Jaakko Peltonen <jaakko.peltonen@hut.fi>
++	Jaakko Peltonen <jaakko dot peltonen at hut dot fi>
 +
 +Copyright:
 +
@@ -491,7 +491,7 @@ diff -Naur vultures/debian/vulturesclaw.6 vultures.debian/debian/vulturesclaw.6
 +Clive Crous, <clive@crous.co.za>
 +
 +Based on Falcon's Eye by:
-+Jaakko Peltonen, <jaakko.peltonen@hut.fi>
++Jaakko Peltonen, <jaakko dot peltonen at hut dot fi>
 +
 +.SH "REPORTING BUGS"
 +
@@ -890,7 +890,7 @@ diff -Naur vultures/debian/vultureseye.6 vultures.debian/debian/vultureseye.6
 +Clive Crous, <clive@crous.co.za>
 +
 +Based on Falcon's Eye by:
-+Jaakko Peltonen, <jaakko.peltonen@hut.fi>
++Jaakko Peltonen, <jaakko dot peltonen at hut dot fi>
 +
 +.SH "REPORTING BUGS"
 +
