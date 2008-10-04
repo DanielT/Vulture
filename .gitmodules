@@ -1,6 +1,6 @@
 [submodule "nethack"]
 	path = nethack
-	url = git@github.com:clivecrous/nethack.git
+	url = git://github.com/clivecrous/nethack.git
 [submodule "slashem"]
 	path = slashem
-	url = git@github.com:clivecrous/nethack.git
+	url = git://github.com/clivecrous/nethack.git
