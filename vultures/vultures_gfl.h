@@ -5,6 +5,7 @@
 #ifndef _vultures_gfl_h_
 #define _vultures_gfl_h_
 
+#include <SDL.h>
 
 extern SDL_Surface *vultures_load_surface(char *srcbuf, unsigned int buflen);
 extern SDL_Surface *vultures_load_graphic(const char *subdir, const char *name);

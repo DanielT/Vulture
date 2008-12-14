@@ -7,10 +7,16 @@
 class mainwin : public window
 {
 public:
-	mainwin(window *p, int nh_wt);
-	mainwin(window *p, int nh_wt, window_type wt);
-	virtual int draw();
+	mainwin() {};
+	mainwin(window *p);
+	virtual bool draw();
 	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
+// 	int align_buttons(int pos_y);
+	virtual void layout();
+
+protected:
+	int border_left, border_right, border_top, border_bottom;
+	int get_frameheight();
 };
 
 

@@ -4,6 +4,8 @@
 #ifndef _vultures_mou_h_
 #define _vultures_mou_h_
 
+#include "vultures_types.h"
+
 extern void vultures_mouse_init(void);
 extern void vultures_mouse_destroy(void);
 

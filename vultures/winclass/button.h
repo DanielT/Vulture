@@ -7,9 +7,13 @@
 class button : public window
 {
 public:
-	button(window *p, int nh_wt, window_type wt);
-	virtual int draw();
+	button(window *p, const char *caption, int menuid, char accel);
+	virtual bool draw();
 	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
+
+private:
+	SDL_Surface *image;
+	bool selected;
 };
 
 
