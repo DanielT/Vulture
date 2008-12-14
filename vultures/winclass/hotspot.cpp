@@ -2,18 +2,27 @@
 #include "hotspot.h"
 
 
-hotspot::hotspot(window *p, int nh_wt, window_type wt) : window(p, nh_wt, wt)
+hotspot::hotspot(window *parent, int x, int y, int w, int h, int menu_id, const char * name) : window(parent)
 {
-
+	this->x = x;
+	this->y = y;
+	this->w = w;
+	this->h = h;
+	this->abs_x = parent->abs_x + this->x;
+	this->abs_y = parent->abs_y + this->y;
+	this->menu_id = menu_id;
+	
+	if (name)
+		this->caption = strdup(name);
 }
 
 
-int hotspot::draw()
+bool hotspot::draw()
 {
-	return 0;
+	return false;
 }
 
 eventresult hotspot::event_handler(window* target, void* result, SDL_Event* event)
 {
-	return V_EVENT_HANDLED_FINAL;
+	return V_EVENT_UNHANDLED;
 }

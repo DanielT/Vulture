@@ -3,8 +3,8 @@
 
 enum
 {   
-    INSTRUMENT_LOAD_SUCCESS,
-    INSTRUMENT_LOAD_FAILED
+	INSTRUMENT_LOAD_SUCCESS,
+	INSTRUMENT_LOAD_FAILED
 };
 
 extern void vultures_pcmusic_init( void );

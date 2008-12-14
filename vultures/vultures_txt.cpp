@@ -1,6 +1,6 @@
 /* Copyright (c) Daniel Thaler, 2006   */
 /* NetHack may be freely redistributed under the Nethack General Public License
- * See nethack/dat/license for details */
+* See nethack/dat/license for details */
 
 #include <stdlib.h>
 #include <string.h>
@@ -14,211 +14,210 @@
 #define VULTURES_MAX_FONTS  2
 
 /* the rest of vultures gets these defines indirectly from nethack code.
- * but I'd prefer not to pull all that in here */
+* but I'd prefer not to pull all that in here */
 #define TRUE 1
 #define FALSE 0
 
 static struct vultures_font {
-             TTF_Font * fontptr;
-             char lineheight;
-} * vultures_fonts = NULL;
+	TTF_Font *fontptr;
+	char lineheight;
+} *vultures_fonts = NULL;
 
 
 /* load a font from a ttf file with the given fontindex and pointsize as font font_id */
 int vultures_load_font (int font_id, const char * ttf_filename, int fontindex, int pointsize)
 {
-    TTF_Font * newfont;
-    if(!TTF_WasInit())
-    {
-        if(TTF_Init()==-1)
-            return FALSE;
+	TTF_Font *newfont;
+	if(!TTF_WasInit())
+	{
+		if(TTF_Init()==-1)
+			return FALSE;
 
-        if (!vultures_fonts)
-            vultures_fonts = (struct vultures_font *)calloc(VULTURES_MAX_FONTS, sizeof(struct vultures_font));
-    }
+		if (!vultures_fonts)
+			vultures_fonts = (struct vultures_font *)calloc(VULTURES_MAX_FONTS, sizeof(struct vultures_font));
+	}
 
-    /* font_id should always be passed as a #define, which is always <  VULTURES_MAX_FONTS */
-    if (font_id >= VULTURES_MAX_FONTS)
-        return FALSE;
+	/* font_id should always be passed as a #define, which is always <  VULTURES_MAX_FONTS */
+	if (font_id >= VULTURES_MAX_FONTS)
+		return FALSE;
 
-    newfont = TTF_OpenFontIndex(ttf_filename, pointsize, fontindex);
+	newfont = TTF_OpenFontIndex(ttf_filename, pointsize, fontindex);
 
-    if (!newfont)
-        return FALSE;
+	if (!newfont)
+		return FALSE;
 
-    if (vultures_fonts[font_id].fontptr)
-        TTF_CloseFont(vultures_fonts[font_id].fontptr);
+	if (vultures_fonts[font_id].fontptr)
+		TTF_CloseFont(vultures_fonts[font_id].fontptr);
 
-    vultures_fonts[font_id].fontptr = newfont;
-    vultures_fonts[font_id].lineheight = TTF_FontAscent(newfont) + 2;
+	vultures_fonts[font_id].fontptr = newfont;
+	vultures_fonts[font_id].lineheight = TTF_FontAscent(newfont) + 2;
 
-    return TRUE;
+	return TRUE;
 }
-
 
 
 int vultures_put_text (int font_id, const char *str, SDL_Surface *dest, int x, int y, Uint32 color)
 {
-    SDL_Surface * textsurface;
-    SDL_Color fontcolor;
-    SDL_Rect dstrect;
-    char * cleaned_str;
-    int len, i;
+	SDL_Surface *textsurface;
+	SDL_Color fontcolor;
+	SDL_Rect dstrect;
+	char *cleaned_str;
+	int len, i;
 
-    if (font_id >= VULTURES_MAX_FONTS || (!vultures_fonts[font_id].fontptr) || !str)
-        return FALSE;
+	if (font_id >= VULTURES_MAX_FONTS || (!vultures_fonts[font_id].fontptr) || !str)
+		return FALSE;
 
-    /* sanitize the input string of unprintable characters */
-    len = strlen(str);
-    cleaned_str = (char *)malloc(len+1);
-    strcpy(cleaned_str, str);
-    for (i = 0; i < len; i++)
-        if (!isprint(cleaned_str[i]))
-            cleaned_str[i] = ' ';
+	/* sanitize the input string of unprintable characters */
+	len = strlen(str);
+	cleaned_str = (char *)malloc(len+1);
+	strcpy(cleaned_str, str);
+	for (i = 0; i < len; i++)
+		if (!isprint(cleaned_str[i]))
+			cleaned_str[i] = ' ';
 
 
-    /* extract components from the 32-bit color value */
-    fontcolor.r = (color & dest->format->Rmask) >> dest->format->Rshift;
-    fontcolor.g = (color & dest->format->Gmask) >> dest->format->Gshift;
-    fontcolor.b = (color & dest->format->Bmask) >> dest->format->Bshift;
-    fontcolor.unused = 0;
+	/* extract components from the 32-bit color value */
+	fontcolor.r = (color & dest->format->Rmask) >> dest->format->Rshift;
+	fontcolor.g = (color & dest->format->Gmask) >> dest->format->Gshift;
+	fontcolor.b = (color & dest->format->Bmask) >> dest->format->Bshift;
+	fontcolor.unused = 0;
 
-    textsurface = TTF_RenderText_Blended(vultures_fonts[font_id].fontptr, cleaned_str, fontcolor);
-    if (!textsurface)
-    {
-        free(cleaned_str);
-        return FALSE;
-    }
+	textsurface = TTF_RenderText_Blended(vultures_fonts[font_id].fontptr, cleaned_str, fontcolor);
+	if (!textsurface)
+	{
+		free(cleaned_str);
+		return FALSE;
+	}
 
-    free(cleaned_str);
+	free(cleaned_str);
 
-    dstrect.x = x;
-    dstrect.y = y - 1;
-    dstrect.w = textsurface->w;
-    dstrect.h = textsurface->h;
+	dstrect.x = x;
+	dstrect.y = y - 1;
+	dstrect.w = textsurface->w;
+	dstrect.h = textsurface->h;
 
-    SDL_BlitSurface(textsurface, NULL, dest, &dstrect);
-    SDL_FreeSurface(textsurface);
-    
-    return TRUE;
+	SDL_BlitSurface(textsurface, NULL, dest, &dstrect);
+	SDL_FreeSurface(textsurface);
+	
+	return TRUE;
 }
 
 
 
 int vultures_put_text_shadow (int font_id, const char *str, SDL_Surface *dest,
-                              int x, int y, Uint32 textcolor, Uint32 shadowcolor)
+							int x, int y, Uint32 textcolor, Uint32 shadowcolor)
 {
-    /* draw the shadow first */
-    vultures_put_text(font_id, str, dest, x+1, y+1, shadowcolor);
-    /* we only truly care that the actual text got drawn, so only retrun that status */
-    return vultures_put_text(font_id, str, dest, x, y, textcolor);
+	/* draw the shadow first */
+	vultures_put_text(font_id, str, dest, x+1, y+1, shadowcolor);
+	/* we only truly care that the actual text got drawn, so only retrun that status */
+	return vultures_put_text(font_id, str, dest, x, y, textcolor);
 }
 
 
 /* draw text over multiple lines if it's length exceeds maxlen */
 void vultures_put_text_multiline(int font_id, const char *str, SDL_Surface *dest,
-                                int x, int y, Uint32 color, Uint32 shadowcolor, int maxlen)
+								int x, int y, Uint32 color, Uint32 shadowcolor, int maxlen)
 {
-    char *str_copy;
-    int lastfit, txtlen, lineno, text_height, endpos, startpos;
+	char *str_copy;
+	int lastfit, txtlen, lineno, text_height, endpos, startpos;
 
-    lineno = 0;
-    lastfit = 0;
-    startpos = endpos = 0;
-    text_height = vultures_text_height(font_id, str);
+	lineno = 0;
+	lastfit = 0;
+	startpos = endpos = 0;
+	text_height = vultures_text_height(font_id, str);
 
-    /* lastfit is true when the last segment has been fit onto the surface (drawn) */
-    while (!lastfit)
-    {
-        lastfit = 1;
+	/* lastfit is true when the last segment has been fit onto the surface (drawn) */
+	while (!lastfit)
+	{
+		lastfit = 1;
 
-        startpos = startpos + endpos;
-        str_copy = strdup(str + startpos);
-        endpos = strlen(str_copy) - 1;
+		startpos = startpos + endpos;
+		str_copy = strdup(str + startpos);
+		endpos = strlen(str_copy) - 1;
 
-        txtlen = vultures_text_length(font_id, str_copy);
+		txtlen = vultures_text_length(font_id, str_copy);
 
-        /* split word off the end of the string until it is short enough to fit */
-        while (txtlen > maxlen)
-        {
-            /* a piece will be split off the end, so this is not the last piece */
-            lastfit = 0;
+		/* split word off the end of the string until it is short enough to fit */
+		while (txtlen > maxlen)
+		{
+			/* a piece will be split off the end, so this is not the last piece */
+			lastfit = 0;
 
-            /* find a suitable place to split */
-            while (endpos && !isspace(str_copy[endpos]))
-                endpos--;
+			/* find a suitable place to split */
+			while (endpos && !isspace(str_copy[endpos]))
+				endpos--;
 
-            /* prevent infinite loops if a long word doesn't fit */
-            if (endpos == 0)
-            {
-                endpos = strlen(str_copy) - 1;
-                lastfit = 1;
-                break;
-            }
+			/* prevent infinite loops if a long word doesn't fit */
+			if (endpos == 0)
+			{
+				endpos = strlen(str_copy) - 1;
+				lastfit = 1;
+				break;
+			}
 
-            /* truncate the text */
-            str_copy[endpos++] = '\0';
-            txtlen = vultures_text_length(font_id, str_copy);
-        }
-        vultures_put_text_shadow(font_id, str_copy, dest, x, y + lineno * text_height, color, shadowcolor);
+			/* truncate the text */
+			str_copy[endpos++] = '\0';
+			txtlen = vultures_text_length(font_id, str_copy);
+		}
+		vultures_put_text_shadow(font_id, str_copy, dest, x, y + lineno * text_height, color, shadowcolor);
 
-        free(str_copy);
-        lineno++;
-    }
+		free(str_copy);
+		lineno++;
+	}
 }
 
 
 
 int vultures_text_length (int font_id, const char *str)
 {
-    int width = 0;
+	int width = 0;
 
-    if (!vultures_fonts[font_id].fontptr || !str)
-        return 0;
+	if (!vultures_fonts[font_id].fontptr || !str)
+		return 0;
 
-    TTF_SizeText(vultures_fonts[font_id].fontptr, str, &width, NULL);
+	TTF_SizeText(vultures_fonts[font_id].fontptr, str, &width, NULL);
 
-    return width;
+	return width;
 }
 
 
 
 int vultures_text_height (int font_id, const char *str)
 {
-    int height = 0;
+	int height = 0;
 
-    if (!vultures_fonts[font_id].fontptr || !str)
-        return 0;
+	if (!vultures_fonts[font_id].fontptr || !str)
+		return 0;
 
-    TTF_SizeText(vultures_fonts[font_id].fontptr, str, NULL, &height);
+	TTF_SizeText(vultures_fonts[font_id].fontptr, str, NULL, &height);
 
-    return height;
+	return height;
 }
 
 
 
 int vultures_get_lineheight(int font_id)
 {
-    if (font_id < VULTURES_MAX_FONTS && vultures_fonts[font_id].fontptr)
-        return vultures_fonts[font_id].lineheight;
-    return 0;
+	if (font_id < VULTURES_MAX_FONTS && vultures_fonts[font_id].fontptr)
+		return vultures_fonts[font_id].lineheight;
+	return 0;
 }
 
 
 
 void vultures_free_fonts()
 {
-    int font_id;
+	int font_id;
 
-    for (font_id = 0; font_id < VULTURES_MAX_FONTS; font_id++)
-    {
-        if (vultures_fonts[font_id].fontptr)
-            TTF_CloseFont(vultures_fonts[font_id].fontptr);
-        vultures_fonts[font_id].fontptr = NULL;
-    }
+	for (font_id = 0; font_id < VULTURES_MAX_FONTS; font_id++)
+	{
+		if (vultures_fonts[font_id].fontptr)
+			TTF_CloseFont(vultures_fonts[font_id].fontptr);
+		vultures_fonts[font_id].fontptr = NULL;
+	}
 
-    free(vultures_fonts);
-    vultures_fonts = NULL;
+	free(vultures_fonts);
+	vultures_fonts = NULL;
 
-    TTF_Quit();
+	TTF_Quit();
 }

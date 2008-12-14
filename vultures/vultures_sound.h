@@ -14,24 +14,24 @@
 
 /* Event sound types */
 enum vultures_event_sound_enum {
-    V_EVENT_SOUND_TYPE_NONE = 0,
-    V_EVENT_SOUND_TYPE_SND,
-    V_EVENT_SOUND_TYPE_MUS,
-    V_EVENT_SOUND_TYPE_RANDOM_SONG,
-    V_EVENT_SOUND_TYPE_CD_AUDIO,
+	V_EVENT_SOUND_TYPE_NONE = 0,
+	V_EVENT_SOUND_TYPE_SND,
+	V_EVENT_SOUND_TYPE_MUS,
+	V_EVENT_SOUND_TYPE_RANDOM_SONG,
+	V_EVENT_SOUND_TYPE_CD_AUDIO,
 };
 
 
 typedef struct {
-    char * searchpattern;
-    int soundtype;
-    char * filename;
+	char * searchpattern;
+	int soundtype;
+	char * filename;
 } vultures_event_sound;
 
 
 typedef struct {
-    Mix_Chunk *chunk;
-    char * filename;
+	Mix_Chunk *chunk;
+	char * filename;
 } vultures_cached_sound;
 
 

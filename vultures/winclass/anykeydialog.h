@@ -3,13 +3,18 @@
 
 #include "mainwin.h"
 
+class textwin;
 
 class anykeydialog : public mainwin
 {
 public:
-	anykeydialog(window *p, int nh_wt);
-	virtual int draw();
+	anykeydialog(window *p, const char *ques);
+	virtual bool draw();
 	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
+
+private:
+	int count;
+	textwin *txt;
 };
 
 
