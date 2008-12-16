@@ -14,7 +14,7 @@ SLASHEM = claw
 GAMENETHACK = $(GAME)$(NETHACK)
 GAMESLASHEM = $(GAME)$(SLASHEM)
 DATE := $(shell date +%Y%m%d%H%M%S)
-GITREVISION := $(shell git rev-list `git describe --tags --abbrev=0`..master|wc -l)
+GITREVISION := $(strip $(shell git rev-list `git describe --tags --abbrev=0`..master|wc -l))
 VERSION = 2.2.$(GITREVISION)
 RELEASE = 1
 FULLNAME = $(GAME)-$(VERSION)
@@ -28,6 +28,7 @@ MD5 = md5sum
 SHA256 = sha256sum
 
 help:
+	@echo "Building $(FULLNAME)"
 	@echo "to build NetHack in your home directory: $(MAKE) nethack-home"
 	@echo "to build Slashem in your home directory: $(MAKE) slashem-home"
 	@echo "to build * Both  in your home directory: $(MAKE) home"
