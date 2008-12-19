@@ -26,6 +26,8 @@ enhancebutton::enhancebutton(window *p) : window(p)
 	h = image->h;
 	
 	enhancebtn = this;
+	autobg = true;
+	visible = false;
 }
 
 enhancebutton::~enhancebutton()

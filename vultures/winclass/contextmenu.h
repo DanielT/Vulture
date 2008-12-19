@@ -10,7 +10,7 @@
 class contextmenu : public window
 {
 public:
-	typedef std::vector<std::pair<char*, int> >  itemlist;
+	typedef std::vector<std::pair<string, int> >  itemlist;
 
 	contextmenu(window *p);
 	virtual bool draw();

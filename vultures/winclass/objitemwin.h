@@ -8,7 +8,7 @@ struct obj;
 class objitemwin : public optionwin
 {
 public:
-	objitemwin(window *p, menuitem* mi, const char *cap,
+	objitemwin(window *p, menuitem* mi, string cap,
 	          char accel, int glyph, bool selected);
 	virtual bool draw();
 	virtual eventresult event_handler(window *target, void *result, SDL_Event *event);

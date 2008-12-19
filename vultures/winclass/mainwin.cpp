@@ -91,7 +91,7 @@ bool mainwin::draw()
 	pos_x = this->abs_x + border_left;
 	pos_y = this->abs_y + border_top;
 
-	if (this->caption)
+	if (!caption.empty())
 		vultures_put_text_shadow(V_FONT_HEADLINE, caption, vultures_screen, pos_x, 
 								pos_y, V_COLOR_TEXT, V_COLOR_BACKGROUND);
 
@@ -110,7 +110,7 @@ eventresult mainwin::event_handler(window* target, void* result, SDL_Event* even
 int mainwin::get_frameheight()
 {
 	int capheight = 0;
-	if (caption)
+	if (!caption.empty())
 		capheight = vultures_text_height(V_FONT_HEADLINE, caption);
 	return border_top + capheight + border_bottom;
 }
@@ -125,7 +125,7 @@ void mainwin::layout()
 	int buttonheight = vultures_get_lineheight(V_FONT_MENU) + 15;
 	
 	capheight = 0;
-	if (caption)
+	if (!caption.empty())
 		capheight = vultures_text_height(V_FONT_HEADLINE, caption) * 2;
 	
 	btncount = btn_totalwidth = btn_maxwidth = pos_x = 0;

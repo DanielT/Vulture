@@ -77,56 +77,46 @@ int scrollwin::get_scrollheight(void)
 int scrollwin::get_menuitem_width(window *item, int colwidths[8])
 {
 	int width, i, thiscol, btnwidth;
-	char *sep, *start, *pos;
-	char buf[256];
-	bool done;
-
-	/* get the width of the radiobutton/checkbox + 4px space */
+	size_t prevpos, pos, found;
+	string coltxt;
+	
+	/* if this is an option leave space for the checkbox in the first column */
 	btnwidth = 0;
 	if (item->v_type == V_WINTYPE_OPTION)
 		btnwidth = vultures_winelem.checkbox_off->w + 4;
+		
+	pos = item->caption.find_first_of('\t');
+	if (pos == string::npos)
+		return vultures_text_length(V_FONT_MENU, coltxt) + btnwidth + 5;
 
-	/* if the caption contains a tab character we have items for multiple columns */
-	if (strchr(item->caption, '\t')) {
-		width = 0;
-		i = 0;
-		start = item->caption;
-		sep = strchr(start, '\t');
+	width = prevpos = i = 0;
+	do {
+		/* get the string for this column */
+		coltxt = item->caption.substr(prevpos, pos - prevpos);
+		
+		/* trim trailing whitespace */
+		found = coltxt.find_last_not_of(' ');
+		if (found != string::npos)
+			coltxt.erase(found + 1);
+		else
+			coltxt.clear();
 
-		/* for each item  */
-		do {
-			if (sep == NULL || i >= 7) {
-				done = true;
-				sep = start + strlen(start);
-			}
+		/* get the item's width */
+		thiscol = vultures_text_length(V_FONT_MENU, coltxt) + 5;
+		
+		if (i == 0)
+			thiscol += btnwidth;
+	
+		/* adjust the column with to fit, if necessary */
+		if (thiscol > colwidths[i])
+			colwidths[i] = thiscol;
 
-			strncpy(buf, start, sep-start);
-			buf[sep-start] = '\0';
-			pos = &buf[sep-start-1];
-
-			/* strip spaces */
-			while (isspace(*pos))
-				*pos-- = '\0';
-
-			/* get the item's width */
-			thiscol = vultures_text_length(V_FONT_MENU, buf) + 5;
-
-			if (i == 0)
-				thiscol += btnwidth;
-
-			/* adjust the column with to fit, if necessary */
-			if (thiscol > colwidths[i])
-				colwidths[i] = thiscol;
-
-			width += colwidths[i]/* + 20*/;
-			i++;
-			start = sep+1;
-			sep = strchr(start, '\t');
-		} while (!done);
-	}
-	else
-		width = vultures_text_length(V_FONT_MENU, item->caption) + btnwidth;
-
+		width += colwidths[i];
+		prevpos = ++pos;
+		i++;
+		pos = item->caption.find_first_of('\t', prevpos);
+	} while (prevpos-1 != string::npos && i <= 7);
+	
 	return width;
 }
 
@@ -137,10 +127,11 @@ void scrollwin::layout(void)
 	int i, elem_maxwidth, saved_scrollpos, height;
 	int colwidths[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 	int colstart[8] = {0, 0, 0, 0, 0, 0, 0, 0};
-	char capbuf[256], *start, *sep;
+	string txt, orig_caption;
 	bool done = false;
 	elem_maxwidth = height = 0;
 	saved_scrollpos = scrollpos;
+	size_t prevpos, pos;
 
 	/* must not re-layout an already layouted scrollarea, as that would mangle
 	 * multi-column text fields */
@@ -177,39 +168,36 @@ void scrollwin::layout(void)
 	elem_maxwidth = (elem_maxwidth > (colstart[7] + colwidths[7])) ? 
 					elem_maxwidth : (colstart[7] + colwidths[7]) + 5;
 
-	w = ((w > elem_maxwidth) ? w : elem_maxwidth) + 1;
+	w = elem_maxwidth;
 	h = height;
 
 	/* split up the captions into multiple labels: one for each column */
 	for (winelem = first_child; winelem; winelem = winelem->sib_next) {
 		winelem->w = elem_maxwidth;
 
-		start = strchr(winelem->caption, '\t');
-		if (!start)
+		done = false;
+		/* skip over elements without tab chars */
+		pos = prevpos = winelem->caption.find_first_of('\t');
+		if (pos == string::npos)
 			continue;
 		
-		*start++ = '\0';
-		sep = strchr(start, '\t');
+		orig_caption = winelem->caption;
+		winelem->caption = orig_caption.substr(0, pos);
+		prevpos++;
 		i = 1;
-		
-		done = false;
 		do {
-			if (!sep || i >= 7) {
-				sep = start + strlen(start);
+			pos = orig_caption.find_first_of('\t', prevpos);
+			if (pos == string::npos)
 				done = true;
-			}
+			txt = orig_caption.substr(prevpos, pos - prevpos);
 			
-			strncpy(capbuf, start, sep-start);
-			capbuf[sep-start] = '\0';
-			coltxt = new textwin(this, capbuf);
+			coltxt = new textwin(this, txt);
 			coltxt->w = 1;
 			coltxt->h = winelem->h;
 			coltxt->x = colstart[i];
-			coltxt->y = winelem->y;
-
-			start = sep;
-			*start++ = '\0';
-			sep = strchr(start, '\t');
+			coltxt->y = winelem->y + 1;
+			
+			prevpos = ++pos;
 			i++;
 		} while (!done);
 	}

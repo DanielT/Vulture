@@ -7,12 +7,11 @@
 #include "button.h"
 
 
-button::button(window *p, const char *caption, int menuid, char accel) : window(p)
+button::button(window *p, string caption, int menuid, char accel) : window(p)
 {
 	v_type = V_WINTYPE_BUTTON;
 
-	if (caption)
-		this->caption = strdup(caption);
+	this->caption = caption;
 
 	menu_id = menuid;
 	accelerator = accel;
@@ -23,6 +22,14 @@ button::button(window *p, const char *caption, int menuid, char accel) : window(
 
 	w = vultures_text_length(V_FONT_MENU, caption) + 14;
 	h = vultures_text_height(V_FONT_MENU, caption) + 10;
+}
+
+
+button::~button()
+{
+	if (image)
+		SDL_FreeSurface(image);
+	image = NULL;
 }
 
 
@@ -46,7 +53,7 @@ bool button::draw()
 	/* Inner edge (raised) */
 	vultures_draw_raised_frame(x + 2, y + 2, x + w - 3, y + h - 3);
 
-	if (caption) {
+	if (!caption.empty()) {
 		text_start_x = x + (w - vultures_text_length(V_FONT_BUTTON, caption))/2;
 		text_start_y = y + 5;
 

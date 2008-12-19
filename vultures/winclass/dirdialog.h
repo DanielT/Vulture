@@ -8,7 +8,7 @@ class hotspot;
 class dirdialog : public mainwin
 {
 public:
-	dirdialog(window *p, const char *ques);
+	dirdialog(window *p, string ques);
 	virtual bool draw();
 	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
 	

@@ -89,7 +89,7 @@ bool map::draw()
 #ifdef VULTURESCLAW
 	describe_level(buffer, TRUE);
 #else
-	if (!describe_level(txt->caption))
+	if (!describe_level(buffer))
 		sprintf(buffer, "%s, level %d ", dungeons[u.uz.dnum].dname, depth(&u.uz));
 #endif
 	txt->set_caption(buffer);

@@ -2,7 +2,7 @@
 #include "hotspot.h"
 
 
-hotspot::hotspot(window *parent, int x, int y, int w, int h, int menu_id, const char * name) : window(parent)
+hotspot::hotspot(window *parent, int x, int y, int w, int h, int menu_id, string name) : window(parent)
 {
 	this->x = x;
 	this->y = y;
@@ -12,8 +12,7 @@ hotspot::hotspot(window *parent, int x, int y, int w, int h, int menu_id, const 
 	this->abs_y = parent->abs_y + this->y;
 	this->menu_id = menu_id;
 	
-	if (name)
-		this->caption = strdup(name);
+	caption = name;
 }
 
 

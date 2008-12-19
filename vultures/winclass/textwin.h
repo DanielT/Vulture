@@ -8,9 +8,9 @@ class textwin : public window
 {
 public:
 // 	textwin() {};
-	textwin(window *p, const char *cap);
+	textwin(window *p, string cap);
 	textwin(window *p, int destsize);
-	virtual void set_caption(const char *str);
+	virtual void set_caption(string str);
 	virtual bool draw();
 	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
 	

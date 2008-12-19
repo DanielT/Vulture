@@ -1,7 +1,7 @@
 #ifndef _window_h_
 #define _window_h_
 
-
+#include <string>
 #include <SDL.h>
 #include "vultures_types.h"
 
@@ -10,6 +10,7 @@
 #define V_LISTITEM_WIDTH  300
 #define V_LISTITEM_HEIGHT  52
 
+using std::string;
 
 typedef enum {
 	V_WINTYPE_NONE, /* only the root window has this type */
@@ -94,12 +95,11 @@ public:
 	virtual bool draw() = 0;
 	virtual eventresult event_handler(window* target, void* result, SDL_Event* event) = 0;
 	virtual window* replace_win(window *win);
-	virtual void set_caption(const char *str);
+	virtual void set_caption(string str);
 	virtual void hide();
 	virtual void layout() {};
 	virtual void update_background(void);
 	
-	int get_nhtype() { return nh_type; };
 	window_type get_wintype() { return v_type; };
 	int get_nh_type() { return nh_type; };
 	int get_id() { return id; };
@@ -128,14 +128,9 @@ public:
 	int id;
 	int nh_type;                   /* type assigned by nethack */
 	window_type v_type;
-	char *caption;
+	string caption;
 	char accelerator;
-	
-	window *parent;
-	window *sib_next, *sib_prev;
-	window *first_child, *last_child;
 
-	SDL_Surface *background;
 
 	/* absolute coords; calculated before drawing */
 	int abs_x, abs_y;
@@ -144,12 +139,19 @@ public:
 	int x, y;
 	int w, h;
 
-	bool autobg;
 	
 	union {
 		void *menu_id_v;
 		int menu_id;
 	};
+	
+	window *first_child, *last_child;
+	window *parent;
+	window *sib_next, *sib_prev;
+	
+protected:
+	bool autobg;
+	SDL_Surface *background;
 };
 
 

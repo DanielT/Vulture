@@ -11,9 +11,9 @@
 #include "button.h"
 
 
-anykeydialog::anykeydialog(window *p, const char *ques) : mainwin(p)
+anykeydialog::anykeydialog(window *p, string ques) : mainwin(p)
 {
-	caption = strdup(ques);
+	caption = ques;
 	count = 0;
 
 	/* add it as a menuitem so that menuwin::layout will dtrt */

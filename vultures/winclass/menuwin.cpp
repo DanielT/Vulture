@@ -33,6 +33,12 @@ menuwin::menuwin(window *p) : mainwin(p)
 }
 
 
+menuwin::~menuwin()
+{
+	reset();
+}
+
+
 menuwin* menuwin::replace_win(menuwin* win)
 {
 	*this = *win;
@@ -42,6 +48,25 @@ menuwin* menuwin::replace_win(menuwin* win)
 	nh_type = NHW_MENU;
 	
 	return this;
+}
+
+
+void menuwin::reset()
+{
+	while (first_child) {
+		delete first_child;
+	}
+	
+	for (item_iterator i = items.begin(); i != items.end(); ++i)
+		delete *i;
+	items.clear();
+	
+	scrollarea = NULL;
+	w = 0;
+	
+	if (background)
+		SDL_FreeSurface(background);
+	background = NULL;
 }
 
 
@@ -253,7 +278,7 @@ eventresult menuwin::event_handler(window* target, void* result, SDL_Event* even
 				str_to_find[0] = '\0';
 				if (vultures_get_input(-1, -1, "What are you looking for?", str_to_find) != -1) {
 					for (winelem = scrollarea->first_child; winelem; winelem = winelem->sib_next) {
-						if (winelem->caption && strstr(winelem->caption, str_to_find)) {
+						if (winelem->caption.find(str_to_find)) {
 							scrollarea->scrollto(V_SCROLL_PIXEL_ABS, winelem->y);
 							break;
 						}
@@ -300,26 +325,6 @@ eventresult menuwin::event_handler(window* target, void* result, SDL_Event* even
 	return V_EVENT_HANDLED_NOREDRAW;
 }
 
-void menuwin::reset()
-{
-	while (first_child) {
-		delete first_child;
-	}
-	
-	for (item_iterator i = items.begin(); i != items.end(); ++i) {
-		free( (char*)(*i)->str );
-		delete *i;
-	}
-	items.clear();
-	
-	scrollarea = NULL;
-	w = 0;
-	
-	if (background)
-		SDL_FreeSurface(background);
-	background = NULL;
-}
-
 
 void menuwin::assign_accelerators()
 {
@@ -359,7 +364,7 @@ void menuwin::layout()
 	int scrollheight = 0;
 	int buttonheight = vultures_get_lineheight(V_FONT_MENU) + 15;
 	int menu_height_limit;
-	char capbuf[256];
+	string newcaption;
 	
 	// remove existing scrollarea
 	if (scrollarea)
@@ -367,20 +372,19 @@ void menuwin::layout()
 	
 	// create & populate new scrollarea
 	scrollarea = new scrollwin(this);
-	scrollarea->x = 0;
-	scrollarea->y = 0;
 	for (item_iterator i = items.begin(); i != items.end(); ++i) {
+		newcaption = "";
 		if ((*i)->accelerator) {
-			snprintf(capbuf, 256, "[%c] - %s", (*i)->accelerator, (*i)->str);
-		} else
-			strcpy(capbuf, (*i)->str);
+			newcaption += "[ ] - ";
+			newcaption[1] = (*i)->accelerator;
+		}
+		newcaption += (*i)->str;
 	
 		if (!(*i)->identifier || select_how == PICK_NONE)
-			new textwin(scrollarea, capbuf);
+			new textwin(scrollarea, newcaption);
 		else
-			new optionwin(scrollarea, *i, capbuf, (*i)->accelerator, 
+			new optionwin(scrollarea, *i, newcaption, (*i)->accelerator, 
 			             (*i)->glyph, (*i)->preselected, select_how == PICK_ANY);
-
 	}
 	scrollarea->layout();
 	scrollheight = scrollarea->get_scrollheight();
@@ -401,9 +405,9 @@ void menuwin::layout()
 }
 
 
-void menuwin::add_menuitem(const char *str, bool preselected, void *identifier, char accelerator, int glyph)
+void menuwin::add_menuitem(string str, bool preselected, void *identifier, char accelerator, int glyph)
 {
-	items.push_back(new menuitem(strdup(str), preselected, identifier, accelerator, glyph));
+	items.push_back(new menuitem(str, preselected, identifier, accelerator, glyph));
 }
 
 

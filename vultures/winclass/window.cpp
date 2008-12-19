@@ -48,11 +48,12 @@ window::window(window *p) : parent(p)
 	first_child = last_child = NULL;
 	sib_next = sib_prev = NULL;
 	abs_x = abs_y = x = y = w = h = 0;
-	caption = NULL;
+	caption = "";
 	accelerator = '\0';
 	background = NULL;
 	autobg = false;
 	menu_id_v = NULL;
+	content_is_text = false;
 	
 	need_redraw = true;
 	visible = true;
@@ -113,10 +114,6 @@ window::~window()
 		windowcount_max = 0;
 	}
 
-	/* free up alloced resources */
-	if (caption)
-		free(caption);
-
 	/* we may want to restore the background before deleting it */
 	if (visible && background != NULL && autobg && (!parent || parent->visible)) {
 		vultures_put_img(abs_x, abs_y, background);
@@ -150,7 +147,6 @@ window* window::replace_win(window *win)
 		sib_next->sib_prev = this;
 		
 	win->first_child = win->last_child = win->parent = NULL;
-	win->caption = NULL;
 	win->background = NULL;
 	win->id = -1;
 	
@@ -160,12 +156,9 @@ window* window::replace_win(window *win)
 }
 
 
-void window::set_caption(const char *str)
+void window::set_caption(string str)
 {
-	if (caption)
-		free(caption);
-	
-	caption = strdup(str);
+	caption = str;
 }
 
 

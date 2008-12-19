@@ -60,7 +60,7 @@ menuwin* inventory::replace_win(menuwin* win)
 
 bool inventory::draw()
 {
-	char *stored_caption;
+	string stored_caption;
 	char label[32];
 	int ix ,iy, iw, ih, labelwidth, buttonspace;
 
@@ -70,7 +70,7 @@ bool inventory::draw()
 
 	/* draw the window, but prevent draw_mainwin from drawing the caption */
 	stored_caption = caption;
-	caption = NULL;
+	caption.clear();
 	
 	mainwin::draw();
 	
@@ -579,7 +579,7 @@ eventresult inventory::objwin_event_handler(window* target, void* result, SDL_Ev
 						itemcount = 0;
 						for (winelem = first_child; winelem; winelem = winelem->sib_next) {
 							itemcount++;
-							if (winelem->caption && strstr(winelem->caption, str_to_find)) {
+							if (winelem->caption.find(str_to_find)) {
 								colno = itemcount / ow_vrows;
 								update_invscroll(colno);
 								break;
@@ -674,8 +674,8 @@ void inventory::layout()
 	while (first_child)
 		delete first_child;
 
-	if (!caption)
-		caption = strdup("Inventory");
+	if (caption.empty())
+		caption = "Inventory";
 
 	int leftoffset = border_left;
 	int topoffset = border_top;
@@ -757,7 +757,7 @@ void inventory::layout()
 	if (ncols > ow_vcols) {
 		h += 25;
 
-		btn = new button(this, NULL, V_INV_PREVPAGE, '\0');
+		btn = new button(this, "", V_INV_PREVPAGE, '\0');
 		btn->x = leftoffset;
 		btn->y = h - border_bottom - 23;
 		btn->w = 100;
@@ -766,7 +766,7 @@ void inventory::layout()
 								vultures_winelem.invarrow_left->h, vultures_winelem.invarrow_left);
 		btn->visible = 0;
 
-		btn = new button(this, NULL, V_INV_NEXTPAGE, '\0');
+		btn = new button(this, "", V_INV_NEXTPAGE, '\0');
 		btn->x = w - rightoffset - 101;
 		btn->y = h - border_bottom - 23;
 		btn->w = 100;
@@ -796,7 +796,7 @@ void inventory::layout()
 		btn->w = max_width;
 		btn->x = (w - rightoffset - leftoffset - total_width) / 2 + leftoffset + max_width + 10;
 	} else {
-		btn = new button(this, NULL, V_INV_CLOSE, '\0');
+		btn = new button(this, "", V_INV_CLOSE, '\0');
 		btn->visible = 1;
 		btn->x = w - border_right - 28;
 		btn->y = border_top + 2;

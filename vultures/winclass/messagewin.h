@@ -17,16 +17,16 @@ public:
 	virtual bool draw();
 	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
 	
-	void add_message(const char *msg);
+	void add_message(string msg);
 	void setshown(int first);
 	int getshown(void);
-	char *get_message(int offset, int *age);
+	string get_message(int offset, int *age);
 	void view_all(void);
 
 private:
 	SDL_Surface *bg_img;
 	int message_ages[V_MESSAGEBUF_SIZE];
-	char *message_buf[V_MESSAGEBUF_SIZE];
+	string message_buf[V_MESSAGEBUF_SIZE];
 	int message_cur, message_top;
 };
 

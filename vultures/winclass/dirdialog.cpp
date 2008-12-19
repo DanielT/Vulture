@@ -14,18 +14,18 @@
 #include "levelwin.h"
 
 
-dirdialog::dirdialog(window *p, const char *ques) : mainwin(p)
+dirdialog::dirdialog(window *p, string ques) : mainwin(p)
 {
 	int arrows_w, arrows_h;
 
-	caption = strdup(ques);
+	caption = ques;
 
 	arrows_w = vultures_winelem.direction_arrows->w;
 	arrows_h = vultures_winelem.direction_arrows->h;
 
 
 	/* calculate window layout */
-	if (ques)
+	if (!ques.empty())
 		w = vultures_text_length(V_FONT_HEADLINE, ques);
 	w = (w > arrows_w) ? w : arrows_w;
 	w += vultures_winelem.border_left->w + vultures_winelem.border_right->w;

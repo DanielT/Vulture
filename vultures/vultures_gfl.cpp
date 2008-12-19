@@ -273,7 +273,7 @@ void vultures_save_screenshot(void)
 			if (vultures_windows_inited)
 				vultures_messagebox(msg);
 			else
-				msgwin->add_message(msg);
+				msgwin->add_message(string(msg));
 
 			free(msg);
 			free(filename);

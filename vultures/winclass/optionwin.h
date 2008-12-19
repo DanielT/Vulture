@@ -11,7 +11,7 @@ class optionwin : public window
 {
 public:
 	optionwin() {};
-	optionwin(window *p, menuitem* mi, const char *cap,
+	optionwin(window *p, menuitem* mi, string cap,
 	          char accel, int glyph, bool selected, bool is_checkbox);
 	virtual bool draw();
 	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);

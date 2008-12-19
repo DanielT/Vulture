@@ -7,14 +7,13 @@
 #include "objheaderwin.h"
 
 
-objheaderwin::objheaderwin(window *parent, const char *cap) : window(parent)
+objheaderwin::objheaderwin(window *parent, string cap) : window(parent)
 {
 	v_type = V_WINTYPE_OBJITEMHEADER;
 	w = V_LISTITEM_WIDTH;
 	h = V_LISTITEM_HEIGHT;
 	autobg = true;
-	
-	caption = strdup(cap);
+	caption = cap;
 }
 
 

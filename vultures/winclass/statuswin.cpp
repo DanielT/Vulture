@@ -38,21 +38,16 @@ statuswin::statuswin(window *p) : window(p)
 	subwin = new enhancebutton(this->parent);
 	subwin->x = this->x + this->w;
 	subwin->y = this->y - subwin->h;
-	subwin->visible = 0;
-	subwin->autobg = 1;
 	subwin->menu_id = V_WIN_ENHANCE;
 	
 	for (int i = 0; i < 5; i++)
 		for (int j = 0; j < 5; j++)
 		{
 			tokenarray[i][j] = new textwin(this, "");
-			tokenarray[i][j]->autobg = 1;
 			tokenarray[i][j]->x = 3 + status_xpos[i];
 			tokenarray[i][j]->y = 2 + j*vultures_get_lineheight(V_FONT_STATUS);
 			tokenarray[i][j]->w = 100;
 			tokenarray[i][j]->h = vultures_get_lineheight(V_FONT_STATUS);
-			tokenarray[i][j]->caption = (char *)malloc(64);
-			tokenarray[i][j]->caption[0] = '\0';
 		}
 
 	/* the player is longer than everything else */
@@ -99,55 +94,62 @@ eventresult statuswin::event_handler(window* target, void* result, SDL_Event* ev
 }
 
 
-void statuswin::parse_statusline(const char *str)
+void statuswin::parse_statusline(string str)
 {
-	int len, hp, hpmax, nconds;
+	int hp, hpmax, nconds;
 	long val;
-	char * ptr;
+	string txt;
 	int cap = near_capacity();
-
+	size_t pos;
+	char buf[64];
 
 	/* get player name + title */
-	ptr = strstr(str, "St:");
-	if (ptr)
-	{
-		len = ptr - str;
-		strncpy(tokenarray[0][0]->caption, str, len);
-		tokenarray[0][0]->caption[len] = '\0';
-	}
+	pos = str.find("St:", 0);
+	if (pos != string::npos)
+		tokenarray[0][0]->caption = str.substr(0, pos);
 
 	/* strength needs special treatment */
-	ptr = tokenarray[0][1]->caption;
 	if (ACURR(A_STR) > 18) 
 	{
 		if (ACURR(A_STR) > STR18(100))
-			sprintf(ptr,"St:%2d", ACURR(A_STR)-100);
+			sprintf(buf,"St:%2d", ACURR(A_STR)-100);
 		else if (ACURR(A_STR) < STR18(100))
-			sprintf(ptr, "St:18/%02d", ACURR(A_STR)-18);
+			sprintf(buf, "St:18/%02d", ACURR(A_STR)-18);
 		else
-			sprintf(ptr,"St:18/**");
+			sprintf(buf,"St:18/**");
 	}
 	else
-		sprintf(ptr, "St:%-1d", ACURR(A_STR));
+		sprintf(buf, "St:%-1d", ACURR(A_STR));
+	tokenarray[0][1]->caption = buf;
 
 	/* the other stats */
-	sprintf(tokenarray[0][2]->caption, "Dx:%-1d", ACURR(A_DEX));
-	sprintf(tokenarray[0][3]->caption, "Co:%-1d", ACURR(A_CON));
-	sprintf(tokenarray[1][1]->caption, "In:%-1d", ACURR(A_INT));
-	sprintf(tokenarray[1][2]->caption, "Wi:%-1d", ACURR(A_WIS));
-	sprintf(tokenarray[1][3]->caption, "Ch:%-1d", ACURR(A_CHA));
+	sprintf(buf, "Dx:%-1d", ACURR(A_DEX));
+	tokenarray[0][2]->caption = buf;
+	
+	sprintf(buf, "Co:%-1d", ACURR(A_CON));
+	tokenarray[0][3]->caption = buf;
+	
+	sprintf(buf, "In:%-1d", ACURR(A_INT));
+	tokenarray[1][1]->caption = buf;
+	
+	sprintf(buf, "Wi:%-1d", ACURR(A_WIS));
+	tokenarray[1][2]->caption = buf;
+	
+	sprintf(buf, "Ch:%-1d", ACURR(A_CHA));
+	tokenarray[1][3]->caption = buf;
 
 	/* alignment */
 	tokenarray[4][0]->visible = 1;
-	sprintf(tokenarray[4][0]->caption, (u.ualign.type == A_CHAOTIC) ? "Chaotic" :
-			(u.ualign.type == A_NEUTRAL) ? "Neutral" : "Lawful");
+	tokenarray[4][0]->caption = (u.ualign.type == A_CHAOTIC) ? "Chaotic" :
+			(u.ualign.type == A_NEUTRAL) ? "Neutral" : "Lawful";
 
 	/* score */
 #ifdef SCORE_ON_BOTL
-	if (flags.showscore)
-		sprintf(tokenarray[3][4]->caption, "S:%ld", botl_score());
-	else
-		tokenarray[3][4]->caption[0] = '\0';
+	if (flags.showscore) {
+		sprintf(buf, "S:%ld", botl_score());
+		tokenarray[3][4]->caption = buf;
+	} else
+		tokenarray[3][4]->caption.clear();
 #endif
 
 	/* money */
@@ -156,31 +158,39 @@ void statuswin::parse_statusline(const char *str)
 #else
 		val = money_cnt(invent);
 #endif
-	if (val >= 100000)
-		sprintf(tokenarray[3][2]->caption, "%c:%-2ldk", oc_syms[COIN_CLASS], val / 1000);
-	else
-		sprintf(tokenarray[3][2]->caption, "%c:%-2ld", oc_syms[COIN_CLASS], val);
+	if (val >= 100000) {
+		sprintf(buf, "%c:%-2ldk", oc_syms[COIN_CLASS], val / 1000);
+		tokenarray[3][2]->caption = buf;
+	} else {
+		sprintf(buf, "%c:%-2ld", oc_syms[COIN_CLASS], val);
+		tokenarray[3][2]->caption = buf;
+	}
 
 	/* Experience */
-	if (Upolyd)
-		Sprintf(tokenarray[3][0]->caption, "HD:%d", mons[u.umonnum].mlevel);
+	if (Upolyd) {
+		sprintf(buf, "HD:%d", mons[u.umonnum].mlevel);
+		tokenarray[3][0]->caption = buf;
+	}
 #ifdef EXP_ON_BOTL
 	else if(flags.showexp)
 	{
-		Sprintf(tokenarray[3][0]->caption, "Xp:%u/%-1ld", u.ulevel,u.uexp);
+		Sprintf(buf, "Xp:%u/%-1ld", u.ulevel,u.uexp);
+		tokenarray[3][0]->caption = buf;
 		/* if the exp gets too long, suppress displaying the alignment */
-		if (strlen(tokenarray[3][0]->caption) > 10)
+		if (tokenarray[3][0]->caption.length() > 10)
 			tokenarray[4][0]->visible = 0;
 	}
 #endif
-	else
-		Sprintf(tokenarray[3][0]->caption, "Exp:%u", u.ulevel);
-
+	else {
+		Sprintf(buf, "Exp:%u", u.ulevel);
+		tokenarray[3][0]->caption = buf;
+	}
 
 	/* HP, energy, armor */
 	hp = Upolyd ? u.mh : u.uhp;
 	hpmax = Upolyd ? u.mhmax : u.uhpmax;
-	sprintf(tokenarray[2][1]->caption, "HP:%d(%d)", hp, hpmax);
+	sprintf(buf, "HP:%d(%d)", hp, hpmax);
+	tokenarray[2][1]->caption = buf;
 	if (hp >= ((hpmax * 90) / 100))
 		tokenarray[2][1]->textcolor = warn_colors[V_WARN_NONE];
 	else if (hp >= ((hpmax * 70) / 100))
@@ -191,17 +201,21 @@ void statuswin::parse_statusline(const char *str)
 		tokenarray[2][1]->textcolor = warn_colors[V_WARN_ALERT];
 	else
 		tokenarray[2][1]->textcolor = warn_colors[V_WARN_CRITICAL];
-	sprintf(tokenarray[2][2]->caption, "Pw:%d(%d)", u.uen, u.uenmax);
-	sprintf(tokenarray[2][3]->caption, "AC:%-2d", u.uac);
+	sprintf(buf, "Pw:%d(%d)", u.uen, u.uenmax);
+	tokenarray[2][2]->caption = buf;
+	sprintf(buf, "AC:%-2d", u.uac);
+	tokenarray[2][3]->caption = buf;
 
 	/* time */
-	if(flags.time)
-		sprintf(tokenarray[3][3]->caption, "T:%ld", moves);
-	else
-		tokenarray[3][3]->caption[0] = '\0';
+	if(flags.time) {
+		sprintf(buf, "T:%ld", moves);
+		tokenarray[3][3]->caption = buf;
+	} else
+		tokenarray[3][3]->caption.clear();
 
 	/* depth again (numeric) */
-	sprintf(tokenarray[3][1]->caption, "Dlvl:%-2d ", depth(&u.uz));
+	sprintf(buf, "Dlvl:%-2d ", depth(&u.uz));
+	tokenarray[3][1]->caption = buf;
 
 	/* conditions (hunger, confusion, etc) */
 	nconds = 0;
@@ -243,12 +257,12 @@ void statuswin::parse_statusline(const char *str)
 }
 
 
-void statuswin::add_cond(const char *str, int warnno, int color)
+void statuswin::add_cond(string str, int warnno, int color)
 {
 	static const point pos[9] = {{4,1}, {4,2}, {4,3}, {4,4}, {3,4}, {2,4}, {1,4}, {0,4}, {4,0}};
 	if (warnno >= 9)
 		return;
 
-	strcpy(tokenarray[pos[warnno].x][pos[warnno].y]->caption, str);
+	tokenarray[pos[warnno].x][pos[warnno].y]->caption = str;
 	tokenarray[pos[warnno].x][pos[warnno].y]->textcolor = warn_colors[color];
 }

@@ -25,10 +25,10 @@ public:
 	virtual ~statuswin();
 	virtual bool draw();
 	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
-	void parse_statusline(const char *str);
+	void parse_statusline(string str);
 
 private:
-	void add_cond(const char *str, int warnno, int color);
+	void add_cond(string str, int warnno, int color);
 	SDL_Surface *statusbg;
 	textwin *tokenarray[5][5];
 };

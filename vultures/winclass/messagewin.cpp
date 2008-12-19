@@ -35,7 +35,7 @@ messagewin::messagewin(window *p) : window(p)
 	SDL_SetAlpha(bg_img, SDL_SRCALPHA, 128);
 	
 	/* init message ring buffer */
-	memset(message_buf, 0, V_MESSAGEBUF_SIZE * sizeof(char*));
+	memset(message_ages, 0, V_MESSAGEBUF_SIZE * sizeof(int));
 	message_top = -1;
 	message_cur = -1;
 	
@@ -52,10 +52,6 @@ messagewin::messagewin(window *p) : window(p)
 
 messagewin::~messagewin(void)
 {
-	for (int i = 0; i < V_MESSAGEBUF_SIZE; i++)
-		if (message_buf[i])
-			free(message_buf[i]);
-	
 	SDL_FreeSurface(bg_img);
 }
 
@@ -65,7 +61,7 @@ bool messagewin::draw()
 {
 	int age, textlen, num_messages;
 	int pos_x, pos_y, i;
-	char * message;
+	string message;
 	int refresh_x, refresh_y, refresh_h, refresh_w;
 	int time_cur = moves;
 
@@ -95,7 +91,7 @@ bool messagewin::draw()
 	w = 0;
 
 	/* calculate height & width of new message area */
-	while((message = get_message(num_messages, &age)) &&
+	while(!(message = get_message(num_messages, &age)).empty() &&
 		(time_cur-age) < V_MAX_MESSAGE_COLORS && num_messages < vultures_opts.messagelines)
 	{
 		h += (vultures_get_lineheight(V_FONT_MESSAGE) + 1);
@@ -174,16 +170,10 @@ eventresult messagewin::event_handler(window* target, void* result, SDL_Event* e
 }
 
 
-void messagewin::add_message(const char *str)
+void messagewin::add_message(string str)
 {
-	message_top = (message_top + 1) % V_MESSAGEBUF_SIZE;
-	message_cur = message_top;
-
-	/* if we just wrapped around, free the old entry */
-	if(message_buf[message_top])
-		free(message_buf[message_top]);
-
-	message_buf[message_top] = strdup(str);
+	message_cur = message_top = (message_top + 1) % V_MESSAGEBUF_SIZE;
+	message_buf[message_top] = str;
 	message_ages[message_top] = moves;
 }
 
@@ -201,35 +191,35 @@ int messagewin::getshown()
 
 
 /* retrieve a message from the message buffer, offset messages before the current one */
-char * messagewin::get_message(int offset, int *age)
+string messagewin::get_message(int offset, int *age)
 {
 	if (offset >= V_MESSAGEBUF_SIZE)
 		return NULL;
 
 	int msg_id = (message_cur - offset + V_MESSAGEBUF_SIZE) % V_MESSAGEBUF_SIZE;
 
-	if (message_buf[msg_id]) {
+	if (message_ages[msg_id]) {
 		*age = message_ages[msg_id];
 		return message_buf[msg_id];
 	}
 
 	*age = 0;
-	return NULL;
+	return "";
 }
 
 
 void messagewin::view_all(void)
 {
 	int offset, time, winid;
-	char *message;
+	string message;
 	char menuline[256];
 
 	winid = vultures_create_nhwindow(NHW_MENU);
 
 	offset = -getshown();
-	while ( (message = get_message(offset, &time)) )
+	while ( !(message = get_message(offset, &time)).empty() )
 	{
-		sprintf(menuline, "T:%d %s", time, message);
+		sprintf(menuline, "T:%d %s", time, message.c_str());
 		vultures_putstr(winid, ATR_NONE, menuline);
 		offset++;
 	}

@@ -2,7 +2,6 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
 #include <stdlib.h>
-#include <string.h>
 
 #include "SDL.h"
 
@@ -24,10 +23,10 @@ static struct {
 static struct {
 	point cur;
 	SDL_Surface *background, *tip;
-	char * text;
+	string text;
 	int valid;
 	SDL_Rect refresh;
-} vultures_tooltip = {{0, 0}, NULL, NULL, NULL, 0, {0,0,0,0}};
+} vultures_tooltip = {{0, 0}, NULL, NULL, "", 0, {0,0,0,0}};
 
 static Uint32 tooltipcolor;
 
@@ -52,9 +51,6 @@ void vultures_mouse_destroy(void)
 {
 	if (vultures_mouse.background)
 		SDL_FreeSurface(vultures_mouse.background);
-
-	if (vultures_tooltip.text)
-		free(vultures_tooltip.text);
 
 	if (vultures_tooltip.tip)
 		SDL_FreeSurface(vultures_tooltip.tip);
@@ -269,14 +265,13 @@ void vultures_mouse_invalidate_tooltip(int force)
 
 
 
-void vultures_mouse_set_tooltip(char * str)
+void vultures_mouse_set_tooltip(string str)
 {
 	int length, height;
 
-	if (str && (!vultures_tooltip.text || strcmp(str, vultures_tooltip.text) != 0))
+	if (!str.empty() && str != vultures_tooltip.text)
 	{
-		free(vultures_tooltip.text);
-		vultures_tooltip.text = strdup(str);
+		vultures_tooltip.text = str;
 
 		if (vultures_tooltip.background)
 			SDL_FreeSurface(vultures_tooltip.background);

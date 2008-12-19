@@ -8,15 +8,14 @@
 #include "vultures_txt.h"
 
 
-optionwin::optionwin(window *p, menuitem* mi, const char *cap, char accel, 
+optionwin::optionwin(window *p, menuitem* mi, string cap, char accel, 
                      int glyph, bool selected, bool is_checkbox) : window(p),
                      glyph(glyph), item(mi), is_checkbox(is_checkbox)
 {
 	v_type = V_WINTYPE_OPTION;
 	accelerator = accel;
 	
-	if (cap)
-		caption = strdup(cap);
+	caption = cap;
 }
 
 

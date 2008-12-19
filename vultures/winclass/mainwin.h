@@ -11,7 +11,6 @@ public:
 	mainwin(window *p);
 	virtual bool draw();
 	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
-// 	int align_buttons(int pos_y);
 	virtual void layout();
 
 protected:

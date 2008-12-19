@@ -720,7 +720,7 @@ eventresult levelwin::event_handler(window* target, void* result, SDL_Event* eve
 			if (event->user.code < HOVERTIMEOUT)
 				break;
 
-			if (target != this && target->caption)
+			if (target != this && !target->caption.empty())
 				vultures_mouse_set_tooltip(target->caption);
 			else {
 				ttext = map_square_description(mappos, 1);

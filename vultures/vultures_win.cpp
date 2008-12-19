@@ -70,9 +70,6 @@ void vultures_messagebox(const char *message)
 
     win->layout();
 
-    win->abs_x = win->parent->x + win->x;
-    win->abs_y = win->parent->y + win->y;
-
     vultures_event_dispatcher(&dummy, V_RESPOND_INT, win);
 
 	delete win;
@@ -82,20 +79,7 @@ void vultures_messagebox(const char *message)
 int vultures_get_input(int force_x, int force_y, const char *ques, char *input)
 {
 	int response;
-	inputdialog *win = new inputdialog(vultures_get_window(0), ques, 256);
-
-	if (force_x > -1)
-		win->x = force_x;
-	else
-		win->x = (win->parent->w - win->w) / 2;
-
-	if (force_y > -1)
-		win->y = force_y;
-	else
-		win->y = (win->parent->h - win->h) / 2;
-
-	win->abs_x = win->parent->x + win->x;
-	win->abs_y = win->parent->y + win->y;
+	inputdialog *win = new inputdialog(vultures_get_window(0), ques, 256, force_x, force_y);
 
 	/* get input */
 	vultures_event_dispatcher(&response, V_RESPOND_INT, win);

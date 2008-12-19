@@ -9,10 +9,10 @@
 #include "textwin.h"
 
 
-textwin::textwin(window *p, const char *cap) : window(p)
+textwin::textwin(window *p, string cap) : window(p)
 {
 	v_type = V_WINTYPE_TEXT;
-	caption = strdup(cap);
+	caption = cap;
 	is_input = false;
 	textcolor = V_COLOR_TEXT;
 	autobg = true;
@@ -22,8 +22,7 @@ textwin::textwin(window *p, const char *cap) : window(p)
 textwin::textwin(window *p, int destsize) : window(p)
 {
 	v_type = V_WINTYPE_TEXT;
-	caption = (char *)malloc(destsize);
-	caption[0] = '\0';
+	caption = "";
 	
 	is_input = true;
 	textcolor = V_COLOR_TEXT;
@@ -41,12 +40,10 @@ bool textwin::draw()
 		vultures_invalidate_region(abs_x-2, abs_y, background->w+4, background->h);
 	}
 
-	if (caption) {
-		vultures_put_text_shadow(V_FONT_MENU, caption, vultures_screen,
-				abs_x, abs_y, textcolor, V_COLOR_BACKGROUND);
+	vultures_put_text_shadow(V_FONT_MENU, caption, vultures_screen,
+	                         abs_x, abs_y, textcolor, V_COLOR_BACKGROUND);
 
-		textlen = vultures_text_length(V_FONT_MENU, caption);
-	}
+	textlen = vultures_text_length(V_FONT_MENU, caption);
 
 
 	if (is_input)
@@ -60,7 +57,7 @@ bool textwin::draw()
 }
 
 
-void textwin::set_caption(const char *str)
+void textwin::set_caption(string str)
 {
 	window::set_caption(str);
 	w = vultures_text_length(V_FONT_MENU, caption) + 10;

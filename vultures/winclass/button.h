@@ -7,7 +7,8 @@
 class button : public window
 {
 public:
-	button(window *p, const char *caption, int menuid, char accel);
+	button(window *p, string caption, int menuid, char accel);
+	virtual ~button();
 	virtual bool draw();
 	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
 

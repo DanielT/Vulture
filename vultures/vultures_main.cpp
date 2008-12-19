@@ -318,7 +318,7 @@ void vultures_display_nhwindow(int winid, BOOLEAN_P blocking)
 	if (!win)
 		return;
 
-	switch(win->get_nhtype())
+	switch(win->get_nh_type())
 	{
 		case NHW_TEXT:
 			if (win->get_wintype() == V_WINTYPE_ENDING) {
@@ -327,7 +327,7 @@ void vultures_display_nhwindow(int winid, BOOLEAN_P blocking)
 				win->need_redraw = 1;
 				win->visible = 1;
 
-				// need to run the eventloop manually
+				/* need to run the eventloop manually */
 				vultures_event_dispatcher(&response, V_RESPOND_INT, win);
 
 				vultures_fade_out(0.5);
@@ -584,7 +584,7 @@ void vultures_putstr(int winid, int attr, const char *str)
 			if (strncmp(str, "Done.", 5) == 0)
 				return;
 
-			msgwin->add_message(str);
+			msgwin->add_message(string(str));
 
 			/* Play any event sounds associated with this message */
 			vultures_play_event_sound(str);

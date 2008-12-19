@@ -28,7 +28,7 @@ bool endingwin::draw()
 
 	if (!flags.tombstone) {
 		for (item_iterator i = items.begin(); i != items.end(); ++i)
-			printf("%s\n", (*i)->str);
+			printf("%s\n", (*i)->str.c_str());
 
 		printf("\n\n");
 		return false;

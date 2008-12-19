@@ -10,7 +10,7 @@
 #include "button.h"
 
 
-choicedialog::choicedialog(window *p, const char *question, const char *choices, char defchoice) : mainwin(p)
+choicedialog::choicedialog(window *p, string question, const char *choices, char defchoice) : mainwin(p)
 {
 	button *btn;
 	int nbuttons = 0, longdesc = 0;
@@ -19,7 +19,7 @@ choicedialog::choicedialog(window *p, const char *question, const char *choices,
 	char *btncaption;
 
 	defbutton = NULL;
-	caption = strdup(question);
+	caption = question;
 	nbuttons = strlen(choices);
 
 	/* a very common case is "yn" queries. Improve that to a yes/no query*/

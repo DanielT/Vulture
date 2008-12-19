@@ -61,7 +61,7 @@ eventresult toolbar::event_handler(window* target, void* result, SDL_Event* even
 		/* timer: draw tooltips */
 		case SDL_TIMEREVENT:
 			if (event->user.code > HOVERTIMEOUT)
-				if (target != this  && target->caption)
+				if (target != this  && !target->caption.empty())
 					vultures_mouse_set_tooltip(target->caption);
 			break;
 

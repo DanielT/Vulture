@@ -8,7 +8,7 @@ class textwin;
 class anykeydialog : public mainwin
 {
 public:
-	anykeydialog(window *p, const char *ques);
+	anykeydialog(window *p, string ques);
 	virtual bool draw();
 	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
 

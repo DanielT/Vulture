@@ -13,11 +13,11 @@ class scrollwin;
 class menuitem
 {
 public:
-	menuitem(const char *str, bool sel, void *ident, char accel, int glyph) : 
+	menuitem(string str, bool sel, void *ident, char accel, int glyph) : 
 	         identifier(ident), str(str), glyph(glyph), preselected(sel),
              accelerator(accel), selected(false), count(-1) {};
 	const void *identifier;
-	const char *str;
+	string str;
 	const int glyph;
 	const bool preselected;
 	char accelerator;
@@ -49,6 +49,7 @@ public:
 
 	menuwin();
 	menuwin(window *p);
+	virtual ~menuwin();
 	virtual bool draw();
 	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
 	virtual menuwin* replace_win(menuwin* win);
@@ -60,7 +61,7 @@ public:
 	selection_iterator selection_begin() { return selection_iterator(items.begin(), items.end()); }
 	selection_iterator selection_end() { return selection_iterator(items.end(), items.end()); }
 	
-	virtual void add_menuitem(const char *str, bool preselected, void *identifier, char accelerator, int glyph);
+	virtual void add_menuitem(string str, bool preselected, void *identifier, char accelerator, int glyph);
 	
 protected:
 	void select_option(optionwin *target, int count);
