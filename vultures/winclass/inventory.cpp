@@ -189,8 +189,7 @@ eventresult inventory::context_menu(objitemwin *target)
 	if (!objects[target->obj->otyp].oc_name_known)
 		menu->add_item("Name", V_INVACTION_NAME);
 
-// 	menu->layout();
-
+	menu->layout();
 	vultures_event_dispatcher(&action, V_RESPOND_INT, menu);
 
 	delete menu;

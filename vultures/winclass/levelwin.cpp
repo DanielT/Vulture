@@ -1630,7 +1630,7 @@ map_action levelwin::get_map_contextmenu(point mappos)
 		menu->add_item("What's this?", V_ACTION_WHATS_THIS);
 	}
 
-
+	menu->layout();
 	vultures_event_dispatcher(&result, V_RESPOND_INT, menu);
 
 	delete menu;

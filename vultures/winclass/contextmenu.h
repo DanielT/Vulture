@@ -15,11 +15,10 @@ public:
 	contextmenu(window *p);
 	virtual bool draw();
 	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
-	
+	virtual void layout(void);
 	void add_item(const char *label, int menuid);
 
 private:
-	void layout(void);
 	itemlist items;
 	bool layout_done;
 };
