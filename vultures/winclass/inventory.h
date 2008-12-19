@@ -1,10 +1,9 @@
-#if 0
-
 #ifndef _inventory_h_
 #define _inventory_h_
 
 #include "menuwin.h"
 
+class objitemwin;
 
 enum invactions {
 	V_INVACTION_APPLY = 1,
@@ -24,18 +23,20 @@ enum invactions {
 class inventory : public menuwin
 {
 public:
-	inventory() {};
+	inventory();
 	inventory(window *p);
 	virtual bool draw();
 	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
-	virtual window* replace_win(window* win);
+	virtual menuwin* replace_win(menuwin* win);
 	virtual void layout();
 	
 private:
-	int ow_ncols, ow_vcols, ow_firstcol;
+	eventresult objwin_event_handler(window* target, void* result, SDL_Event* event);
+	void update_invscroll(int newpos);
+	eventresult context_menu(objitemwin *target);
+	int ow_ncols, ow_vcols, ow_firstcol, ow_vrows;
+	objitemwin *ow_lasttoggled;
 };
 
 
 #endif
-
-#endif //0

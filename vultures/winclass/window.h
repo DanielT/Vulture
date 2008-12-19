@@ -4,6 +4,7 @@
 
 #include <SDL.h>
 
+#define ROOTWIN vultures_get_window(0)
 
 typedef enum {
 	V_WINTYPE_NONE, /* only the root window has this type */

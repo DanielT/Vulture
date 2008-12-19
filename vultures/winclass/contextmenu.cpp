@@ -10,9 +10,11 @@
 #include "button.h"
 
 
-contextmenu::contextmenu(window *p, point pos) : window(p)
+contextmenu::contextmenu(window *p) : window(p)
 {
 	v_type = V_WINTYPE_CONTEXTMENU;
+	layout_done = false;
+	autobg = true;
 }
 
 
@@ -119,8 +121,7 @@ eventresult contextmenu::event_handler(window* target, void* result, SDL_Event* 
 	}
 
 	/* clicks: return id of clicked button */
-	else if (event->type == SDL_MOUSEBUTTONUP && event->button.button == SDL_BUTTON_LEFT)
-	{
+	else if (event->type == SDL_MOUSEBUTTONUP && event->button.button == SDL_BUTTON_LEFT) {
 		if (this != target && target->menu_id)
 		{
 			*(int*)result = target->menu_id;
@@ -129,8 +130,9 @@ eventresult contextmenu::event_handler(window* target, void* result, SDL_Event* 
 	}
 
 	/* keypresses or clicks outside the menu cancel it */
-	if (event->type == SDL_KEYDOWN || event->type == SDL_MOUSEBUTTONUP  || event->type == SDL_VIDEORESIZE)
-	{
+	if (event->type == SDL_KEYDOWN ||
+	    event->type == SDL_MOUSEBUTTONUP ||
+		event->type == SDL_VIDEORESIZE) {
 		*(int*)result = 0;
 		return V_EVENT_HANDLED_FINAL;
 	}

@@ -105,7 +105,7 @@ eventresult endingwin::event_handler(window* target, void* result, SDL_Event* ev
 }
 
 
-window* endingwin::replace_win(window *win)
+menuwin* endingwin::replace_win(menuwin *win)
 {
 	menuwin::replace_win(win);
 	v_type = V_WINTYPE_ENDING;

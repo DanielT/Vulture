@@ -385,7 +385,8 @@ void vultures_destroy_nhwindow(int winid)
 
 void vultures_start_menu(int winid)
 {
-	window * win = vultures_get_window(winid);
+	window *win = vultures_get_window(winid);
+	menuwin *menu;
 
 	/* sanity checks */
 	if(!win)
@@ -394,10 +395,14 @@ void vultures_start_menu(int winid)
 	if (win->get_nh_type() != NHW_MENU)
 		return;
 	
-	// start menu should never be called on a window that is not a menu
-	assert (win->get_wintype() == V_WINTYPE_MENU);
+	/* start menu should never be called on a window that is not a menu */
+	assert (win->get_wintype() == V_WINTYPE_MENU || win->get_wintype() == V_WINTYPE_OBJWIN);
 	
-	static_cast<menuwin*>(win)->reset();
+	menu = static_cast<menuwin*>(win);
+	menu->reset();
+	
+	/* possibly convert an inventory type window back to a regular menu window */
+	(new menuwin())->replace_win(menu);
 }
 
 
@@ -407,18 +412,18 @@ void vultures_add_menu(int winid, int glyph, const ANY_P * identifier,
 					CHAR_P accelerator, CHAR_P groupacc, int attr,
 					const char *str, BOOLEAN_P preselected)
 {
-	window *win = vultures_get_window(winid);
-	if (!win)
+	menuwin *menu = static_cast<menuwin*>(vultures_get_window(winid));
+	if (!menu)
 		return;
 	
-//     bool may_convert = ((winid == WIN_INVEN && !vultures_opts.use_standard_inventory) ||
-//                         (winid != WIN_INVEN && !vultures_opts.use_standard_object_menus));
+    bool may_convert = ((winid == WIN_INVEN && !vultures_opts.use_standard_inventory) ||
+                        (winid != WIN_INVEN && !vultures_opts.use_standard_object_menus));
 
-// 	convert a menu window to an object window
-// 	if (glyph_is_object(glyph) && win->get_wintype() != V_WINTYPE_OBJWIN && may_convert)
-// 	win = (new inventory())->replace_win(win);
+	/* convert a menu window to an object window */
+	if (glyph_is_object(glyph) && menu->get_wintype() != V_WINTYPE_OBJWIN && may_convert)
+		menu = (new inventory())->replace_win(menu);
 	
-	static_cast<menuwin*>(win)->add_menuitem(str, !!preselected, identifier->a_void, accelerator, glyph);
+	menu->add_menuitem(str, !!preselected, identifier->a_void, accelerator, glyph);
 }
 
 
@@ -471,27 +476,8 @@ int vultures_select_menu(int winid, int how, menu_item ** menu_list)
 		}
 	} else
 		win->content_is_text = true;
-//TODO
-//     else if (!win->is_objwin)
-//     {
-//         /* if this is a PICK_NONE menu, all checkboxes need to be converted into normal text items */
-//         /* info for vultures_layout_menu */
-//         win->content_is_text = 1;
-// 
-//         /* traverse the list of child windows: contains all checkboxes */
-//         win_elem = win->first_child;
-//         while (win_elem)
-//         {
-//             if (win_elem->v_type == V_WINTYPE_OPTION) {
-//                 vultures_init_wintype(win_elem, V_WINTYPE_TEXT);
-//             }
-//             win_elem = win_elem->sib_next;
-//         }
-//     }
 
-
-	if (win->get_wintype() != V_WINTYPE_OBJWIN)
-	{
+	if (win->get_wintype() != V_WINTYPE_OBJWIN) {
 		if ( /* TODO FIXME win->content_is_text || */ how == PICK_NONE )
 			new button(win, "Continue", V_MENU_ACCEPT, 0);
 		else
@@ -503,9 +489,7 @@ int vultures_select_menu(int winid, int how, menu_item ** menu_list)
 
 	win->visible = 1;
 	win->need_redraw = 1;
-
 	win->layout();
-
 
 	vultures_event_dispatcher(&response, V_RESPOND_INT, win);
 
@@ -719,7 +703,7 @@ void vultures_outrip(int winid, int how)
 	if (!win)
 		return;
 
-	(new endingwin(how))->replace_win(win);
+	(new endingwin(how))->replace_win(static_cast<menuwin*>(win));
 }
 
 

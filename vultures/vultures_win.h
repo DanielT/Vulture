@@ -156,7 +156,7 @@ extern void vultures_event_dispatcher(void * result, int resulttype, window * to
 extern int vultures_event_dispatcher_nonblocking(void * result, window * topwin);
 
 /* misc functions */
-extern void vultures_parse_statusline(window * statuswin, const char * str);
+// extern void vultures_parse_statusline(window * statuswin, const char * str);
 extern window * vultures_get_window_from_point(window * topwin, point mouse);
 extern void vultures_win_resize(int width, int height);
 extern void vultures_show_mainmenu(void);
@@ -169,7 +169,7 @@ extern vultures_window_graphics vultures_winelem;
 extern int vultures_suppress_helpmsg;
 extern int vultures_winid_map;
 extern int vultures_winid_minimap;
-extern SDL_Surface * vultures_statusbar;
+// extern SDL_Surface * vultures_statusbar;
 extern int vultures_whatis_singleshot;
 extern int vultures_windows_inited;
 

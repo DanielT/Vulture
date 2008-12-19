@@ -14,7 +14,7 @@ class contextmenu : public window
 public:
 	typedef std::vector<std::pair<char*, int> >  itemlist;
 
-	contextmenu(window *p, point pos);
+	contextmenu(window *p);
 	virtual bool draw();
 	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
 	

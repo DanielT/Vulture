@@ -11,8 +11,8 @@ public:
 	virtual bool draw();
 	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
 
-private:
 	SDL_Surface *image;
+private:
 	bool selected;
 };
 

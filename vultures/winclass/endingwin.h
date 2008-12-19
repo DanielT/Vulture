@@ -20,7 +20,7 @@ public:
 	endingwin(int how);
 	virtual bool draw();
 	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
-	virtual window* replace_win(window *win);
+	virtual menuwin* replace_win(menuwin *win);
 
 private:
 	int ending_type;

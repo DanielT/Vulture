@@ -1473,7 +1473,7 @@ map_action levelwin::get_map_contextmenu(point mappos)
 		return V_ACTION_NONE;
 
 	/* Construct a context-sensitive drop-down menu */
-	menu = new contextmenu(this, mouse_pos);
+	menu = new contextmenu(this /*, mouse_pos */);
 
 	if ((u.ux == mappos. x) && (u.uy == mappos. y))
 	{

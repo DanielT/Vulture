@@ -164,8 +164,8 @@ void window::hide()
 	if (background && autobg)
 	{
 		vultures_put_img(abs_x, abs_y, background);
-		vultures_invalidate_region(abs_x, abs_y, w, h);
-// 		vultures_refresh_region(abs_x, abs_y, abs_x + w, abs_y + h);
+// 		vultures_invalidate_region(abs_x, abs_y, w, h);
+		vultures_refresh_region(abs_x, abs_y, abs_x + w, abs_y + h);
 		SDL_FreeSurface(background);
 		background = NULL;
 	}

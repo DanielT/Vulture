@@ -26,6 +26,19 @@ menuwin::menuwin(window *p) : mainwin(p)
 	count = 0;
 }
 
+
+menuwin* menuwin::replace_win(menuwin* win)
+{
+	*this = *win;
+	
+	window::replace_win(win);
+	v_type = V_WINTYPE_MENU;
+	nh_type = NHW_MENU;
+	
+	return this;
+}
+
+
 bool menuwin::draw()
 {
 	/* draw the window + title */
@@ -45,7 +58,8 @@ void menuwin::select_option(optionwin *target, int count)
 	if (!target->is_checkbox) {
 		/* unselect everything else */
 		for (winelem = first_child; winelem; winelem = winelem->sib_next) {
-			if (winelem->v_type == V_WINTYPE_OPTION) {
+			if (winelem->v_type == V_WINTYPE_OPTION ||
+			    winelem->v_type == V_WINTYPE_OBJITEM) {
 				opt = static_cast<optionwin*>(winelem);
 				opt->item->selected = false;
 				opt->item->count = -1;
@@ -279,21 +293,6 @@ eventresult menuwin::event_handler(window* target, void* result, SDL_Event* even
 
 	return V_EVENT_HANDLED_NOREDRAW;
 }
-
-
-window* menuwin::replace_win(window* win)
-{
-	window::replace_win(win);
-	menuwin *oldmenu = static_cast<menuwin*>(win);
-	
-	v_type = V_WINTYPE_MENU;
-	nh_type = NHW_MENU;
-	
-	items = std::vector<menuitem*>(oldmenu->items);
-	
-	return this;
-}
-
 
 void menuwin::reset()
 {
