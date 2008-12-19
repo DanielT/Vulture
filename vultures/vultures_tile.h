@@ -4,9 +4,12 @@
 #ifndef _vultures_tile_h_
 #define _vultures_tile_h_
 
+#include <SDL.h>
+#include "vultures_types.h"
 extern "C" {
 #include "hack.h"
 }
+
 
 extern void vultures_put_tile_shaded(int x, int y, int tile_id, int shadelevel);
 extern int vultures_load_gametiles(void);

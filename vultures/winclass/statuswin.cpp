@@ -7,6 +7,7 @@ extern const char *const enc_stat[];   /* defined in botl.c */
 }
 
 #include "vultures_win.h"
+#include "vultures_gra.h"
 #include "vultures_sdl.h"
 #include "vultures_gfl.h"
 #include "vultures_txt.h"
@@ -18,7 +19,8 @@ extern const char *const enc_stat[];   /* defined in botl.c */
 #include "textwin.h"
 
 statuswin *stwin;
-const int status_xpos[5] = { 0, 60, 100, 180, 250};
+static const int status_xpos[5] = { 0, 60, 100, 180, 250};
+static Uint32 warn_colors[V_MAX_WARN];
 
 statuswin::statuswin(window *p) : window(p)
 {
@@ -57,6 +59,13 @@ statuswin::statuswin(window *p) : window(p)
 	tokenarray[0][0]->w = 250;
 	
 	stwin = this;
+
+	/* Set warning colors */
+	warn_colors[V_WARN_NONE] = V_COLOR_TEXT;
+	warn_colors[V_WARN_NORMAL] = CLR32_GREEN;
+	warn_colors[V_WARN_MORE] = CLR32_YELLOW;
+	warn_colors[V_WARN_ALERT] = CLR32_ORANGE;
+	warn_colors[V_WARN_CRITICAL] = CLR32_RED;
 }
 
 
@@ -173,15 +182,15 @@ void statuswin::parse_statusline(const char *str)
 	hpmax = Upolyd ? u.mhmax : u.uhpmax;
 	sprintf(tokenarray[2][1]->caption, "HP:%d(%d)", hp, hpmax);
 	if (hp >= ((hpmax * 90) / 100))
-		tokenarray[2][1]->textcolor = vultures_warn_colors[V_WARN_NONE];
+		tokenarray[2][1]->textcolor = warn_colors[V_WARN_NONE];
 	else if (hp >= ((hpmax * 70) / 100))
-		tokenarray[2][1]->textcolor = vultures_warn_colors[V_WARN_NORMAL];
+		tokenarray[2][1]->textcolor = warn_colors[V_WARN_NORMAL];
 	else if (hp >= ((hpmax * 50) / 100))
-		tokenarray[2][1]->textcolor = vultures_warn_colors[V_WARN_MORE];
+		tokenarray[2][1]->textcolor = warn_colors[V_WARN_MORE];
 	else if (hp >= ((hpmax * 25) / 100))
-		tokenarray[2][1]->textcolor = vultures_warn_colors[V_WARN_ALERT];
+		tokenarray[2][1]->textcolor = warn_colors[V_WARN_ALERT];
 	else
-		tokenarray[2][1]->textcolor = vultures_warn_colors[V_WARN_CRITICAL];
+		tokenarray[2][1]->textcolor = warn_colors[V_WARN_CRITICAL];
 	sprintf(tokenarray[2][2]->caption, "Pw:%d(%d)", u.uen, u.uenmax);
 	sprintf(tokenarray[2][3]->caption, "AC:%-2d", u.uac);
 
@@ -241,5 +250,5 @@ void statuswin::add_cond(const char *str, int warnno, int color)
 		return;
 
 	strcpy(tokenarray[pos[warnno].x][pos[warnno].y]->caption, str);
-	tokenarray[pos[warnno].x][pos[warnno].y]->textcolor = vultures_warn_colors[color];
+	tokenarray[pos[warnno].x][pos[warnno].y]->textcolor = warn_colors[color];
 }

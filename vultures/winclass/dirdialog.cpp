@@ -1,6 +1,7 @@
 
 #include "vultures_win.h"
 #include "vultures_gen.h"
+#include "vultures_gra.h"
 #include "vultures_sdl.h"
 #include "vultures_txt.h"
 #include "vultures_mou.h"
@@ -8,6 +9,9 @@
 
 #include "dirdialog.h"
 #include "hotspot.h"
+
+/* for defs of V_MAP_XMOD and V_MAP_YMOD */
+#include "levelwin.h"
 
 
 dirdialog::dirdialog(window *p, const char *ques) : mainwin(p)

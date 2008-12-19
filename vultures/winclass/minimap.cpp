@@ -11,7 +11,9 @@ extern "C" {
 #include "vultures_map.h"
 #include "vultures_mou.h"
 #include "vultures_tile.h"
+
 #include "minimap.h"
+#include "levelwin.h"
 
 
 
@@ -27,10 +29,12 @@ minimap::minimap(levelwin *p, int parentw) : window(p), level(p)
 	autobg = 1;
 }
 
+
 minimap::~minimap()
 {
 	SDL_FreeSurface(minimapbg);
 }
+
 
 bool minimap::draw()
 {

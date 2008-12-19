@@ -16,7 +16,6 @@ extern struct window_procs vultures_procs;
 
 
 extern void win_vultures_init();
-
 extern int vultures_find_menu_accelerator(char *used_accelerators);
 
 

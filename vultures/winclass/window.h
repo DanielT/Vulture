@@ -6,6 +6,10 @@
 
 #define ROOTWIN vultures_get_window(0)
 
+#define V_LISTITEM_WIDTH  300
+#define V_LISTITEM_HEIGHT  52
+
+
 typedef enum {
 	V_WINTYPE_NONE, /* only the root window has this type */
 	V_WINTYPE_LEVEL,

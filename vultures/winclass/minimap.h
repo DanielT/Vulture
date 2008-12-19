@@ -1,13 +1,10 @@
 #ifndef _minimap_h_
 #define _minimap_h_
 
-#include "window.h"
 #include "SDL.h"
-
-#include "levelwin.h"
+#include "window.h"
 
 #define V_FILENAME_MINIMAPBG            "minimapbg"
-
 
 /*
  * colors used to draw the mini-map
@@ -17,7 +14,6 @@
 #define V_COLOR_MINI_DOOR     CLR32_BROWN
 #define V_COLOR_MINI_FLOOR    CLR32_PURPLE44
 #define V_COLOR_MINI_YOU      CLR32_WHITE
-
 
 /* minimap tile types */
 enum {
@@ -32,6 +28,7 @@ enum {
 };
 
 
+class levelwin;
 
 class minimap : public window
 {

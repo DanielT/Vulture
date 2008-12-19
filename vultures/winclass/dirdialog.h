@@ -2,11 +2,8 @@
 #define _dirdialog_h_
 
 #include "mainwin.h"
-#include "hotspot.h"
 
-/* for defs of V_MAP_XMOD and V_MAP_YMOD */
-#include "levelwin.h"
-
+class hotspot;
 
 class dirdialog : public mainwin
 {

@@ -5,8 +5,7 @@
 #include <ctype.h>
 
 /* SDL headers */
-#include "SDL.h"
-#include "SDL_video.h"
+#include <SDL.h>
 
 /* nethack headers */
 extern "C" {
@@ -31,25 +30,27 @@ extern "C" {
 #define TRAVEL_HACK /* XXX This is to be removed once Slash'EM (NetHack?)  fixes the problem of infinite loops */
 
 /* vultures headers */
-#include "vultures_types.h"
+#include "vultures_main.h"
 #include "vultures_gra.h"
-#include "vultures_gfl.h"
 #include "vultures_gen.h"
 #include "vultures_win.h"
 #include "vultures_map.h"
 #include "vultures_sdl.h"
 #include "vultures_init.h"
-#include "vultures_main.h"
 #include "vultures_pcmusic.h"
 #include "vultures_sound.h"
-#include "vultures_tile.h"
-#include "vultures_txt.h"
 #include "vultures_mou.h"
 #include "vultures_opt.h"
 
-#include "window_types.h"
-
-
+#include "winclass/anykeydialog.h"
+#include "winclass/button.h"
+#include "winclass/choicedialog.h"
+#include "winclass/dirdialog.h"
+#include "winclass/endingwin.h"
+#include "winclass/inventory.h"
+#include "winclass/levelwin.h"
+#include "winclass/messagewin.h"
+#include "winclass/statuswin.h"
 
 /* Interface definition, for windows.c */
 struct window_procs vultures_procs = {
@@ -734,7 +735,7 @@ int vultures_get_ext_cmd(void)
 	anything id;
 	menu_item * selected = NULL;
 	char used_accels[128];
-	char cur_accelerator;
+	char cur_accelerator = '\0';
 
 // TODO: use functions of class menuwin directly
 	win = vultures_create_nhwindow(NHW_MENU);
@@ -968,7 +969,6 @@ void vultures_get_nh_event(void)
 /*******************************************************
 * utility functions
 *******************************************************/
-
 
 int vultures_find_menu_accelerator(char *used_accelerators)
 {

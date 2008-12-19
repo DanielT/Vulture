@@ -6,10 +6,7 @@
 
 #include "vultures_types.h"
 
-
-
-#include "winclass/window.h"
-
+class window;
 
 /* 
 * External files used by the GUI.
@@ -38,56 +35,8 @@
 #define V_FILENAME_WINDOW_STYLE         "winelem"
 #define V_FILENAME_MAP_PARCHMENT        "parchment"
 
-
-/*
-* Subdirectories used by Vulture's. 
-* These should be under the main directory.
-*/
-#define V_CONFIG_DIRECTORY   "config"
-#define V_GRAPHICS_DIRECTORY "graphics"
-#define V_SOUND_DIRECTORY    "sound"
-#define V_MUSIC_DIRECTORY    "music"
-#define V_MANUAL_DIRECTORY   "manual"
-#define V_FONTS_DIRECTORY    "fonts"
-
-
-
-/* Font indices. Currently, there're only 2 fonts (large & small). */
-#define V_FONT_SMALL 0
-#define V_FONT_LARGE 1
-#define V_FONT_INTRO     V_FONT_LARGE
-#define V_FONT_MENU      V_FONT_SMALL
-#define V_FONT_HEADLINE  V_FONT_LARGE
-#define V_FONT_BUTTON    V_FONT_LARGE
-#define V_FONT_TOOLTIP   V_FONT_SMALL
-#define V_FONT_STATUS    V_FONT_SMALL
-#define V_FONT_MESSAGE   V_FONT_SMALL
-#define V_FONT_INPUT     V_FONT_SMALL
-
-/* Message shading: old messages grow darker */
-#define V_MAX_MESSAGE_COLORS 16
-
 /* how many ms must the mouse remain stationary until a tooltip is displayed */
 #define HOVERTIMEOUT 400
-
-/*
-* colors used to draw text
-*/
-#define V_COLOR_TEXT       0xffffffff
-#define V_COLOR_INTRO_TEXT 0xffffffff
-
-#define V_COLOR_BACKGROUND CLR32_BLACK
-
-
-/* Indices into warning colors */
-enum vultures_warn_type {
-	V_WARN_NONE = 0,
-	V_WARN_NORMAL,
-	V_WARN_MORE,
-	V_WARN_ALERT,
-	V_WARN_CRITICAL,
-	V_MAX_WARN
-};
 
 
 enum responses {
@@ -131,7 +80,6 @@ typedef struct event {
 } vultures_event;
 
 
-
 /* exported functions */
 
 /* high-level window functions */
@@ -156,15 +104,13 @@ extern void vultures_event_dispatcher(void * result, int resulttype, window * to
 extern int vultures_event_dispatcher_nonblocking(void * result, window * topwin);
 
 /* misc functions */
-// extern void vultures_parse_statusline(window * statuswin, const char * str);
 extern window * vultures_get_window_from_point(window * topwin, point mouse);
 extern void vultures_win_resize(int width, int height);
 extern void vultures_show_mainmenu(void);
 
 
 /* exported variables */
-extern Uint32 vultures_message_colors[V_MAX_MESSAGE_COLORS];
-extern Uint32 vultures_warn_colors[V_MAX_WARN];
+// extern Uint32 vultures_message_colors[V_MAX_MESSAGE_COLORS];
 extern vultures_window_graphics vultures_winelem;
 extern int vultures_suppress_helpmsg;
 extern int vultures_winid_map;

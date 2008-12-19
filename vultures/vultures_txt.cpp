@@ -5,11 +5,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "SDL.h"
+#include <SDL.h>
 #include "SDL_ttf.h"
+
 #include "vultures_txt.h"
-#include "vultures_gen.h"
-#include "vultures_win.h"
 
 #define VULTURES_MAX_FONTS  2
 

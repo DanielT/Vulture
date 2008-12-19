@@ -13,6 +13,7 @@
 
 #include "vultures_types.h"
 #include "vultures_tile.h"
+#include "vultures_win.h"
 #include "vultures_gra.h"
 #include "vultures_gfl.h"
 #include "vultures_map.h"

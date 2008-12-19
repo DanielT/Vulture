@@ -2,9 +2,8 @@
 #define _scrollwin_h_
 
 #include "window.h"
-#include "scrollbar.h"
 
-
+class scrollbar;
 
 enum scrolltypes {
 	V_SCROLL_LINE_REL,

@@ -15,7 +15,9 @@ extern "C" {
 #include "messagewin.h"
 
 
+#include "vultures_win.h"
 #include "vultures_sdl.h"
+#include "vultures_gra.h"
 #include "vultures_opt.h"
 #include "vultures_tile.h"
 #include "vultures_map.h"
@@ -31,7 +33,13 @@ extern "C" {
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 
+#define VULTURES_CLIPMARGIN 200
+
+
 levelwin *levwin;
+int vultures_map_draw_msecs = 0;
+int vultures_map_draw_lastmove = 0;
+int vultures_map_highlight_objects = 0;
 
 
 levelwin::levelwin() : window(NULL)
@@ -300,7 +308,7 @@ bool levelwin::draw()
 
 
 	/* prevent double redraws if the map view just moved under the mouse cursor */
-	vultures_map_highlight = mouse_to_map(vultures_get_mouse_pos());
+	map_highlight = mouse_to_map(vultures_get_mouse_pos());
 
 	/* coords of the top right corner */
 	map_tr_x = (-V_MAP_YMOD * (map_centre_x + 50) + V_MAP_XMOD * (map_centre_y + 50) +
@@ -388,7 +396,7 @@ bool levelwin::draw()
 				continue;
 
 			if (vultures_opts.highlight_cursor_square && 
-				(j == vultures_map_highlight.x && i == vultures_map_highlight.y))
+				(j == map_highlight.x && i == map_highlight.y))
 				vultures_put_tile(x, y, V_MISC_FLOOR_HIGHLIGHT);
 
 			/* 3. Floor edges */
@@ -658,16 +666,16 @@ eventresult levelwin::event_handler(window* target, void* result, SDL_Event* eve
 			/* if the highlight option is on, store the map position of the mouse
 			* and refresh the current and previous positions */
 			if (vultures_opts.highlight_cursor_square && 
-				(vultures_map_highlight.x != mappos.x || vultures_map_highlight.y != mappos.y))
+				(map_highlight.x != mappos.x || map_highlight.y != mappos.y))
 			{
-				mouse = map_to_mouse(vultures_map_highlight);
+				mouse = map_to_mouse(map_highlight);
 				add_to_clipregion(mouse.x - V_MAP_XMOD, mouse.y - V_MAP_YMOD,
 				                  mouse.x + V_MAP_XMOD, mouse.y + V_MAP_YMOD);
 				mouse = map_to_mouse(mappos);
 				add_to_clipregion(mouse.x - V_MAP_XMOD, mouse.y - V_MAP_YMOD,
 				                  mouse.x + V_MAP_XMOD, mouse.y + V_MAP_YMOD);
 
-				vultures_map_highlight = mappos;
+				map_highlight = mappos;
 				need_redraw = 1;
 				return V_EVENT_HANDLED_REDRAW;
 			}

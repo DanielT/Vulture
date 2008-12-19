@@ -7,6 +7,24 @@
 #include "SDL_ttf.h"
 
 
+/* Font indices. Currently, there're only 2 fonts (large & small). */
+#define V_FONT_SMALL 0
+#define V_FONT_LARGE 1
+#define V_FONT_INTRO     V_FONT_LARGE
+#define V_FONT_MENU      V_FONT_SMALL
+#define V_FONT_HEADLINE  V_FONT_LARGE
+#define V_FONT_BUTTON    V_FONT_LARGE
+#define V_FONT_TOOLTIP   V_FONT_SMALL
+#define V_FONT_STATUS    V_FONT_SMALL
+#define V_FONT_MESSAGE   V_FONT_SMALL
+#define V_FONT_INPUT     V_FONT_SMALL
+
+/*
+* colors used to draw text
+*/
+#define V_COLOR_TEXT       0xffffffff
+#define V_COLOR_INTRO_TEXT 0xffffffff
+
 /*---------------------------------------------------------------------------
  Text displaying
 ---------------------------------------------------------------------------*/

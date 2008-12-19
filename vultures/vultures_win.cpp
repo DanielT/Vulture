@@ -1,8 +1,7 @@
-/* Copyright (c) Daniel Thaler, 2006				  */
+/* Copyright (c) Daniel Thaler, 2006, 2008				  */
 /* NetHack may be freely redistributed.  See license for details. */
 
 #include <ctype.h>
-
 #include "SDL.h"
 
 extern "C" {
@@ -16,8 +15,10 @@ extern "C" {
 #include "vultures_main.h"
 #include "vultures_opt.h"
 
-
-#include "window_types.h"
+#include "winclass/button.h"
+#include "winclass/enhancebutton.h"
+#include "winclass/inputdialog.h"
+#include "winclass/levelwin.h"
 
 #define V_EVENTSTACK_SIZE 32
 
@@ -33,9 +34,6 @@ int vultures_invrects_max = 0;
 
 /*********************************/
 
-Uint32 vultures_message_colors[V_MAX_MESSAGE_COLORS];
-Uint32 vultures_warn_colors[V_MAX_WARN];
-
 vultures_window_graphics vultures_winelem; /* contains borders, background, etc */
 
 int vultures_windows_inited = 0;
@@ -43,7 +41,6 @@ int vultures_suppress_helpmsg;
 int vultures_winid_map = 0;
 int vultures_winid_minimap = 0;
 int vultures_whatis_singleshot = 0;
-
 
 vultures_event * vultures_eventstack = NULL;
 int vultures_eventstack_top;

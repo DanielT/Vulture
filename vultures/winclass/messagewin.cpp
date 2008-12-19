@@ -16,10 +16,14 @@ extern "C" {
 
 
 messagewin *msgwin;
+static Uint32 message_colors[V_MAX_MESSAGE_COLORS];
 
 
 messagewin::messagewin(window *p) : window(p)
 {
+	int i;
+	Uint32 color;
+
 	nh_type = NHW_MESSAGE;
 	v_type = V_WINTYPE_CUSTOM;
 	
@@ -36,6 +40,12 @@ messagewin::messagewin(window *p) : window(p)
 	message_cur = -1;
 	
 	msgwin = this;
+	
+	/* Set message shading */
+	for (i = 0; i < V_MAX_MESSAGE_COLORS; i++) {
+		color = 255 - (i * 11);
+		message_colors[i] = SDL_MapRGB(vultures_px_format, color, color, color);
+	}
 }
 
 
@@ -67,8 +77,7 @@ bool messagewin::draw()
 	refresh_h = refresh_w = 0;
 
 	/* repaint background and free it */
-	if (background)
-	{
+	if (background) {
 		vultures_put_img(abs_x, abs_y, background);
 		SDL_FreeSurface(background);
 		background = NULL;
@@ -112,12 +121,10 @@ bool messagewin::draw()
 	vultures_set_draw_region(abs_x, abs_y,
 						abs_x + w-1, abs_y + h-1);
 	pos_y = abs_y;
-	while (pos_y <= abs_y + h)
-	{
+	while (pos_y <= abs_y + h) {
 		pos_x = abs_x;
 
-		while (pos_x <= abs_x+w)
-		{
+		while (pos_x <= abs_x+w) {
 			vultures_put_img(pos_x, pos_y, bg_img);
 			pos_x += bg_img->w;
 		}
@@ -127,14 +134,13 @@ bool messagewin::draw()
 
 
 	/* draw the messages */
-	for (i = 0; i < num_messages; i++)
-	{
+	for (i = 0; i < num_messages; i++) {
 		message = get_message(num_messages - i - 1, &age);
 
 		pos_x = abs_x + (w - vultures_text_length(V_FONT_MESSAGE, message)) / 2;
 		pos_y = abs_y + i * (vultures_get_lineheight(V_FONT_MESSAGE) + 1);
 		vultures_put_text(V_FONT_MESSAGE, message, vultures_screen,
-						pos_x, pos_y, vultures_message_colors[time_cur-age]);
+						pos_x, pos_y, message_colors[time_cur-age]);
 	}
 
 	refresh_w = (refresh_w > w) ? refresh_w : w;

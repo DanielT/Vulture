@@ -3,22 +3,14 @@
 
 #ifndef _vultures_types_h_
 #define _vultures_types_h_
+
+#include <SDL.h>
 /*
  * This file is meant to be a place to put structure declarations
  * and enums that have global importance.
  * 
  * In the interest of modularization THIS FILE SHOULD NOT EXPORT FUNCTIONS
  */
-
-#include <SDL.h>
-
-
-
-#define V_LISTITEM_WIDTH  300
-#define V_LISTITEM_HEIGHT  52
-
-
-
 typedef struct { 
     /* image data (width & height encoded in first 4 bytes) */
     SDL_Surface *graphic;

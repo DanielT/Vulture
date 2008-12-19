@@ -19,7 +19,6 @@
 #include "vultures_win.h"
 #include "vultures_sdl.h"
 
-
 #include "winclass/messagewin.h"
 
 #define PNG_BYTES_TO_CHECK 4

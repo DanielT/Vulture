@@ -1,12 +1,12 @@
 #ifndef _messagewin_h_
 #define _messagewin_h_
 
-
 #include "window.h"
 
+/* Message shading: old messages grow darker */
+#define V_MAX_MESSAGE_COLORS 16
 
 #define V_MESSAGEBUF_SIZE 512
-
 
 
 class messagewin : public window

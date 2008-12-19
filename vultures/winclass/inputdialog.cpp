@@ -5,6 +5,7 @@
 #include "vultures_tile.h"
 
 #include "inputdialog.h"
+#include "textwin.h"
 
 
 inputdialog::inputdialog(window *p, const char *ques, int size) : mainwin(p)

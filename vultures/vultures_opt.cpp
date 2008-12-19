@@ -18,8 +18,7 @@
 #include "vultures_tile.h"
 #include "vultures_sdl.h"
 
-
-#include "window_types.h"
+#include "winclass/levelwin.h"
 
 enum interface_opts_menu_ids {
 	V_IOMID_RECENTER = 1,

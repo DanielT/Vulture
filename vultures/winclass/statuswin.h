@@ -5,6 +5,17 @@
 
 #define V_FILENAME_STATUS_BAR           "statusbar"
 
+/* Indices into warning colors */
+enum vultures_warn_type {
+	V_WARN_NONE = 0,
+	V_WARN_NORMAL,
+	V_WARN_MORE,
+	V_WARN_ALERT,
+	V_WARN_CRITICAL,
+	V_MAX_WARN
+};
+
+
 class textwin;
 
 class statuswin : public window
@@ -20,7 +31,6 @@ private:
 	void add_cond(const char *str, int warnno, int color);
 	SDL_Surface *statusbg;
 	textwin *tokenarray[5][5];
-// 	const int status_xpos[5];
 };
 
 extern statuswin *stwin;

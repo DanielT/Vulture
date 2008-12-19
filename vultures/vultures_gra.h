@@ -6,7 +6,6 @@
 #define _vultures_gra_h_
 
 #include <SDL.h>
-#include "vultures_types.h"
 
 #define vultures_rect(x1,y1,x2,y2,cindex)      vultures_rect_surface(vultures_screen,x1,y1,x2,y2,cindex)
 #define vultures_fill_rect(x1,y1,x2,y2,cindex) vultures_fill_rect_surface(vultures_screen,x1,y1,x2,y2,cindex)
@@ -47,5 +46,7 @@ extern Uint32 CLR32_WHITE;
 extern Uint32 CLR32_BLESS_BLUE;
 extern Uint32 CLR32_CURSE_RED;
 extern Uint32 CLR32_GOLD_SHADE;
+
+#define V_COLOR_BACKGROUND CLR32_BLACK
 
 #endif /* _vultures_gra_h_ */

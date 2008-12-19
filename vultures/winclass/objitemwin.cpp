@@ -1,5 +1,6 @@
 
 #include "vultures_win.h"
+#include "vultures_gra.h"
 #include "vultures_sdl.h"
 #include "vultures_mou.h"
 #include "vultures_map.h"

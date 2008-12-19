@@ -2,8 +2,8 @@
 #define _inputdialog_h_
 
 #include "mainwin.h"
-#include "textwin.h"
 
+class textwin;
 
 class inputdialog : public mainwin
 {

@@ -4,8 +4,6 @@
 #include <vector>
 #include <utility>
 
-#include "vultures_types.h"
-
 #include "window.h"
 
 

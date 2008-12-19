@@ -10,18 +10,15 @@
 #define _vultures_sdl_h_
 
 #include <SDL.h>
-#include "vultures_gra.h"
-
 
 #define SDL_TIMEREVENT SDL_USEREVENT
 #define SDL_MOUSEMOVEOUT (SDL_USEREVENT+1)
 
-
 /* low-level event handling */
-extern void vultures_wait_event(SDL_Event * event, int wait_timeout);
-extern int vultures_poll_event(SDL_Event * event);
-extern void vultures_wait_input(SDL_Event * event, int wait_timeout);
-extern void vultures_wait_key(SDL_Event * event);
+extern void vultures_wait_event(SDL_Event *event, int wait_timeout);
+extern int vultures_poll_event(SDL_Event *event);
+extern void vultures_wait_input(SDL_Event *event, int wait_timeout);
+extern void vultures_wait_key(SDL_Event *event);
 
 /* Graphics initialization and closing */
 extern void vultures_enter_graphics_mode(void);
@@ -32,7 +29,7 @@ extern void vultures_refresh(void);
 extern void vultures_refresh_region(int, int, int, int);
 
 /* Miscellaneous */
-extern int vultures_convertkey_sdl2nh(SDL_keysym * keysym);
+extern int vultures_convertkey_sdl2nh(SDL_keysym *keysym);
 extern void vultures_set_screensize(void);
 
 

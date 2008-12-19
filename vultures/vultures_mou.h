@@ -4,8 +4,6 @@
 #ifndef _vultures_mou_h_
 #define _vultures_mou_h_
 
-#include "vultures_types.h"
-
 extern void vultures_mouse_init(void);
 extern void vultures_mouse_destroy(void);
 
@@ -21,6 +19,8 @@ extern void vultures_mouse_restore_bg();
 /* tooltip handling functions */
 extern void vultures_mouse_invalidate_tooltip(int force);
 extern void vultures_mouse_set_tooltip(char * str);
+
+
 
 
 #endif

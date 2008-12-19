@@ -320,9 +320,6 @@ static void vultures_show_intro(const char *introscript_name)
 
 static void vultures_init_colors()
 {
-	int i;
-	Uint32 color;
-
 	/* set up the colors used in the game
 	* the only good way to do this without needing graphics to have been loaded first
 	* is to create a surface here which we then put into display format + alpha ourselves */
@@ -335,13 +332,6 @@ static void vultures_init_colors()
 
 	SDL_FreeSurface(reformatted);
 	SDL_FreeSurface(pixel);
-
-	/* Set message shading */
-	for (i = 0; i < V_MAX_MESSAGE_COLORS; i++)
-	{
-		color = 255 - (i * 11);
-		vultures_message_colors[i] = SDL_MapRGB(vultures_px_format, color, color, color);
-	}
 
 	CLR32_BLACK      = SDL_MapRGBA(vultures_px_format, 0,0,0, 0xff);
 	CLR32_BLACK_A30  = SDL_MapRGBA(vultures_px_format, 0,0,0, 0x50);
@@ -362,13 +352,6 @@ static void vultures_init_colors()
 	CLR32_BLESS_BLUE = SDL_MapRGBA(vultures_px_format, 0x96, 0xdc, 0xfe, 0x60);
 	CLR32_CURSE_RED  = SDL_MapRGBA(vultures_px_format, 0x60, 0x00, 0x00, 0x50);
 	CLR32_GOLD_SHADE = SDL_MapRGBA(vultures_px_format, 0xf0, 0xe0, 0x57, 0x40);
-
-	/* Set warning colors */
-	vultures_warn_colors[V_WARN_NONE] = V_COLOR_TEXT;
-	vultures_warn_colors[V_WARN_NORMAL] = CLR32_GREEN;
-	vultures_warn_colors[V_WARN_MORE] = CLR32_YELLOW;
-	vultures_warn_colors[V_WARN_ALERT] = CLR32_ORANGE;
-	vultures_warn_colors[V_WARN_CRITICAL] = CLR32_RED;
 }
 
 

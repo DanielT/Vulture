@@ -1,13 +1,9 @@
 #ifndef _levelwin_h_
 #define _levelwin_h_
 
-#include "window.h"
-
-#include "vultures_types.h"
 #include "vultures_tile.h"
-
-
-/* Map dimensions in glyphs */
+#include "vultures_types.h"
+#include "window.h"
 
 /* 
  * Tile drawing: pixel coordinate difference from a square to
@@ -16,7 +12,6 @@
  */
 #define V_MAP_XMOD 56
 #define V_MAP_YMOD 22
-
 
 #define V_FILENAME_TOOLBAR1             "tb1"
 #define V_FILENAME_TOOLBAR2             "tb2"
@@ -123,6 +118,7 @@ private:
 	int vultures_map_pet[ROWNO][COLNO]; /* special attributes, we use them to highlight the pet */
 	unsigned char vultures_map_deco[ROWNO][COLNO];     /* positions of murals and carpets */
 	int vultures_map_swallow; /* the engulf tile, if any */
+	point map_highlight;
 
 	/* pointer to full height, half height or transparent walltile array */
 	struct walls *walltiles;
@@ -142,5 +138,8 @@ private:
 
 
 extern levelwin *levwin;
+extern int vultures_map_draw_lastmove;
+extern int vultures_map_draw_msecs;
+extern int vultures_map_highlight_objects;
 
 #endif

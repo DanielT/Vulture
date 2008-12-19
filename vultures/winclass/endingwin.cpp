@@ -23,7 +23,7 @@ endingwin::endingwin(int how) : menuwin()
 bool endingwin::draw()
 {
 	int lines;
-	point textpos;
+	int textpos_x, textpos_y;
 	SDL_Surface *image;
 
 	if (!flags.tombstone) {
@@ -76,17 +76,17 @@ bool endingwin::draw()
 	lines++;
 
 	/* Display the rows */
-	textpos.y = vultures_screen->h - (lines+1) * vultures_get_lineheight(V_FONT_INTRO);
+	textpos_y = vultures_screen->h - (lines+1) * vultures_get_lineheight(V_FONT_INTRO);
 	for (item_iterator i = items.begin(); i != items.end(); ++i) {
-		textpos.x = (vultures_screen->w - vultures_text_length(V_FONT_INTRO, (*i)->str))/2;
-		vultures_put_text_shadow(V_FONT_INTRO, (*i)->str, vultures_screen, textpos.x,
-								textpos.y, V_COLOR_INTRO_TEXT, V_COLOR_BACKGROUND);
-		textpos.y += vultures_get_lineheight(V_FONT_INTRO);
+		textpos_x = (vultures_screen->w - vultures_text_length(V_FONT_INTRO, (*i)->str))/2;
+		vultures_put_text_shadow(V_FONT_INTRO, (*i)->str, vultures_screen, textpos_x,
+								textpos_y, V_COLOR_INTRO_TEXT, V_COLOR_BACKGROUND);
+		textpos_y += vultures_get_lineheight(V_FONT_INTRO);
 	}
 
-	textpos.x = (vultures_screen->w - vultures_text_length(V_FONT_INTRO, "(press any key)"))/2;
-	vultures_put_text_shadow(V_FONT_INTRO, "(press any key)", vultures_screen, textpos.x,
-							textpos.y, V_COLOR_INTRO_TEXT, V_COLOR_BACKGROUND);
+	textpos_x = (vultures_screen->w - vultures_text_length(V_FONT_INTRO, "(press any key)"))/2;
+	vultures_put_text_shadow(V_FONT_INTRO, "(press any key)", vultures_screen, textpos_x,
+							textpos_y, V_COLOR_INTRO_TEXT, V_COLOR_BACKGROUND);
 
 	vultures_refresh();
 	return false;

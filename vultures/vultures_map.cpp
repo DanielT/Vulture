@@ -5,23 +5,8 @@
 
 #include "vultures_win.h"
 #include "vultures_map.h"
-#include "vultures_gfl.h"
-#include "vultures_tile.h"
-#include "vultures_tileconfig.h"
-#include "vultures_gra.h"
-#include "vultures_sdl.h"
-#include "vultures_main.h"
-#include "vultures_tile.h"
-#include "vultures_txt.h"
-#include "vultures_opt.h"
 #include "vultures_gen.h"
-#include "vultures_mou.h"
-
-
-#include "window_types.h"
-
-#define min(a, b) (((a) < (b)) ? (a) : (b))
-#define max(a, b) (((a) > (b)) ? (a) : (b))
+#include "winclass/levelwin.h"
 
 #include "epri.h"
 
@@ -33,7 +18,6 @@ extern "C" short glyph2tile[];
 #define META(c) (0x80 | (c))
 #define CTRL(c) (0x1f & (c))
 
-
 /* the only other cmaps beside furniture that have significant height and
 * therefore need to be drawn as part of the second pass with the furniture. */
 #define V_EXTRA_FURNITURE(typ) ((typ) == DOOR || \
@@ -42,63 +26,29 @@ extern "C" short glyph2tile[];
 								(typ) == TREE)
 
 
-
-
-/*----------------------------
-* global variables
-*---------------------------- */
-
-
 static int * vultures_tilemap_engulf;
-
-
-int vultures_map_draw_msecs = 0;
-int vultures_map_draw_lastmove = 0;
-point vultures_map_highlight = {-1, -1};
-
-int vultures_map_highlight_objects = 0;
-
-
 static int vultures_tilemap_misc[MAXPCHARS];
 
 
-/*----------------------------
-* pre-declared functions
-*---------------------------- */
 static int vultures_monster_to_tile(int mon_id, XCHAR_P x, XCHAR_P y);
 static char vultures_mappos_to_dirkey(point mappos);
 static void vultures_build_tilemap(void);
 
 
 
-
-/*****************************************************************************
-* 1) Initializer and destructor
-*****************************************************************************/
-
 int vultures_init_map(void)
 {
-
 	/* build vultures_tilemap_misc and vultures_tilemap_engulf */
 	vultures_build_tilemap();
 
 	return 1;
 }
 
-
-
 void vultures_destroy_map(void)
 {
-
 	/* free nethack to vultures translation tables */
 	free (vultures_tilemap_engulf);
-
 }
-
-
-/*****************************************************************************
-* 3) Setting map data
-*****************************************************************************/
 
 
 
@@ -451,12 +401,6 @@ void vultures_print_glyph(winid window, XCHAR_P x, XCHAR_P y, int glyph)
 }
 
 
-
-/*****************************************************************************
-* 5) Interface functions for windowing
-*****************************************************************************/
-
-
 /* convert an action_id into an actual key to be passed to nethack to perform the action */
 int vultures_perform_map_action(int action_id, point mappos)
 {
@@ -537,11 +481,6 @@ int vultures_perform_map_action(int action_id, point mappos)
 }
 
 
-
-
-/*****************************************************************************
-* 6) misc utility functions
-*****************************************************************************/
 
 int vultures_object_to_tile(int obj_id, int x, int y, struct obj *in_obj)
 {

@@ -25,6 +25,17 @@
 #define V_LOG_WRITE_NOTE 1
 #define V_LOG_WRITE_DEBUG 0
 
+/*
+* Subdirectories used by Vulture's.
+* These should be under the main directory.
+*/
+#define V_CONFIG_DIRECTORY   "config"
+#define V_GRAPHICS_DIRECTORY "graphics"
+#define V_SOUND_DIRECTORY    "sound"
+#define V_MUSIC_DIRECTORY    "music"
+#define V_MANUAL_DIRECTORY   "manual"
+#define V_FONTS_DIRECTORY    "fonts"
+
 #define OOM(do_exit) vultures_oom(do_exit, __FILE__, __LINE__)
 
 extern char *vultures_basename(const char *filename);
