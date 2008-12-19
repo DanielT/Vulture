@@ -17,6 +17,12 @@ extern "C" {
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 
 
+menuwin::menuwin()
+{
+	scrollarea = NULL;
+	count = 0;
+}
+
 menuwin::menuwin(window *p) : mainwin(p)
 {
 	v_type = V_WINTYPE_MENU;
@@ -308,6 +314,10 @@ void menuwin::reset()
 	
 	scrollarea = NULL;
 	w = 0;
+	
+	if (background)
+		SDL_FreeSurface(background);
+	background = NULL;
 }
 
 
