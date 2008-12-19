@@ -16,7 +16,6 @@
 #include "vultures_main.h"
 #include "vultures_map.h"
 #include "vultures_tile.h"
-#include "vultures_win_event.h"
 #include "vultures_sdl.h"
 
 

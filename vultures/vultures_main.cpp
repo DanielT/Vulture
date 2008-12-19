@@ -36,7 +36,6 @@ extern "C" {
 #include "vultures_gfl.h"
 #include "vultures_gen.h"
 #include "vultures_win.h"
-#include "vultures_win_event.h"
 #include "vultures_map.h"
 #include "vultures_sdl.h"
 #include "vultures_init.h"
@@ -199,7 +198,7 @@ void vultures_init_nhwindows(int *argcp, char **argv)
 void vultures_exit_nhwindows(const char * str)
 {
 	/* destroy any surviving windows */
-	delete vultures_get_window(0);
+	delete ROOTWIN;
 
 	/* close the application window */
 	vultures_exit_graphics_mode();
