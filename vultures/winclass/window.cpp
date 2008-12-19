@@ -118,7 +118,7 @@ window::~window()
 		free(caption);
 
 	/* we may want to restore the background before deleting it */
-	if (visible && background != NULL && autobg) {
+	if (visible && background != NULL && autobg && (!parent || parent->visible)) {
 		vultures_put_img(abs_x, abs_y, background);
 		vultures_refresh_region(abs_x, abs_y,abs_x + w, abs_y + h);
 	}
