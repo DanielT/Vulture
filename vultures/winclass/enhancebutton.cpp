@@ -27,6 +27,11 @@ enhancebutton::enhancebutton(window *p) : window(p)
 	enhancebtn = this;
 }
 
+enhancebutton::~enhancebutton()
+{
+	SDL_FreeSurface(image);
+}
+
 bool enhancebutton::draw()
 {
 	vultures_set_draw_region(abs_x, abs_y, abs_x + w - 1, abs_y + h - 1);

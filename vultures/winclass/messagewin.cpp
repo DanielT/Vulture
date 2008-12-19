@@ -45,6 +45,8 @@ messagewin::~messagewin(void)
 	for (int i = 0; i < V_MESSAGEBUF_SIZE; i++)
 		if (message_buf[i])
 			free(message_buf[i]);
+	
+	SDL_FreeSurface(bg_img);
 }
 
 

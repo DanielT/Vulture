@@ -84,7 +84,7 @@ class window
 public:
 	window(window *p);
 	window();
-	~window();
+	virtual ~window();
 
 	virtual bool draw() = 0;
 	virtual eventresult event_handler(window* target, void* result, SDL_Event* event) = 0;

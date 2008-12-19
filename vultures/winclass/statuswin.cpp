@@ -15,6 +15,7 @@ extern const char *const enc_stat[];   /* defined in botl.c */
 
 #include "statuswin.h"
 #include "enhancebutton.h"
+#include "textwin.h"
 
 statuswin *stwin;
 const int status_xpos[5] = { 0, 60, 100, 180, 250};
@@ -56,6 +57,12 @@ statuswin::statuswin(window *p) : window(p)
 	tokenarray[0][0]->w = 250;
 	
 	stwin = this;
+}
+
+
+statuswin::~statuswin()
+{
+	SDL_FreeSurface(statusbg);
 }
 
 

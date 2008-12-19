@@ -32,6 +32,10 @@ toolbar::toolbar(window *p, int menuid, bool visible, int x, int y, const char *
 
 }
 
+toolbar::~toolbar()
+{
+	SDL_FreeSurface(bgimage);
+}
 
 bool toolbar::draw()
 {

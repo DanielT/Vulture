@@ -13,6 +13,7 @@ class enhancebutton : public window
 {
 public:
 	enhancebutton(window *p);
+	virtual ~enhancebutton();
 	virtual bool draw();
 	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
 	void check_enhance(void);

@@ -2,15 +2,16 @@
 #define _statuswin_h_
 
 #include "window.h"
-#include "textwin.h"
 
 #define V_FILENAME_STATUS_BAR           "statusbar"
 
+class textwin;
 
 class statuswin : public window
 {
 public:
 	statuswin(window *p);
+	virtual ~statuswin();
 	virtual bool draw();
 	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
 	void parse_statusline(const char *str);

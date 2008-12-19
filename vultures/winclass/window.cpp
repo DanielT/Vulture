@@ -25,6 +25,9 @@ window::window(window *p) : parent(p)
 {
 	id = 0;
 	
+	if (windowcount != 0 && !parent)
+		printf("Treason uncloaked! New window is not parented to rootwin\n");
+	
 	/* if necessary make space in the vultures_windows array */
 	if (windowcount == windowcount_max)
 	{
@@ -77,7 +80,7 @@ window::~window()
 		vultures_windows[id] = NULL;
 		windowcount--;
 	}
-
+	
 	/* the root window has no parent */
 	if (parent) {
 		/* unlink the window everywhere */
@@ -101,6 +104,13 @@ window::~window()
 		if (!visible)
 			first_child->visible = 0;
 		delete first_child; // deleting a child will unlink it; eventually first_child will be NULL
+	}
+	
+	/* clean up after the last window is gone */
+	if (windowcount == 0) {
+		free(vultures_windows);
+		vultures_windows = NULL;
+		windowcount_max = 0;
 	}
 
 	/* free up alloced resources */
