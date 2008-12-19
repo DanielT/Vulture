@@ -426,7 +426,7 @@ int vultures_handle_global_event(SDL_Event * event)
 				vultures_unload_gametiles();
 				vultures_load_gametiles();
 				levwin->force_redraw();
-				vultures_draw_windows(vultures_get_window(0));
+				vultures_get_window(0)->draw_windows();
 				pline("tileconfig reloaded!");
 			}
 
@@ -442,7 +442,7 @@ int vultures_handle_global_event(SDL_Event * event)
 				levwin->force_redraw();
 
 				/* redraw with the object highlight */
-				vultures_draw_windows(vultures_get_window(0));
+				vultures_get_window(0)->draw_windows();
 
 				/* the mouse got painted over, restore it */
 				vultures_mouse_draw();
@@ -466,7 +466,7 @@ int vultures_handle_global_event(SDL_Event * event)
 				levwin->force_redraw();
 
 				/* redraw without the object highlight */
-				vultures_draw_windows(vultures_get_window(0));
+				vultures_get_window(0)->draw_windows();
 
 				/* the mouse got painted over, restore it */
 				vultures_mouse_draw();

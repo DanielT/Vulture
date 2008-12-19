@@ -251,3 +251,131 @@ window* window::find_accel(char accel)
     return NULL;
 }
 
+
+/****************************
+* window drawing functions
+****************************/
+/* walks the list of windows and draws all of them, depending on their type and status */
+void window::draw_windows()
+{
+	bool descend = true;
+	bool invalid = false;
+	window *current = this;
+
+	update_background();
+
+	if (need_redraw && !draw()) {
+		/* draw() == 0 means that the window took care of
+		 * redrawing it's children itself */
+		need_redraw = false;
+		return;
+	}
+
+	need_redraw = false;
+
+	do {
+		current = current->walk_winlist(&descend);
+
+		if (!current->visible) {
+			descend = false;
+			continue;
+		}
+
+		/* recalc absolute position */
+		if (current->parent) {
+			current->abs_x = current->parent->abs_x + current->x;
+			current->abs_y = current->parent->abs_y + current->y;
+		}
+
+		/* if the window intersects an invalid region, some window "underneath" it
+		 * painted over part of it; we need to refresh the saved background and redraw */
+		invalid = current->intersects_invalid();
+
+		if (current->need_redraw || (invalid && descend)) {
+			current->update_background();
+
+			/* setting descend = 0 will prevent the next call to vultures_walk_winlist
+			 * from descending to a child window. The window's draw() function can choose
+			 * to let us redraw it's children from here by returning 1 */
+			descend = current->draw();
+
+			current->need_redraw = 0;
+		}
+	/* vultures_walk_winlist will eventually arive back at the top window */
+	} while (current != this);
+}
+
+
+window *window::walk_winlist(bool *descend)
+{
+	/* 1) try to descend to child */
+	if (*descend && first_child)
+		return first_child;
+
+	/* 2) try sibling*/
+	if (sib_next) {
+		*descend = true;
+		return sib_next;
+	}
+
+	/* 3) ascend to parent and set *descend = false to prevent infinite loops */
+	*descend = false;
+	return parent;
+}
+
+
+/* find the window under the mouse, starting from here */
+window *window::get_window_from_point(point mouse)
+{
+	window *winptr, *nextwin;
+
+	winptr = this;
+
+	/* as each child window is completely contained by its parent we can descend
+	* into every child window that is under the cursor until no further descent
+	* is possible. The child lists are traversed in reverse because newer child
+	* windows are considered to be on top if child windows overlap */
+	while (winptr->last_child) {
+		nextwin = winptr->last_child;
+
+		while (nextwin && (nextwin->abs_x > mouse.x || nextwin->abs_y > mouse.y ||
+						(nextwin->abs_x + nextwin->w) < mouse.x ||
+						(nextwin->abs_y + nextwin->h) < mouse.y || !nextwin->visible))
+			nextwin = nextwin->sib_prev;
+
+		if (nextwin)
+			winptr = nextwin;
+		else
+			return winptr;
+	}
+	return winptr;
+}
+
+
+/* determine whether a window intersects an invalid region */
+bool window::intersects_invalid()
+{
+	int i;
+	int x1, y1, x2, y2;
+
+	for (i = 0; i < vultures_invrects_num; i++) {
+		/* check intersection with each invalid rect */
+		if (abs_x > (vultures_invrects[i].x + vultures_invrects[i].w) ||
+			abs_y > (vultures_invrects[i].y + vultures_invrects[i].h) ||
+			(abs_x + w) < vultures_invrects[i].x ||
+			(abs_y + h) < vultures_invrects[i].y)
+			continue;
+
+		x1 = (abs_x > vultures_invrects[i].x) ? abs_x : vultures_invrects[i].x;
+		y1 = (abs_y > vultures_invrects[i].y) ? abs_y : vultures_invrects[i].y;
+		x2 = (abs_x + w > vultures_invrects[i].x + vultures_invrects[i].w) ?
+				vultures_invrects[i].x + vultures_invrects[i].w : abs_x + w;
+		y2 = (abs_y + h > vultures_invrects[i].y + vultures_invrects[i].h) ?
+				vultures_invrects[i].y + vultures_invrects[i].h : abs_y + h;
+
+		if (x1 < x2 && y1 < y2)
+			return true;
+	}
+
+	return false;
+}

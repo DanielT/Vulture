@@ -168,7 +168,7 @@ eventresult messagewin::event_handler(window* target, void* result, SDL_Event* e
 		return V_EVENT_HANDLED_NOREDRAW;
 
 	mouse = vultures_get_mouse_pos();
-	new_target = vultures_get_window_from_point(levwin, mouse);
+	new_target = levwin->get_window_from_point(mouse);
 
 	return levwin->event_handler(new_target, result, event);
 }

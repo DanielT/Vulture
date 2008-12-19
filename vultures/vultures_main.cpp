@@ -290,7 +290,7 @@ static void vultures_display_nhmap(struct window * win, vultures_event *result, 
 		}
 		else
 		{
-			vultures_draw_windows(win);
+			win->draw_windows();
 			vultures_refresh_window_region();
 		}
 	}
@@ -356,7 +356,7 @@ void vultures_display_nhwindow(int winid, BOOLEAN_P blocking)
 			win->need_redraw = 1;
 			/* we need to actually draw here so that we get output even when the
 			* message window isn't on the current drawing loop */
-			vultures_draw_windows(win);
+			win->draw_windows();
 			vultures_refresh_window_region();
 			break;
 
@@ -831,7 +831,7 @@ int vultures_doprev_message(void)
 
 	messages = vultures_get_window(WIN_MESSAGE);
 	messages->need_redraw = 1;
-	vultures_draw_windows(messages);
+	messages->draw_windows();
 	vultures_refresh_window_region();
 
 	return 0;

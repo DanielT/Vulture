@@ -3,6 +3,7 @@
 
 
 #include <SDL.h>
+#include "vultures_types.h"
 
 #define ROOTWIN vultures_get_window(0)
 
@@ -103,6 +104,11 @@ public:
 	int get_nh_type() { return nh_type; };
 	int get_id() { return id; };
 	void *get_menu_id() { return menu_id_v; };
+	
+	void draw_windows();
+	window *walk_winlist(bool *descend);
+	window *get_window_from_point(point mouse);
+	bool intersects_invalid();
 
 	int get_w() { return w; }
 	int get_h() { return h; }

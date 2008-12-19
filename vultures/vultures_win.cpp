@@ -50,10 +50,6 @@ int vultures_eventstack_top;
 * function pre-declarations
 ******************************************************************************/
 
-struct window * vultures_walk_winlist(struct window *win, bool *descend);
-
-int vultures_intersects_invalid(struct window * win);
-
 static int vultures_event_dispatcher_core(SDL_Event * event, void * result, struct window * topwin);
 static int vultures_handle_event(struct window * topwin, struct window * win,
 								void * result, SDL_Event * event, int * redraw);
@@ -173,11 +169,11 @@ void vultures_event_dispatcher(void * result, int resulttype, struct window * to
 	memset(&event, 0, sizeof(event));
 	event.type = SDL_MOUSEMOTION;
 	mouse = vultures_get_mouse_pos();
-	win = vultures_get_window_from_point(topwin, mouse);
+	win = topwin->get_window_from_point(mouse);
 	vultures_handle_event(topwin, win, result, &event, &redraw);
 
 	/* draw windows, if necessary */
-	vultures_draw_windows(topwin);
+	topwin->draw_windows();
 	vultures_mouse_draw();
 	vultures_refresh_window_region();
 	vultures_mouse_refresh();
@@ -208,7 +204,7 @@ int vultures_event_dispatcher_nonblocking(void * result, struct window * topwin)
 	vultures_mouse_invalidate_tooltip(1);
 
 	/* draw windows, if necessary */
-	vultures_draw_windows(topwin);
+	topwin->draw_windows();
 	vultures_mouse_draw();
 	vultures_refresh_window_region();
 	vultures_mouse_refresh();
@@ -253,7 +249,7 @@ static int vultures_event_dispatcher_core(SDL_Event * event, void * result, stru
 	else {
 		/* find out what window the mouse is over now */
 		mouse = vultures_get_mouse_pos();
-		win = vultures_get_window_from_point(topwin, mouse);
+		win = topwin->get_window_from_point(mouse);
 
 		/* All other events belong to the window under the mouse cursor */
 		if (event->type == SDL_MOUSEMOTION) {
@@ -262,7 +258,7 @@ static int vultures_event_dispatcher_core(SDL_Event * event, void * result, stru
 			vultures_mouse_invalidate_tooltip(0);
 
 			/* notify the window the mouse got moved out of */
-			win_old = vultures_get_window_from_point(topwin, mouse_old);
+			win_old = topwin->get_window_from_point(mouse_old);
 			if (win_old && win != win_old && win_old != win->parent) {
 				event->type = SDL_MOUSEMOVEOUT;
 				event_result = vultures_handle_event(topwin, win_old, result, event, &redraw);
@@ -279,7 +275,7 @@ static int vultures_event_dispatcher_core(SDL_Event * event, void * result, stru
 	}
 
 	if (redraw)
-		vultures_draw_windows(topwin);
+		topwin->draw_windows();
 
 	if (redraw || event->type != SDL_TIMEREVENT ||
 		(hovertime > HOVERTIMEOUT && hovertime_prev < HOVERTIMEOUT))
@@ -376,110 +372,6 @@ void vultures_eventstack_destroy(void)
 }
 
 
-
-/****************************
-* window drawing functions 
-****************************/
-/* walks the list of windows and draws all of them, depending on their type and status */
-void vultures_draw_windows(window *topwin)
-{
-	bool descend = true;
-	bool invalid = false;
-	window *current = topwin;
-
-	current->update_background();
-
-	if (topwin->need_redraw && !topwin->draw()) {
-		/* topwin->draw() == 0 means that the window took care of
-		 * redrawing it's children itself */
-		topwin->need_redraw = false;
-		return;
-	}
-
-	topwin->need_redraw = 0;
-
-	do {
-		current = vultures_walk_winlist(current, &descend);
-
-		if (!current->visible) {
-			descend = false;
-			continue;
-		}
-
-		/* recalc absolute position */
-		if (current->parent) {
-			current->abs_x = current->parent->abs_x + current->x;
-			current->abs_y = current->parent->abs_y + current->y;
-		}
-
-		/* if the window intersects an invalid region, some window "underneath" it
-		 * painted over part of it; we need to refresh the saved background and redraw */
-		invalid = vultures_intersects_invalid(current);
-
-		if (current->need_redraw || (invalid && descend)) {
-			current->update_background();
-
-			/* setting descend = 0 will prevent the next call to vultures_walk_winlist
-			 * from descending to a child window. The window's draw() function can choose
-			 * to let us redraw it's children from here by returning 1 */
-			descend = current->draw();
-
-			current->need_redraw = 0;
-		}
-	/* vultures_walk_winlist will eventually arive back at the top window */
-	} while (current != topwin);
-}
-
-
-/*********************************
-* misc utility functions
-*********************************/
-
-window *vultures_walk_winlist(struct window *win, bool *descend)
-{
-	/* 1) try to descend to child */
-	if (*descend && win->first_child)
-		return win->first_child;
-
-	/* 2) try sibling*/
-	if (win->sib_next) {
-		*descend = true;
-		return win->sib_next;
-	}
-
-	/* 3) ascend to parent and set *descend = false to prevent infinite loops */
-	*descend = false;
-	return win->parent;
-}
-
-
-/* find the window under the mouse, starting from topwin */
-window *vultures_get_window_from_point(window *topwin, point mouse)
-{
-	window *winptr, *nextwin;
-
-	winptr = topwin;
-
-	/* as each child window is completely contained by its parent we can descend
-	* into every child window that is under the cursor until no further descent
-	* is possible. The child lists are traversed in reverse because newer child
-	* windows are considered to be on top if child windows overlap */
-	while (winptr->last_child) {
-		nextwin = winptr->last_child;
-
-		while (nextwin && (nextwin->abs_x > mouse.x || nextwin->abs_y > mouse.y ||
-						(nextwin->abs_x + nextwin->w) < mouse.x ||
-						(nextwin->abs_y + nextwin->h) < mouse.y || !nextwin->visible))
-			nextwin = nextwin->sib_prev;
-
-		if (nextwin)
-			winptr = nextwin;
-		else return winptr;
-	}
-	return winptr;
-}
-
-
 void vultures_invalidate_region(int x , int y, int w, int h)
 {
 	int i;
@@ -551,35 +443,6 @@ void vultures_refresh_window_region(void)
 }
 
 
-/* determine whether a window intersects an invalid region */
-int vultures_intersects_invalid(window *win)
-{
-	int i;
-	int x1, y1, x2, y2;
-
-	for (i = 0; i < vultures_invrects_num; i++) {
-		/* check intersection with each invalid rect */
-		if (win->abs_x > (vultures_invrects[i].x + vultures_invrects[i].w) ||
-			win->abs_y > (vultures_invrects[i].y + vultures_invrects[i].h) ||
-			(win->abs_x + win->w) < vultures_invrects[i].x ||
-			(win->abs_y + win->h) < vultures_invrects[i].y)
-			continue;
-
-		x1 = (win->abs_x > vultures_invrects[i].x) ? win->abs_x : vultures_invrects[i].x;
-		y1 = (win->abs_y > vultures_invrects[i].y) ? win->abs_y : vultures_invrects[i].y;
-		x2 = (win->abs_x + win->w > vultures_invrects[i].x + vultures_invrects[i].w) ?
-				vultures_invrects[i].x + vultures_invrects[i].w : win->abs_x + win->w;
-		y2 = (win->abs_y + win->h > vultures_invrects[i].y + vultures_invrects[i].h) ?
-				vultures_invrects[i].y + vultures_invrects[i].h : win->abs_y + win->h;
-
-		if (x1 < x2 && y1 < y2)
-			return 1;
-	}
-
-	return 0;
-}
-
-
 /* resize the vultures application window to the given width and height */
 void vultures_win_resize(int width, int height)
 {
@@ -596,9 +459,8 @@ void vultures_win_resize(int width, int height)
 
 	current->event_handler(current, &dummy, &event);
 
-	do
-	{
-		current = vultures_walk_winlist(current, &descend);
+	do {
+		current = current->walk_winlist(&descend);
 
 		current->event_handler(current, &dummy, &event);
 
@@ -613,7 +475,7 @@ void vultures_win_resize(int width, int height)
 	/* redraw everything */
 	levwin->force_redraw();
 
-	vultures_draw_windows(topwin);
+	topwin->draw_windows();
 	vultures_refresh_window_region();
 }
 

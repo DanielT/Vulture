@@ -88,7 +88,6 @@ extern int vultures_get_input(int x, int y, const char *ques, char *input);
 
 
 /* drawing functions */
-extern void vultures_draw_windows(window * topwin);
 extern void vultures_refresh_window_region(void);
 extern void vultures_invalidate_region(int, int, int, int);
 
@@ -104,18 +103,15 @@ extern void vultures_event_dispatcher(void * result, int resulttype, window * to
 extern int vultures_event_dispatcher_nonblocking(void * result, window * topwin);
 
 /* misc functions */
-extern window * vultures_get_window_from_point(window * topwin, point mouse);
 extern void vultures_win_resize(int width, int height);
 extern void vultures_show_mainmenu(void);
 
 
 /* exported variables */
-// extern Uint32 vultures_message_colors[V_MAX_MESSAGE_COLORS];
 extern vultures_window_graphics vultures_winelem;
 extern int vultures_suppress_helpmsg;
 extern int vultures_winid_map;
 extern int vultures_winid_minimap;
-// extern SDL_Surface * vultures_statusbar;
 extern int vultures_whatis_singleshot;
 extern int vultures_windows_inited;
 

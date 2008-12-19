@@ -399,7 +399,7 @@ eventresult scrollwin::event_handler(window* target, void* result, SDL_Event* ev
 			mouse = vultures_get_mouse_pos();
 			oldpos.x = mouse.x + event->motion.xrel;
 			oldpos.y = mouse.y + event->motion.yrel;
-			winelem = vultures_get_window_from_point(this, oldpos);
+			winelem = get_window_from_point(oldpos);
 
 			if (target->v_type == V_WINTYPE_SCROLLBAR && winelem == target)
 				return mousescroll(static_cast<scrollbar*>(target), 1);
