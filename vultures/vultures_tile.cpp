@@ -39,7 +39,7 @@ static vultures_tilecache_entry *vultures_tilecache;
 static SDL_Surface * vultures_ftshade1;
 static SDL_Surface * vultures_ftshade2;
 
-static struct gametiles *vultures_gametiles;
+static gametiles *vultures_gametiles;
 
 static vultures_tile *vultures_make_alpha_player_tile(int monnum, double op_scale);
 static inline vultures_tile * vultures_shade_tile(vultures_tile *orig, int shadelevel);
@@ -50,7 +50,7 @@ static inline void vultures_set_tile_alpha(vultures_tile *tile, double opacity);
 inline static void vultures_free_tile(vultures_tile *tile)
 {
 	SDL_FreeSurface(tile->graphic);
-	free(tile);
+	delete tile;
 }
 
 
@@ -173,10 +173,10 @@ vultures_tile * vultures_load_tile(int tile_id)
 	int fsize;
 
 	/* if data_len is 0 the tile doesn't have a graphic */
-	if (!vultures_gametiles[tile_id].filename)
+	if (vultures_gametiles[tile_id].filename.empty())
 		return NULL;
 
-	fp = fopen(vultures_gametiles[tile_id].filename, "rb");
+	fp = fopen(vultures_gametiles[tile_id].filename.c_str(), "rb");
 	if (!fp)
 		return NULL;
 
@@ -186,10 +186,10 @@ vultures_tile * vultures_load_tile(int tile_id)
 	rewind(fp);
 
 	/* load the tile */
-	data = (char *)malloc(fsize);
+	data = new char[fsize];
 	fread(data, fsize, 1, fp);
 
-	newtile = (vultures_tile *)malloc(sizeof(vultures_tile));
+	newtile = new vultures_tile;
 	if (!newtile)
 	{
 		free(data);
@@ -200,7 +200,7 @@ vultures_tile * vultures_load_tile(int tile_id)
 	newtile->xmod = vultures_gametiles[tile_id].hs_x;
 	newtile->ymod = vultures_gametiles[tile_id].hs_y;
 
-	free(data);
+	delete data;
 	fclose(fp);
 
 	if (TILE_IS_WALL(tile_id))
@@ -214,7 +214,7 @@ vultures_tile * vultures_load_tile(int tile_id)
 static inline vultures_tile * vultures_shade_tile(vultures_tile *orig, int shadelevel)
 {
 	SDL_Surface * blend = (shadelevel == 1) ? vultures_ftshade1 : vultures_ftshade2;
-	vultures_tile *tile = (vultures_tile *)malloc(sizeof(vultures_tile));
+	vultures_tile *tile = new vultures_tile;
 
 	tile->xmod = orig->xmod;
 	tile->ymod = orig->ymod;
@@ -278,13 +278,12 @@ void vultures_put_tilehighlight(int x, int y, int tile_id)
 
 int vultures_load_gametiles(void)
 {
-	char * filename;
+	string filename;
 	FILE * fp;
 
 	/* load gametiles.bin */
-	filename = vultures_make_filename(V_CONFIG_DIRECTORY, NULL, "vultures_tiles.conf");
-	fp = fopen(filename, "rb");
-	free(filename);
+	filename = vultures_make_filename(V_CONFIG_DIRECTORY, "", "vultures_tiles.conf");
+	fp = fopen(filename.c_str(), "rb");
 	if (!fp)
 	{
 		printf("FATAL: Could not read tile configuration (vultures_tiles.conf) file: %s", strerror(errno));
@@ -297,7 +296,7 @@ int vultures_load_gametiles(void)
 
 	/* initialize the two tile arrays. must happen after reading the config file,
 	* as GAMETILECOUNT and TILEARRAYLEN are not know before */
-	vultures_tilecache = (vultures_tilecache_entry *)malloc(TILEARRAYLEN * sizeof(vultures_tilecache_entry));
+	vultures_tilecache = new vultures_tilecache_entry[TILEARRAYLEN];
 	memset(vultures_tilecache, 0, TILEARRAYLEN * sizeof(vultures_tilecache_entry));
 
 
@@ -317,20 +316,11 @@ int vultures_load_gametiles(void)
 
 void vultures_unload_gametiles(void)
 {
-	int i;
-
 	vultures_tilecache_discard();
-	free(vultures_tilecache);
+	delete vultures_tilecache;
 
 	SDL_FreeSurface(vultures_ftshade1);
 	SDL_FreeSurface(vultures_ftshade2);
-
-	for (i = 0; i < GAMETILECOUNT; i++)
-	{
-		if (vultures_gametiles[i].filename)
-			free(vultures_gametiles[i].filename);
-	}
-	free(vultures_gametiles);
 }
 
 
@@ -350,7 +340,7 @@ static vultures_tile *vultures_make_alpha_player_tile(int monnum, double op_scal
 		lastscale = op_scale;
 
 		montile = vultures_get_tile(MONSTER_TO_VTILE(monnum));
-		tile = (vultures_tile *)malloc(sizeof(vultures_tile));
+		tile = new vultures_tile;
 		if (tile == NULL)
 			return montile;
 

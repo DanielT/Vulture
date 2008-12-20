@@ -3,6 +3,7 @@
 #include "scrollbar.h"
 #include "textwin.h"
 
+#include "vultures_gen.h"
 #include "vultures_gra.h"
 #include "vultures_win.h"
 #include "vultures_sdl.h"
@@ -77,7 +78,7 @@ int scrollwin::get_scrollheight(void)
 int scrollwin::get_menuitem_width(window *item, int colwidths[8])
 {
 	int width, i, thiscol, btnwidth;
-	size_t prevpos, pos, found;
+	size_t prevpos, pos;
 	string coltxt;
 	
 	/* if this is an option leave space for the checkbox in the first column */
@@ -95,11 +96,7 @@ int scrollwin::get_menuitem_width(window *item, int colwidths[8])
 		coltxt = item->caption.substr(prevpos, pos - prevpos);
 		
 		/* trim trailing whitespace */
-		found = coltxt.find_last_not_of(' ');
-		if (found != string::npos)
-			coltxt.erase(found + 1);
-		else
-			coltxt.clear();
+		trim(coltxt);
 
 		/* get the item's width */
 		thiscol = vultures_text_length(V_FONT_MENU, coltxt) + 5;
@@ -190,6 +187,7 @@ void scrollwin::layout(void)
 			if (pos == string::npos)
 				done = true;
 			txt = orig_caption.substr(prevpos, pos - prevpos);
+			trim(txt);
 			
 			coltxt = new textwin(this, txt);
 			coltxt->w = 1;

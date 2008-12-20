@@ -11,18 +11,23 @@ extern "C" {
 #include "vultures_gen.h"
 #include "vultures_opt.h"
 
+#include <vector>
+using std::vector;
 
-typedef struct {
-	char *filename;
+class tmp_tile {
+public:
+	tmp_tile() : filename(""), ptr_type(0), ptr_num(0), hs_x(0), hs_y(0) {};
+
+	string filename;
 	int ptr_type, ptr_num;
 	int hs_x, hs_y;
-} tmp_tile;
+};
 
 
-char ** tilenames[NUM_TILETYPES];
+vector< vector<string> > tilenames(NUM_TILETYPES);
 int tmp_wallstyles[V_WALL_STYLE_MAX][8];
 int tmp_flooredges[V_FLOOR_EDGE_MAX][12];
-tmp_tile * tmp_gametiles[NUM_TILETYPES];
+vector<tmp_tile> tmp_gametiles[NUM_TILETYPES];
 tmp_tile deftiles[NUM_TILETYPES];
 
 /* things that get used by vultures later */
@@ -34,20 +39,16 @@ int vultures_typecount[NUM_TILETYPES];
 int glassgems[CLR_MAX];
 
 /* names for the various tiletypes */
-static const char * typenames[NUM_TILETYPES];
-static const char * floorstylenames[V_FLOOR_STYLE_MAX];
-static const char * wallstylenames[V_WALL_STYLE_MAX];
-
-static const char * edgestylenames[V_FLOOR_EDGE_MAX] = {
-	/* [V_FLOOR_EDGE_COBBLESTONE] */ "COBBLESTONE"
-};
+static vector<string> typenames(NUM_TILETYPES);
+static vector<string> floorstylenames(V_FLOOR_STYLE_MAX);
+static vector<string> wallstylenames(V_WALL_STYLE_MAX);
+static vector<string> edgestylenames(V_FLOOR_EDGE_MAX);
 
 /* the enum for the misc tiles starts at MISCTILEOFFSET so that the enumerated
 * names can be used diretly in the code; here however this means we need to
 * subtract MISCTILEOFFSET everywhere to get usable array indices */
-static const char * miscnames[MISCTILECOUNT];
-
-static const char * cursornames[V_CURSOR_MAX];
+static vector<string> miscnames(MISCTILECOUNT);
+static vector<string> cursornames(V_CURSOR_MAX);
 
 
 static void init_typenames();
@@ -62,14 +63,13 @@ static void init_explnames();
 
 /* parse the configuration file and prepare the data arrays needed by the rest of vultures 
 * This function is the only one that should be called from outside */
-void vultures_parse_tileconf(FILE *fp, struct gametiles **gt_ptr)
+void vultures_parse_tileconf(FILE *fp, gametiles **gt_ptr)
 {
 	int i, j, tilenum, loadnum;
 	int typeoffset[NUM_TILETYPES];
 	vultures_tile *tile;
 	char messagebuf[512];
-	struct gametiles * gametiles;
-
+	gametiles *game_tiles;
 
 
 	/* init the names for all types of tiles */
@@ -81,24 +81,19 @@ void vultures_parse_tileconf(FILE *fp, struct gametiles **gt_ptr)
 	init_objnames(); /* init TT_OBJECT and TT_OBJICON */
 	init_monnames(); /* init TT_MONSTER, TT_STATUE and TT_FIGURINE */
 	init_explnames();/* TT_EXPL */
+	edgestylenames[V_FLOOR_EDGE_COBBLESTONE] = "COBBLESTONE";
 
 	vultures_typecount[TT_MISC] = MISCTILECOUNT;
-	tilenames[TT_MISC] = (char**)miscnames;
+	tilenames[TT_MISC] = miscnames;
 	vultures_typecount[TT_CURSOR] = V_CURSOR_MAX;
-	tilenames[TT_CURSOR] = (char**)cursornames;
+	tilenames[TT_CURSOR] = cursornames;
 
 	vultures_typecount[TT_WALL] = 0;
-	tilenames[TT_WALL] = (char **)malloc(0);
 	vultures_typecount[TT_FLOOR] = 0;
-	tilenames[TT_FLOOR] = (char **)malloc(0);
 	vultures_typecount[TT_EDGE] = 0;
-	tilenames[TT_EDGE] = (char **)malloc(0);
 
 	for (i = 0; i < NUM_TILETYPES; i++)
-	{
-		tmp_gametiles[i] = (tmp_tile *)malloc(vultures_typecount[i] * sizeof(tmp_tile));
-		memset(tmp_gametiles[i], 0, vultures_typecount[i] * sizeof(tmp_tile));
-	}
+		tmp_gametiles[i].resize(vultures_typecount[i]);
 
 	/* tell the lexer about the input file and start the parser */
 	yyrestart(fp);
@@ -111,9 +106,8 @@ void vultures_parse_tileconf(FILE *fp, struct gametiles **gt_ptr)
 		typeoffset[i] = typeoffset[i-1] + vultures_typecount[i-1];
 
 
-	*gt_ptr = (struct gametiles *)malloc(GAMETILECOUNT * sizeof(struct gametiles));
-	gametiles = *gt_ptr;
-	memset(gametiles, 0, GAMETILECOUNT * sizeof(struct gametiles));
+	*gt_ptr = new gametiles[GAMETILECOUNT];
+	game_tiles = *gt_ptr;
 
 	/* build gametiles from the info in tmp_gametiles */
 	for (i = 0; i < NUM_TILETYPES; i++)
@@ -123,29 +117,29 @@ void vultures_parse_tileconf(FILE *fp, struct gametiles **gt_ptr)
 			tilenum = typeoffset[i] + j;
 
 			/* use given tile */
-			if (tmp_gametiles[i][j].filename && tmp_gametiles[i][j].ptr_type == -1 && tmp_gametiles[i][j].ptr_num == -1)
-			{
-				gametiles[tilenum].filename = strdup(tmp_gametiles[i][j].filename);
-				gametiles[tilenum].ptr = -1;
-				gametiles[tilenum].hs_x = tmp_gametiles[i][j].hs_x;
-				gametiles[tilenum].hs_y = tmp_gametiles[i][j].hs_y;
+			if (!tmp_gametiles[i][j].filename.empty() &&
+			    tmp_gametiles[i][j].ptr_type == -1 && tmp_gametiles[i][j].ptr_num == -1) {
+				game_tiles[tilenum].filename = tmp_gametiles[i][j].filename;
+				game_tiles[tilenum].ptr = -1;
+				game_tiles[tilenum].hs_x = tmp_gametiles[i][j].hs_x;
+				game_tiles[tilenum].hs_y = tmp_gametiles[i][j].hs_y;
 			}
 			/* redirect to another tile */
 			else if (tmp_gametiles[i][j].ptr_type != 0 || tmp_gametiles[i][j].ptr_num != 0)
 			{
-				gametiles[tilenum].filename = NULL;
-				gametiles[tilenum].ptr = typeoffset[tmp_gametiles[i][j].ptr_type] + tmp_gametiles[i][j].ptr_num;
-				gametiles[tilenum].hs_x = 0;
-				gametiles[tilenum].hs_y = 0;
+				game_tiles[tilenum].filename = "";
+				game_tiles[tilenum].ptr = typeoffset[tmp_gametiles[i][j].ptr_type] + tmp_gametiles[i][j].ptr_num;
+				game_tiles[tilenum].hs_x = 0;
+				game_tiles[tilenum].hs_y = 0;
 			}
 			/* use default tile */
-			else if (!tmp_gametiles[i][j].filename &&
+			else if (tmp_gametiles[i][j].filename.empty() &&
 					tmp_gametiles[i][j].ptr_type == 0 &&
 					tmp_gametiles[i][j].ptr_num == 0)
 			{
-				gametiles[tilenum].ptr = typeoffset[deftiles[i].ptr_type] + deftiles[i].ptr_num;
-				gametiles[tilenum].hs_x = deftiles[i].hs_x;
-				gametiles[tilenum].hs_y = deftiles[i].hs_y;
+				game_tiles[tilenum].ptr = typeoffset[deftiles[i].ptr_type] + deftiles[i].ptr_num;
+				game_tiles[tilenum].hs_x = deftiles[i].hs_x;
+				game_tiles[tilenum].hs_y = deftiles[i].hs_y;
 			}
 		}
 	}
@@ -161,18 +155,17 @@ void vultures_parse_tileconf(FILE *fp, struct gametiles **gt_ptr)
 			{
 				tilenum = typeoffset[i] + j;
 				loadnum = tilenum;
-				if (!gametiles[tilenum].filename && gametiles[tilenum].ptr != -1)
-					loadnum = gametiles[tilenum].ptr;
+				if (game_tiles[tilenum].filename.empty() && game_tiles[tilenum].ptr != -1)
+					loadnum = game_tiles[tilenum].ptr;
 
 				tile = vultures_load_tile(loadnum);
-				if (!tile)
-				{
-					if (gametiles[tilenum].filename)
+				if (!tile) {
+					if (!game_tiles[tilenum].filename.empty())
 						snprintf(messagebuf, sizeof(messagebuf), "%s.%s: \"%s\" cannot be loaded",
-								typenames[i], tilenames[i][j], gametiles[tilenum].filename);
+								typenames[i].c_str(), (tilenames[i][j]).c_str(), game_tiles[tilenum].filename.c_str());
 					else
 						snprintf(messagebuf, sizeof(messagebuf), "%s.%s: invalid redirection",
-								typenames[i], tilenames[i][j]);
+								typenames[i].c_str(), tilenames[i][j].c_str());
 
 					if (iflags.window_inited == TRUE)
 						pline(messagebuf);
@@ -192,34 +185,7 @@ void vultures_parse_tileconf(FILE *fp, struct gametiles **gt_ptr)
 
 	/* special fixup for V_MISC_PLAYER_INVIS: it does not have a tile image,
 	* nor should it redirect as it is handled specially */
-	gametiles[V_MISC_PLAYER_INVIS].ptr = -1;
-
-
-	/* free tilenames etc */
-	for (i = 0; i < NUM_TILETYPES; i++)
-	{
-		for (j = 0; j < vultures_typecount[i]; j++)
-		{
-			if (i != TT_MISC && i != TT_CURSOR)
-			{
-				if (tilenames[i][j])
-					free(tilenames[i][j]);
-				tilenames[i][j] = NULL;
-			}
-
-			if (tmp_gametiles[i][j].filename)
-				free(tmp_gametiles[i][j].filename);
-			tmp_gametiles[i][j].filename = NULL;
-		}
-		free(tmp_gametiles[i]);
-	}
-
-	free(tilenames[TT_OBJECT]);
-	free(tilenames[TT_MONSTER]);
-	free(tilenames[TT_EXPL]);
-	free(tilenames[TT_WALL]);
-	free(tilenames[TT_FLOOR]);
-	free(tilenames[TT_EDGE]);
+	game_tiles[V_MISC_PLAYER_INVIS].ptr = -1;
 
 
 	/* build wall arrays */
@@ -254,7 +220,7 @@ int vultures_get_tiletype_from_name(char* name)
 {
 	int i;
 	for (i = 0; i < NUM_TILETYPES; i++)
-		if (strcmp(name, typenames[i]) == 0)
+		if (typenames[i] == name)
 			return i;
 
 	yyerror("invalid tile type");
@@ -266,7 +232,7 @@ int vultures_get_wallstyle_from_name(char *name)
 {
 	int i;
 	for (i = 0; i < V_WALL_STYLE_MAX; i++)
-		if (strcmp(name, wallstylenames[i]) == 0)
+		if (wallstylenames[i] == name)
 			return i;
 
 	yyerror("invalid wall style name");
@@ -278,7 +244,7 @@ int vultures_get_edgestyle_from_name(char *name)
 {
 	int i;
 	for (i = 0; i < V_FLOOR_EDGE_MAX; i++)
-		if (strcmp(name, edgestylenames[i]) == 0)
+		if (edgestylenames[i] == name)
 			return i;
 
 	yyerror("invalid edge style name");
@@ -290,7 +256,7 @@ int vultures_get_floorstyle_from_name(char *name)
 {
 	int i;
 	for (i = 0; i < V_FLOOR_STYLE_MAX; i++)
-		if (strcmp(name, floorstylenames[i]) == 0)
+		if (floorstylenames[i] == name)
 			return i;
 
 	yyerror("invalid floor style name");
@@ -307,20 +273,18 @@ int vultures_get_tile_index(int type, char * name, int allow_expand)
 
 	index = -1;
 	for (i = 0; i < vultures_typecount[type]; i++)
-		if (strcmp(name, tilenames[type][i]) == 0)
+		if (tilenames[type][i] == name)
 			index = i;
 
 	if (index == -1) {
-		if ((type == TT_WALL || type == TT_FLOOR || type == TT_EDGE) && allow_expand)
-		{
+		if ((type == TT_WALL || type == TT_FLOOR || type == TT_EDGE) && allow_expand) {
 			index = vultures_typecount[type];
 
 			vultures_typecount[type]++;
-			tilenames[type] = (char **)realloc(tilenames[type], vultures_typecount[type] * sizeof(char*));
-			tmp_gametiles[type] = (tmp_tile *)realloc(tmp_gametiles[type], vultures_typecount[type] * sizeof(tmp_tile));
-			memset(&tmp_gametiles[type][index], 0, sizeof(tmp_tile));
+			tilenames[type].resize(vultures_typecount[type]);
+			tmp_gametiles[type].resize(vultures_typecount[type]);
 
-			tilenames[type][index] = strdup(name);
+			tilenames[type][index] = name;
 		}
 	}
 
@@ -335,7 +299,7 @@ void vultures_add_tile(int tiletype, char *tilename, char *filename, int xoffset
 	if (tilenum == -1)
 		return;
 
-	tmp_gametiles[tiletype][tilenum].filename = strdup(filename);
+	tmp_gametiles[tiletype][tilenum].filename = filename;
 	tmp_gametiles[tiletype][tilenum].ptr_type = -1;
 	tmp_gametiles[tiletype][tilenum].ptr_num = -1;
 	tmp_gametiles[tiletype][tilenum].hs_x = xoffset;
@@ -353,7 +317,7 @@ void vultures_redirect_tile(int tiletype, char *tilename, int redir_tiletype, ch
 
 	if (strcmp("default", tilename) == 0)
 	{
-		deftiles[tiletype].filename = NULL;
+		deftiles[tiletype].filename = "";
 		deftiles[tiletype].ptr_type = redir_tiletype;
 		deftiles[tiletype].ptr_num = dst;
 		deftiles[tiletype].hs_x = 0;
@@ -365,7 +329,7 @@ void vultures_redirect_tile(int tiletype, char *tilename, int redir_tiletype, ch
 		if (src == -1)
 			return;
 
-		tmp_gametiles[tiletype][src].filename = NULL;
+		tmp_gametiles[tiletype][src].filename = "";
 		tmp_gametiles[tiletype][src].ptr_type = redir_tiletype;
 		tmp_gametiles[tiletype][src].ptr_num = dst;
 		tmp_gametiles[tiletype][src].hs_x = 0;
@@ -448,6 +412,8 @@ static void init_typenames()
 
 static void init_floortilenames()
 {
+	tilenames[TT_FLOOR].resize(FLOTILECOUNT);
+	
 	floorstylenames[V_FLOOR_COBBLESTONE] = "COBBLESTONE";
 	floorstylenames[V_FLOOR_ROUGH] = "ROUGH";
 	floorstylenames[V_FLOOR_CERAMIC] = "CERAMIC";
@@ -467,6 +433,8 @@ static void init_floortilenames()
 
 static void init_wallstylenames()
 {
+	tilenames[TT_WALL].resize(WALTILECOUNT);
+	
 	wallstylenames[V_WALL_BRICK] = "BRICK";
 	wallstylenames[V_WALL_BRICK_BANNER] = "BRICK_BANNER";
 	wallstylenames[V_WALL_BRICK_PAINTING] = "BRICK_PAINTING";
@@ -483,6 +451,8 @@ static void init_wallstylenames()
 
 static void init_curnames()
 {
+	tilenames[TT_CURSOR].resize(CURTILECOUNT);
+	
 	cursornames[V_CURSOR_NORMAL] = "NORMAL";
 	cursornames[V_CURSOR_SCROLLRIGHT] = "SCROLLRIGHT";
 	cursornames[V_CURSOR_SCROLLLEFT] = "SCROLLLEFT";
@@ -505,6 +475,8 @@ static void init_curnames()
 
 static void init_miscnames()
 {
+	tilenames[TT_MISC].resize(MISCTILECOUNT);
+	
 	miscnames[V_MISC_PLAYER_INVIS - MISCTILEOFFSET] = ""; /* make it impossible to assign a tile to V_MISC_PLAYER_INVIS */
 	miscnames[V_MISC_FLOOR_NOT_VISIBLE - MISCTILEOFFSET] = "FLOOR_NOT_VISIBLE";
 	miscnames[V_MISC_DOOR_WOOD_BROKEN - MISCTILEOFFSET] = "DOOR_WOOD_BROKEN";
@@ -630,6 +602,7 @@ static void init_objnames()
 	int i;
 	char *c, *nameptr;
 	int unnamed_cnt[MAXOCLASSES];
+	char buffer[64];
 
 	static const char *objclassnames[] = { 0,
 			"Illegal objects", "Weapons", "Armor", "Rings", "Amulets",
@@ -640,20 +613,17 @@ static void init_objnames()
 
 	memset(unnamed_cnt, 0, MAXOCLASSES * sizeof(int));
 
+	tilenames[TT_OBJECT].resize(OBJTILECOUNT);
 	vultures_typecount[TT_OBJECT] = OBJTILECOUNT;
 
-	tilenames[TT_OBJECT] = (char **)malloc(vultures_typecount[TT_OBJECT] * sizeof(char*));
-
-	for(i = 0; !i || objects[i].oc_class != ILLOBJ_CLASS; i++)
-	{
-		tilenames[TT_OBJECT][i] = (char *)malloc(41 * sizeof(char)); /* makedefs uses max 30 chars + '\0' */
-		tilenames[TT_OBJECT][i][0] = '\0';
-		tilenames[TT_OBJECT][i][40] = '\0';
+	for(i = 0; !i || objects[i].oc_class != ILLOBJ_CLASS; i++) {
+		buffer[0] = '\0';
+		buffer[40] = '\0';
 
 		if (!obj_descr[i].oc_name)
 		{
 			unnamed_cnt[(int)objects[i].oc_class]++;
-			snprintf(tilenames[TT_OBJECT][i], 40, "%3.3s unnamed %d",
+			snprintf(buffer, 40, "%3.3s unnamed %d",
 					objclassnames[(int)objects[i].oc_class], unnamed_cnt[(int)objects[i].oc_class]);
 		}
 		else
@@ -663,56 +633,55 @@ static void init_objnames()
 			switch (objects[i].oc_class)
 			{
 				case WAND_CLASS:
-					snprintf(tilenames[TT_OBJECT][i], 40, "WAN_%s", nameptr); break;
+					snprintf(buffer, 40, "WAN_%s", nameptr); break;
 				case RING_CLASS:
-					snprintf(tilenames[TT_OBJECT][i], 40, "RIN_%s", nameptr); break;
+					snprintf(buffer, 40, "RIN_%s", nameptr); break;
 				case POTION_CLASS:
-					snprintf(tilenames[TT_OBJECT][i], 40, "POT_%s", nameptr); break;
+					snprintf(buffer, 40, "POT_%s", nameptr); break;
 				case SPBOOK_CLASS:
-					snprintf(tilenames[TT_OBJECT][i], 40, "SPE_%s", nameptr); break;
+					snprintf(buffer, 40, "SPE_%s", nameptr); break;
 				case SCROLL_CLASS:
-					snprintf(tilenames[TT_OBJECT][i], 40, "SCR_%s", nameptr); break;
+					snprintf(buffer, 40, "SCR_%s", nameptr); break;
 				case AMULET_CLASS:
 					if(objects[i].oc_material == PLASTIC)
-						snprintf(tilenames[TT_OBJECT][i], 40, "FAKE_AMULET_OF_YENDOR");
+						snprintf(buffer, 40, "FAKE_AMULET_OF_YENDOR");
 					else
-						snprintf(tilenames[TT_OBJECT][i], 40, "%s", obj_descr[i].oc_name); break;
+						snprintf(buffer, 40, "%s", obj_descr[i].oc_name); break;
 				case GEM_CLASS:
 					if (objects[i].oc_material == GLASS)
 					{
 						switch (objects[i].oc_color)
 						{
-							case CLR_WHITE:  snprintf(tilenames[TT_OBJECT][i], 40, "GEM_WHITE_GLASS"); break;
-							case CLR_BLUE:   snprintf(tilenames[TT_OBJECT][i], 40, "GEM_BLUE_GLASS");  break;
-							case CLR_RED:    snprintf(tilenames[TT_OBJECT][i], 40, "GEM_RED_GLASS");   break;
-							case CLR_BROWN:  snprintf(tilenames[TT_OBJECT][i], 40, "GEM_BROWN_GLASS"); break;
-							case CLR_ORANGE: snprintf(tilenames[TT_OBJECT][i], 40, "GEM_ORANGE_GLASS");break;
-							case CLR_YELLOW: snprintf(tilenames[TT_OBJECT][i], 40, "GEM_YELLOW_GLASS");break;
-							case CLR_BLACK:  snprintf(tilenames[TT_OBJECT][i], 40, "GEM_BLACK_GLASS"); break;
-							case CLR_GREEN:  snprintf(tilenames[TT_OBJECT][i], 40, "GEM_GREEN_GLASS"); break;
-							case CLR_MAGENTA:snprintf(tilenames[TT_OBJECT][i], 40, "GEM_VIOLET_GLASS");break;
+							case CLR_WHITE:  snprintf(buffer, 40, "GEM_WHITE_GLASS"); break;
+							case CLR_BLUE:   snprintf(buffer, 40, "GEM_BLUE_GLASS");  break;
+							case CLR_RED:    snprintf(buffer, 40, "GEM_RED_GLASS");   break;
+							case CLR_BROWN:  snprintf(buffer, 40, "GEM_BROWN_GLASS"); break;
+							case CLR_ORANGE: snprintf(buffer, 40, "GEM_ORANGE_GLASS");break;
+							case CLR_YELLOW: snprintf(buffer, 40, "GEM_YELLOW_GLASS");break;
+							case CLR_BLACK:  snprintf(buffer, 40, "GEM_BLACK_GLASS"); break;
+							case CLR_GREEN:  snprintf(buffer, 40, "GEM_GREEN_GLASS"); break;
+							case CLR_MAGENTA:snprintf(buffer, 40, "GEM_VIOLET_GLASS");break;
 						}
 						glassgems[objects[i].oc_color] = i;
 					}
 					else
-						snprintf(tilenames[TT_OBJECT][i], 40, "%s", nameptr); break;
+						snprintf(buffer, 40, "%s", nameptr); break;
 					break;
 				default:
-					snprintf(tilenames[TT_OBJECT][i], 40, "%s", nameptr); break;
+					snprintf(buffer, 40, "%s", nameptr); break;
 			}
 		}
 
-		for (c = tilenames[TT_OBJECT][i]; *c; c++)
-		{
+		for (c = buffer; *c; c++) {
 			if (*c >= 'a' && *c <= 'z') *c -= (char)('a' - 'A');
 			else if ((*c < 'A' || *c > 'Z') && !isdigit(*c)) *c = '_';
 		}
-
+		
+		tilenames[TT_OBJECT][i] = buffer;
 	}
 
 	/* fix up the slime mold as it's name varies and we can't count on it being called "slime mold" */
-	free(tilenames[TT_OBJECT][SLIME_MOLD]);
-	tilenames[TT_OBJECT][SLIME_MOLD] = strdup("SLIME_MOLD");
+	tilenames[TT_OBJECT][SLIME_MOLD] = "SLIME_MOLD";
 
 	vultures_typecount[TT_OBJICON] = vultures_typecount[TT_OBJECT];
 	tilenames[TT_OBJICON] = tilenames[TT_OBJECT];
@@ -724,24 +693,23 @@ static void init_monnames()
 {
 	char * c;
 	int i;
+	char buffer[64];
 
+	tilenames[TT_MONSTER].resize(MONTILECOUNT);
 	vultures_typecount[TT_MONSTER] = MONTILECOUNT;
 
-	tilenames[TT_MONSTER] = (char **)malloc(vultures_typecount[TT_MONSTER] * sizeof(char*));
-
-	for (i = 0; mons[i].mlet; i++)
-	{
-		tilenames[TT_MONSTER][i] = (char *)malloc(64 * sizeof(char));
+	for (i = 0; mons[i].mlet; i++) {
 		if (mons[i].mlet == S_HUMAN && !strncmp(mons[i].mname, "were", 4))
-			snprintf(tilenames[TT_MONSTER][i], 64, "PM_HUMAN_%s", mons[i].mname);
+			snprintf(buffer, 64, "PM_HUMAN_%s", mons[i].mname);
 		else
-			snprintf(tilenames[TT_MONSTER][i], 64, "PM_%s", mons[i].mname);
+			snprintf(buffer, 64, "PM_%s", mons[i].mname);
 
-		for (c = tilenames[TT_MONSTER][i]; *c; c++)
-		{
+		for (c = buffer; *c; c++) {
 			if (*c >= 'a' && *c <= 'z') *c -= (char)('a' - 'A');
 			else if (*c < 'A' || *c > 'Z') *c = '_';
 		}
+		
+		tilenames[TT_MONSTER][i] = buffer;
 	}
 
 	vultures_typecount[TT_STATUE] = vultures_typecount[TT_MONSTER];
@@ -758,17 +726,12 @@ static void init_explnames()
 	int i, j;
 	const char * explosion_names[] = {"DARK", "NOXIOUS", "MUDDY", "WET", "MAGICAL", "FIERY", "FROSTY"};
 
+	tilenames[TT_EXPL].resize(EXPL_MAX * 9);
 	vultures_typecount[TT_EXPL] = EXPL_MAX * 9;
 
-	tilenames[TT_EXPL] = (char **)malloc(vultures_typecount[TT_EXPL] * sizeof(char*));
-
-	for (i = 0; i < EXPL_MAX; i++)
-	{
+	for (i = 0; i < EXPL_MAX; i++) {
 		for (j = 0; j < 9; j++)
-		{
-			tilenames[TT_EXPL][i*9+j] = (char *)malloc(64 * sizeof(char));
-			snprintf(tilenames[TT_EXPL][i*9+j], 64, "%s_%d", explosion_names[i], j+1);
-		}
+			tilenames[TT_EXPL][i*9+j] = explosion_names[i];
 	}
 }
 

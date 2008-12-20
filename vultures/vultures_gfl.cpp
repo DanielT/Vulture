@@ -117,9 +117,8 @@ SDL_Surface *vultures_load_surface(char *srcbuf, unsigned int buflen)
 		goto out;
 
 	/* Create the array of pointers to image data */
-	row_pointers = (png_byte**)malloc(sizeof(png_bytep) * height);
-	if (!row_pointers)
-	{
+	row_pointers = new png_bytep[height];
+	if (!row_pointers) {
 		SDL_FreeSurface(img);
 		img = NULL;
 		goto out;
@@ -135,7 +134,7 @@ out:
 	png_destroy_read_struct(&png_ptr, info_ptr ? &info_ptr : NULL, NULL);
 
 	if (row_pointers)
-		free(row_pointers);
+		delete row_pointers;
 
 	if (!img)
 		return NULL;
@@ -156,22 +155,18 @@ loads the given file into a buffer and calls vultures_load_surface
 subdir:  [in] subdirectory in which to look
 name:    [in] filename of the image
 ---------------------------------------*/
-SDL_Surface *vultures_load_graphic(const char *subdir, const char *name)
+SDL_Surface *vultures_load_graphic(string name)
 {
 	SDL_Surface *image;
-	char namebuf[128];
 	int fsize;
-	char * filename;
+	string filename;
 	FILE * fp;
 	char * srcbuf;
 
-	strcat(strcpy(namebuf, name), ".png");
-	filename = vultures_make_filename(V_GRAPHICS_DIRECTORY, subdir, namebuf);
-	if (filename == NULL)
-		OOM(1);
+	name += ".png";
+	filename = vultures_make_filename(V_GRAPHICS_DIRECTORY, "", name);
 
-	fp = fopen(filename, "rb");
-	free(filename);
+	fp = fopen(filename.c_str(), "rb");
 	if (!fp)
 		return NULL;
 
@@ -180,7 +175,7 @@ SDL_Surface *vultures_load_graphic(const char *subdir, const char *name)
 	fsize = ftell(fp);
 	rewind(fp);
 
-	srcbuf = (char*)malloc(fsize);
+	srcbuf = new char[fsize];
 	if (!srcbuf)
 		return 0;
 
@@ -189,7 +184,7 @@ SDL_Surface *vultures_load_graphic(const char *subdir, const char *name)
 
 	image = vultures_load_surface(srcbuf, fsize);
 
-	free(srcbuf);
+	delete srcbuf;
 
 	return image;
 }
@@ -199,15 +194,15 @@ SDL_Surface *vultures_load_graphic(const char *subdir, const char *name)
 /*--------------------------------------------
 Save the contents of the surface to a png file
 --------------------------------------------*/
-void vultures_save_png(SDL_Surface * surface, char* filename, int with_alpha)
+void vultures_save_png(SDL_Surface *surface, string filename, int with_alpha)
 {
 	png_structp png_ptr;
 	png_infop info_ptr;
 	FILE * fp;
 	int i, j;
 	unsigned int *in_pixels = (unsigned int*)surface->pixels;
-	unsigned char *output = (unsigned char*)malloc(surface->w * surface->h * (with_alpha ? 4 : 3) );
-	png_byte ** image = (png_byte**)malloc(surface->h * sizeof(png_byte*));
+	unsigned char *output = new unsigned char[surface->w * surface->h * (with_alpha ? 4 : 3)];
+	png_bytep *image = new png_bytep[surface->h];
 
 	/* strip out alpha bytes if neccessary and reorder the image bytes to RGB */
 	for (j = 0; j < surface->h; j++)
@@ -225,7 +220,7 @@ void vultures_save_png(SDL_Surface * surface, char* filename, int with_alpha)
 	}
 
 	/* open the file */
-	if (!(fp = fopen(filename, "wb")))
+	if (!(fp = fopen(filename.c_str(), "wb")))
 		goto cleanup;
 
 	/* create png image data structures */
@@ -244,8 +239,9 @@ void vultures_save_png(SDL_Surface * surface, char* filename, int with_alpha)
 
 cleanup: /* <- */
 	fclose(fp);
-	free(image[0]);
-	free(image);
+	/* output has been modified, but the value is still present in image[0] */
+	delete image[0];
+	delete image;
 }
 
 
@@ -255,31 +251,27 @@ back buffer) into a BMP file.
 ---------------------------------------*/
 void vultures_save_screenshot(void)
 {
-	char *filename;
+	string filename;
 	int i;
-	char *msg;
+	string msg;
 	char namebuf[20];
 
 	for (i = 0; i < 1000; i++)
 	{
 		sprintf(namebuf, "scree%03d.png", i);
 		filename = vultures_make_filename(NULL, NULL, namebuf);
-		if (access(filename, R_OK) != 0)
+		if (access(filename.c_str(), R_OK) != 0)
 		{
-			vultures_save_png(vultures_screen,filename,0);
-			msg = (char *)malloc(256);
-			snprintf(msg, 256, "Screenshot saved as %s.", namebuf);
+			vultures_save_png(vultures_screen, filename, 0);
+			msg = string("Screenshot saved as ") + namebuf + ".";
 
 			if (vultures_windows_inited)
 				vultures_messagebox(msg);
 			else
-				msgwin->add_message(string(msg));
+				msgwin->add_message(msg);
 
-			free(msg);
-			free(filename);
 			return;
 		}
-		free(filename);
 	}
 	vultures_messagebox("Too many screenshots already saved.");
 }

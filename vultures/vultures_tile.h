@@ -4,12 +4,14 @@
 #ifndef _vultures_tile_h_
 #define _vultures_tile_h_
 
+#include <string>
 #include <SDL.h>
 #include "vultures_types.h"
 extern "C" {
 #include "hack.h"
 }
 
+using std::string;
 
 extern void vultures_put_tile_shaded(int x, int y, int tile_id, int shadelevel);
 extern int vultures_load_gametiles(void);
@@ -253,8 +255,10 @@ enum special_tiles {
 };
 
 
-struct gametiles {
-	char *filename;
+class gametiles {
+public:
+	gametiles() : filename(""), ptr(0), hs_x(0), hs_y(0) {};
+	string filename;
 	int ptr;
 	int hs_x;
 	int hs_y;

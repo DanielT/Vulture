@@ -1,8 +1,12 @@
 /* NetHack may be freely redistributed.  See license for details. */
 /* Copyright (c) Jaakko Peltonen, 2000				  */
 
-#include <unistd.h>
-#include <string.h>
+#include <vector>
+#include <string>
+
+using std::vector;
+using std::string;
+
 #include <errno.h>
 
 #include "vultures_win.h"
@@ -36,7 +40,7 @@
 * pre-declared functions
 *---------------------------- */
 static void trimright(char *buf);
-static void vultures_show_intro(const char *introscript_name);
+static void vultures_show_intro(string introscript_name);
 
 
 /*----------------------------
@@ -63,7 +67,7 @@ void vultures_show_logo_screen(void)
 
 	if (iflags.wc_splash_screen)
 	{
-		logo = vultures_load_graphic(NULL, V_FILENAME_NETHACK_LOGO);
+		logo = vultures_load_graphic(V_FILENAME_NETHACK_LOGO);
 		if (logo != NULL)
 		{
 			/* TODO Stretch this image fullscreen */
@@ -92,12 +96,11 @@ void vultures_show_logo_screen(void)
 void vultures_player_selection(void)
 {
 	SDL_Surface *logo;
-	char *filename;
+	string filename;
 
 	SDL_FillRect(vultures_screen, NULL, CLR32_BLACK);
-	logo = vultures_load_graphic(NULL, V_FILENAME_CHARACTER_GENERATION);
-	if (logo != NULL)
-	{
+	logo = vultures_load_graphic(V_FILENAME_CHARACTER_GENERATION);
+	if (logo != NULL) {
 		vultures_put_img((vultures_screen->w - logo->w) / 2, (vultures_screen->h - logo->h) / 2, logo);
 		SDL_FreeSurface(logo);
 	}
@@ -109,12 +112,10 @@ void vultures_player_selection(void)
 	/* Success! Show introduction. */
 	vultures_fade_out(0.2);
 
-	filename = vultures_make_filename(V_CONFIG_DIRECTORY, NULL, V_FILENAME_INTRO_SCRIPT);
+	filename = vultures_make_filename(V_CONFIG_DIRECTORY, "", V_FILENAME_INTRO_SCRIPT);
 
 	if (flags.legacy)
 		vultures_show_intro(filename);
-
-	free(filename);
 }
 
 
@@ -138,184 +139,122 @@ void vultures_askname(void)
 }
 
 
-
-static void vultures_show_intro(const char *introscript_name)
+static void vultures_show_intro(string introscript_name)
 {
-	FILE   * f;
-	int      i, j;
-	int      nScenes;
-	int    * subtitle_rows;
-	char *** subtitles;
-	char  ** scene_images;
-	char     tempbuffer[1024];
-	int      lineno;
-	int      lineheight = vultures_get_lineheight(V_FONT_INTRO);
-	SDL_Rect textrect = {0, 0, vultures_screen->w, 0};
+	FILE *f;
+	char buffer[1024];
+	unsigned int nr_scenes, i, j, pos_x, pos_y, lineno;
+	string line;
+	vector<string> imagenames;
+	vector< vector<string> > subtitles;
+	int lineheight = vultures_get_lineheight(V_FONT_INTRO);
 	SDL_Event event;
-	SDL_Surface *image=NULL;
+	SDL_Surface *image = NULL;
+	SDL_Rect textrect = {0, 0, vultures_screen->w, 0};
 
-	nScenes = 0;
-	scene_images = NULL;
-	subtitle_rows = NULL;
-	subtitles = NULL;
-
-	vultures_play_event_sound("nhfe_music_introduction");
-
-	f = fopen(introscript_name, "rb");
-	if (f == NULL)
-	{
-		vultures_write_log(V_LOG_NOTE, NULL, 0, "intro script %s not found\n", introscript_name);
-	} else
-	{
-		lineno = 1;
-		while (fgets(tempbuffer, 1024, f))
-		{
-		if (tempbuffer[0] == '%') /* Start of new scene */
-		{
-			trimright(&tempbuffer[1]);
-			i = strlen(&tempbuffer[1]);
-			if (i > 0)
-			{
-			char *dot;
+	f = fopen(introscript_name.c_str(), "rb");
+	if (f == NULL) {
+		vultures_write_log(V_LOG_NOTE, NULL, 0, "intro script %s not found\n",
+		                   introscript_name.c_str());
+		return;
+	}
+	
+	lineno = nr_scenes = 0;
+	while (fgets(buffer, 1024, f)) {
+		lineno++;
+		
+		if (buffer[0] == '%') {
+			/* new scene */
+			line = string(&buffer[1]);
+			trim(line);
 			
-			nScenes++;
-			scene_images = (char **)realloc(scene_images, nScenes*sizeof(char *));
-			scene_images[nScenes-1] = (char *)malloc((i + 1) * sizeof(*tempbuffer));
-			if (!scene_images[nScenes - 1])
-			{
-				OOM(1);
+			if (line.length() == 0)
+				continue;
+			
+			nr_scenes++;
+			
+			if (line.substr(line.length() - 4, 4) != ".png")
+				vultures_write_log(V_LOG_NOTE, NULL, 0, "scene image %s not png?", line.c_str());
+			
+			/* trim off the file extension */
+			line = line.substr(0, line.length() - 4);
+			
+			imagenames.push_back(line);
+			subtitles.resize(nr_scenes);
+			
+		} else {
+			/* text lines for current scene */
+			if (nr_scenes == 0) {
+				vultures_write_log(V_LOG_NOTE, NULL, 0, "subtitle without a preceding scene in line %d of intro script %s\n", lineno, introscript_name.c_str());
+				continue;
 			}
-			strcpy(scene_images[nScenes - 1], tempbuffer + 1);
-			dot = strrchr(scene_images[nScenes - 1], '.');
-			if (dot != NULL)
-			{
-				if (strcmp(dot, ".png") == 0)
-				{
-				*dot = '\0';
-				} else
-				{
-				vultures_write_log(V_LOG_NOTE, NULL, 0, "scene image %s not png?", scene_images[nScenes - 1]);
-				}
-			}
-			subtitle_rows = (int *)realloc(subtitle_rows, nScenes * sizeof(int));
-
-			subtitle_rows[nScenes - 1] = 0;
-			subtitles = (char ***)realloc(subtitles, nScenes * sizeof(char **));
-
-			subtitles[nScenes - 1] = NULL;
-			}
-		}
-		else /* New subtitle line for latest scene */
-		{
-			if (nScenes > 0)
-			{
-			subtitle_rows[nScenes - 1]++;
-			subtitles[nScenes - 1] = (char **)realloc(subtitles[nScenes - 1],
-				subtitle_rows[nScenes - 1] * sizeof(char *));
-
-			/* Remove extra whitespace from line */
-			trimright(tempbuffer);
-			i = 0;
-			while (tempbuffer[i] == ' ')
-				i++;
-			trimright(&tempbuffer[i]);
-			/* Copy line to subtitle array */
-			subtitles[nScenes - 1][subtitle_rows[nScenes - 1] - 1] = (char *)malloc(strlen(tempbuffer + i) + 1);
-			if (!subtitles[nScenes - 1][subtitle_rows[nScenes - 1] - 1])
-			{
-				OOM(1);
-			}
-			strcpy(subtitles[nScenes - 1][subtitle_rows[nScenes - 1] - 1], tempbuffer + i);
-			/* DEBUG printf("%s", subtitles[nScenes-1][subtitle_rows[nScenes-1]-1]); DEBUG */
-			} else
-			{
-			vultures_write_log(V_LOG_NOTE, NULL, 0, "subtitle without a preceding scene in line %d of intro script %s\n",
-				lineno, introscript_name);
-			}
-		}
-		}
-		fclose(f);
-
-		if (nScenes == 0)
-		{
-		vultures_write_log(V_LOG_NOTE, NULL, 0, "no scenes found in intro script %s\n", introscript_name);
-		} else
-		{
-
-		/*
-		* Show each scene of the introduction in four steps:
-		* - Erase previous image, load and fade in new image
-		* - Print the subtitles
-		* - Wait out a set delay
-		* - Erase subtitles, Fade out 
-		*/
-		vultures_set_draw_region(0, 0, vultures_screen->w - 1, vultures_screen->h - 1);
-		for (i = 0; i < nScenes; i++)
-		{
-			/* If we are starting, or the previous image was different, fade in the current image */
-			if ((i <= 0) || (strcmp(scene_images[i], scene_images[i - 1]) != 0))
-			{
-			if (image)
-				SDL_FreeSurface(image);
-
-			image = vultures_load_graphic(NULL, scene_images[i]);
-			SDL_FillRect(vultures_screen, NULL, CLR32_BLACK);
-			if (image != NULL)
-				vultures_put_img((vultures_screen->w - image->w) / 2, (vultures_screen->h - image->h) / 6, image);
-			vultures_fade_in(0.2);
-			}
-			/* Show subtitles */
-			for (j = 0; j < subtitle_rows[i] && image != NULL; j++)
-			{
-
-			vultures_put_text(V_FONT_INTRO, subtitles[i][j], vultures_screen,
-								(vultures_screen->w - vultures_text_length(V_FONT_INTRO, subtitles[i][j])) / 2,
-								2 * (vultures_screen->h - image->h) / 6 + image->h + lineheight * j,
-								V_COLOR_INTRO_TEXT);
-			}
-			vultures_refresh();
-
-			/* Wait until scene is over or player pressed a key */
-			/* FIXME: should make the timeout depend on amount of text */
-			vultures_wait_input(&event, 5000);
-			if (event.type != SDL_TIMEREVENT)
-				i = nScenes;
-
-			/* Erase subtitles */
-
-			if (image != NULL)
-			{
-				textrect.y = (vultures_screen->h - image->h) / 6 + image->h;
-				textrect.h = vultures_screen->h - textrect.y;
-				SDL_FillRect(vultures_screen, &textrect, CLR32_BLACK);
-				vultures_refresh();
-			}
-		
-			/* If we are at the end, or the next image is different, fade out the current image */
-			if ((i >= nScenes - 1) || (strcmp(scene_images[i], scene_images[i + 1]) != 0))
-			vultures_fade_out(0.2);
-		}
-		
-		/* Clean up */
-		for (i = 0; i < nScenes; i++)
-		{
-			free(scene_images[i]);
-			for (j = 0; j < subtitle_rows[i]; j++)
-			free(subtitles[i][j]);
-			if (subtitles[i] != NULL)
-			free(subtitles[i]);
-		}
-		if (subtitle_rows != NULL)
-			free(subtitle_rows);
-		if (scene_images != NULL)
-			free(scene_images);
+			
+			line = string(buffer);
+			trim(line);
+			
+			subtitles[nr_scenes - 1].push_back(line);
 		}
 	}
 
+	if (nr_scenes == 0) {
+		vultures_write_log(V_LOG_NOTE, NULL, 0, "no scenes found in intro script %s\n",
+		                   introscript_name.c_str());
+		return;
+	}
+	
+	/*
+	* Show each scene of the introduction in four steps:
+	* - Erase previous image, load and fade in new image
+	* - Print the subtitles
+	* - Wait out a set delay
+	* - Erase subtitles, Fade out 
+	*/
+	vultures_set_draw_region(0, 0, vultures_screen->w - 1, vultures_screen->h - 1);
+	for (i = 0; i < nr_scenes; i++) {
+		/* If we are starting, or the previous image was different, fade in the current image */
+		if (i == 0 || imagenames[i-1] != imagenames[i]) {
+			if (image)
+				SDL_FreeSurface(image);
+			
+			image = vultures_load_graphic(imagenames[i]);
+			SDL_FillRect(vultures_screen, NULL, CLR32_BLACK);
+			if (image != NULL)
+				vultures_put_img((vultures_screen->w - image->w) / 2,
+				                 (vultures_screen->h - image->h) / 6, image);
+			vultures_fade_in(0.2);
+		}
+		
+		/* Show subtitles */
+		for (j = 0; j < subtitles[i].size() && image != NULL; j++) {
+			pos_x = (vultures_screen->w - vultures_text_length(V_FONT_INTRO, subtitles[i][j])) / 2;
+			pos_y = 2 * (vultures_screen->h - image->h) / 6 + image->h + lineheight * j;
+			vultures_put_text(V_FONT_INTRO, subtitles[i][j], vultures_screen,
+			                  pos_x, pos_y, V_COLOR_INTRO_TEXT);
+		}
+		vultures_refresh();
+
+		/* Wait until scene is over or player pressed a key */
+		vultures_wait_input(&event, 5000);
+		if (event.type != SDL_TIMEREVENT)
+			i = nr_scenes;
+
+		/* Erase subtitles */
+		if (image) {
+			textrect.y = (vultures_screen->h - image->h) / 6 + image->h;
+			textrect.h = vultures_screen->h - textrect.y;
+			SDL_FillRect(vultures_screen, &textrect, CLR32_BLACK);
+			vultures_refresh();
+		}
+	
+		/* If we are at the end, or the next image is different, fade out the current image */
+		if ((i >= nr_scenes - 1) || imagenames[i] != imagenames[i+1])
+			vultures_fade_out(0.2);
+	}
+	
+	/* Clean up */
 	if (image)
 		SDL_FreeSurface(image);
 }
-
 
 
 static void vultures_init_colors()
@@ -327,7 +266,7 @@ static void vultures_init_colors()
 								0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
 	SDL_Surface * reformatted = SDL_DisplayFormatAlpha(pixel);
 
-	vultures_px_format = (SDL_PixelFormat *)malloc(sizeof(SDL_PixelFormat));
+	vultures_px_format = new SDL_PixelFormat;
 	memcpy(vultures_px_format, reformatted->format, sizeof(SDL_PixelFormat));
 
 	SDL_FreeSurface(reformatted);
@@ -359,7 +298,7 @@ int vultures_init_graphics(void)
 {
 	int all_ok = TRUE;
 	SDL_Surface *image;
-	char * fullname;
+	string fullname;
 	int font_loaded = 0;
 
 
@@ -402,18 +341,16 @@ int vultures_init_graphics(void)
 	{
 		font_loaded = 1;
 		/* add the path to the filename */
-		fullname = vultures_make_filename(V_FONTS_DIRECTORY, NULL, V_FILENAME_FONT);
+		fullname = vultures_make_filename(V_FONTS_DIRECTORY, "", V_FILENAME_FONT);
 
-		font_loaded &= vultures_load_font(V_FONT_SMALL, fullname, 0, 12);
-		font_loaded &= vultures_load_font(V_FONT_LARGE, fullname, 0, 14);
-
-		free(fullname);
+		font_loaded &= vultures_load_font(V_FONT_SMALL, fullname.c_str(), 0, 12);
+		font_loaded &= vultures_load_font(V_FONT_LARGE, fullname.c_str(), 0, 14);
 	}
 
 	all_ok &= font_loaded;
 
 	/* Load window style graphics */
-	image = vultures_load_graphic(NULL, V_FILENAME_WINDOW_STYLE);
+	image = vultures_load_graphic(V_FILENAME_WINDOW_STYLE);
 	if (image == NULL)
 		all_ok = FALSE;
 	else
@@ -464,7 +401,7 @@ int vultures_init_graphics(void)
 
 void vultures_destroy_graphics(void)
 {
-	int i;
+	unsigned int i;
 
 	vultures_destroy_map();
 
@@ -504,16 +441,11 @@ void vultures_destroy_graphics(void)
 	SDL_FreeSurface(vultures_winelem.closebutton);
 
 	/* free sound descriptions */
-	for (i = 0; i < vultures_n_event_sounds; i++)
-	{
-		free (vultures_event_sounds[i]->searchpattern);
-		free (vultures_event_sounds[i]->filename);
-		free (vultures_event_sounds[i]);
-	}
-	free (vultures_event_sounds);
+	for (i = 0; i < vultures_event_sounds.size(); i++)
+		free (vultures_event_sounds[i].searchpattern);
 
 	/* misc small stuff */
-	free (vultures_px_format);
+	delete vultures_px_format;
 }
 
 

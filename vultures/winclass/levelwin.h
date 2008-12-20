@@ -87,7 +87,7 @@ public:
 	void set_wall_style(int style);
 	
 	eventresult handle_click(void* result, int button, point mappos);
-	char* map_square_description(point target, int include_seen);
+	string map_square_description(point target, int include_seen);
 
 private:
 	void add_to_clipregion(int tl_x, int tl_y, int br_x, int br_y);

@@ -35,7 +35,7 @@ map::map(levelwin *p) : window(p)
 	abs_y = parent->abs_y + y;
 
 	/* Load map parchment */
-	mapbg = vultures_load_graphic(NULL, V_FILENAME_MAP_PARCHMENT);
+	mapbg = vultures_load_graphic(V_FILENAME_MAP_PARCHMENT);
 
 	/* level title */
 	textwin *txt = new textwin(this, "");
@@ -48,7 +48,7 @@ map::map(levelwin *p) : window(p)
 	close->abs_y = abs_y + close->y;
 
 	/* Load map symbols */
-	image = vultures_load_graphic(NULL, V_FILENAME_MAP_SYMBOLS);
+	image = vultures_load_graphic(V_FILENAME_MAP_SYMBOLS);
 	if (image == NULL)
 		return;
 	else
@@ -151,7 +151,7 @@ void map::toggle(void)
 eventresult map::event_handler(window* target, void* result, SDL_Event* event)
 {
 	point mouse, mappos;
-	char * ttext;
+	string ttext;
 
 	mouse = vultures_get_mouse_pos();
 	mappos.x = (mouse.x - abs_x - 39) / VULTURES_MAP_SYMBOL_WIDTH;
@@ -189,12 +189,10 @@ eventresult map::event_handler(window* target, void* result, SDL_Event* event)
 			if (this != target && target->menu_id == 1)
 				vultures_mouse_set_tooltip(target->caption);
 			/* draw a tooltip for the map location */
-			else if (mappos.x != -1)
-			{
+			else if (mappos.x != -1) {
 				ttext = levwin->map_square_description(mappos, 1);
-				if(ttext && ttext[0])
+				if(!ttext.empty())
 					vultures_mouse_set_tooltip(ttext);
-				free(ttext);
 			}
 
 			break;

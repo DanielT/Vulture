@@ -27,7 +27,7 @@ statuswin::statuswin(window *p) : window(p)
 	window *subwin;
 	nh_type = NHW_STATUS;
 	
-	statusbg = vultures_load_graphic(NULL, V_FILENAME_STATUS_BAR);
+	statusbg = vultures_load_graphic(V_FILENAME_STATUS_BAR);
 	this->w = statusbg->w;
 	this->h = statusbg->h;
 	this->x = 6;

@@ -5,9 +5,14 @@
 #ifndef _vultures_sound_h_
 #define _vultures_sound_h_
 
-#include "SDL_audio.h"
-#include "SDL_mixer.h"
+#include <SDL.h>
+#include <SDL_audio.h>
+#include <SDL_mixer.h>
 
+#include <string>
+#include <vector>
+using std::string;
+using std::vector;
 
 #define V_MAX_CACHED_SOUNDS 40
 
@@ -25,13 +30,13 @@ enum vultures_event_sound_enum {
 typedef struct {
 	char * searchpattern;
 	int soundtype;
-	char * filename;
+	string filename;
 } vultures_event_sound;
 
 
 typedef struct {
 	Mix_Chunk *chunk;
-	char * filename;
+	string filename;
 } vultures_cached_sound;
 
 
@@ -43,8 +48,7 @@ extern void vultures_stop_music(void);
 
 extern vultures_cached_sound * vultures_cached_sounds;
 extern SDL_CD *vultures_cdrom;
-extern vultures_event_sound ** vultures_event_sounds;
-extern int vultures_n_event_sounds;
+extern vector<vultures_event_sound> vultures_event_sounds;
 extern int vultures_n_background_songs;
 
 

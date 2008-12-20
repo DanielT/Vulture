@@ -7,6 +7,8 @@
 /*--------------------------------------------------------------------------
  General functions
 --------------------------------------------------------------------------*/
+#include <string>
+using std::string;
 
 #include <stdarg.h>
 
@@ -38,8 +40,9 @@
 
 #define OOM(do_exit) vultures_oom(do_exit, __FILE__, __LINE__)
 
+extern string& trim(string &str);
 extern char *vultures_basename(const char *filename);
-extern char *vultures_make_filename(const char *subdir1, const char *subdir2, const char *name);
+extern string vultures_make_filename(string subdir1, string subdir2, string name);
 extern void vultures_init_gamepath(void);
 
 extern void vultures_write_log(int msgtype, const char *file,

@@ -18,11 +18,14 @@
 /* Remove/undefine this to have all log messages end up in stderr */
 #define V_LOG_FILENAME "vultures_log.txt"
 
+static string vultures_game_path;
 
-extern "C" void append_slash(char *);
+#ifdef WIN32
+static const string slash = "\\";
+#else
+static const string slash = "/";
+#endif
 
-
-char vultures_game_path[1024];
 
 /*--------------------------------------------------------------------------
 General functions
@@ -46,34 +49,32 @@ char *vultures_basename(const char *filename)
 }
 
 
+string& trim(string &str)
+{
+	size_t start = str.find_first_not_of(" \t\r\n\0");
+	size_t end =  str.find_last_not_of(" \t\r\n\0");
+	
+	if (start == string::npos)
+		start = 0;
+	
+	str = str.substr(start, end - start + 1);
+	return str;
+}
+
 
 /* appends the name of a data file to it's subdir name to get a name relative to the executable */
-char *vultures_make_filename(const char *subdir1, const char *subdir2, const char *name)
+string vultures_make_filename(string subdir1, string subdir2, string name)
 {
-	char *filename;
-
-	filename = (char*)malloc(strlen(vultures_game_path) + 1 +
-		(subdir1 ? strlen(subdir1) + 2 : 0) +
-		(subdir2 ? strlen(subdir2) + 2 : 0) +
-		strlen(name) + 1);
-	if (filename == NULL)
-		OOM(1);
-
-	strcpy(filename, vultures_game_path);
-	append_slash(filename);
-	if (subdir1)
-	{
-		strcat(filename, subdir1);
-		append_slash(filename);
-	}
-
-	if (subdir2)
-	{
-		strcat(filename, subdir2);
-		append_slash(filename);
-	}
-	strcat(filename, name);
-
+	string filename = vultures_game_path;
+	
+	if (!subdir1.empty())
+		filename.append(slash).append(subdir1);
+	
+	if (!subdir2.empty())
+		filename.append(slash).append(subdir2);
+	
+	filename.append(slash).append(name);
+	
 	return filename;
 }
 
@@ -149,7 +150,7 @@ void vultures_init_gamepath(void)
 /* Get starting directory, and save it for reference */
 	char hackdir[1024];
 	getcwd(hackdir, sizeof(hackdir));
-	strncpy(vultures_game_path, hackdir, 1024);
+	vultures_game_path = hackdir;
 }
 
 

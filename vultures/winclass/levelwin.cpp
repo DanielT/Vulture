@@ -553,7 +553,7 @@ eventresult levelwin::event_handler(window* target, void* result, SDL_Event* eve
 	int translated_key, key;
 	int macronum, i;
 	point mouse, mappos;
-	char * ttext;
+	string ttext;
 
 	mouse = vultures_get_mouse_pos();
 	mappos = mouse_to_map(mouse);
@@ -724,9 +724,8 @@ eventresult levelwin::event_handler(window* target, void* result, SDL_Event* eve
 				vultures_mouse_set_tooltip(target->caption);
 			else {
 				ttext = map_square_description(mappos, 1);
-				if(ttext && ttext[0])
+				if(!ttext.empty())
 					vultures_mouse_set_tooltip(ttext);
-				free(ttext);
 			}
 			break;
 
@@ -1314,78 +1313,63 @@ void levelwin::clear_floor_edges(int y, int x)
 }
 
 
-char* levelwin::map_square_description(point target, int include_seen)
+string levelwin::map_square_description(point target, int include_seen)
 {
 	struct permonst *pm;
-	char   *out_str, look_buf[BUFSZ];
-	char   temp_buf[BUFSZ], coybuf[QBUFSZ];  
-	char   monbuf[BUFSZ];
+	string out_str = "";
+	char monbuf[BUFSZ], temp_buf[BUFSZ], coybuf[BUFSZ], look_buf[BUFSZ];
 	struct monst *mtmp = (struct monst *) 0;
 	const char *firstmatch;
 	int n_objs;
 	struct obj * obj;
 
-	if ((target.x < 1) || (target.x >= COLNO) || (target.y < 0) || (target.y >= ROWNO))
-	return NULL;
+	if ((target.x < 1) || (target.x >= COLNO) ||
+	    (target.y < 0) || (target.y >= ROWNO))
+		return out_str;
 
 	/* All of monsters, objects, traps and furniture get descriptions */
-	if ((vultures_map_mon[target.y][target.x] != V_TILE_NONE))
-	{
-		out_str = (char *)malloc(BUFSZ);
-		out_str[0] = '\0';
-
+	if ((vultures_map_mon[target.y][target.x] != V_TILE_NONE)) {
 		look_buf[0] = '\0';
 		monbuf[0] = '\0';
 		pm = lookat(target.x, target.y, look_buf, monbuf);
 		firstmatch = look_buf;
-		if (*firstmatch)
-		{
+		if (look_buf[0]) {
 			mtmp = m_at(target.x, target.y);
 			Sprintf(temp_buf, "%s", (pm == &mons[PM_COYOTE]) ? coyotename(mtmp,coybuf) : firstmatch);
-			strncat(out_str, temp_buf, BUFSZ-strlen(out_str)-1);
+			out_str = temp_buf;
 		}
-		if (include_seen)
-		{
-			if (monbuf[0])
-			{
+		if (include_seen) {
+			if (monbuf[0]) {
 				sprintf(temp_buf, " [seen: %s]", monbuf);
-				strncat(out_str, temp_buf, BUFSZ-strlen(out_str)-1);
+				out_str += temp_buf;
 			}
 		}
-		return out_str;
 	}
-	else if (vultures_map_obj[target.y][target.x] != V_TILE_NONE)
-	{
-		out_str = (char *)malloc(BUFSZ);
+	else if (vultures_map_obj[target.y][target.x] != V_TILE_NONE) {
 		look_buf[0] = '\0';
 		monbuf[0] = '\0';
 		lookat(target.x, target.y, look_buf, monbuf);
 		
 		n_objs = 0;
 		obj = level.objects[target.x][target.y];
-		while(obj)
-		{
+		while(obj) {
 			n_objs++;
 			obj = obj->nexthere;
 		}
 		
-		if (n_objs > 1)
-			snprintf(out_str, BUFSZ, "%s (+%d other object%s)", look_buf, n_objs - 1, (n_objs > 2) ? "s" : "");
-		else
-			strncpy(out_str, look_buf, BUFSZ);
-
-		return out_str;
+		if (n_objs > 1) {
+			snprintf(temp_buf, BUFSZ, "%s (+%d other object%s)", look_buf, n_objs - 1, (n_objs > 2) ? "s" : "");
+			out_str = temp_buf;
+		} else
+			out_str = look_buf;
 	}
 	else if ((vultures_map_trap[target.y][target.x] != V_TILE_NONE) ||
-			(vultures_map_furniture[target.y][target.x] != V_TILE_NONE))
-	{
-		out_str = (char *)malloc(BUFSZ);
-		lookat(target.x, target.y, out_str, monbuf);
-
-		return out_str;
+			(vultures_map_furniture[target.y][target.x] != V_TILE_NONE)) {
+		lookat(target.x, target.y, look_buf, monbuf);
+		out_str = look_buf;
 	}
 
-	return NULL;
+	return out_str;
 }
 
 

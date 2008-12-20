@@ -342,7 +342,6 @@ eventresult inventory::event_handler(window* target, void* result, SDL_Event* ev
 eventresult inventory::objwin_event_handler(window* target, void* result, SDL_Event* event)
 {
 	struct window * winelem;
-	char * str_to_find;
 	int key, itemcount, colno;
 	objitemwin *oitem;
 
@@ -572,7 +571,7 @@ eventresult inventory::objwin_event_handler(window* target, void* result, SDL_Ev
 
 
 				case MENU_SEARCH:
-					str_to_find = (char *)malloc(512);
+					char str_to_find[512];
 					str_to_find[0] = '\0';
 					if (vultures_get_input(-1, -1, "What are you looking for?", str_to_find) != -1)
 					{
@@ -592,7 +591,6 @@ eventresult inventory::objwin_event_handler(window* target, void* result, SDL_Ev
 						if (ow_lasttoggled)
 							ow_lasttoggled->last_toggled = true;
 					}
-					free(str_to_find);
 					return V_EVENT_HANDLED_REDRAW;
 
 				default:

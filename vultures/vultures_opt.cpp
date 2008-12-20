@@ -132,8 +132,10 @@ void vultures_read_main_config(FILE * fp)
 void vultures_read_sound_config(FILE * fp)
 {
 	char configline[1024];
+	char buffer[1024];
 	char *tok, *tok2;
 	int soundtype;
+	vultures_event_sound cur_event_sound;
 
 	while (fgets(configline, sizeof(configline), fp))
 	{
@@ -161,30 +163,17 @@ void vultures_read_sound_config(FILE * fp)
 			continue;
 
 
-		vultures_n_event_sounds++;
-		vultures_event_sounds = (vultures_event_sound **)realloc(vultures_event_sounds,
-								vultures_n_event_sounds * sizeof(vultures_event_sound *));
-		vultures_event_sounds[vultures_n_event_sounds-1] = 
-							(vultures_event_sound *)malloc(sizeof(vultures_event_sound));
-		(vultures_event_sounds[vultures_n_event_sounds-1])->filename = 
-									(char *)malloc(V_MAX_FILENAME_LENGTH*sizeof(char));
-
-		(vultures_event_sounds[vultures_n_event_sounds-1])->searchpattern = 
-									(char *)malloc(V_MAX_FILENAME_LENGTH*sizeof(char));
-		memcpy((vultures_event_sounds[vultures_n_event_sounds-1])->searchpattern,
-				configline+1, tok-configline-1);
-		(vultures_event_sounds[vultures_n_event_sounds-1])->searchpattern[tok-configline-1] = '\0';
+		cur_event_sound.searchpattern = new char[V_MAX_FILENAME_LENGTH];
+		memcpy(cur_event_sound.searchpattern, configline+1, tok-configline-1);
+		cur_event_sound.searchpattern[tok-configline-1] = '\0';
 
 		/* Check for a background music event */
-		if (!strcmp((vultures_event_sounds[vultures_n_event_sounds-1])->searchpattern,
-					"nhfe_music_background"))
-		{
+		if (!strcmp(cur_event_sound.searchpattern, "nhfe_music_background")) {
 			vultures_n_background_songs++;
-			free((vultures_event_sounds[vultures_n_event_sounds-1])->searchpattern);
-			(vultures_event_sounds[vultures_n_event_sounds-1])->searchpattern =
-											(char *)malloc(strlen("nhfe_music_background")+4);
-			sprintf((vultures_event_sounds[vultures_n_event_sounds-1])->searchpattern,
-									"nhfe_music_background%03d", vultures_n_background_songs-1);
+			delete cur_event_sound.searchpattern;
+			cur_event_sound.searchpattern = (char *)malloc(strlen("nhfe_music_background")+4);
+			sprintf(cur_event_sound.searchpattern, "nhfe_music_background%03d",
+                    vultures_n_background_songs-1);
 		}
 
 		if (soundtype == V_EVENT_SOUND_TYPE_SND ||
@@ -194,32 +183,26 @@ void vultures_read_sound_config(FILE * fp)
 			tok = tok + 8;
 
 		tok2 = strstr(tok, "]");
-		memcpy((vultures_event_sounds[vultures_n_event_sounds-1])->filename, tok, tok2-tok);
-		(vultures_event_sounds[vultures_n_event_sounds-1])->filename[tok2-tok] = '\0';
+		memcpy(buffer, tok, tok2-tok);
+		buffer[tok2-tok] = '\0';
 
-		(vultures_event_sounds[vultures_n_event_sounds-1])->soundtype = soundtype;
-
+		cur_event_sound.filename = buffer;
+		cur_event_sound.soundtype = soundtype;
 
 		/* If this isn't a CD track, add path to sounds subdirectory before filename */
 		if (soundtype != V_EVENT_SOUND_TYPE_CD_AUDIO)
-		{
-			char *tmp = vultures_event_sounds[vultures_n_event_sounds-1]->filename;
-			vultures_event_sounds[vultures_n_event_sounds-1]->filename =
-					vultures_make_filename(soundtype == V_EVENT_SOUND_TYPE_SND ? 
-														V_SOUND_DIRECTORY : V_MUSIC_DIRECTORY,
-														NULL, tmp);
-			free(tmp);
-		}
-
+			cur_event_sound.filename =
+				vultures_make_filename(soundtype == V_EVENT_SOUND_TYPE_SND ? V_SOUND_DIRECTORY : V_MUSIC_DIRECTORY, "", cur_event_sound.filename);
+		
+		vultures_event_sounds.push_back(cur_event_sound);
 	} /* while (fgets(...)) */
 }
 
 
 
-char * vultures_get_userdir(void)
+string vultures_get_userdir(void)
 {
-	char *userdir;
-	userdir = (char *)malloc(512);
+	char userdir[512];
 	
 #ifdef WIN32
 	/* %appdir% = X:\Documents and Settings\<username>\Application Data */
@@ -236,9 +219,9 @@ char * vultures_get_userdir(void)
 void vultures_read_options(void)
 {
 	FILE *fp;
-	char *filename;
+	string filename;
 	int i;
-	char *userdir = vultures_get_userdir();
+	string userdir = vultures_get_userdir();
 	
 	/* initialize these, in case they aren't set in the config file */
 	vultures_opts.wall_opacity = 1.0;
@@ -266,36 +249,26 @@ void vultures_read_options(void)
 	/* Read interface options */
 	
 	/* main config file */
-	filename = vultures_make_filename(V_CONFIG_DIRECTORY, NULL, V_FILENAME_OPTIONS);
-	fp = fopen(filename, "rb");
+	filename = vultures_make_filename(V_CONFIG_DIRECTORY, "", V_FILENAME_OPTIONS);
+	fp = fopen(filename.c_str(), "rb");
 
-	if (fp)
-	{
+	if (fp) {
 		vultures_read_main_config(fp);
 		fclose(fp);
 	}
 	else
-		printf("Could nor open %s: %s\n", filename, strerror(errno));
-
-	free(filename);
+		printf("Could nor open %s: %s\n", filename.c_str(), strerror(errno));
 
 	/* user's config file */
-	filename = (char *)malloc(512);
-	strncpy(filename, userdir, 512);
-	strncat(filename, V_FILENAME_OPTIONS, 512);
-	fp = fopen(filename, "rb");
+	filename = userdir + V_FILENAME_OPTIONS;
+	fp = fopen(filename.c_str(), "rb");
 
-	if (fp)
-	{
+	if (fp) {
 		vultures_read_main_config(fp);
 		fclose(fp);
 	}
 
-	free(filename);
-
-
-	if (vultures_opts.wall_opacity > 1.0 || vultures_opts.wall_opacity < 0)
-	{
+	if (vultures_opts.wall_opacity > 1.0 || vultures_opts.wall_opacity < 0) {
 		fprintf(stderr, "WARNING: detected an invalid value for wall_opacity. Set 1.0 instead.\n");
 		vultures_opts.wall_opacity = 1.0;
 	}
@@ -303,47 +276,36 @@ void vultures_read_options(void)
 	/* minimum window size: the map + inventory windows need at least this much space */
 	if (vultures_opts.width < 640)
 		vultures_opts.width = 640;
-	if (vultures_opts.height < 510)
-		vultures_opts.height = 510;
+	if (vultures_opts.height < 480)
+		vultures_opts.height = 480;
 
 
 	/* Read event sounds options */
-	vultures_event_sounds = NULL;
-	vultures_n_event_sounds = 0;
+	vultures_event_sounds.clear();
 
-	filename = vultures_make_filename(V_CONFIG_DIRECTORY, NULL, V_FILENAME_SOUNDS_CONFIG);
-	fp = fopen(filename, "rb");
+	filename = vultures_make_filename(V_CONFIG_DIRECTORY, "", V_FILENAME_SOUNDS_CONFIG);
+	fp = fopen(filename.c_str(), "rb");
 
-	if (fp)
-	{
+	if (fp) {
 		vultures_read_sound_config(fp);
 		fclose(fp);
 	}
 
-	free(filename);
-
 
 	/* user's sound config file */
-	filename = (char *)malloc(512);
-	strncpy(filename, userdir, 512);
-	strncat(filename, V_FILENAME_SOUNDS_CONFIG, 512);
-	fp = fopen(filename, "rb");
+	filename = userdir + V_FILENAME_SOUNDS_CONFIG;
+	fp = fopen(filename.c_str(), "rb");
 
-	if (fp)
-	{
+	if (fp) {
 		vultures_read_main_config(fp);
 		fclose(fp);
 	}
-
-	free(filename);
-
-	free(userdir);
 }
 
 
 void vultures_write_userconfig(void)
 {
-	char *filename, *dir;
+	string filename, dir;
 	struct stat statbuf;
 	mode_t oldmask;
 	int i;
@@ -356,40 +318,30 @@ void vultures_write_userconfig(void)
 	* This should work everywhere people haven't changed permissions to
 	* something really whacky and if they have, they'll just have to fix
 	* it themselves */
-	mkdir(dir);
+	mkdir(dir.c_str());
 #else
 
 	/* elsewhere we try to be more intelligent: create the dir only if it doesn't
 	* exist, and when we do so, use a sane umask + permissions */
-	if (stat(dir, &statbuf) == -1)
+	if (stat(dir.c_str(), &statbuf) == -1)
 	{
-		if (errno == ENOENT)
-		{
+		if (errno == ENOENT) {
 			oldmask = umask(0022);
 
-			if (mkdir(dir, 0755) == -1)
-			{
-				printf("Could not create %s: %s\n", dir, strerror(errno));
-				free(dir);
+			if (mkdir(dir.c_str(), 0755) == -1) {
+				printf("Could not create %s: %s\n", dir.c_str(), strerror(errno));
 				return;
 			}
 			umask(oldmask);
-		}
-		else
-		{
-			printf("Could not stat %s: %s\n", dir, strerror(errno));
-			free(dir);
+		} else {
+			printf("Could not stat %s: %s\n", dir.c_str(), strerror(errno));
 			return;
 		}
 	}
 #endif
 		
-	filename = (char *)malloc(512);
-	strncpy(filename, dir, 512);
-	strncat(filename, V_FILENAME_OPTIONS, 512);
-	free(dir);
-	
-	fp = fopen(filename, "wb");
+	filename = dir + V_FILENAME_OPTIONS;
+	fp = fopen(filename.c_str(), "wb");
 	if (fp)
 	{
 		fprintf(fp, "screen_xsize=%d\n", vultures_opts.width);
@@ -419,9 +371,7 @@ void vultures_write_userconfig(void)
 		fclose(fp);
 	}
 	else
-		printf("Could not open %s for writing: %s\n", filename, strerror(errno));
-
-	free(filename);
+		printf("Could not open %s for writing: %s\n", filename.c_str(), strerror(errno));
 }
 
 
@@ -439,7 +389,7 @@ int vultures_iface_opts(void)
 	winid = vultures_create_nhwindow(NHW_MENU);
 	vultures_start_menu(winid);
 	
-	str = (char *)malloc(256);
+	str = new char[256];
 
 	any.a_int = V_IOMID_RECENTER;
 	sprintf(str, "Recenter after movement\t[%s]", vultures_opts.recenter ? "yes" : "no");
@@ -674,7 +624,7 @@ int vultures_iface_opts(void)
 	if (size_changed)
 		vultures_set_screensize();
 
-	free(str);
+	delete str;
 
 	vultures_write_userconfig();
 

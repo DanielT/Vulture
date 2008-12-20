@@ -21,7 +21,7 @@ enhancebutton *enhancebtn;
 
 enhancebutton::enhancebutton(window *p) : window(p)
 {
-	image = vultures_load_graphic(NULL, V_FILENAME_ENHANCE);
+	image = vultures_load_graphic(V_FILENAME_ENHANCE);
 	w = image->w;
 	h = image->h;
 	

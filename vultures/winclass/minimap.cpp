@@ -19,7 +19,7 @@ extern "C" {
 
 minimap::minimap(levelwin *p, int parentw) : window(p), level(p)
 {
-	minimapbg = vultures_load_graphic(NULL, V_FILENAME_MINIMAPBG);
+	minimapbg = vultures_load_graphic(V_FILENAME_MINIMAPBG);
 	w = minimapbg->w;
 	h = minimapbg->h;
 	x = parentw - (w + 6);

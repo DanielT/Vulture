@@ -445,7 +445,7 @@ void vultures_end_menu(int winid, const char *prompt)
 
 
 
-int vultures_select_menu(int winid, int how, menu_item ** menu_list)
+int vultures_select_menu(int winid, int how, menu_item **menu_list)
 {
 	menuwin *win;
 	window *win_elem;
@@ -460,14 +460,12 @@ int vultures_select_menu(int winid, int how, menu_item ** menu_list)
 	win->set_selection_type(how);
 	*menu_list = NULL; /* realloc blows up if this contains a random memory location */
 
-	if (how != PICK_NONE)
-	{
+	if (how != PICK_NONE) {
 		/* check for an autoresponse to this menu */
-		if ((queued_event = vultures_eventstack_get()) && queued_event->rtype == V_RESPOND_ANY)
-		{
+		if ((queued_event = vultures_eventstack_get()) &&
+            queued_event->rtype == V_RESPOND_ANY) {
 			win_elem = win->find_accel((char)queued_event->num);
-			if (win_elem)
-			{
+			if (win_elem) {
 				*menu_list = (menu_item *)malloc(sizeof(menu_item));
 				(*menu_list)[0].item.a_void = win_elem->get_menu_id();
 				(*menu_list)[0].count = -1; 

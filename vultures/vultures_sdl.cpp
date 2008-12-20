@@ -12,6 +12,7 @@ Requires SDL 1.1 or newer.
 #include <unistd.h>
 #endif
 #include <stdarg.h>
+#include "vultures_sound.h"
 #include "SDL.h"
 #include "SDL_video.h"
 #include "SDL_error.h"
@@ -22,7 +23,6 @@ Requires SDL 1.1 or newer.
 #include "vultures_win.h"
 #include "vultures_sdl.h"
 #include "vultures_main.h"
-#include "vultures_sound.h"
 #include "vultures_mou.h"
 #include "vultures_opt.h"
 #include "vultures_tile.h"

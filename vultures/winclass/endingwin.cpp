@@ -40,17 +40,17 @@ bool endingwin::draw()
 	switch (ending_type-1)
 	{
 		case QUIT:
-			image = vultures_load_graphic(NULL, V_FILENAME_ENDING_QUIT);
+			image = vultures_load_graphic(V_FILENAME_ENDING_QUIT);
 			vultures_play_event_sound("nhfe_music_end_quit");
 			break;
 
 		case ASCENDED:
-			image = vultures_load_graphic(NULL, V_FILENAME_ENDING_ASCENDED);
+			image = vultures_load_graphic(V_FILENAME_ENDING_ASCENDED);
 			vultures_play_event_sound("nhfe_music_end_ascended");
 			break;
 
 		case ESCAPED:
-			image = vultures_load_graphic(NULL, V_FILENAME_ENDING_ESCAPED);
+			image = vultures_load_graphic(V_FILENAME_ENDING_ESCAPED);
 			vultures_play_event_sound("nhfe_music_end_ascended");
 			break;
 
@@ -59,7 +59,7 @@ bool endingwin::draw()
 			break;
 
 		default:
-			image = vultures_load_graphic(NULL, V_FILENAME_ENDING_DIED);
+			image = vultures_load_graphic(V_FILENAME_ENDING_DIED);
 			vultures_play_event_sound("nhfe_music_end_died");
 	}
 

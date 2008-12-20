@@ -47,7 +47,7 @@ int vultures_init_map(void)
 void vultures_destroy_map(void)
 {
 	/* free nethack to vultures translation tables */
-	free (vultures_tilemap_engulf);
+	delete vultures_tilemap_engulf;
 }
 
 
@@ -832,7 +832,7 @@ static char vultures_mappos_to_dirkey(point mappos)
 static void vultures_build_tilemap(void)
 {
 	int i;
-	vultures_tilemap_engulf = (int *)malloc(NUMMONS*sizeof(int));
+	vultures_tilemap_engulf = new int[NUMMONS];
 
 	/* build engulf tile array */
 	for (i = 0; i < NUMMONS; i++)
