@@ -804,6 +804,10 @@ void levelwin::set_map_data(glyph_type type, int x, int y, int newval, bool forc
 	if ((*data_array)[y][x] != newval || force)
 	{
 		(*data_array)[y][x] = newval;
+		
+		/* raw glyph values are only stored, not printed */
+		if (type == MAP_GLYPH)
+			return;
 
 		pixel_x = (this->w / 2) + V_MAP_XMOD*(x - y + vultures_view_y - vultures_view_x);
 		pixel_y = (this->h / 2) + V_MAP_YMOD*(x + y - vultures_view_y - vultures_view_x);
