@@ -724,14 +724,18 @@ static void init_monnames()
 static void init_explnames()
 {
 	int i, j;
-	const char * explosion_names[] = {"DARK", "NOXIOUS", "MUDDY", "WET", "MAGICAL", "FIERY", "FROSTY"};
+	char buffer[64];
+	const char * explosion_names[] = {"DARK", "NOXIOUS", "MUDDY", "WET", 
+	                                  "MAGICAL", "FIERY", "FROSTY"};
 
 	tilenames[TT_EXPL].resize(EXPL_MAX * 9);
 	vultures_typecount[TT_EXPL] = EXPL_MAX * 9;
 
 	for (i = 0; i < EXPL_MAX; i++) {
-		for (j = 0; j < 9; j++)
-			tilenames[TT_EXPL][i*9+j] = explosion_names[i];
+		for (j = 0; j < 9; j++) {
+			snprintf(buffer, 64, "%s_%d", explosion_names[i], j+1);
+			tilenames[TT_EXPL][i*9+j] = buffer;
+		}
 	}
 }
 
