@@ -689,11 +689,11 @@ void inventory::layout()
 		bottomoffset += (textheight + 14);
 
 	for (item_iterator i = items.begin(); i != items.end(); ++i) {
-		if (!(*i)->identifier)
-			new objheaderwin(this, (*i)->str);
+		if (!i->identifier)
+			new objheaderwin(this, i->str);
 		else
-			new objitemwin(this, *i, (*i)->str, (*i)->accelerator, 
-						(*i)->glyph, (*i)->preselected);
+			new objitemwin(this, &(*i), i->str, i->accelerator, 
+						i->glyph, i->preselected, select_how == PICK_ANY);
 		itemcount++;
 
 	}

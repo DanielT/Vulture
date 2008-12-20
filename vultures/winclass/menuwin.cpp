@@ -35,7 +35,7 @@ menuwin::menuwin(window *p) : mainwin(p)
 
 menuwin::~menuwin()
 {
-	reset();
+	items.clear();
 }
 
 
@@ -57,8 +57,6 @@ void menuwin::reset()
 		delete first_child;
 	}
 	
-	for (item_iterator i = items.begin(); i != items.end(); ++i)
-		delete *i;
 	items.clear();
 	
 	scrollarea = NULL;
@@ -333,10 +331,10 @@ void menuwin::assign_accelerators()
 
 	used_accels[0] = '\0';
 	for (item_iterator i = items.begin(); i != items.end(); ++i) {
-		if ((*i)->accelerator == 0 && (*i)->identifier) {
+		if (i->accelerator == 0 && i->identifier) {
 			new_accel = vultures_find_menu_accelerator(used_accels);
 			if (new_accel >= 0)
-				(*i)->accelerator = new_accel;
+				i->accelerator = new_accel;
 		}
 	}
 }
@@ -374,17 +372,17 @@ void menuwin::layout()
 	scrollarea = new scrollwin(this);
 	for (item_iterator i = items.begin(); i != items.end(); ++i) {
 		newcaption = "";
-		if ((*i)->accelerator) {
+		if (i->accelerator) {
 			newcaption += "[ ] - ";
-			newcaption[1] = (*i)->accelerator;
+			newcaption[1] = i->accelerator;
 		}
-		newcaption += (*i)->str;
+		newcaption += i->str;
 	
-		if (!(*i)->identifier || select_how == PICK_NONE)
+		if (!i->identifier || select_how == PICK_NONE)
 			new textwin(scrollarea, newcaption);
 		else
-			new optionwin(scrollarea, *i, newcaption, (*i)->accelerator, 
-			             (*i)->glyph, (*i)->preselected, select_how == PICK_ANY);
+			new optionwin(scrollarea, &(*i), newcaption, i->accelerator, 
+			             i->glyph, i->preselected, select_how == PICK_ANY);
 	}
 	scrollarea->layout();
 	scrollheight = scrollarea->get_scrollheight();
@@ -407,21 +405,21 @@ void menuwin::layout()
 
 void menuwin::add_menuitem(string str, bool preselected, void *identifier, char accelerator, int glyph)
 {
-	items.push_back(new menuitem(str, preselected, identifier, accelerator, glyph));
+	items.push_back(menuitem(str, preselected, identifier, accelerator, glyph));
 }
 
 
 /* selection iterator */
 menuwin::selection_iterator::selection_iterator(item_iterator start, item_iterator end) : iter(start), end(end)
 {
-	while (iter != end && !(*iter)->selected)
+	while (iter != end && !iter->selected)
 		iter++;
 }
 
 menuwin::selection_iterator& menuwin::selection_iterator::operator++(void)
 {
 	iter++;
-	while (iter != end && !(*iter)->selected)
+	while (iter != end && !iter->selected)
 		iter++;
 	
 	return *this;
@@ -432,7 +430,7 @@ bool menuwin::selection_iterator::operator!=(selection_iterator rhs) const
 	return this->iter != rhs.iter;
 }
 
-menuitem* menuwin::selection_iterator::operator*()
+menuitem& menuwin::selection_iterator::operator*()
 {
 	return *iter;
 }

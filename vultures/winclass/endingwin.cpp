@@ -28,7 +28,7 @@ bool endingwin::draw()
 
 	if (!flags.tombstone) {
 		for (item_iterator i = items.begin(); i != items.end(); ++i)
-			printf("%s\n", (*i)->str.c_str());
+			printf("%s\n", i->str.c_str());
 
 		printf("\n\n");
 		return false;
@@ -78,8 +78,8 @@ bool endingwin::draw()
 	/* Display the rows */
 	textpos_y = vultures_screen->h - (lines+1) * vultures_get_lineheight(V_FONT_INTRO);
 	for (item_iterator i = items.begin(); i != items.end(); ++i) {
-		textpos_x = (vultures_screen->w - vultures_text_length(V_FONT_INTRO, (*i)->str))/2;
-		vultures_put_text_shadow(V_FONT_INTRO, (*i)->str, vultures_screen, textpos_x,
+		textpos_x = (vultures_screen->w - vultures_text_length(V_FONT_INTRO, i->str))/2;
+		vultures_put_text_shadow(V_FONT_INTRO, i->str, vultures_screen, textpos_x,
 								textpos_y, V_COLOR_INTRO_TEXT, V_COLOR_BACKGROUND);
 		textpos_y += vultures_get_lineheight(V_FONT_INTRO);
 	}

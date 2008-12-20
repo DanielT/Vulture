@@ -507,8 +507,8 @@ int vultures_select_menu(int winid, int how, menu_item ** menu_list)
 	     iter != win->selection_end(); ++iter) {
 			n_selected++;
 			*menu_list = (menu_item *)realloc(*menu_list, n_selected*sizeof(menu_item));
-			(*menu_list)[n_selected-1].item.a_void = (void*)(*iter)->identifier;
-			(*menu_list)[n_selected-1].count = (*iter)->count;
+			(*menu_list)[n_selected-1].item.a_void = (void*)(*iter).identifier;
+			(*menu_list)[n_selected-1].count = (*iter).count;
 	}
 
 	return n_selected;

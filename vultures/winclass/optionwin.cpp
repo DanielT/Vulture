@@ -16,6 +16,7 @@ optionwin::optionwin(window *p, menuitem* mi, string cap, char accel,
 	accelerator = accel;
 	
 	caption = cap;
+	menu_id_v = (void*)mi->identifier;
 }
 
 

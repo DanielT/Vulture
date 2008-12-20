@@ -87,7 +87,7 @@ int scrollwin::get_menuitem_width(window *item, int colwidths[8])
 		
 	pos = item->caption.find_first_of('\t');
 	if (pos == string::npos)
-		return vultures_text_length(V_FONT_MENU, coltxt) + btnwidth + 5;
+		return vultures_text_length(V_FONT_MENU, item->caption) + btnwidth + 5;
 
 	width = prevpos = i = 0;
 	do {

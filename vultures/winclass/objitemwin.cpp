@@ -11,9 +11,9 @@
 #include "objitemwin.h"
 
 
-objitemwin::objitemwin(window *p, menuitem* mi, string cap,
-                       char accel, int glyph, bool selected) : 
-                       optionwin(p, mi, cap, accel, glyph, selected, false)
+objitemwin::objitemwin(window *p, menuitem* mi, string cap, char accel,
+                       int glyph, bool selected, bool multiselect) : 
+                       optionwin(p, mi, cap, accel, glyph, selected, multiselect)
 {
 	v_type = V_WINTYPE_OBJITEM;
 	last_toggled = false;
@@ -21,6 +21,7 @@ objitemwin::objitemwin(window *p, menuitem* mi, string cap,
 	autobg = true;
 	w = V_LISTITEM_WIDTH;
 	h = V_LISTITEM_HEIGHT;
+	obj = NULL;
 }
 
 

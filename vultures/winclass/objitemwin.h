@@ -9,7 +9,7 @@ class objitemwin : public optionwin
 {
 public:
 	objitemwin(window *p, menuitem* mi, string cap,
-	          char accel, int glyph, bool selected);
+	          char accel, int glyph, bool selected, bool multiselect);
 	virtual bool draw();
 	virtual eventresult event_handler(window *target, void *result, SDL_Event *event);
 

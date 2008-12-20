@@ -1,7 +1,7 @@
 #ifndef _menuwin_h_
 #define _menuwin_h_
 
-#include <vector>
+#include <list>
 
 #include "mainwin.h"
 
@@ -18,8 +18,8 @@ public:
              accelerator(accel), selected(false), count(-1) {};
 	const void *identifier;
 	string str;
-	const int glyph;
-	const bool preselected;
+	int glyph;
+	bool preselected;
 	char accelerator;
 	bool selected;
 	int count;
@@ -29,7 +29,7 @@ public:
 class menuwin : public mainwin
 {
 public:
-	typedef std::vector<menuitem*>::iterator item_iterator;
+	typedef std::list<menuitem>::iterator item_iterator;
 
 	class selection_iterator
 	{
@@ -37,7 +37,7 @@ public:
 	public:
 		selection_iterator& operator++(void);
 		bool operator!=(selection_iterator rhs) const;
-		menuitem* operator*();
+		menuitem& operator*();
 		
 	private:
 		selection_iterator(item_iterator start, item_iterator end);
@@ -68,7 +68,7 @@ protected:
 	
 	scrollwin *scrollarea;
 	int select_how;
-	std::vector<menuitem*> items;
+	std::list<menuitem> items;
 	int count;
 };
 

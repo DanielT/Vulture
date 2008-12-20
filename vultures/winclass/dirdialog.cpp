@@ -28,19 +28,19 @@ dirdialog::dirdialog(window *p, string ques) : mainwin(p)
 	if (!ques.empty())
 		w = vultures_text_length(V_FONT_HEADLINE, ques);
 	w = (w > arrows_w) ? w : arrows_w;
-	w += vultures_winelem.border_left->w + vultures_winelem.border_right->w;
+	w += border_left + border_right;
 
-	arroffset_y = vultures_winelem.border_top->h + vultures_get_lineheight(V_FONT_HEADLINE) * 1.5;
+	arroffset_y = border_top + vultures_get_lineheight(V_FONT_HEADLINE) * 1.5;
 	arroffset_x = (w - arrows_w) / 2;
 
-	h = arroffset_y + arrows_h + vultures_winelem.border_bottom->h;
+	h = arroffset_y + arrows_h + border_bottom;
 
 	x = (parent->get_w() - w) / 2;
 	y = (parent->get_h() - h) / 2;
 	abs_x = parent->abs_x + x;
 	abs_y = parent->abs_y + y;
 
-	arr = new hotspot(this, arroffset_x, arroffset_y, arrows_w, arrows_h, 0, NULL);
+	arr = new hotspot(this, arroffset_x, arroffset_y, arrows_w, arrows_h, 0, "");
 }
 
 
