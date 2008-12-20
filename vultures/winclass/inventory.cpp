@@ -719,9 +719,7 @@ void inventory::layout()
 	ow_firstcol = 0;
 
 	itemcount = 0;
-	winelem = first_child;
-	while (winelem)
-	{
+	for (winelem = first_child; winelem; winelem = winelem->sib_next) {
 		if (winelem->v_type == V_WINTYPE_OBJITEM ||
 		    winelem->v_type == V_WINTYPE_OBJITEMHEADER) {
 			winelem->x = (itemcount / ow_vrows) * (V_LISTITEM_WIDTH + 4) + leftoffset;
@@ -729,11 +727,10 @@ void inventory::layout()
 			winelem->visible = ((itemcount / ow_vrows) < ow_vcols);
 
 			/* find the objects associated with the items */
-			if (winelem->v_type == V_WINTYPE_OBJITEM)
-			{
+			if (winelem->v_type == V_WINTYPE_OBJITEM) {
 				/* nethack may have been nice and passed an object pointer in menu_id_v
-				* Unforunately, we need this ugly hack to try to discern between
-				* chars, small ints and pointers */
+				 * Unforunately, we need this ugly hack to try to discern between
+				 * chars, small ints and pointers */
 				if (winelem->menu_id_v > (void*)0x10000)
 					static_cast<objitemwin*>(winelem)->obj = (struct obj *)winelem->menu_id_v; 
 				else if (id == WIN_INVEN) {
@@ -746,7 +743,6 @@ void inventory::layout()
 
 			itemcount++;
 		}
-		winelem = winelem->sib_next;
 	}
 
 	w = ow_vcols * (V_LISTITEM_WIDTH + 4) - 4 + leftoffset + rightoffset;

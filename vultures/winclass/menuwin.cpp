@@ -211,7 +211,7 @@ eventresult menuwin::event_handler(window* target, void* result, SDL_Event* even
 				if (select_how == PICK_ONE)
 					return V_EVENT_HANDLED_NOREDRAW;
 
-				for (winelem = first_child; winelem; winelem = winelem->sib_next) {
+				for (winelem = scrollarea->first_child; winelem; winelem = winelem->sib_next) {
 					if (winelem->v_type == V_WINTYPE_OPTION) {
 						opt = static_cast<optionwin*>(winelem);
 						opt->item->selected = (key == MENU_SELECT_ALL);
@@ -227,7 +227,7 @@ eventresult menuwin::event_handler(window* target, void* result, SDL_Event* even
 				if (select_how == PICK_ONE)
 					return V_EVENT_HANDLED_NOREDRAW;
 
-				for (winelem = first_child; winelem; winelem = winelem->sib_next) {
+				for (winelem = scrollarea->first_child; winelem; winelem = winelem->sib_next) {
 					if (winelem->v_type == V_WINTYPE_OPTION) {
 						opt = static_cast<optionwin*>(winelem);
 						opt->item->selected = !opt->item->selected;
@@ -244,7 +244,7 @@ eventresult menuwin::event_handler(window* target, void* result, SDL_Event* even
 				if (select_how == PICK_ONE)
 					return V_EVENT_HANDLED_NOREDRAW;
 
-				for (winelem = first_child; winelem; winelem = winelem->sib_next) {
+				for (winelem = scrollarea->first_child; winelem; winelem = winelem->sib_next) {
 					if (winelem->v_type == V_WINTYPE_OPTION && winelem->visible) {
 						opt = static_cast<optionwin*>(winelem);
 						opt->item->selected = (key == MENU_SELECT_PAGE);
@@ -260,7 +260,7 @@ eventresult menuwin::event_handler(window* target, void* result, SDL_Event* even
 				if (select_how == PICK_ONE)
 					return V_EVENT_HANDLED_NOREDRAW;
 
-				for (winelem = first_child; winelem; winelem = winelem->sib_next) {
+				for (winelem = scrollarea->first_child; winelem; winelem = winelem->sib_next) {
 					if (winelem->v_type == V_WINTYPE_OPTION && winelem->visible) {
 						opt = static_cast<optionwin*>(winelem);
 						opt->item->selected = !opt->item->selected;
