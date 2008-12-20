@@ -272,7 +272,8 @@ bool levelwin::draw()
 		vultures_map_clip_br_y = max(vultures_map_clip_br_y, this->abs_y + this->h - 1);
 	}
 
-	if (vultures_map_clip_tl_x >= this->w + this->abs_x || vultures_map_clip_tl_y >= this->h + this->abs_y)
+	if (vultures_map_clip_tl_x >= this->w + this->abs_x ||
+	    vultures_map_clip_tl_y >= this->h + this->abs_y)
 		/* nothing changed onscreen */
 		return 1;
 
@@ -784,9 +785,9 @@ eventresult levelwin::event_handler(window* target, void* result, SDL_Event* eve
 void levelwin::set_map_data(glyph_type type, int x, int y, int newval, bool force)
 {
 	int pixel_x, pixel_y;
-	int tl_x = 0, tl_y = 0, br_x = 0, br_y = 0;
+	int tl_x = 99999, tl_y = 99999, br_x = 0, br_y = 0;
 	vultures_tile *oldtile, *newtile;
-	int (*data_array)[ROWNO][COLNO];
+	int (*data_array)[ROWNO][COLNO], prevtile;
 	
 	switch (type) {
 		case MAP_MON: data_array = &vultures_map_mon; break;
@@ -797,16 +798,16 @@ void levelwin::set_map_data(glyph_type type, int x, int y, int newval, bool forc
 		case MAP_FURNITURE: data_array = &vultures_map_furniture; break;
 		case MAP_DARKNESS: data_array = &vultures_map_darkness; break;
 		case MAP_PET: data_array = &vultures_map_pet; break;
-		case MAP_GLYPH: data_array = &vultures_map_glyph; break;
+		case MAP_GLYPH:
+			/* raw glyph values are only stored, not printed */
+			vultures_map_glyph[y][x] = newval;
+			return;
 	}
 
 	if ((*data_array)[y][x] != newval || force)
 	{
+		prevtile = (*data_array)[y][x];
 		(*data_array)[y][x] = newval;
-		
-		/* raw glyph values are only stored, not printed */
-		if (type == MAP_GLYPH)
-			return;
 
 		pixel_x = (this->w / 2) + V_MAP_XMOD*(x - y + vultures_view_y - vultures_view_x);
 		pixel_y = (this->h / 2) + V_MAP_YMOD*(x + y - vultures_view_y - vultures_view_x);
@@ -817,13 +818,11 @@ void levelwin::set_map_data(glyph_type type, int x, int y, int newval, bool forc
 			pixel_y > vultures_screen->h + VULTURES_CLIPMARGIN)
 			return;
 
-		oldtile = vultures_get_tile((*data_array)[y][x]);
+		oldtile = vultures_get_tile(prevtile);
 		newtile = vultures_get_tile(newval);
 
-		if (*data_array != vultures_map_back)
-		{
-			if (oldtile)
-			{
+		if (*data_array != vultures_map_back) {
+			if (oldtile) {
 				tl_x = oldtile->xmod;
 				tl_y = oldtile->ymod;
 
@@ -831,8 +830,7 @@ void levelwin::set_map_data(glyph_type type, int x, int y, int newval, bool forc
 				br_y = oldtile->ymod + oldtile->graphic->h;
 			}
 
-			if (newtile)
-			{
+			if (newtile) {
 				tl_x = min(newtile->xmod, tl_x);
 				tl_y = min(newtile->ymod, tl_y);
 
@@ -849,9 +847,9 @@ void levelwin::set_map_data(glyph_type type, int x, int y, int newval, bool forc
 				/* allow for the heart icon on pets */
 				tl_y -= 10;
 		}
-		else
-		{
-			/* floor tiles tend to be placeholders until we reach draw_level, so we do this manually */
+		else {
+			/* floor tiles tend to be placeholders until we reach draw_level,
+			 * so we do this manually */
 			tl_x = pixel_x - 56;
 			tl_y = pixel_y - 100; /* 100 pixels accounts for possible walls, too */
 			br_x = pixel_x + 56;
