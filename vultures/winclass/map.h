@@ -5,9 +5,6 @@
 
 class levelwin;
 
-#define VULTURES_MAP_SYMBOL_WIDTH   7
-#define VULTURES_MAP_SYMBOL_HEIGHT 14
-
 
 #ifdef VULTURESEYE
 # define V_MAX_MAP_SYMBOLS  (40*30)
@@ -28,7 +25,7 @@ public:
 
 private:
 	SDL_Surface *mapbg;
-	SDL_Surface *vultures_map_symbols[V_MAX_MAP_SYMBOLS];
+	SDL_Surface *map_symbols[V_MAX_MAP_SYMBOLS];
 };
 
 

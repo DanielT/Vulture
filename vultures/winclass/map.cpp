@@ -12,11 +12,14 @@ extern "C" {
 #include "vultures_mou.h"
 #include "vultures_tile.h"
 
-
 #include "map.h"
 #include "hotspot.h"
 #include "levelwin.h"
 #include "textwin.h"
+
+#define SYMBOL_WIDTH   7
+#define SYMBOL_HEIGHT 14
+
 
 
 map::map(levelwin *p) : window(p)
@@ -54,11 +57,11 @@ map::map(levelwin *p) : window(p)
 	else
 	{
 		for (i = 0; i < V_MAX_MAP_SYMBOLS; i++)
-			vultures_map_symbols[i] = vultures_get_img_src(
-				(i%40)*VULTURES_MAP_SYMBOL_WIDTH,
-				(i/40)*VULTURES_MAP_SYMBOL_HEIGHT,
-				(i%40)*VULTURES_MAP_SYMBOL_WIDTH + (VULTURES_MAP_SYMBOL_WIDTH - 1),
-				(i/40)*VULTURES_MAP_SYMBOL_HEIGHT+ (VULTURES_MAP_SYMBOL_HEIGHT - 1),
+			map_symbols[i] = vultures_get_img_src(
+				(i%40)*SYMBOL_WIDTH,
+				(i/40)*SYMBOL_HEIGHT,
+				(i%40)*SYMBOL_WIDTH + (SYMBOL_WIDTH - 1),
+				(i/40)*SYMBOL_HEIGHT+ (SYMBOL_HEIGHT - 1),
 				image);
 		SDL_FreeSurface(image);
 	}
@@ -70,7 +73,7 @@ map::~map()
 
 	/* free the map symbols */
 	for (i = 0; i < V_MAX_MAP_SYMBOLS; i++)
-		SDL_FreeSurface(vultures_map_symbols[i]);
+		SDL_FreeSurface(map_symbols[i]);
 	
 	SDL_FreeSurface(mapbg);
 }
@@ -96,7 +99,8 @@ bool map::draw()
 	txt->x = (w - vultures_text_length(V_FONT_HEADLINE, txt->caption)) / 2;
 	txt->abs_x = abs_x + txt->x;
 	txt->abs_y = abs_y + txt->y;
-	vultures_put_text_shadow(V_FONT_HEADLINE, txt->caption, vultures_screen, txt->abs_x, txt->abs_y, CLR32_BROWN, CLR32_BLACK_A50);
+	vultures_put_text_shadow(V_FONT_HEADLINE, txt->caption, vultures_screen,
+	                      txt->abs_x, txt->abs_y, CLR32_BROWN, CLR32_BLACK_A50);
 
 	/* Find upper left corner of map on parchment */
 	map_x = abs_x + 39;
@@ -113,9 +117,9 @@ bool map::draw()
 				(map_glyph != cmap_to_glyph(S_stone) ||
 				(level.locations[j][i].seenv && is_dark))) {
 				vultures_put_img(
-						map_x+VULTURES_MAP_SYMBOL_WIDTH*j,
-						map_y+VULTURES_MAP_SYMBOL_HEIGHT*i,
-						vultures_map_symbols[glyph2tile[map_glyph]]); 
+						map_x + SYMBOL_WIDTH*j,
+						map_y + SYMBOL_HEIGHT*i,
+						map_symbols[glyph2tile[map_glyph]]); 
 			}
 		}
 
@@ -154,8 +158,8 @@ eventresult map::event_handler(window* target, void* result, SDL_Event* event)
 	string ttext;
 
 	mouse = vultures_get_mouse_pos();
-	mappos.x = (mouse.x - abs_x - 39) / VULTURES_MAP_SYMBOL_WIDTH;
-	mappos.y = (mouse.y - abs_y - 91) / VULTURES_MAP_SYMBOL_HEIGHT;
+	mappos.x = (mouse.x - abs_x - 39) / SYMBOL_WIDTH;
+	mappos.y = (mouse.y - abs_y - 91) / SYMBOL_HEIGHT;
 
 	if (mappos.x < 1 || mappos.x >= COLNO ||
 		mappos.y < 0 || mappos.y >= ROWNO)

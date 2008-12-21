@@ -73,7 +73,7 @@ public:
 	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
 	void set_map_data(glyph_type type, int x, int y, int newval, bool force);
 	void clear_map();
-	void set_swallowed(int swglyph) { vultures_map_swallow = swglyph; };
+	void set_swallowed(int swglyph) { map_swallow = swglyph; };
 	
 	int get_glyph(glyph_type type, int x, int y);
 	
@@ -104,35 +104,34 @@ private:
 	map_action get_map_contextmenu(point mappos);
 	int get_map_cursor(point mappos);
 
-	int vultures_view_x, vultures_view_y;  /* Center of displayed map area */
+	int view_x, view_y;  /* Center of displayed map area */
 	
 	/* Map window contents, as Vulture's tile IDs */
-	int vultures_map_glyph[ROWNO][COLNO];     /* real glyph representation of map */
-	int vultures_map_back[ROWNO][COLNO];      /* background (floors, walls, pools, moats, ...) */
-	int vultures_map_furniture[ROWNO][COLNO]; /* furniture (stairs, altars, fountains, ...) */
-	int vultures_map_trap[ROWNO][COLNO];      /* traps */
-	int vultures_map_obj[ROWNO][COLNO];       /* topmost object */
-	int vultures_map_specialeff[ROWNO][COLNO];   /* special effects: zap, engulf, explode */
-	int vultures_map_mon[ROWNO][COLNO];       /* monster tile ID */
-	int vultures_map_darkness[ROWNO][COLNO];
-	int vultures_map_pet[ROWNO][COLNO]; /* special attributes, we use them to highlight the pet */
-	unsigned char vultures_map_deco[ROWNO][COLNO];     /* positions of murals and carpets */
-	int vultures_map_swallow; /* the engulf tile, if any */
+	int map_glyph[ROWNO][COLNO];     /* real glyph representation of map */
+	int map_back[ROWNO][COLNO];      /* background (floors, walls, pools, moats, ...) */
+	int map_furniture[ROWNO][COLNO]; /* furniture (stairs, altars, fountains, ...) */
+	int map_trap[ROWNO][COLNO];      /* traps */
+	int map_obj[ROWNO][COLNO];       /* topmost object */
+	int map_specialeff[ROWNO][COLNO];   /* special effects: zap, engulf, explode */
+	int map_mon[ROWNO][COLNO];       /* monster tile ID */
+	int map_darkness[ROWNO][COLNO];
+	int map_pet[ROWNO][COLNO]; /* special attributes, we use them to highlight the pet */
+	unsigned char map_deco[ROWNO][COLNO];     /* positions of murals and carpets */
+	int map_swallow; /* the engulf tile, if any */
 	point map_highlight;
 
 	/* pointer to full height, half height or transparent walltile array */
 	struct walls *walltiles;
 
-	struct walls vultures_maptile_wall[ROWNO][COLNO]; /* Custom (combination) wall style for each square */
-	struct fedges vultures_maptile_floor_edge[ROWNO][COLNO]; /* Custom floor edge style for each square */
+	struct walls maptile_wall[ROWNO][COLNO]; /* Custom (combination) wall style for each square */
+	struct fedges maptile_floor_edge[ROWNO][COLNO]; /* Custom floor edge style for each square */
 
-	char vultures_room_indices[ROWNO][COLNO]; /* packed room numbers and deco ids */
+	char room_indices[ROWNO][COLNO]; /* packed room numbers and deco ids */
 
-
-	int vultures_map_clip_tl_x;
-	int vultures_map_clip_tl_y ;
-	int vultures_map_clip_br_x;
-	int vultures_map_clip_br_y;
+	int clip_tl_x;
+	int clip_tl_y ;
+	int clip_br_x;
+	int clip_br_y;
 
 };
 
