@@ -1,8 +1,6 @@
 
 extern "C" {
 	#include "hack.h"
-	
-	struct permonst * lookat(int, int, char *, char *);
 }
 
 
@@ -20,7 +18,6 @@ extern "C" {
 #include "vultures_gra.h"
 #include "vultures_opt.h"
 #include "vultures_tile.h"
-#include "vultures_map.h"
 #include "vultures_mou.h"
 #include "vultures_gen.h"
 #include "vultures_main.h"
@@ -42,7 +39,7 @@ int vultures_map_draw_lastmove = 0;
 int vultures_map_highlight_objects = 0;
 
 
-levelwin::levelwin() : window(NULL)
+levelwin::levelwin(mapdata *data) : window(NULL), map_data(data)
 {
 	nh_type = NHW_MAP;
 	v_type = V_WINTYPE_LEVEL;
@@ -70,12 +67,10 @@ levelwin::levelwin() : window(NULL)
 	new hotspot(this, w - 20, h - 20, 20,     20,     V_HOTSPOT_SCROLL_DOWNRIGHT, "scroll diagonally");
 
 	/* create the minimap now, so that it's drawn _under_ the message window */
-	new minimap(this, w);
+	new minimap(this, map_data);
 
 	/*NOTE: the upper scroll hotspot gets created later in ::init(),
 	* so that it covers the message window */
-
-	map_swallow = V_TILE_NONE;
 
 	clip_tl_x = 999999;
 	clip_tl_y = 999999;
@@ -83,12 +78,25 @@ levelwin::levelwin() : window(NULL)
 	clip_br_y = 0;
 
 	levwin = this;
+	
+	map_data->add_viewer(this);
 }
 
 
 void levelwin::init()
 {
 	int i, j;
+	
+	/* Initialize map */
+	for (i = 0; i < ROWNO; i++) {
+		for (j = 0; j < COLNO; j++) {
+			map_deco[i][j] = 0;
+			room_indices[i][j] = 0;
+			
+			clear_walls(i,j);
+		}
+	}
+	
 	w = vultures_screen->w;
 	h = vultures_screen->h;
 
@@ -120,9 +128,7 @@ void levelwin::init()
 
 	new toolbar(this, V_WIN_TOOLBAR2, vultures_opts.show_helptb,
 				w - 215, h - 45, V_FILENAME_TOOLBAR2, tb2_desc);
-				
-				
-
+	
 	/* select wall style */
 	switch (vultures_opts.wall_style)
 	{
@@ -136,61 +142,14 @@ void levelwin::init()
 			walltiles = (struct walls*)walls_half; break;
 	}
 
-	/* Initialize map */
-	for (i = 0; i < ROWNO; i++)
-	{
-		for (j = 0; j < COLNO; j++)
-		{
-			map_glyph[i][j] = NO_GLYPH;  
-			map_back[i][j] = V_MISC_UNMAPPED_AREA;
-			map_obj[i][j] = V_TILE_NONE;
-			map_trap[i][j] = V_TILE_NONE;
-			map_furniture[i][j] = V_TILE_NONE;
-			map_specialeff[i][j] = V_TILE_NONE;
-			map_mon[i][j] = V_TILE_NONE;
-			map_pet[i][j] = 0;
-			map_deco[i][j] = 0;
-			map_darkness[i][j] = 2;
-			room_indices[i][j] = 0;
-			
-			clear_walls(i,j);
-		}
-	}
-
 	view_x = COLNO/2;
 	view_y = ROWNO/2;
-
 }
 
 
 levelwin::~levelwin()
 {
-}
-
-
-void levelwin::clear_map()
-{
-	int i, j;
-
-	for (i = 0; i < ROWNO; i++)
-		for (j = 0; j < COLNO; j++)
-		{
-			map_darkness[i][j] = 2;
-			/* ideally this is what we'd do to clear background:
-			* map_back[i][j] = V_MISC_UNMAPPED_AREA;
-			* unfortunately doing so breaks dark tiles in rooms... */
-			vultures_print_glyph(0, j, i, cmap_to_glyph(S_stone));
-			map_trap[i][j] = V_TILE_NONE;
-			map_furniture[i][j] = V_TILE_NONE;
-			map_obj[i][j] = V_TILE_NONE;
-			map_mon[i][j] = V_TILE_NONE;
-			map_specialeff[i][j] = V_TILE_NONE;
-			map_pet[i][j] = 0;
-			map_glyph[i][j] = cmap_to_glyph(S_stone);
-
-			clear_floor_edges(i, j);
-			clear_walls(i, j);
-		}
+	map_data->del_viewer(this);
 }
 
 
@@ -241,6 +200,7 @@ bool levelwin::draw()
 	int map_tr_x, map_tr_y, __i, __j, diff, sum;
 	int map_centre_x = this->w / 2;
 	int map_centre_y = this->h / 2;
+	int map_back, map_darkness, map_obj, map_mon;
 	
 	unsigned long startticks = SDL_GetTicks();
 
@@ -257,7 +217,7 @@ bool levelwin::draw()
 
 	if (prev_cx != view_x ||
 		prev_cy != view_y ||
-		map_swallow != V_TILE_NONE)
+		map_data->map_swallow != V_TILE_NONE)
 	{
 		clip_tl_x = this->abs_x;
 		clip_tl_y = this->abs_y;
@@ -285,8 +245,7 @@ bool levelwin::draw()
 							clip_br_x, clip_br_y);
 
 	/* If swallowed draw ONLY the engulf tile and the player! */
-	if (u.uswallow && map_swallow != V_TILE_NONE)
-	{
+	if (u.uswallow && map_data->map_swallow != V_TILE_NONE) {
 		/* Clear map area */
 		SDL_FillRect(vultures_screen, NULL, CLR32_BLACK);
 
@@ -294,10 +253,10 @@ bool levelwin::draw()
 		y = map_centre_y + V_MAP_YMOD*(u.ux + u.uy - view_y - view_x);
 
 		/* engulf tile */
-		vultures_put_tile(x, y, map_swallow);
+		vultures_put_tile(x, y, map_data->map_swallow);
 
 		/* player */
-		vultures_put_tile(x, y, map_mon[u.uy][u.ux]);
+		vultures_put_tile(x, y, map_data->get_glyph(MAP_MON, u.ux, u.uy));
 
 		vultures_invalidate_region(clip_tl_x, clip_tl_y,
 								clip_br_x - clip_tl_x,
@@ -305,7 +264,7 @@ bool levelwin::draw()
 		return 1;
 	}
 	else
-		map_swallow = V_TILE_NONE;
+		map_data->map_swallow = V_TILE_NONE;
 
 
 	/* prevent double redraws if the map view just moved under the mouse cursor */
@@ -337,6 +296,9 @@ bool levelwin::draw()
 				vultures_put_tile(x, y, V_MISC_OFF_MAP);
 				continue;
 			}
+			
+			map_back = map_data->get_glyph(MAP_BACK, j, i);
+			map_darkness = map_data->get_glyph(MAP_DARKNESS, j, i);
 
 			/* 
 			Draw Vulture's tiles, in order:
@@ -355,8 +317,8 @@ bool levelwin::draw()
 			*/
 
 			/* 0. init walls and floor edges for this tile*/
-			if (map_back[i][j] == V_TILE_WALL_GENERIC ||
-				map_back[i][j] == V_MISC_UNMAPPED_AREA)
+			if (map_back == V_TILE_WALL_GENERIC ||
+				map_back == V_MISC_UNMAPPED_AREA)
 				get_wall_tiles(i, j);
 			else
 				/* certain events (amnesia or a secret door being discovered) 
@@ -364,10 +326,10 @@ bool levelwin::draw()
 				* we simply clear walls whenever we don't set any... */
 				clear_walls(i, j);
 
-			if (map_back[i][j] == V_TILE_FLOOR_WATER ||
-				map_back[i][j] == V_TILE_FLOOR_ICE ||
-				map_back[i][j] == V_TILE_FLOOR_LAVA ||
-				map_back[i][j] == V_TILE_FLOOR_AIR)
+			if (map_back == V_TILE_FLOOR_WATER ||
+				map_back == V_TILE_FLOOR_ICE ||
+				map_back == V_TILE_FLOOR_LAVA ||
+				map_back == V_TILE_FLOOR_AIR)
 				/* these tiles get edges */
 				get_floor_edges(i, j);
 			else
@@ -378,14 +340,13 @@ bool levelwin::draw()
 
 
 			/* 2. Floor */
-			tile_id = map_back[i][j];
+			tile_id = map_back;
 			shadelevel = 0;
 
 			if ((tile_id >= V_TILE_FLOOR_COBBLESTONE) &&
-				(tile_id <= V_TILE_FLOOR_DARK))
-			{
+				(tile_id <= V_TILE_FLOOR_DARK)) {
 				tile_id = get_floor_tile(tile_id, i, j);
-				shadelevel = map_darkness[i][j];
+				shadelevel = map_darkness;
 			}
 			else if(tile_id == V_TILE_NONE || tile_id == V_TILE_WALL_GENERIC)
 				tile_id = V_MISC_UNMAPPED_AREA;
@@ -421,51 +382,52 @@ bool levelwin::draw()
 			x = map_centre_x + V_MAP_XMOD*(__j - __i);
 			y = map_centre_y + V_MAP_YMOD*(__j + __i);
 
+			map_back = map_data->get_glyph(MAP_BACK, j, i);
+			map_obj = map_data->get_glyph(MAP_OBJ, j, i);
+			map_mon = map_data->get_glyph(MAP_MON, j, i);
 
 			/* 1. West and north walls */
 			if (j > 1)
 				vultures_put_tile_shaded(x, y, maptile_wall[i][j].west,
-										map_darkness[i][j-1]);
+										map_data->get_glyph(MAP_DARKNESS, j-1, i));
 			if (i > 1)
 				vultures_put_tile_shaded(x, y, maptile_wall[i][j].north,
-										map_darkness[i-1][j]);
+										map_data->get_glyph(MAP_DARKNESS, j, i-1));
 
 			/* shortcut for unmapped case */
-			if (map_back[i][j] != V_MISC_UNMAPPED_AREA ||
-				map_obj[i][j] != V_TILE_NONE)
-			{
+			if (map_back != V_MISC_UNMAPPED_AREA ||
+				map_obj != V_TILE_NONE) {
 				/* 2. Furniture*/
-				vultures_put_tile(x, y, map_furniture[i][j]);
+				vultures_put_tile(x, y, map_data->get_glyph(MAP_FURNITURE, j, i));
 
 
 				/* 3. Traps */
-				vultures_put_tile(x, y, map_trap[i][j]);
+				vultures_put_tile(x, y, map_data->get_glyph(MAP_TRAP, j, i));
 
 
 				/* 4. Objects */
-				vultures_put_tile(x, y, map_obj[i][j]);
+				vultures_put_tile(x, y, map_obj);
 
 
 				/* 5. Monsters */
-				if ((cur_tile = vultures_get_tile(map_mon[i][j])) != NULL)
-				{
-					vultures_put_tile(x, y, map_mon[i][j]);
-					if (iflags.hilite_pet && map_pet[i][j])
+				if ((cur_tile = vultures_get_tile(map_mon)) != NULL) {
+					vultures_put_tile(x, y, map_mon);
+					if (iflags.hilite_pet && map_data->get_glyph(MAP_PET, j, i))
 						vultures_put_img(x + cur_tile->xmod, y + cur_tile->ymod - 10,
 									vultures_get_tile(V_MISC_HILITE_PET)->graphic);
 				}
 
 				/* 6. Effects */
-				vultures_put_tile(x, y, map_specialeff[i][j]);
+				vultures_put_tile(x, y, map_data->get_glyph(MAP_SPECIAL, j, i));
 			}
 
 			/* 7. South & East walls */
 			if (i < ROWNO - 1)
 				vultures_put_tile_shaded(x, y, maptile_wall[i][j].south,
-										map_darkness[i+1][j]);
+										map_data->get_glyph(MAP_DARKNESS, j, i+1));
 			if (j < COLNO - 1)
 				vultures_put_tile_shaded(x, y, maptile_wall[i][j].east,
-										map_darkness[i][j+1]);
+										map_data->get_glyph(MAP_DARKNESS, j+1, i));
 		}
 	}
 
@@ -487,7 +449,7 @@ bool levelwin::draw()
 				x = map_centre_x + V_MAP_XMOD*(__j - __i);
 				y = map_centre_y + V_MAP_YMOD*(__j + __i);
 
-				vultures_put_tilehighlight(x, y, map_obj[i][j]);
+				vultures_put_tilehighlight(x, y, map_data->get_glyph(MAP_OBJ, j, i));
 			}
 		}
 	}
@@ -513,42 +475,6 @@ bool levelwin::draw()
 
 
 
-eventresult levelwin::handle_click(void* result, int button, point mappos)
-{
-	int retval, action_id = 0;
-
-	/* if vultures_whatis_active is set, we want a location (for look or teleport) */
-	if (vultures_whatis_active)
-	{
-		((vultures_event*)result)->num = 0;
-		((vultures_event*)result)->x = mappos.x;
-		((vultures_event*)result)->y = mappos.y;
-		return V_EVENT_HANDLED_FINAL;
-	}
-
-	/* else  */
-	/* right click: try to resolve the click on the map to a default action */
-	if (button == SDL_BUTTON_LEFT)
-		action_id = get_map_action(mappos);
-	/* left click: allow the user to choose from a context menu */
-	else if (button == SDL_BUTTON_RIGHT)
-		action_id = get_map_contextmenu(mappos);
-
-	/* if an action was chosen, return it and leave the event loop */
-	if (action_id)
-	{
-		retval = vultures_perform_map_action(action_id, mappos);
-		if (retval)
-		{
-			((vultures_event*)result)->num = retval;
-			return V_EVENT_HANDLED_FINAL;
-		}
-	}
-
-	return V_EVENT_HANDLED_NOREDRAW;
-}
-
-
 eventresult levelwin::event_handler(window* target, void* result, SDL_Event* event)
 {
 	int translated_key, key;
@@ -562,7 +488,7 @@ eventresult levelwin::event_handler(window* target, void* result, SDL_Event* eve
 	switch (event->type)
 	{
 		case SDL_MOUSEBUTTONUP:
-			return handle_click(result, event->button.button, mappos);
+			return map_data->handle_click(result, event->button.button, mappos);
 			break;
 
 		/* keyboard events */
@@ -724,7 +650,7 @@ eventresult levelwin::event_handler(window* target, void* result, SDL_Event* eve
 			if (target != this && !target->caption.empty())
 				vultures_mouse_set_tooltip(target->caption);
 			else {
-				ttext = map_square_description(mappos, 1);
+				ttext = map_data->map_square_description(mappos, 1);
 				if(!ttext.empty())
 					vultures_mouse_set_tooltip(ttext);
 			}
@@ -782,102 +708,73 @@ eventresult levelwin::event_handler(window* target, void* result, SDL_Event* eve
 
 
 
-void levelwin::set_map_data(glyph_type type, int x, int y, int newval, bool force)
+void levelwin::map_update(glyph_type type, int prev_glyph, int new_glyph, int x, int y)
 {
 	int pixel_x, pixel_y;
 	int tl_x = 99999, tl_y = 99999, br_x = 0, br_y = 0;
 	vultures_tile *oldtile, *newtile;
-	int (*data_array)[ROWNO][COLNO], prevtile;
-	
-	switch (type) {
-		case MAP_MON: data_array = &map_mon; break;
-		case MAP_OBJ: data_array = &map_obj; break;
-		case MAP_TRAP: data_array = &map_trap; break;
-		case MAP_BACK: data_array = &map_back; break;
-		case MAP_SPECIAL: data_array = &map_specialeff; break;
-		case MAP_FURNITURE: data_array = &map_furniture; break;
-		case MAP_DARKNESS: data_array = &map_darkness; break;
-		case MAP_PET: data_array = &map_pet; break;
-		case MAP_GLYPH:
-			/* raw glyph values are only stored, not printed */
-			map_glyph[y][x] = newval;
-			return;
-	}
 
-	if ((*data_array)[y][x] != newval || force)
-	{
-		prevtile = (*data_array)[y][x];
-		(*data_array)[y][x] = newval;
+	pixel_x = (this->w / 2) + V_MAP_XMOD*(x - y + view_y - view_x);
+	pixel_y = (this->h / 2) + V_MAP_YMOD*(x + y - view_y - view_x);
 
-		pixel_x = (this->w / 2) + V_MAP_XMOD*(x - y + view_y - view_x);
-		pixel_y = (this->h / 2) + V_MAP_YMOD*(x + y - view_y - view_x);
-
-		if (pixel_x < -VULTURES_CLIPMARGIN ||
-			pixel_y < -VULTURES_CLIPMARGIN ||
-			pixel_x > vultures_screen->w + VULTURES_CLIPMARGIN ||
-			pixel_y > vultures_screen->h + VULTURES_CLIPMARGIN)
-			return;
-
-		oldtile = vultures_get_tile(prevtile);
-		newtile = vultures_get_tile(newval);
-
-		if (*data_array != map_back) {
-			if (oldtile) {
-				tl_x = oldtile->xmod;
-				tl_y = oldtile->ymod;
-
-				br_x = oldtile->xmod + oldtile->graphic->w;
-				br_y = oldtile->ymod + oldtile->graphic->h;
-			}
-
-			if (newtile) {
-				tl_x = min(newtile->xmod, tl_x);
-				tl_y = min(newtile->ymod, tl_y);
-
-				br_x = max(br_x, newtile->xmod + newtile->graphic->w);
-				br_y = max(br_y, newtile->ymod + newtile->graphic->h);
-			}
-
-			tl_x += pixel_x;
-			tl_y += pixel_y;
-			br_x += pixel_x;
-			br_y += pixel_y;
-
-			if (*data_array == map_mon)
-				/* allow for the heart icon on pets */
-				tl_y -= 10;
-		}
-		else {
-			/* floor tiles tend to be placeholders until we reach draw_level,
-			 * so we do this manually */
-			tl_x = pixel_x - 56;
-			tl_y = pixel_y - 100; /* 100 pixels accounts for possible walls, too */
-			br_x = pixel_x + 56;
-			br_y = pixel_y + 22;
-		}
-
-		add_to_clipregion(tl_x, tl_y, br_x, br_y);
-	}
-}
-
-
-int levelwin::get_glyph(glyph_type type, int x, int y)
-{
-	switch (type) {
-		case MAP_MON: return map_mon[y][x];
-		case MAP_OBJ: return map_obj[y][x];
-		case MAP_TRAP: return map_trap[y][x];
-		case MAP_BACK: return map_back[y][x];
-		case MAP_SPECIAL: return map_specialeff[y][x];
-		case MAP_FURNITURE: return map_furniture[y][x];
-		case MAP_DARKNESS: return map_darkness[y][x];
-		case MAP_PET: return map_pet[y][x];
-		case MAP_GLYPH: return map_glyph[y][x];
+	if (pixel_x < -VULTURES_CLIPMARGIN ||
+		pixel_y < -VULTURES_CLIPMARGIN ||
+		pixel_x > vultures_screen->w + VULTURES_CLIPMARGIN ||
+		pixel_y > vultures_screen->h + VULTURES_CLIPMARGIN)
+		return;
 		
-		default: return -1;
+	oldtile = vultures_get_tile(prev_glyph);
+	newtile = vultures_get_tile(new_glyph);
+
+	if (type != MAP_BACK) {
+		if (oldtile) {
+			tl_x = oldtile->xmod;
+			tl_y = oldtile->ymod;
+
+			br_x = oldtile->xmod + oldtile->graphic->w;
+			br_y = oldtile->ymod + oldtile->graphic->h;
+		}
+
+		if (newtile) {
+			tl_x = min(newtile->xmod, tl_x);
+			tl_y = min(newtile->ymod, tl_y);
+
+			br_x = max(br_x, newtile->xmod + newtile->graphic->w);
+			br_y = max(br_y, newtile->ymod + newtile->graphic->h);
+		}
+
+		tl_x += pixel_x;
+		tl_y += pixel_y;
+		br_x += pixel_x;
+		br_y += pixel_y;
+
+		if (type == MAP_MON)
+			/* allow for the heart icon on pets */
+			tl_y -= 10;
 	}
+	else {
+		/* floor tiles tend to be placeholders until we reach draw_level,
+			* so we do this manually */
+		tl_x = pixel_x - 56;
+		tl_y = pixel_y - 100; /* 100 pixels accounts for possible walls, too */
+		br_x = pixel_x + 56;
+		br_y = pixel_y + 22;
+	}
+
+	add_to_clipregion(tl_x, tl_y, br_x, br_y);
 }
 
+
+void levelwin::map_clear()
+{
+	int i, j;
+
+	for (i = 0; i < ROWNO; i++)
+		for (j = 0; j < COLNO; j++) {
+			clear_floor_edges(i, j);
+			clear_walls(i, j);
+		}
+}
 
 point levelwin::mouse_to_map(point mouse)
 {
@@ -1177,43 +1074,42 @@ void levelwin::init_floor_decors(int num_decors)
 void levelwin::get_wall_tiles(int y, int x)
 {
 	int style;
+	int bg_west, bg_north, bg_east, bg_south;
 
 	if (!level.locations[x][y].seenv)
 		return;
 
 	/* x - 1: west wall  */
-	if (x > 0 && map_back[y][x - 1] != V_TILE_WALL_GENERIC && map_back[y][x - 1] != V_MISC_UNMAPPED_AREA)
-	{
-		style = get_wall_decor(map_back[y][x - 1], y, x, y, x-1);
+	bg_west = map_data->get_glyph(MAP_BACK, x - 1, y);
+	if (x > 0 && bg_west != V_TILE_WALL_GENERIC && bg_west != V_MISC_UNMAPPED_AREA) {
+		style = get_wall_decor(bg_west, y, x, y, x-1);
 		maptile_wall[y][x].west = walltiles[style].west;
 	}
 	else
 		maptile_wall[y][x].west = V_TILE_NONE;
 
 	/* y - 1: north wall  */
-	if (y > 0 && map_back[y - 1][x] != V_TILE_WALL_GENERIC && map_back[y - 1][x] != V_MISC_UNMAPPED_AREA)
-	{
-		style = get_wall_decor(map_back[y - 1][x], y, x, y - 1, x);
+	bg_north = map_data->get_glyph(MAP_BACK, x, y - 1);
+	if (y > 0 && bg_north != V_TILE_WALL_GENERIC && bg_north != V_MISC_UNMAPPED_AREA) {
+		style = get_wall_decor(bg_north, y, x, y - 1, x);
 		maptile_wall[y][x].north = walltiles[style].north;
 	}
 	else
 		maptile_wall[y][x].north = V_TILE_NONE;
 
 	/* x + 1: east wall  */
-	if (x < COLNO - 1 && map_back[y][x + 1] != V_TILE_WALL_GENERIC &&
-		map_back[y][x + 1] != V_MISC_UNMAPPED_AREA)
-	{
-		style = get_wall_decor(map_back[y][x + 1], y, x, y, x + 1);
+	bg_east = map_data->get_glyph(MAP_BACK, x + 1, y);
+	if (x < COLNO - 1 && bg_east != V_TILE_WALL_GENERIC && bg_east != V_MISC_UNMAPPED_AREA) {
+		style = get_wall_decor(bg_east, y, x, y, x + 1);
 		maptile_wall[y][x].east = walltiles[style].east;
 	}
 	else
 		maptile_wall[y][x].east = V_TILE_NONE;
 
 	/* y + 1: south wall  */
-	if (y < ROWNO - 1 && map_back[y + 1][x] != V_TILE_WALL_GENERIC &&
-		map_back[y + 1][x] != V_MISC_UNMAPPED_AREA)
-	{
-		style = get_wall_decor(map_back[y + 1][x], y, x, y + 1, x);
+	bg_south = map_data->get_glyph(MAP_BACK, x, y + 1);
+	if (y < ROWNO - 1 && bg_south != V_TILE_WALL_GENERIC && bg_south != V_MISC_UNMAPPED_AREA) {
+		style = get_wall_decor(bg_south, y, x, y + 1, x);
 		maptile_wall[y][x].south = walltiles[style].south;
 	}
 	else
@@ -1228,8 +1124,7 @@ int levelwin::get_floor_tile(int tile, int y, int x)
 	int deco_pos;
 	unsigned char deco = map_deco[y][x];
 
-	if (deco && tile == V_TILE_FLOOR_COBBLESTONE)
-	{
+	if (deco && tile == V_TILE_FLOOR_COBBLESTONE) {
 		style = (deco >> 4) - 1;
 		deco_pos = (int)(deco & 0x0F);
 		return floorstyles[style].array[deco_pos];
@@ -1244,8 +1139,8 @@ int levelwin::get_floor_tile(int tile, int y, int x)
 
 void levelwin::get_floor_edges(int y, int x)
 {
-	int i;
-	int tile = map_back[y][x];
+	int i, x2, y2;
+	int tile = map_data->get_glyph(MAP_BACK, x, y);
 	int style = V_FLOOR_EDGE_COBBLESTONE;
 
 	point s_delta[4] = {{-1,0}, {0,-1}, {1,0}, {0,1}};
@@ -1255,19 +1150,19 @@ void levelwin::get_floor_edges(int y, int x)
 	clear_floor_edges(y, x);
 
 	/* straight sections */
-	for (i = 0; i < 4; i++)
-	{
+	for (i = 0; i < 4; i++) {
+		x2 = x+s_delta[i].x;
+		y2 = y+s_delta[i].y;
 		if (x > 0 && x < COLNO-s_delta[i].x && y > 0 && y < ROWNO-s_delta[i].y && 
-			tile != map_back[y+s_delta[i].y][x+s_delta[i].x] &&
-			(tile + map_back[y+s_delta[i].y][x+s_delta[i].x]) !=
-			(V_TILE_FLOOR_WATER + V_TILE_FLOOR_ICE)) /* this prevents borders between water and ice*/
+			tile != map_data->get_glyph(MAP_BACK, x2, y2) &&
+			tile + map_data->get_glyph(MAP_BACK, x2, y2) !=
+			V_TILE_FLOOR_WATER + V_TILE_FLOOR_ICE) /* this prevents borders between water and ice*/
 				maptile_floor_edge[y][x].dir[i] = flooredges[style].dir[i];
 	}
 
 
 	/* "inward pointing" corners */
-	for (i = 4; i < 8; i++)
-	{
+	for (i = 4; i < 8; i++) {
 		if ((maptile_floor_edge[y][x].dir[(i+3)%4] != V_TILE_NONE) &&
 			(maptile_floor_edge[y][x].dir[i%4]) != V_TILE_NONE)
 
@@ -1276,15 +1171,15 @@ void levelwin::get_floor_edges(int y, int x)
 
 
 	/* "outward pointing" corners */
-	for (i = 8; i < 12; i++)
-	{
+	for (i = 8; i < 12; i++) {
+		x2 = x+d_delta[i%4].x;
+		y2 = y+d_delta[i%4].y;
 		if ((maptile_floor_edge[y][x].dir[(i+3)%4] == V_TILE_NONE) &&
 			(maptile_floor_edge[y][x].dir[i%4] == V_TILE_NONE) &&
 			x > 0 && x < COLNO - 1 && y > 0 && y < ROWNO - 1 && 
-			tile != map_back[y+d_delta[i%4].y][x+d_delta[i%4].x] &&
-			(tile + map_back[y+d_delta[i%4].y][x+d_delta[i%4].x]) != 
-			(V_TILE_FLOOR_WATER + V_TILE_FLOOR_ICE))
-
+			tile != map_data->get_glyph(MAP_BACK, x2, y2) &&
+			tile + map_data->get_glyph(MAP_BACK, x2, y2) != 
+			V_TILE_FLOOR_WATER + V_TILE_FLOOR_ICE)
 			maptile_floor_edge[y][x].dir[i] = flooredges[style].dir[i];
 	}
 
@@ -1311,321 +1206,6 @@ void levelwin::clear_floor_edges(int y, int x)
 }
 
 
-string levelwin::map_square_description(point target, int include_seen)
-{
-	struct permonst *pm;
-	string out_str = "";
-	char monbuf[BUFSZ], temp_buf[BUFSZ], coybuf[BUFSZ], look_buf[BUFSZ];
-	struct monst *mtmp = (struct monst *) 0;
-	const char *firstmatch;
-	int n_objs;
-	struct obj * obj;
-
-	if ((target.x < 1) || (target.x >= COLNO) ||
-	    (target.y < 0) || (target.y >= ROWNO))
-		return out_str;
-
-	/* All of monsters, objects, traps and furniture get descriptions */
-	if ((map_mon[target.y][target.x] != V_TILE_NONE)) {
-		look_buf[0] = '\0';
-		monbuf[0] = '\0';
-		pm = lookat(target.x, target.y, look_buf, monbuf);
-		firstmatch = look_buf;
-		if (look_buf[0]) {
-			mtmp = m_at(target.x, target.y);
-			Sprintf(temp_buf, "%s", (pm == &mons[PM_COYOTE]) ? coyotename(mtmp,coybuf) : firstmatch);
-			out_str = temp_buf;
-		}
-		if (include_seen) {
-			if (monbuf[0]) {
-				sprintf(temp_buf, " [seen: %s]", monbuf);
-				out_str += temp_buf;
-			}
-		}
-	}
-	else if (map_obj[target.y][target.x] != V_TILE_NONE) {
-		look_buf[0] = '\0';
-		monbuf[0] = '\0';
-		lookat(target.x, target.y, look_buf, monbuf);
-		
-		n_objs = 0;
-		obj = level.objects[target.x][target.y];
-		while(obj) {
-			n_objs++;
-			obj = obj->nexthere;
-		}
-		
-		if (n_objs > 1) {
-			snprintf(temp_buf, BUFSZ, "%s (+%d other object%s)", look_buf, n_objs - 1, (n_objs > 2) ? "s" : "");
-			out_str = temp_buf;
-		} else
-			out_str = look_buf;
-	}
-	else if ((map_trap[target.y][target.x] != V_TILE_NONE) ||
-			(map_furniture[target.y][target.x] != V_TILE_NONE)) {
-		lookat(target.x, target.y, look_buf, monbuf);
-		out_str = look_buf;
-	}
-
-	return out_str;
-}
-
-
-
-map_action levelwin::get_map_action(point mappos)
-{
-	int mapglyph_offset;
-
-	/* Off-map squares have no default action */
-	if ((mappos.x < 1) || (mappos.x >= COLNO) ||
-		(mappos.y < 0) || (mappos.y >= ROWNO))
-		return V_ACTION_NONE;
-
-
-	/* Target is at least 2 squares away */
-	if ((abs(u.ux-mappos.x) >= 2) || (abs(u.uy-mappos.y) >= 2))
-		return V_ACTION_TRAVEL;
-
-	/* Monster on target square */
-	if (map_mon[mappos.y][mappos.x] != V_TILE_NONE &&
-		(u.ux != mappos.x || u.uy != mappos.y))
-		return V_ACTION_MOVE_HERE;
-
-	/* Object on target square */
-	if (map_obj[mappos.y][mappos.x] != V_TILE_NONE &&
-		u.ux == mappos.x && u.uy == mappos.y)
-	{
-		mapglyph_offset = map_obj[mappos.y][mappos.x];
-		switch(mapglyph_offset - OBJTILEOFFSET)
-		{
-			case LARGE_BOX:
-			case ICE_BOX:
-			case CHEST:
-				return V_ACTION_LOOT;
-
-			default:
-				return V_ACTION_PICK_UP;
-		}
-	}
-
-	/* map feature on target square */
-	if (map_furniture[mappos.y][mappos.x] != V_TILE_NONE)
-	{
-		if ((u.ux == mappos.x) && (u.uy == mappos.y))
-			switch (map_furniture[mappos.y][mappos.x])
-			{
-				case V_MISC_STAIRS_DOWN:
-				case V_MISC_LADDER_DOWN:
-					return V_ACTION_GO_DOWN;
-
-				case V_MISC_STAIRS_UP:
-				case V_MISC_LADDER_UP:
-					return V_ACTION_GO_UP;
-
-				case V_MISC_FOUNTAIN:
-					return V_ACTION_DRINK;
-			}
-
-		else
-			switch (map_furniture[mappos.y][mappos.x])
-			{
-				case V_MISC_VDOOR_WOOD_CLOSED:
-				case V_MISC_HDOOR_WOOD_CLOSED:
-					return V_ACTION_OPEN_DOOR;
-			}
-	}
-
-	/* default action for your own square */
-	if (u.ux == mappos.x && u.uy == mappos.y)
-		return V_ACTION_SEARCH;
-
-	/* default action for adjacent squares (nonadjacent squares were handled further up)*/
-	/* if the square contains an object and there is no monster ther, use trvel after all
-	* to suppress the messegebox listing the objects */
-	if (map_obj[mappos.y][mappos.x] && !level.monsters[mappos.x][mappos.y])
-		return V_ACTION_TRAVEL;
-
-	if (u.ux != mappos.x || u.uy != mappos.y)
-		return V_ACTION_MOVE_HERE;
-
-	return V_ACTION_NONE;
-}
-
-
-
-/* display a context menu for the given map location and return the chosen action */
-map_action levelwin::get_map_contextmenu(point mappos)
-{
-	contextmenu *menu;
-	int mapglyph_offset;
-	int result;
-	point mouse_pos = vultures_get_mouse_pos();
-
-
-	/* Dropdown commands are shown only for valid squares */
-	if ((mappos. x < 1) || (mappos. x >= COLNO) || (mappos. y < 0) || (mappos. y >= ROWNO))
-		return V_ACTION_NONE;
-
-	/* Construct a context-sensitive drop-down menu */
-	menu = new contextmenu(this /*, mouse_pos */);
-
-	if ((u.ux == mappos. x) && (u.uy == mappos. y))
-	{
-		/* Add personal options: */
-		menu->add_item("Engrave", V_ACTION_ENGRAVE);
-		menu->add_item("Look around", V_ACTION_LOOK_AROUND);
-		menu->add_item("Monster ability", V_ACTION_MONSTER_ABILITY);
-
-		if (*u.ushops)
-			menu->add_item("Pay bill", V_ACTION_PAY_BILL);
-
-		menu->add_item("Pray", V_ACTION_PRAY);
-		menu->add_item("Rest", V_ACTION_REST);
-		menu->add_item("Search", V_ACTION_SEARCH);
-		menu->add_item("Sit", V_ACTION_SIT);
-
-		/* do a minimum check to leave turn undead out for those who _definitely_ can't do it */
-#ifdef VULTURESEYE
-		if (Role_if(PM_PRIEST) || Role_if(PM_KNIGHT) ||
-#else /* VULTURESCLAW */
-		if (tech_known(T_TURN_UNDEAD) ||
-#endif
-			objects[SPE_TURN_UNDEAD].oc_name_known)
-			menu->add_item("Turn undead", V_ACTION_TURN_UNDEAD);
-
-		menu->add_item("Wipe face", V_ACTION_WIPE_FACE);
-	}
-
-	/* monster options */
-	else if (map_mon[mappos. y][mappos. x] != V_TILE_NONE)
-		if ((abs(u.ux-mappos. x) <= 1) && (abs(u.uy-mappos. y) <= 1))
-		{
-			menu->add_item("Chat", V_ACTION_CHAT);
-			menu->add_item("Fight", V_ACTION_FIGHT);
-			menu->add_item("Name", V_ACTION_NAMEMON);
-		}
-
-
-	/* Add object options: */
-	if (map_obj[mappos. y][mappos. x] != V_TILE_NONE &&
-		(abs(u.ux-mappos. x) <= 1 && abs(u.uy-mappos. y) <= 1))
-	{
-		mapglyph_offset =  map_obj[mappos. y][mappos. x];
-		switch(mapglyph_offset - OBJTILEOFFSET)
-		{
-			/* containers have special options */
-			case LARGE_BOX:
-			case ICE_BOX:
-			case CHEST:
-				if ((u.ux == mappos. x) && (u.uy == mappos. y))
-				{
-					menu->add_item("Force lock", V_ACTION_FORCE_LOCK);
-					menu->add_item("Loot", V_ACTION_LOOT);
-					menu->add_item("Pick up", V_ACTION_PICK_UP);
-				}
-				menu->add_item("Untrap", V_ACTION_UNTRAP);
-				break;
-
-			case SACK:
-			case OILSKIN_SACK:
-			case BAG_OF_HOLDING:
-			case BAG_OF_TRICKS:
-				if ((u.ux == mappos. x) && (u.uy == mappos. y))
-				{
-					menu->add_item("Loot", V_ACTION_LOOT);
-					menu->add_item("Pick up", V_ACTION_PICK_UP);
-				}
-				break;
-
-			/* all other objects can merly be picked up */
-			default:
-				if ((u.ux == mappos. x) && (u.uy == mappos. y))
-					menu->add_item("Pick up", V_ACTION_PICK_UP);
-				break;
-		}
-	}
-
-
-	/* Add location options: */
-	if (map_furniture[mappos. y][mappos. x] != V_TILE_NONE &&
-		abs(u.ux-mappos. x) <= 1 && abs(u.uy-mappos. y) <= 1)
-	{
-		switch(map_furniture[mappos. y][mappos. x])
-		{
-			case V_MISC_STAIRS_DOWN: case V_MISC_LADDER_DOWN:
-				if ((u.ux == mappos. x) && (u.uy == mappos. y))
-					menu->add_item("Go down", V_ACTION_GO_DOWN);
-				break;
-
-			case V_MISC_STAIRS_UP: case V_MISC_LADDER_UP:
-				if ((u.ux == mappos. x) && (u.uy == mappos. y))
-					menu->add_item("Go up", V_ACTION_GO_UP);
-				break;
-
-			case V_MISC_FOUNTAIN:
-				if ((u.ux == mappos. x) && (u.uy == mappos. y))
-					menu->add_item("Drink", V_ACTION_DRINK);
-				break;
-
-			case V_MISC_VDOOR_WOOD_OPEN: case V_MISC_HDOOR_WOOD_OPEN:
-				if ((u.ux != mappos. x) || (u.uy != mappos. y))
-				{
-					menu->add_item("Close door", V_ACTION_CLOSE_DOOR);
-					menu->add_item("Untrap", V_ACTION_UNTRAP);
-					menu->add_item("Kick", V_ACTION_KICK);
-				}
-				break;
-
-			case V_MISC_VDOOR_WOOD_CLOSED: case V_MISC_HDOOR_WOOD_CLOSED:
-				if ((u.ux != mappos. x) || (u.uy != mappos. y))
-				{
-					menu->add_item("Open door", V_ACTION_OPEN_DOOR);
-					menu->add_item("Untrap", V_ACTION_UNTRAP);
-					menu->add_item("Kick", V_ACTION_KICK);
-				}
-				break;
-
-			case V_MISC_ALTAR:
-				if ((u.ux == mappos. x) && (u.uy == mappos. y))
-					menu->add_item("Offer", V_ACTION_OFFER);
-				else
-					menu->add_item("Kick", V_ACTION_KICK);
-				break;
-
-			default:
-				if ((u.ux != mappos. x) || (u.uy != mappos. y))
-					menu->add_item("Kick", V_ACTION_KICK);
-				break;
-		}
-	}
-
-	/* (known) traps */
-	if (map_trap[mappos. y][mappos. x] != V_TILE_NONE)
-	{
-		menu->add_item("Untrap", V_ACTION_UNTRAP);
-		if ((u.ux != mappos. x) || (u.uy != mappos. y))
-			if ((abs(u.ux-mappos. x) <= 1) && (abs(u.uy-mappos. y) <= 1))
-				menu->add_item("Enter trap", V_ACTION_MOVE_HERE);
-	}
-
-	/* move to and look will work for every (mapped) square */
-	if (map_back[mappos. y][mappos. x] != V_TILE_NONE)
-	{
-		if ((u.ux != mappos. x) || (u.uy != mappos. y))    
-			menu->add_item("Move here", V_ACTION_TRAVEL);
-		menu->add_item("What's this?", V_ACTION_WHATS_THIS);
-	}
-
-	menu->layout();
-	vultures_event_dispatcher(&result, V_RESPOND_INT, menu);
-
-	delete menu;
-
-	return (map_action)result;
-}
-
-
-
 /* select an appropriate cursor for the given location */
 int levelwin::get_map_cursor(point mappos)
 {
@@ -1638,33 +1218,31 @@ int levelwin::get_map_cursor(point mappos)
 		return V_CURSOR_TARGET_HELP;
 
 	/* monsters and objects get a red circle */
-	if (map_mon[mappos.y][mappos.x] != V_TILE_NONE &&
+	if (map_data->get_glyph(MAP_MON, mappos.x, mappos.y) != V_TILE_NONE &&
 		((mappos.x != u.ux) || (mappos.y != u.uy)))
 		return V_CURSOR_TARGET_RED;
 
-	if (map_obj[mappos.y][mappos.x] != V_TILE_NONE)  
+	if (map_data->get_glyph(MAP_OBJ, mappos.x, mappos.y) != V_TILE_NONE)  
 		return V_CURSOR_TARGET_RED;
 
 	/* other valid visible locations  */
-	if (map_back[mappos.y][mappos.x] != V_TILE_NONE)  
-	{
+	if (map_data->get_glyph(MAP_BACK, mappos.x, mappos.y) != V_TILE_NONE) {
+		int furniture = map_data->get_glyph(MAP_FURNITURE, mappos.x, mappos.y);
 		/* Closed doors get an 'open door' cursor */
-		if ((map_furniture[mappos.y][mappos.x] == V_MISC_VDOOR_WOOD_CLOSED) ||
-			(map_furniture[mappos.y][mappos.x] == V_MISC_HDOOR_WOOD_CLOSED))
+		if ((furniture == V_MISC_VDOOR_WOOD_CLOSED) ||
+			(furniture == V_MISC_HDOOR_WOOD_CLOSED))
 			return V_CURSOR_OPENDOOR;
 
 		/* Stairs and ladders get a 'stairs' cursor */
-		if ((map_furniture[mappos.y][mappos.x] == V_MISC_STAIRS_UP) ||
-			(map_furniture[mappos.y][mappos.x] == V_MISC_STAIRS_DOWN) ||
-			(map_furniture[mappos.y][mappos.x] == V_MISC_LADDER_UP) ||
-			(map_furniture[mappos.y][mappos.x] == V_MISC_LADDER_DOWN))
+		if ((furniture == V_MISC_STAIRS_UP) || (furniture == V_MISC_STAIRS_DOWN) ||
+			(furniture == V_MISC_LADDER_UP) || (furniture == V_MISC_LADDER_DOWN))
 			return V_CURSOR_STAIRS;
 
 		/* Fountains get a 'goblet' cursor */
-		if (map_furniture[mappos.y][mappos.x] == V_MISC_FOUNTAIN)
+		if (furniture == V_MISC_FOUNTAIN)
 			return V_CURSOR_GOBLET;
 
-		if (map_back[mappos.y][mappos.x] != V_TILE_WALL_GENERIC)
+		if (map_data->get_glyph(MAP_BACK, mappos.x, mappos.y) != V_TILE_WALL_GENERIC)
 			return V_CURSOR_TARGET_GREEN;
 	}
 

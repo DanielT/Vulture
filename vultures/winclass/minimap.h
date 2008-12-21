@@ -29,19 +29,21 @@ enum {
 
 
 class levelwin;
+class mapdata;
 
 class minimap : public window
 {
 public:
-	minimap(levelwin *p, int parentw);
+	minimap(levelwin *p, mapdata *data);
 	~minimap();
 	virtual bool draw();
-	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
+	virtual eventresult event_handler(window *target, void *result, SDL_Event *event);
 	
 private:
 	SDL_Surface *minimapbg;
 	char vultures_minimap_syms[ROWNO][COLNO];
 	levelwin *level;
+	mapdata *map_data;
 };
 
 

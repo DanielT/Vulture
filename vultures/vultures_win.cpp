@@ -10,7 +10,6 @@ extern "C" {
 
 #include "vultures_win.h"
 #include "vultures_sdl.h"
-#include "vultures_map.h"
 #include "vultures_mou.h"
 #include "vultures_main.h"
 #include "vultures_opt.h"

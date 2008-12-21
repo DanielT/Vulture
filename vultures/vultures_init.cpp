@@ -10,7 +10,6 @@ using std::string;
 #include <errno.h>
 
 #include "vultures_win.h"
-#include "vultures_map.h"
 #include "vultures_gra.h"
 #include "vultures_gen.h"
 #include "vultures_sdl.h"
@@ -380,9 +379,7 @@ int vultures_init_graphics(void)
 		SDL_FreeSurface(image);
 	}
 
-	/* Initialize the isometric tiles */
-	all_ok &= vultures_init_map();  /* Initialize tile bitmaps */
-
+	/* Initialize tile bitmaps */
 	vultures_load_gametiles();
 
 
@@ -402,8 +399,6 @@ int vultures_init_graphics(void)
 void vultures_destroy_graphics(void)
 {
 	unsigned int i;
-
-	vultures_destroy_map();
 
 	/* free tilearrays, related data */
 	vultures_unload_gametiles();

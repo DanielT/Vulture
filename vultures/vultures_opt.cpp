@@ -10,13 +10,12 @@
 #include <unistd.h>
 
 #include "vultures_win.h"
-#include "vultures_opt.h"
 #include "vultures_sound.h"
 #include "vultures_gen.h"
 #include "vultures_main.h"
-#include "vultures_map.h"
 #include "vultures_tile.h"
 #include "vultures_sdl.h"
+#include "vultures_opt.h"
 
 #include "winclass/levelwin.h"
 

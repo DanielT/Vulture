@@ -16,10 +16,12 @@
 #include "vultures_win.h"
 #include "vultures_gra.h"
 #include "vultures_gfl.h"
-#include "vultures_map.h"
 #include "vultures_gen.h"
 #include "vultures_opt.h"
 #include "vultures_tileconfig.h"
+
+#include "epri.h"
+
 
 
 #define TILEARRAYLEN (GAMETILECOUNT*3)
@@ -45,6 +47,7 @@ static vultures_tile *vultures_make_alpha_player_tile(int monnum, double op_scal
 static inline vultures_tile * vultures_shade_tile(vultures_tile *orig, int shadelevel);
 static inline void vultures_set_tile_alpha(vultures_tile *tile, double opacity);
 
+static int vultures_obfuscate_object(int obj_id);
 
 
 inline static void vultures_free_tile(vultures_tile *tile)
@@ -358,6 +361,7 @@ static vultures_tile *vultures_make_alpha_player_tile(int monnum, double op_scal
 	return tile;
 }
 
+
 /* makes a tile (partially) transparent */
 static inline void vultures_set_tile_alpha(vultures_tile *tile, double opacity)
 {
@@ -374,6 +378,157 @@ static inline void vultures_set_tile_alpha(vultures_tile *tile, double opacity)
 			rawdata[y*tile->graphic->pitch+x+3] *= opacity;
 }
 
+
+
+int vultures_object_to_tile(int obj_id, int x, int y, struct obj *in_obj)
+{
+	struct obj *obj;
+	int tile;
+	static int lastfigurine = PM_KNIGHT;
+	static int laststatue = PM_KNIGHT;
+ 
+	if (obj_id < 0 || obj_id > NUM_OBJECTS)
+		/* we get *seriously weird* input for hallucinated corpses */
+		obj_id = CORPSE;
+
+	/* try to find the actual object corresponding to the given obj_id */
+	if (in_obj)
+		obj = in_obj;
+	else {
+		if (x >= 0)
+			obj = level.objects[x][y];
+		else
+			obj = invent;
+
+		while (obj && !(obj->otyp == obj_id && (x >= 0 || obj->invlet == y)))
+			obj = (x >= 0) ? obj->nexthere : obj->nobj;
+	}
+
+	/* all amulets, potions, etc look the same when the player is blind */
+	if (obj && Blind && !obj->dknown) {
+		switch (obj->oclass) {
+			case AMULET_CLASS: return OBJECT_TO_VTILE(AMULET_OF_ESP);
+			case POTION_CLASS: return OBJECT_TO_VTILE(POT_WATER);
+			case SCROLL_CLASS: return OBJECT_TO_VTILE(SCR_BLANK_PAPER);
+			case WAND_CLASS:   return OBJECT_TO_VTILE(WAN_NOTHING);
+			case SPBOOK_CLASS: return OBJECT_TO_VTILE(SPE_BLANK_PAPER);
+			case RING_CLASS:   return OBJECT_TO_VTILE(RIN_ADORNMENT);
+			case GEM_CLASS:
+				if (objects[obj_id].oc_material == MINERAL)
+					return OBJECT_TO_VTILE(ROCK);
+				else
+					return OBJECT_TO_VTILE(glassgems[CLR_BLUE]);
+		}
+	}
+
+	/* figurines and statues get different tiles depending on which monster they represent */
+	if (obj_id == STATUE || obj_id == FIGURINE) {
+		if (obj_id == FIGURINE) {
+			tile = lastfigurine;
+			if (obj) {
+				tile = obj->corpsenm;
+				lastfigurine = tile;
+			}
+
+			tile = FIGURINE_TO_VTILE(tile);
+		} else /* obj_id == STATUE */ {
+			tile = laststatue;
+			if (obj) {
+				tile = obj->corpsenm;
+				laststatue = tile;
+			}
+
+			tile = STATUE_TO_VTILE(tile);
+		}
+		return tile;
+	}
+
+	/* prevent visual identification of unknown objects */
+	return OBJECT_TO_VTILE(vultures_obfuscate_object(obj_id));
+}
+
+
+/* prevent visual identification of unknown objects */
+static int vultures_obfuscate_object(int obj_id)
+{
+	/* catch known objects */
+	if (objects[obj_id].oc_name_known)
+		return obj_id;
+
+	/* revert objects that could be identified by their tiles to a generic
+	* representation */
+	switch (obj_id) {
+		case SACK: case OILSKIN_SACK: case BAG_OF_TRICKS: case BAG_OF_HOLDING:
+			return SACK;
+
+		case LOADSTONE: case LUCKSTONE: case FLINT: case TOUCHSTONE: 
+#ifdef HEALTHSTONE /* only in SlashEM */
+		case HEALTHSTONE:
+#endif
+#ifdef WHETSTONE /* only in SlashEM */
+		case WHETSTONE:
+#endif
+			return FLINT;
+
+		case OIL_LAMP:
+		case MAGIC_LAMP:
+			return OIL_LAMP;
+
+		case TIN_WHISTLE:
+		case MAGIC_WHISTLE:
+			return TIN_WHISTLE;
+
+		/* all gems initially look like pieces of glass */
+		case DILITHIUM_CRYSTAL: case DIAMOND: case RUBY: case JACINTH:
+		case SAPPHIRE: case BLACK_OPAL: case EMERALD: case TURQUOISE:
+		case CITRINE: case AQUAMARINE: case AMBER: case TOPAZ: case JET:
+		case OPAL: case CHRYSOBERYL: case GARNET: case AMETHYST: case JASPER:
+		case FLUORITE: case OBSIDIAN: case AGATE: case JADE:
+			/* select the glass tile at runtime: gem colors get randomized */
+			return glassgems[objects[obj_id].oc_color];
+	}
+	/* the vast majority of objects needs no special treatment */
+	return obj_id;
+}
+
+
+/* returns the tile for a given monster id */
+int vultures_monster_to_tile(int mon_id, int x, int y)
+{
+	if (Invis && u.ux == x && u.uy == y)
+		return V_MISC_PLAYER_INVIS;
+
+#ifdef REINCARNATION
+	/* transform all moster tiles to the "uppercase letter" replacements */
+	if (Is_rogue_level(&u.uz)) {
+		char sym = monsyms[mons[mon_id].mlet];
+		if ((mon_id >= 0) && (mon_id < NUMMONS) &&
+		    !(x == u.ux && y == u.uy) && isalpha(sym))
+			return V_MISC_ROGUE_LEVEL_A + (toupper(sym) - 'A');
+	}
+#endif
+
+	/* aleaxes are angelic doppelgangers and always look like the player */
+	if (mon_id == PM_ALEAX)
+		return MONSTER_TO_VTILE(u.umonnum);
+
+	/* we have different tiles for priests depending on their alignment */
+	if (mon_id == PM_ALIGNED_PRIEST) {
+		register struct monst *mtmp = m_at(x, y);
+
+		switch (EPRI(mtmp)->shralign) {
+			case A_LAWFUL:  return V_MISC_LAWFUL_PRIEST;
+			case A_CHAOTIC: return V_MISC_CHAOTIC_PRIEST;
+			case A_NEUTRAL: return V_MISC_NEUTRAL_PRIEST;
+			default:        return V_MISC_UNALIGNED_PRIEST;
+		}
+	}
+
+	if ((mon_id >= 0) && (mon_id < NUMMONS))
+		return MONSTER_TO_VTILE(mon_id);
+
+	return V_TILE_NONE;
+}
 
 
 

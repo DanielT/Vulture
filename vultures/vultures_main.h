@@ -48,6 +48,7 @@ extern void vultures_cliparound(int, int);
 #ifdef POSITIONBAR
 extern void vultures_update_positionbar(char *);
 #endif
+extern void vultures_print_glyph(winid, XCHAR_P, XCHAR_P, int);
 extern void vultures_raw_print(const char *);
 extern void vultures_raw_print_bold(const char *);
 extern int vultures_nhgetch();

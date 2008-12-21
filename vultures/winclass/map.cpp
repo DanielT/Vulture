@@ -16,13 +16,14 @@ extern "C" {
 #include "hotspot.h"
 #include "levelwin.h"
 #include "textwin.h"
+#include "mapdata.h"
 
 #define SYMBOL_WIDTH   7
 #define SYMBOL_HEIGHT 14
 
 
 
-map::map(levelwin *p) : window(p)
+map::map(levelwin *p, mapdata *data) : window(p), map_data(data)
 {
 	int i;
 	SDL_Surface *image;
@@ -54,8 +55,7 @@ map::map(levelwin *p) : window(p)
 	image = vultures_load_graphic(V_FILENAME_MAP_SYMBOLS);
 	if (image == NULL)
 		return;
-	else
-	{
+	else {
 		for (i = 0; i < V_MAX_MAP_SYMBOLS; i++)
 			map_symbols[i] = vultures_get_img_src(
 				(i%40)*SYMBOL_WIDTH,
@@ -108,10 +108,9 @@ bool map::draw()
 
 	/* Draw map on parchment, and create hotspots */
 	for (i = 0; i < ROWNO; i++)
-		for (j = 1; j < COLNO; j++)
-		{
-			int map_glyph = levwin->get_glyph(MAP_GLYPH, j, i);
-			bool is_dark = (levwin->get_glyph(MAP_DARKNESS, j, i) == 2);
+		for (j = 1; j < COLNO; j++) {
+			int map_glyph = map_data->get_glyph(MAP_GLYPH, j, i);
+			bool is_dark = (map_data->get_glyph(MAP_DARKNESS, j, i) == 2);
 			
 			if (map_glyph != NO_GLYPH &&
 				(map_glyph != cmap_to_glyph(S_stone) ||
@@ -133,17 +132,15 @@ void map::toggle(void)
 {
 	static window *mapwin = NULL;
 
-	if (!mapwin)
-	{
-		mapwin = new map(levwin);
+	if (!mapwin) {
+		mapwin = new map(levwin, ::map_data);
 
 		mapwin->x = (mapwin->parent->w - mapwin->w) / 2;
 		mapwin->y = (mapwin->parent->h - mapwin->h) / 2;
 
 		vultures_winid_map = mapwin->id;
 	}
-	else
-	{
+	else {
 		mapwin->hide();
 		delete mapwin;
 		mapwin = NULL;
@@ -162,8 +159,7 @@ eventresult map::event_handler(window* target, void* result, SDL_Event* event)
 	mappos.y = (mouse.y - abs_y - 91) / SYMBOL_HEIGHT;
 
 	if (mappos.x < 1 || mappos.x >= COLNO ||
-		mappos.y < 0 || mappos.y >= ROWNO)
-	{
+		mappos.y < 0 || mappos.y >= ROWNO) {
 		mappos.x = -1;
 		mappos.y = -1;
 	}
@@ -172,8 +168,7 @@ eventresult map::event_handler(window* target, void* result, SDL_Event* event)
 	{
 		case SDL_MOUSEBUTTONUP:
 			/* handler != target if the user clicked on the X in the upper right corner */
-			if (this != target && target->menu_id == 1)
-			{
+			if (this != target && target->menu_id == 1) {
 				toggle();
 				vultures_mouse_invalidate_tooltip(1);
 				return V_EVENT_HANDLED_REDRAW;
@@ -181,7 +176,7 @@ eventresult map::event_handler(window* target, void* result, SDL_Event* event)
 
 			/* only handle clicks on valid map locations */
 			if (mappos.x != -1)
-				return levwin->handle_click(result, event->button.button, mappos);
+				return map_data->handle_click(result, event->button.button, mappos);
 
 			break;
 
@@ -194,7 +189,7 @@ eventresult map::event_handler(window* target, void* result, SDL_Event* event)
 				vultures_mouse_set_tooltip(target->caption);
 			/* draw a tooltip for the map location */
 			else if (mappos.x != -1) {
-				ttext = levwin->map_square_description(mappos, 1);
+				ttext = map_data->map_square_description(mappos, 1);
 				if(!ttext.empty())
 					vultures_mouse_set_tooltip(ttext);
 			}

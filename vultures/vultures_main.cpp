@@ -34,7 +34,6 @@ extern "C" {
 #include "vultures_gra.h"
 #include "vultures_gen.h"
 #include "vultures_win.h"
-#include "vultures_map.h"
 #include "vultures_sdl.h"
 #include "vultures_init.h"
 #include "vultures_pcmusic.h"
@@ -51,6 +50,7 @@ extern "C" {
 #include "winclass/levelwin.h"
 #include "winclass/messagewin.h"
 #include "winclass/statuswin.h"
+#include "winclass/mapdata.h"
 
 /* Interface definition, for windows.c */
 struct window_procs vultures_procs = {
@@ -185,8 +185,9 @@ void vultures_init_nhwindows(int *argcp, char **argv)
 
 	vultures_show_logo_screen();
 
+	map_data = new mapdata();
 
-	new levelwin();
+	new levelwin(map_data);
 	vultures_windows_inited = 1;
 
 
@@ -200,6 +201,7 @@ void vultures_exit_nhwindows(const char * str)
 {
 	/* destroy any surviving windows */
 	delete ROOTWIN;
+	delete map_data;
 
 	/* close the application window */
 	vultures_exit_graphics_mode();
@@ -255,7 +257,7 @@ void vultures_clear_nhwindow(int winid)
 
 	/* this doesn't seem to be used for anything other than the map ... */
 	if (winid == WIN_MAP)
-		levwin->clear_map();
+		map_data->clear();
 
 	/* nethack also wants to clear WIN_MESSAGE frequently, but we don't do that
 	* because we have our own way of handling the message window... */
@@ -265,8 +267,7 @@ void vultures_clear_nhwindow(int winid)
 /* helper called by vultures_display_nhwindow */
 static void vultures_display_nhmap(struct window * win, vultures_event *result, BOOLEAN_P blocking)
 {
-	if (u.uz.dlevel != 0)
-	{
+	if (u.uz.dlevel != 0) {
 		/* u.uz.dlevel == 0 when the game hasn't been fully initialized yet
 		* you can't actually go there, the astral levels have negative numbers */
 
@@ -297,8 +298,7 @@ static void vultures_display_nhmap(struct window * win, vultures_event *result, 
 
 	/* blocking is set for things like monster detection, where we wait for an
 	* event before returning to a normal state */
-	if (blocking)
-	{
+	if (blocking) {
 		vultures_event dummy;
 		/* go into the event+drawing loop until we get a response */
 		vultures_event_dispatcher(&dummy, V_RESPOND_POSKEY, NULL);
@@ -517,6 +517,12 @@ int vultures_select_menu(int winid, int how, menu_item **menu_list)
 /***************************** 
 * Output functions
 *****************************/
+
+void vultures_print_glyph(winid window, XCHAR_P x, XCHAR_P y, int glyph)
+{
+	map_data->set_glyph(x, y, glyph);
+}
+
 
 void vultures_raw_print(const char *str)
 {

@@ -21,6 +21,8 @@ extern vultures_tile * vultures_get_tile_shaded(int tile_id, int shadelevel);
 extern void vultures_tilecache_discard(void);
 extern void vultures_tilecache_age(void);
 extern void vultures_put_tilehighlight(int x, int y, int tile_id);
+extern int vultures_monster_to_tile(int mon_id, int x, int y);
+extern int vultures_object_to_tile(int mon_id, int x, int y, struct obj *in_obj);
 
 extern int glassgems[CLR_MAX];
 

@@ -3,7 +3,6 @@
 #include "vultures_gra.h"
 #include "vultures_sdl.h"
 #include "vultures_mou.h"
-#include "vultures_map.h"
 #include "vultures_txt.h"
 #include "vultures_tile.h"
 

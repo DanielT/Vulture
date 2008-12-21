@@ -8,7 +8,6 @@ extern "C" {
 #include "vultures_opt.h"
 #include "vultures_gfl.h"
 #include "vultures_gra.h"
-#include "vultures_map.h"
 #include "vultures_mou.h"
 #include "vultures_tile.h"
 
@@ -17,12 +16,12 @@ extern "C" {
 
 
 
-minimap::minimap(levelwin *p, int parentw) : window(p), level(p)
+minimap::minimap(levelwin *p, mapdata *data) : window(p), level(p), map_data(data)
 {
 	minimapbg = vultures_load_graphic(V_FILENAME_MINIMAPBG);
 	w = minimapbg->w;
 	h = minimapbg->h;
-	x = parentw - (w + 6);
+	x = parent->w - (w + 6);
 	y = 6;
 	visible = vultures_opts.show_minimap;
 	menu_id = V_WIN_MINIMAP;
@@ -58,7 +57,7 @@ bool minimap::draw()
 		for (map_x = 1; map_x < COLNO; map_x++)
 		{
 			/* translate the contents of the map into a minimap symbol color */
-			switch(level->get_glyph(MAP_BACK, map_x, map_y))
+			switch(map_data->get_glyph(MAP_BACK, map_x, map_y))
 			{
 				case V_TILE_WALL_GENERIC:
 				case V_MISC_UNMAPPED_AREA:
@@ -68,7 +67,7 @@ bool minimap::draw()
 					sym = V_MMTILE_FLOOR; break;
 			}
 
-			switch(level->get_glyph(MAP_FURNITURE, map_x, map_y))
+			switch(map_data->get_glyph(MAP_FURNITURE, map_x, map_y))
 			{
 				case V_MISC_STAIRS_UP:
 				case V_MISC_STAIRS_DOWN:
@@ -85,12 +84,12 @@ bool minimap::draw()
 					sym = V_MMTILE_DOOR; break;
 			}
 
-			if (level->get_glyph(MAP_TRAP, map_x, map_y) == V_MISC_MAGIC_PORTAL)
+			if (map_data->get_glyph(MAP_TRAP, map_x, map_y) == V_MISC_MAGIC_PORTAL)
 				sym = V_MMTILE_STAIRS;
 
-			if (level->get_glyph(MAP_MON, map_x, map_y) != V_TILE_NONE)
+			if (map_data->get_glyph(MAP_MON, map_x, map_y) != V_TILE_NONE)
 			{
-				if (level->get_glyph(MAP_PET, map_x, map_y))
+				if (map_data->get_glyph(MAP_PET, map_x, map_y))
 					sym = V_MMTILE_PET;
 				else
 					sym = V_MMTILE_MONSTER;
@@ -181,7 +180,7 @@ eventresult minimap::event_handler(window* target, void* result, SDL_Event* even
 				return V_EVENT_HANDLED_FINAL;
 			}
 
-			((vultures_event*)result)->num = vultures_perform_map_action(V_ACTION_TRAVEL, mappos);
+			((vultures_event*)result)->num = map_data->perform_map_action(V_ACTION_TRAVEL, mappos);
 			return V_EVENT_HANDLED_FINAL;
 		}
 		/* right button: travel to location */

@@ -26,7 +26,6 @@ Requires SDL 1.1 or newer.
 #include "vultures_mou.h"
 #include "vultures_opt.h"
 #include "vultures_tile.h"
-#include "vultures_map.h"
 
 #include "winclass/levelwin.h"
 
