@@ -1,10 +1,11 @@
+/* Copyright (c) Daniel Thaler, 2008                              */
+/* NetHack may be freely redistributed.  See license for details. */
+
 #ifndef _enhancebutton_h_
 #define _enhancebutton_h_
 
 #include <SDL.h>
-
 #include "window.h"
-
 
 #define V_FILENAME_ENHANCE              "enhance"
 

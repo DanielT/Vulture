@@ -122,10 +122,8 @@ void vultures_mouse_draw(void)
 
 
 	/* draw a new tooltip, if necessary */
-	if (vultures_tooltip.valid && vultures_tooltip.tip)
-	{
-		if (vultures_tooltip.cur.x == -1)
-		{
+	if (vultures_tooltip.valid && vultures_tooltip.tip) {
+		if (vultures_tooltip.cur.x == -1) {
 			if (new_x + vultures_tooltip.tip->w > vultures_screen->w)
 				vultures_tooltip.cur.x = vultures_screen->w - vultures_tooltip.tip->w;
 			else if (new_x + cursor->xmod < 0)
@@ -172,8 +170,7 @@ void vultures_mouse_refresh(void)
 								new_y + cursor->graphic->h);
 
 	/* refresh the position of the previous tooltip */
-	if (vultures_tooltip.refresh.x != -1)
-	{
+	if (vultures_tooltip.refresh.x != -1) {
 		vultures_refresh_region(vultures_tooltip.refresh.x, vultures_tooltip.refresh.y,
 						vultures_tooltip.refresh.x + vultures_tooltip.refresh.w,
 						vultures_tooltip.refresh.y + vultures_tooltip.refresh.h);
@@ -187,8 +184,7 @@ void vultures_mouse_restore_bg()
 {
 	vultures_tile * cursor;
 
-	if (vultures_tooltip.background)
-	{
+	if (vultures_tooltip.background) {
 		vultures_put_img(vultures_tooltip.cur.x, vultures_tooltip.cur.y, vultures_tooltip.background);
 		SDL_FreeSurface(vultures_tooltip.background);
 		vultures_tooltip.background = NULL;
@@ -200,8 +196,7 @@ void vultures_mouse_restore_bg()
 		vultures_tooltip.refresh.h = vultures_tooltip.tip->h;
 	}
 
-	if (vultures_mouse.background)
-	{
+	if (vultures_mouse.background) {
 		cursor = vultures_get_tile(vultures_mouse.cursor);
 
 		vultures_put_img(vultures_mouse.cur.x + cursor->xmod,
@@ -233,8 +228,7 @@ static void vultures_mouse_get_bg(void)
 
 static void vultures_mouse_get_tt_bg(void)
 {
-	if (vultures_tooltip.tip && vultures_tooltip.valid)
-	{
+	if (vultures_tooltip.tip && vultures_tooltip.valid) {
 		if (vultures_tooltip.background)
 			SDL_FreeSurface(vultures_tooltip.background);
 
@@ -255,8 +249,7 @@ void vultures_mouse_invalidate_tooltip(int force)
 		abs(vultures_mouse.cur.x - (vultures_tooltip.cur.x -
 									cursor->xmod)) > 4 ||
 		abs(vultures_mouse.cur.y - (vultures_tooltip.cur.y -
-									cursor->ymod - cursor->graphic->h)) > 4)
-	{
+									cursor->ymod - cursor->graphic->h)) > 4) {
 		vultures_tooltip.valid = 0;
 		vultures_tooltip.cur.x = -1;
 		vultures_tooltip.cur.x = -1;
@@ -269,8 +262,7 @@ void vultures_mouse_set_tooltip(string str)
 {
 	int length, height;
 
-	if (!str.empty() && str != vultures_tooltip.text)
-	{
+	if (!str.empty() && str != vultures_tooltip.text) {
 		vultures_tooltip.text = str;
 
 		if (vultures_tooltip.background)

@@ -1,11 +1,10 @@
 /* Copyright (c) Daniel Thaler, 2006, 2008                        */
 /* NetHack may be freely redistributed.  See license for details. */
 
-#include <stdlib.h>
-#include <string.h>
 #include <errno.h>
 
 #include "hack.h"
+#include "epri.h"
 
 #if !defined WIN32
 	#include <sys/mman.h>
@@ -20,12 +19,7 @@
 #include "vultures_opt.h"
 #include "vultures_tileconfig.h"
 
-#include "epri.h"
-
-
-
 #define TILEARRAYLEN (GAMETILECOUNT*3)
-
 #define TILECACHE_MAXAGE 4
 
 typedef struct {
@@ -70,6 +64,7 @@ void vultures_tilecache_discard(void)
 	}
 }
 
+
 void vultures_tilecache_age(void)
 {
 	int i;
@@ -83,6 +78,7 @@ void vultures_tilecache_age(void)
 		}
 	}
 }
+
 
 void vultures_tilecache_add(vultures_tile *tile, int tile_id)
 {
@@ -228,7 +224,6 @@ static inline vultures_tile * vultures_shade_tile(vultures_tile *orig, int shade
 }
 
 
-
 void vultures_put_tilehighlight(int x, int y, int tile_id)
 {
 	vultures_tile *tile;
@@ -277,8 +272,6 @@ void vultures_put_tilehighlight(int x, int y, int tile_id)
 }
 
 
-
-
 int vultures_load_gametiles(void)
 {
 	string filename;
@@ -325,7 +318,6 @@ void vultures_unload_gametiles(void)
 	SDL_FreeSurface(vultures_ftshade1);
 	SDL_FreeSurface(vultures_ftshade2);
 }
-
 
 
 static vultures_tile *vultures_make_alpha_player_tile(int monnum, double op_scale)
@@ -377,7 +369,6 @@ static inline void vultures_set_tile_alpha(vultures_tile *tile, double opacity)
 			/* multiply the alpha component by the opacity */
 			rawdata[y*tile->graphic->pitch+x+3] *= opacity;
 }
-
 
 
 int vultures_object_to_tile(int obj_id, int x, int y, struct obj *in_obj)
@@ -514,7 +505,7 @@ int vultures_monster_to_tile(int mon_id, int x, int y)
 
 	/* we have different tiles for priests depending on their alignment */
 	if (mon_id == PM_ALIGNED_PRIEST) {
-		register struct monst *mtmp = m_at(x, y);
+		struct monst *mtmp = m_at(x, y);
 
 		switch (EPRI(mtmp)->shralign) {
 			case A_LAWFUL:  return V_MISC_LAWFUL_PRIEST;
@@ -529,6 +520,3 @@ int vultures_monster_to_tile(int mon_id, int x, int y)
 
 	return V_TILE_NONE;
 }
-
-
-

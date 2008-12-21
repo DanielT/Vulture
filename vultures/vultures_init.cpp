@@ -1,5 +1,6 @@
 /* NetHack may be freely redistributed.  See license for details. */
 /* Copyright (c) Jaakko Peltonen, 2000				  */
+/* Copyright (c) Daniel Thaler, 2008                              */
 
 #include <vector>
 #include <string>
@@ -25,36 +26,12 @@ using std::string;
 
 #include "date.h" /* this is in <variant>/include it's needed for VERSION_ID */
 
-/*----------------------------
-* constants
-*---------------------------- */
-
-/* why is this here? It should ALWAYS be defined by unistd.h */
-#ifndef R_OK
-#  define R_OK 4
-#endif
-
-
-/*----------------------------
-* pre-declared functions
-*---------------------------- */
-static void trimright(char *buf);
 static void vultures_show_intro(string introscript_name);
 
 
 /*----------------------------
 * function implementaions
 *---------------------------- */
-
-static void trimright(char *buf)
-{
-	int i;
-
-	i = strlen(buf) - 1;
-	while (i >= 0 && (buf[i] == ' ' || buf[i] == '\n' || buf[i] == '\r'))
-		i--;
-	buf[i + 1] = '\0';
-}
 
 
 void vultures_show_logo_screen(void)
@@ -91,7 +68,6 @@ void vultures_show_logo_screen(void)
 }
 
 
-
 void vultures_player_selection(void)
 {
 	SDL_Surface *logo;
@@ -116,7 +92,6 @@ void vultures_player_selection(void)
 	if (flags.legacy)
 		vultures_show_intro(filename);
 }
-
 
 
 void vultures_askname(void)
@@ -324,10 +299,8 @@ int vultures_init_graphics(void)
 	vultures_write_log(V_LOG_DEBUG, __FILE__, __LINE__, "Initializing fonts\n");
 
 	/* try custom font first */
-	if (iflags.wc_font_text)
-	{
-		if (access(iflags.wc_font_text, R_OK) == 0)
-		{
+	if (iflags.wc_font_text) {
+		if (access(iflags.wc_font_text, R_OK) == 0) {
 			font_loaded = 1;
 			font_loaded &= vultures_load_font(V_FONT_SMALL, iflags.wc_font_text, 0, 12);
 			font_loaded &= vultures_load_font(V_FONT_LARGE, iflags.wc_font_text, 0, 14);
@@ -336,8 +309,7 @@ int vultures_init_graphics(void)
 			printf("Could not access %s: %s\n", iflags.wc_font_text, strerror(errno));
 	}
 
-	if (!font_loaded) /* fallback to default font */
-	{
+	if (!font_loaded) {/* fallback to default font */
 		font_loaded = 1;
 		/* add the path to the filename */
 		fullname = vultures_make_filename(V_FONTS_DIRECTORY, "", V_FILENAME_FONT);
@@ -352,8 +324,7 @@ int vultures_init_graphics(void)
 	image = vultures_load_graphic(V_FILENAME_WINDOW_STYLE);
 	if (image == NULL)
 		all_ok = FALSE;
-	else
-	{
+	else {
 		vultures_winelem.corner_tl = vultures_get_img_src(1, 1, 23, 23, image);
 		vultures_winelem.border_top = vultures_get_img_src(27, 1, 57, 23, image);
 		vultures_winelem.corner_tr = vultures_get_img_src(61, 1, 84, 23, image);
@@ -442,5 +413,3 @@ void vultures_destroy_graphics(void)
 	/* misc small stuff */
 	delete vultures_px_format;
 }
-
-

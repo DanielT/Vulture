@@ -1,3 +1,6 @@
+/* Copyright (c) Daniel Thaler, 2008                              */
+/* NetHack may be freely redistributed.  See license for details. */
+
 #ifndef _inventory_h_
 #define _inventory_h_
 

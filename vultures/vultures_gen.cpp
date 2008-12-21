@@ -1,4 +1,5 @@
-/* Copyright (c) Jaakko Peltonen, 2000				  */
+/* Copyright (c) Jaakko Peltonen, 2000                            */
+/* Copyright (c) Daniel Thaler, 2008                              */
 /* NetHack may be freely redistributed.  See license for details. */
 
 #include <stdlib.h>

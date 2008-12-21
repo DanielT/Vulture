@@ -1,6 +1,7 @@
+/* Copyright (c) Daniel Thaler, 2008                              */
+/* NetHack may be freely redistributed.  See license for details. */
 
 #include "hotspot.h"
-
 
 hotspot::hotspot(window *parent, int x, int y, int w, int h, int menu_id, string name) : window(parent)
 {

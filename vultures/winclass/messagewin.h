@@ -1,3 +1,6 @@
+/* Copyright (c) Daniel Thaler, 2008                              */
+/* NetHack may be freely redistributed.  See license for details. */
+
 #ifndef _messagewin_h_
 #define _messagewin_h_
 
@@ -31,6 +34,5 @@ private:
 };
 
 extern messagewin *msgwin;
-
 
 #endif

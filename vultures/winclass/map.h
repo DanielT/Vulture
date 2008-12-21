@@ -1,3 +1,6 @@
+/* Copyright (c) Daniel Thaler, 2008                              */
+/* NetHack may be freely redistributed.  See license for details. */
+
 #ifndef _map_h_
 #define _map_h_
 
@@ -27,6 +30,5 @@ private:
 	SDL_Surface *map_symbols[V_MAX_MAP_SYMBOLS];
 	mapdata *map_data;
 };
-
 
 #endif

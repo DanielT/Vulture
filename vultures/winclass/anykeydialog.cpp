@@ -1,3 +1,5 @@
+/* Copyright (c) Daniel Thaler, 2008                              */
+/* NetHack may be freely redistributed.  See license for details. */
 
 #include "vultures_win.h"
 #include "vultures_sdl.h"

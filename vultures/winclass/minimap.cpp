@@ -1,3 +1,5 @@
+/* Copyright (c) Daniel Thaler, 2008                              */
+/* NetHack may be freely redistributed.  See license for details. */
 
 extern "C" {
 	#include "hack.h"
@@ -13,7 +15,6 @@ extern "C" {
 
 #include "minimap.h"
 #include "levelwin.h"
-
 
 
 minimap::minimap(levelwin *p, mapdata *data) : window(p), level(p), map_data(data)

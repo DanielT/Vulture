@@ -1,10 +1,8 @@
-/* Copyright (c) Daniel Thaler, 2006				  */
+/* Copyright (c) Daniel Thaler, 2006, 2008                        */
 /* NetHack may be freely redistributed.  See license for details. */
 
-/* system headers */
 #include <ctype.h>
 
-/* SDL headers */
 #include <SDL.h>
 
 /* nethack headers */
@@ -21,11 +19,7 @@ extern "C" {
 #endif
 
 #include "func_tab.h" /* For extended commands list */
-
 }
-
-#include <assert.h>
-
 
 #define TRAVEL_HACK /* XXX This is to be removed once Slash'EM (NetHack?)  fixes the problem of infinite loops */
 
@@ -142,7 +136,6 @@ void vultures_init_nhwindows(int *argcp, char **argv)
 	/* try to chdir to our datadir */
 	vultures_chdir_to_datadir(argv[0]);
 
-
 	if (!vultures_init_graphics())
 		panic("could not initalize graphic mode");
 
@@ -182,14 +175,12 @@ void vultures_init_nhwindows(int *argcp, char **argv)
 	iflags.menu_tab_sep = 1;
 	iflags.wc_hilite_pet = 1;
 
-
 	vultures_show_logo_screen();
 
 	map_data = new mapdata();
 
 	new levelwin(map_data);
 	vultures_windows_inited = 1;
-
 
 	/* Success! */
 	iflags.window_inited = TRUE;
@@ -220,8 +211,7 @@ winid vultures_create_nhwindow(int type)
 {
 	window *win;
 
-	switch(type)
-	{
+	switch(type) {
 		case NHW_STATUS:
 			win = new statuswin(vultures_get_window(0));
 			break;
@@ -284,13 +274,10 @@ static void vultures_display_nhmap(struct window * win, vultures_event *result, 
 
 		win->need_redraw = 1;
 
-		if (flags.travel)
-		{
+		if (flags.travel) {
 			if (vultures_event_dispatcher_nonblocking(result, NULL))
 				vultures_stop_travelling = 1;
-		}
-		else
-		{
+		} else {
 			win->draw_windows();
 			vultures_refresh_window_region();
 		}
@@ -318,8 +305,7 @@ void vultures_display_nhwindow(int winid, BOOLEAN_P blocking)
 	if (!win)
 		return;
 
-	switch(win->get_nh_type())
-	{
+	switch(win->get_nh_type()) {
 		case NHW_TEXT:
 			if (win->get_wintype() == V_WINTYPE_ENDING) {
 				int response;
@@ -382,7 +368,6 @@ void vultures_destroy_nhwindow(int winid)
 }
 
 
-
 void vultures_start_menu(int winid)
 {
 	window *win = vultures_get_window(winid);
@@ -395,16 +380,12 @@ void vultures_start_menu(int winid)
 	if (win->get_nh_type() != NHW_MENU)
 		return;
 	
-	/* start menu should never be called on a window that is not a menu */
-	assert (win->get_wintype() == V_WINTYPE_MENU || win->get_wintype() == V_WINTYPE_OBJWIN);
-	
 	menu = static_cast<menuwin*>(win);
 	menu->reset();
 	
 	/* possibly convert an inventory type window back to a regular menu window */
 	(new menuwin())->replace_win(menu);
 }
-
 
 
 /* add an item to a menu that was started with vultures_start_menu */
@@ -551,14 +532,12 @@ void vultures_raw_print_bold(const char *str)
 void vultures_putstr(int winid, int attr, const char *str)
 {
 	struct window * win;
-//     ANY_P menuid;
 
 	if (!str)
 		return;
 
 	/* Display error messages immediately */
-	if (winid == WIN_ERR)
-	{
+	if (winid == WIN_ERR) {
 		vultures_messagebox(str);
 		return;
 	}
@@ -569,8 +548,7 @@ void vultures_putstr(int winid, int attr, const char *str)
 	* For windows of type NHW_MESSAGE, both the messages
 	* and their send time are stored.
 	*/
-	switch (win->get_nh_type())
-	{
+	switch (win->get_nh_type()) {
 		case NHW_MESSAGE:
 			/* If "what's this" is active,skip the help messages
 			* associated with NetHack's lookat command. */
@@ -603,12 +581,8 @@ void vultures_putstr(int winid, int attr, const char *str)
 
 		case NHW_TEXT:
 		case NHW_MENU:
-//             win->content_is_text = 1;    /* Text content */
-
 			/* Add the new text line as a menu item */
-//             menuid.a_void = 0; /* Since text lines can't be selected anyway, these can be the same */
-//             vultures_add_menu(winid, NO_GLYPH, &menuid, 0, 0, ATR_NONE, str, FALSE);
-		static_cast<menuwin*>(win)->add_menuitem(str, false, NULL, '\0', 0);
+			static_cast<menuwin*>(win)->add_menuitem(str, false, NULL, '\0', 0);
 			break;
 
 		case NHW_STATUS:
@@ -730,6 +704,7 @@ void vultures_bail(const char *mesg)
 	/*NOTREACHED*/
 }
 
+
 /* display a list of extended commands for the user to pick from */
 int vultures_get_ext_cmd(void)
 {
@@ -747,8 +722,7 @@ int vultures_get_ext_cmd(void)
 	used_accels[0] = '\0';
 
 	/* Add extended commands as menu items */
-	for (i = 0; extcmdlist[i].ef_txt != NULL; i++)
-	{
+	for (i = 0; extcmdlist[i].ef_txt != NULL; i++) {
 		/* try to find an accelerator that fits the command name */
 		cur_accelerator = tolower(extcmdlist[i].ef_txt[0]);
 
@@ -761,8 +735,7 @@ int vultures_get_ext_cmd(void)
 		if (j < len)
 			/* cur_accelerator is already used, so find another */
 			cur_accelerator = vultures_find_menu_accelerator(used_accels);
-		else
-		{
+		else {
 			/* cur_accelerator is not in use: claim it */
 			used_accels[len] = cur_accelerator;
 			used_accels[len+1] = '\0';
@@ -789,7 +762,6 @@ int vultures_get_ext_cmd(void)
 }
 
 
-
 /* display a file in a menu window */
 void vultures_display_file(const char *fname, BOOLEAN_P complain)
 {
@@ -799,10 +771,8 @@ void vultures_display_file(const char *fname, BOOLEAN_P complain)
 
 	/* Read the file */
 	f = dlb_fopen(fname, "r");
-	if (!f)
-	{
-		if (complain == TRUE)
-		{
+	if (!f) {
+		if (complain == TRUE) {
 			sprintf(tempbuffer, "Can't open file [%s].\n", fname);
 			vultures_messagebox(tempbuffer);
 		}
@@ -858,8 +828,7 @@ void vultures_delay_output(void)
 	/* the time it took to draw the map is subtracted from the delay time;
 	* this allows the game to adapt to slow-drawing systems (ie unaccelerated
 	* software graphics) */
-	if (vultures_map_draw_lastmove == moves)
-	{
+	if (vultures_map_draw_lastmove == moves) {
 		delay -= vultures_map_draw_msecs;
 		if (delay < 0)
 			delay = 1;
@@ -868,8 +837,7 @@ void vultures_delay_output(void)
 	origdelay = delay;
 
 	/* delay in small increments and run the eventloop in between */
-	while (delay > 10)
-	{
+	while (delay > 10) {
 		starttick = SDL_GetTicks();
 
 		if (vultures_event_dispatcher_nonblocking(&result, NULL))
@@ -877,8 +845,7 @@ void vultures_delay_output(void)
 
 		endtick = SDL_GetTicks();
 		elapsed = endtick - starttick;
-		if (elapsed < 10)
-		{
+		if (elapsed < 10) {
 			SDL_Delay(10 - elapsed);
 			elapsed = 10;
 		}
@@ -911,8 +878,7 @@ char vultures_message_menu(CHAR_P let, int how, const char *mesg)
 void vultures_curs(winid window, int x, int y)
 {
 	/* allow selecting a position via keyboard for look and teleport (both set vultures_whatis_active) */
-	if (window == WIN_MAP && vultures_whatis_active)
-	{
+	if (window == WIN_MAP && vultures_whatis_active) {
 		point mappos, mouse;
 
 		mappos.x = x; mappos.y = y;
@@ -920,8 +886,7 @@ void vultures_curs(winid window, int x, int y)
 
 		/* move the viewport when the mouse approaches the edge */
 		if (mouse.x < 50 || mouse.x > (vultures_screen->w-50) ||
-			mouse.y < 50 || mouse.y > (vultures_screen->h-50))
-		{
+			mouse.y < 50 || mouse.y > (vultures_screen->h-50)) {
 			levwin->set_view(x, y);
 
 			/* calculate the new mouse position */
@@ -940,22 +905,18 @@ void vultures_get_nh_event(void)
 {
 	static point lastpos[2] = {{-1,-1}, {-1,-1}};
 
-	if (flags.travel)
-	{
+	if (flags.travel) {
 		/* if the positon 2 turns ago is identical to the current position,
 		* the travel algorithm has hung and travel needs to be canceled */
 		if (vultures_stop_travelling ||
 			((lastpos[1].x != lastpos[0].x || lastpos[1].y != lastpos[0].y) &&
-			lastpos[1].x == u.ux && lastpos[1].y == u.uy))
-		{
+			lastpos[1].x == u.ux && lastpos[1].y == u.uy)) {
 			flags.travel = 0;
 			flags.mv = 0;
 			u.tx = u.ux;
 			u.ty = u.uy;
 			lastpos[0].x = lastpos[1].x = -1;
-		}
-		else
-		{
+		} else {
 			lastpos[1] = lastpos[0];
 			lastpos[0].x = u.ux;
 			lastpos[0].y = u.uy;
@@ -966,8 +927,6 @@ void vultures_get_nh_event(void)
 
 	vultures_stop_travelling = 0;
 }
-
-
 
 
 /*******************************************************
@@ -986,8 +945,7 @@ int vultures_find_menu_accelerator(char *used_accelerators)
 	cur_accelerator = 0;
 
 	/* Pick any available letter from [a-zA-Z] */
-	for (i = 0; i < strlen(acclist); i++)
-	{
+	for (i = 0; i < strlen(acclist); i++) {
 		cur_accelerator = acclist[i];
 
 		acc_found = 1;
@@ -998,8 +956,7 @@ int vultures_find_menu_accelerator(char *used_accelerators)
 			break;
 	}
 
-	if (acc_found)
-	{
+	if (acc_found) {
 		/* Add found accelerator to string of used ones (assume there's enough room) */
 		j = strlen(used_accelerators);
 		used_accelerators[j] = cur_accelerator;
@@ -1009,7 +966,6 @@ int vultures_find_menu_accelerator(char *used_accelerators)
 
 	return -1;
 }
-
 
 /*******************************************************
 * unsupported/unnecessary functions of the nethack api
@@ -1036,5 +992,3 @@ void vultures_cliparound(int x, int y) {}
 #ifdef POSITIONBAR
 void vultures_update_positionbar(char *features) {}
 #endif
-
-

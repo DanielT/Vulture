@@ -1,3 +1,6 @@
+/* Copyright (c) Daniel Thaler, 2008                              */
+/* NetHack may be freely redistributed.  See license for details. */
+
 #ifndef _menuwin_h_
 #define _menuwin_h_
 
@@ -71,6 +74,5 @@ protected:
 	std::list<menuitem> items;
 	int count;
 };
-
 
 #endif

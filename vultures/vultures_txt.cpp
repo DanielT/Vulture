@@ -27,8 +27,7 @@ static struct vultures_font {
 int vultures_load_font (int font_id, const char * ttf_filename, int fontindex, int pointsize)
 {
 	TTF_Font *newfont;
-	if(!TTF_WasInit())
-	{
+	if(!TTF_WasInit()) {
 		if(TTF_Init()==-1)
 			return FALSE;
 
@@ -121,8 +120,7 @@ void vultures_put_text_multiline(int font_id, string str, SDL_Surface *dest,
 	text_height = vultures_text_height(font_id, str);
 
 	/* lastfit is true when the last segment has been fit onto the surface (drawn) */
-	while (!lastfit)
-	{
+	while (!lastfit) {
 		lastfit = 1;
 
 		startpos = startpos + endpos;
@@ -132,8 +130,7 @@ void vultures_put_text_multiline(int font_id, string str, SDL_Surface *dest,
 		txtlen = vultures_text_length(font_id, str_copy);
 
 		/* split word off the end of the string until it is short enough to fit */
-		while (txtlen > maxlen)
-		{
+		while (txtlen > maxlen) {
 			/* a piece will be split off the end, so this is not the last piece */
 			lastfit = 0;
 
