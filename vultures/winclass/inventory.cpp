@@ -649,8 +649,8 @@ eventresult inventory::objwin_event_handler(window* target, void* result, SDL_Ev
 				/* redraw */
 				visible = 1;
 				need_redraw = 1;
+				return V_EVENT_HANDLED_REDRAW;
 			}
-			return V_EVENT_HANDLED_NOREDRAW;
 	}
 
 	return V_EVENT_HANDLED_NOREDRAW;

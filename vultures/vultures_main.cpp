@@ -230,6 +230,7 @@ winid vultures_create_nhwindow(int type)
 		case NHW_MENU:
 		case NHW_TEXT:
 			win = new menuwin(vultures_get_window(0));
+			win->visible = false;
 			break;
 
 		default:

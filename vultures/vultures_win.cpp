@@ -98,14 +98,14 @@ int vultures_get_input(int force_x, int force_y, const char *ques, char *input)
 * Event handling functions
 ******************************/
 
-void vultures_event_dispatcher(void * result, int resulttype, struct window * topwin)
+void vultures_event_dispatcher(void * result, int resulttype, window * topwin)
 {
 	vultures_event * queued_event;
 	int event_result = V_EVENT_UNHANDLED;
 	point mouse;
 	SDL_Event event;
 	int redraw;
-	struct window *win;
+	window *win;
 
 	/* first, check whether we have an autoresponse queued */
 	while ( (queued_event = vultures_eventstack_get()))
@@ -175,7 +175,7 @@ void vultures_event_dispatcher(void * result, int resulttype, struct window * to
 
 
 
-int vultures_event_dispatcher_nonblocking(void * result, struct window * topwin)
+int vultures_event_dispatcher_nonblocking(void * result, window * topwin)
 {
 	SDL_Event event;
 	int event_result = V_EVENT_UNHANDLED;
@@ -205,9 +205,9 @@ int vultures_event_dispatcher_nonblocking(void * result, struct window * topwin)
 }
 
 
-static int vultures_event_dispatcher_core(SDL_Event * event, void * result, struct window * topwin)
+static int vultures_event_dispatcher_core(SDL_Event * event, void * result, window * topwin)
 {
-	struct window *win, *win_old;
+	window *win, *win_old;
 	int event_result = V_EVENT_UNHANDLED;
 	int redraw = 0, hovertime_prev = 0;
 	static int hovertime = 0;
@@ -283,8 +283,8 @@ static int vultures_event_dispatcher_core(SDL_Event * event, void * result, stru
 /* takes an event and passes it each window in the win->parent->...->topwin
 * chain until one of the windows handles the event or until the event is
 * rejected by topwin */
-static int vultures_handle_event(struct window *topwin, struct window *win,
-								void * result, SDL_Event *event, int *redraw)
+static int vultures_handle_event(window *topwin, window *win,
+								void *result, SDL_Event *event, int *redraw)
 {
 	int event_result = V_EVENT_UNHANDLED;
 	struct window * winptr = win;
