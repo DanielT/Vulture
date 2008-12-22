@@ -113,33 +113,33 @@ void contextmenu::layout(void)
 }
 
 
-eventresult contextmenu::event_handler(window* target, void* result, SDL_Event* event)
+eventresult contextmenu::handle_mousemotion_event(window* target, void* result, int xrel, 
+                                             int yrel, int state)
 {
-	/* mousemotion: set the cursor */
-	if (event->type == SDL_MOUSEMOTION)
-	{
-		vultures_set_mcursor(V_CURSOR_NORMAL);
-		return V_EVENT_HANDLED_NOREDRAW;
-	}
+	vultures_set_mcursor(V_CURSOR_NORMAL);
+	return V_EVENT_HANDLED_NOREDRAW;
+}
 
-	/* clicks: return id of clicked button */
-	else if (event->type == SDL_MOUSEBUTTONUP && event->button.button == SDL_BUTTON_LEFT) {
-		if (this != target && target->menu_id)
-		{
+
+eventresult contextmenu::handle_mousebuttonup_event(window* target, void* result,
+                                            int mouse_x, int mouse_y, int button, int state)
+{
+	if (button == SDL_BUTTON_LEFT) {
+		if (this != target && target->menu_id) {
 			*(int*)result = target->menu_id;
 			return V_EVENT_HANDLED_FINAL;
 		}
 	}
 
-	/* keypresses or clicks outside the menu cancel it */
-	if (event->type == SDL_KEYDOWN ||
-	    event->type == SDL_MOUSEBUTTONUP ||
-		event->type == SDL_VIDEORESIZE) {
-		*(int*)result = 0;
-		return V_EVENT_HANDLED_FINAL;
-	}
+	*(int*)result = 0;
+	return V_EVENT_HANDLED_FINAL;
+}
 
-	return V_EVENT_HANDLED_NOREDRAW;
+
+eventresult contextmenu::handle_keydown_event(window* target, void* result, SDL_keysym keysym)
+{
+	*(int*)result = 0;
+	return V_EVENT_HANDLED_FINAL;
 }
 
 

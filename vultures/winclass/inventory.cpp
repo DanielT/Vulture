@@ -253,409 +253,347 @@ eventresult inventory::context_menu(objitemwin *target)
 }
 
 
-eventresult inventory::event_handler(window* target, void* result, SDL_Event* event)
+
+eventresult inventory::handle_mousemotion_event(window* target, void* result, int xrel, 
+                                             int yrel, int state)
 {
-	point mouse;
-	int key;
-	int key_ok;
+	vultures_set_mcursor(V_CURSOR_NORMAL);
+	return V_EVENT_HANDLED_NOREDRAW;
+}
+
+
+eventresult inventory::handle_mousebuttonup_event(window* target, void* result,
+                                            int mouse_x, int mouse_y, int button, int state)
+{
+	point mouse = vultures_get_mouse_pos();
+	window *winelem;
+	objitemwin *oitem;
 	
-	/* use a different event handler for menus that expect a selection */
-	if (select_how != PICK_NONE)
-		return objwin_event_handler(target, result, event);
+	if (select_how == PICK_NONE) {
+		/* close the window if the user clicks outside it */
+		if (this == target && (mouse.x < abs_x || mouse.y < abs_y ||
+							mouse.x > abs_x + w || mouse.y > abs_y + h))
+			return V_EVENT_HANDLED_FINAL;
 
-	switch (event->type)
-	{
-		case SDL_MOUSEMOTION:
-			vultures_set_mcursor(V_CURSOR_NORMAL);
-			break;
+		/* left clicks on object items do nothing */
+		if (button == SDL_BUTTON_LEFT &&
+				target != this && target->v_type == V_WINTYPE_OBJITEM)
+			return V_EVENT_HANDLED_NOREDRAW;
 
-		case SDL_MOUSEBUTTONUP:
-			mouse = vultures_get_mouse_pos();
-			/* close the window if the user clicks outside it */
-			if (this == target && (mouse.x < abs_x || mouse.y < abs_y ||
-								mouse.x > abs_x + w || mouse.y > abs_y + h))
-				return V_EVENT_HANDLED_FINAL;
+		/* right clicks on object items open a context menu */
+		else if (button == SDL_BUTTON_RIGHT && target->v_type == V_WINTYPE_OBJITEM)
+			return context_menu(static_cast<objitemwin*>(target));
+	}
+	
+	if (button == SDL_BUTTON_WHEELUP) {
+		if (ow_firstcol > 0) {
+			/* scroll inventory backwards */
+			update_invscroll(ow_firstcol - 1);
+			need_redraw = 1;
+			return V_EVENT_HANDLED_REDRAW;
+		}
+		return V_EVENT_HANDLED_NOREDRAW;
+	}
 
-			/* left clicks on object items do nothing */
-			if (event->button.button == SDL_BUTTON_LEFT &&
-					target != this && target->v_type == V_WINTYPE_OBJITEM)
-				return V_EVENT_HANDLED_NOREDRAW;
+	else if (button == SDL_BUTTON_WHEELDOWN) {
+		if (ow_firstcol + ow_vcols < ow_ncols) {
+			/* scroll inventory forwards */
+			update_invscroll(ow_firstcol + 1);
+			need_redraw = 1;
+			return V_EVENT_HANDLED_REDRAW;
+		}
+		return V_EVENT_HANDLED_NOREDRAW;
+	}
 
-			/* right clicks on object items open a context menu */
-			else if (event->button.button == SDL_BUTTON_RIGHT && target->v_type == V_WINTYPE_OBJITEM)
-				return context_menu(static_cast<objitemwin*>(target));
+	else if (button == SDL_BUTTON_LEFT) {
+		if (this == target)
+			return V_EVENT_HANDLED_NOREDRAW;
 
-			/* other functions are outsourced... */
-			else
-				return objwin_event_handler(target, result, event);
-
-
-		case SDL_KEYDOWN:
-			key_ok = 0;
-			key = event->key.keysym.unicode;
-			switch (event->key.keysym.sym)
+		if (target->v_type == V_WINTYPE_BUTTON) {
+			switch (target->menu_id)
 			{
-				case SDLK_HOME:
-				case SDLK_END:
-				case SDLK_PAGEDOWN:
-				case SDLK_KP2:
-				case SDLK_DOWN:
-				case SDLK_PAGEUP:
-				case SDLK_KP8:
-				case SDLK_UP:
-				case SDLK_LEFT:
-				case SDLK_RIGHT:
-					key_ok = 1;
-					break;
+				case V_MENU_ACCEPT:
+				case V_MENU_CANCEL:
+				case V_INV_CLOSE:
+					*(int*)result = target->menu_id;
+					return V_EVENT_HANDLED_FINAL;
 
-				default: break;
+				case V_INV_PREVPAGE:
+					update_invscroll(ow_firstcol - 1);
+					need_redraw = 1;
+					return V_EVENT_HANDLED_REDRAW;
+
+				case V_INV_NEXTPAGE:
+					update_invscroll(ow_firstcol + 1);
+					need_redraw = 1;
+					return V_EVENT_HANDLED_REDRAW;
+			}
+		}
+
+		/* select a range of items from target (clicked item) to handler->pd.ow_lasttoggled (previously clicked item) */
+		if (target->v_type == V_WINTYPE_OBJITEM && (SDL_GetModState() & KMOD_LSHIFT) && 
+			select_how != PICK_ONE && ow_lasttoggled) {
+			int selectme = 0;
+			for (winelem = first_child; winelem; winelem = winelem->sib_next) {
+				if (winelem == target || winelem == ow_lasttoggled) {
+					selectme = !selectme;
+					oitem = static_cast<objitemwin*>(winelem);
+					oitem->item->selected = 1;
+					oitem->item->count = -1;
+				}
+
+				if (selectme && winelem->v_type == V_WINTYPE_OBJITEM) {
+					oitem = static_cast<objitemwin*>(winelem);
+					oitem->item->selected = 1;
+					oitem->item->count = -1;
+				}
 			}
 
-			switch (key)
-			{
-				case MENU_PREVIOUS_PAGE:
-				case MENU_NEXT_PAGE:
-				case MENU_FIRST_PAGE:
-				case MENU_LAST_PAGE:
-				case MENU_SEARCH:
-					key_ok = 1;
+			ow_lasttoggled->last_toggled = 0;
+			ow_lasttoggled = static_cast<objitemwin*>(target);
+			static_cast<objitemwin*>(target)->last_toggled = 1;
 
-				default: break;
+			need_redraw = 1;
+			return V_EVENT_HANDLED_REDRAW;
+		}
+		else if (target->v_type == V_WINTYPE_OBJITEM) {
+			select_option(static_cast<objitemwin*>(target), -1);
+
+			if (ow_lasttoggled)
+				ow_lasttoggled->last_toggled = false;
+			ow_lasttoggled = static_cast<objitemwin*>(target);
+			ow_lasttoggled->last_toggled = true;
+
+			if (select_how == PICK_ONE) {
+				*(int*)result = V_MENU_ACCEPT;
+				return V_EVENT_HANDLED_FINAL;
 			}
 
-			if (key_ok)
-				return objwin_event_handler(target, result, event);
-
-			else if (!key)
-				return V_EVENT_HANDLED_NOREDRAW;
-
-			else
-				return V_EVENT_HANDLED_FINAL;
-
-		case SDL_VIDEORESIZE:
-			return objwin_event_handler(target, result, event);
+			need_redraw = 1;
+			return V_EVENT_HANDLED_REDRAW;
+		}
 	}
 
 	return V_EVENT_HANDLED_NOREDRAW;
 }
 
 
-eventresult inventory::objwin_event_handler(window* target, void* result, SDL_Event* event)
+eventresult inventory::handle_keydown_event(window* target, void* result, SDL_keysym keysym)
 {
-	struct window * winelem;
-	int key, itemcount, colno;
-	objitemwin *oitem;
+	window *winelem;
+	int itemcount, colno, key;
 
-	switch (event->type)
-	{
-		case SDL_MOUSEMOTION:
-			vultures_set_mcursor(V_CURSOR_NORMAL);
-			break;
+	need_redraw = 1;
+	key = keysym.unicode;
+	switch (keysym.sym) {
+		case SDLK_RETURN:
+		case SDLK_KP_ENTER:
+			*(int*)result = V_MENU_ACCEPT;
+			return V_EVENT_HANDLED_FINAL;
 
-		case SDL_MOUSEBUTTONUP:
-			if (event->button.button == SDL_BUTTON_WHEELUP)
+		case SDLK_SPACE:
+		case SDLK_ESCAPE:
+			*(int*)result = content_is_text ? V_MENU_ACCEPT : V_MENU_CANCEL;
+			return V_EVENT_HANDLED_FINAL;
+
+		/* handle menu control keys */
+		case SDLK_HOME:     key = MENU_FIRST_PAGE;    /* '^' */ break;
+		case SDLK_END:      key = MENU_LAST_PAGE;     /* '|' */ break;
+
+		/* scroll via arrow keys */
+		case SDLK_PAGEDOWN:
+		case SDLK_KP2:
+		case SDLK_DOWN:
+		case SDLK_RIGHT:
+			update_invscroll(ow_firstcol + 1);
+			return V_EVENT_HANDLED_REDRAW;
+
+		case SDLK_PAGEUP:
+		case SDLK_KP8:
+		case SDLK_UP:
+		case SDLK_LEFT:
+			update_invscroll(ow_firstcol - 1);
+			return V_EVENT_HANDLED_REDRAW;
+
+		case SDLK_BACKSPACE:
+			if (ow_lasttoggled)
+				ow_lasttoggled->item->count = ow_lasttoggled->item->count / 10;
+			return V_EVENT_HANDLED_REDRAW;
+
+		default: break;
+	}
+
+	if (!key)
+		/* a function or modifier key, but not one we recognize, was pressed */
+		return V_EVENT_HANDLED_NOREDRAW;
+
+	switch (key) {
+		case MENU_PREVIOUS_PAGE:
+			update_invscroll(ow_firstcol - 1);
+			return V_EVENT_HANDLED_REDRAW;
+
+		case MENU_NEXT_PAGE:
+			update_invscroll(ow_firstcol + 1);
+			return V_EVENT_HANDLED_REDRAW;
+
+		case MENU_FIRST_PAGE:
+			update_invscroll(0);
+			return V_EVENT_HANDLED_REDRAW;
+
+		case MENU_LAST_PAGE:
+			update_invscroll(999999);
+			return V_EVENT_HANDLED_REDRAW;
+
+
+		case MENU_SELECT_ALL:
+		case MENU_UNSELECT_ALL:
+			/* invalid for single selection menus */
+			if (select_how != PICK_ANY)
+				return V_EVENT_HANDLED_NOREDRAW;
+
+			for (winelem = first_child; winelem; winelem = winelem->sib_next) {
+				if (winelem->v_type == V_WINTYPE_OBJITEM) {
+					static_cast<objitemwin*>(winelem)->item->selected =
+											(key == MENU_SELECT_ALL);
+					static_cast<objitemwin*>(winelem)->item->count = -1;
+				}
+			}
+			return V_EVENT_HANDLED_REDRAW;
+
+
+		case MENU_INVERT_ALL:
+			/* invalid for single selection menus */
+			if (select_how != PICK_ANY)
+				return V_EVENT_HANDLED_NOREDRAW;
+
+			for (winelem = first_child; winelem; winelem = winelem->sib_next) {
+				if (winelem->v_type == V_WINTYPE_OBJITEM) {
+					static_cast<objitemwin*>(winelem)->item->selected = 
+					!static_cast<objitemwin*>(winelem)->item->selected;
+					static_cast<objitemwin*>(winelem)->item->count = -1;
+				}
+			}
+			return V_EVENT_HANDLED_REDRAW;
+
+
+		case MENU_SELECT_PAGE:
+		case MENU_UNSELECT_PAGE:
+			/* invalid for single selection menus */
+			if (select_how != PICK_ANY)
+				return V_EVENT_HANDLED_NOREDRAW;
+
+			for (winelem = first_child; winelem; winelem = winelem->sib_next) {
+				if (winelem->v_type == V_WINTYPE_OBJITEM && winelem->visible) {
+					static_cast<objitemwin*>(winelem)->item->selected = (key == MENU_SELECT_PAGE);
+					static_cast<objitemwin*>(winelem)->item->count = -1;
+				}
+			}
+			return V_EVENT_HANDLED_REDRAW;
+
+
+		case MENU_INVERT_PAGE:
+			/* invalid for single selection menus */
+			if (select_how != PICK_ANY)
+				return V_EVENT_HANDLED_NOREDRAW;
+
+			for (winelem = first_child; winelem; winelem = winelem->sib_next) {
+				if (winelem->v_type == V_WINTYPE_OBJITEM && winelem->visible) {
+					static_cast<objitemwin*>(winelem)->item->selected =
+						!static_cast<objitemwin*>(winelem)->item->selected;
+					static_cast<objitemwin*>(winelem)->item->count = -1;
+				}
+			}
+			return V_EVENT_HANDLED_REDRAW;
+
+
+		case MENU_SEARCH:
+			char str_to_find[512];
+			str_to_find[0] = '\0';
+			if (vultures_get_input(-1, -1, "What are you looking for?", str_to_find) != -1)
 			{
-				if (ow_firstcol > 0) {
-					/* scroll inventory backwards */
-					update_invscroll(ow_firstcol - 1);
-					need_redraw = 1;
-					return V_EVENT_HANDLED_REDRAW;
-				}
-				return V_EVENT_HANDLED_NOREDRAW;
-			}
-
-			else if (event->button.button == SDL_BUTTON_WHEELDOWN) {
-				if (ow_firstcol + ow_vcols < ow_ncols) {
-					/* scroll inventory forwards */
-					update_invscroll(ow_firstcol + 1);
-					need_redraw = 1;
-					return V_EVENT_HANDLED_REDRAW;
-				}
-				return V_EVENT_HANDLED_NOREDRAW;
-			}
-
-			else if (event->button.button == SDL_BUTTON_LEFT) {
-				if (this == target)
-					break;
-
-				if (target->v_type == V_WINTYPE_BUTTON) {
-					switch (target->menu_id)
-					{
-						case V_MENU_ACCEPT:
-						case V_MENU_CANCEL:
-						case V_INV_CLOSE:
-							*(int*)result = target->menu_id;
-							return V_EVENT_HANDLED_FINAL;
-
-						case V_INV_PREVPAGE:
-							update_invscroll(ow_firstcol - 1);
-							need_redraw = 1;
-							return V_EVENT_HANDLED_REDRAW;
-
-						case V_INV_NEXTPAGE:
-							update_invscroll(ow_firstcol + 1);
-							need_redraw = 1;
-							return V_EVENT_HANDLED_REDRAW;
-
+				itemcount = 0;
+				for (winelem = first_child; winelem; winelem = winelem->sib_next) {
+					itemcount++;
+					if (winelem->caption.find(str_to_find)) {
+						colno = itemcount / ow_vrows;
+						update_invscroll(colno);
+						break;
 					}
 				}
 
-				/* select a range of items from target (clicked item) to handler->pd.ow_lasttoggled (previously clicked item) */
-				if (target->v_type == V_WINTYPE_OBJITEM && (SDL_GetModState() & KMOD_LSHIFT) && 
-					select_how != PICK_ONE && ow_lasttoggled) {
-					int selectme = 0;
-					for (winelem = first_child; winelem; winelem = winelem->sib_next) {
-						if (winelem == target || winelem == ow_lasttoggled) {
-							selectme = !selectme;
-							oitem = static_cast<objitemwin*>(winelem);
-							oitem->item->selected = 1;
-							oitem->item->count = -1;
-						}
-
-						if (selectme && winelem->v_type == V_WINTYPE_OBJITEM) {
-							oitem = static_cast<objitemwin*>(winelem);
-							oitem->item->selected = 1;
-							oitem->item->count = -1;
-						}
-					}
-
-					ow_lasttoggled->last_toggled = 0;
-					ow_lasttoggled = static_cast<objitemwin*>(target);
-					static_cast<objitemwin*>(target)->last_toggled = 1;
-
-					need_redraw = 1;
-					return V_EVENT_HANDLED_REDRAW;
-				}
-				else if (target->v_type == V_WINTYPE_OBJITEM) {
-					select_option(static_cast<objitemwin*>(target), -1);
-
-					if (ow_lasttoggled)
-						ow_lasttoggled->last_toggled = false;
-					ow_lasttoggled = static_cast<objitemwin*>(target);
+				if (ow_lasttoggled)
+					ow_lasttoggled->last_toggled = false;
+				ow_lasttoggled = static_cast<objitemwin*>(winelem);
+				if (ow_lasttoggled)
 					ow_lasttoggled->last_toggled = true;
-
-					if (select_how == PICK_ONE) {
-						*(int*)result = V_MENU_ACCEPT;
-						return V_EVENT_HANDLED_FINAL;
-					}
-
-					need_redraw = 1;
-					return V_EVENT_HANDLED_REDRAW;
-				}
 			}
-			break;
+			return V_EVENT_HANDLED_REDRAW;
 
-		case SDL_KEYDOWN:
-			need_redraw = 1;
-			key = event->key.keysym.unicode;
-			switch (event->key.keysym.sym)
-			{
-				case SDLK_RETURN:
-				case SDLK_KP_ENTER:
-					*(int*)result = V_MENU_ACCEPT;
-					return V_EVENT_HANDLED_FINAL;
+		default:
+			if (select_how == PICK_NONE)
+				return V_EVENT_HANDLED_FINAL;
+		
+			/* numbers are part of a count */
+			if (key >= '0' && key <= '9' && ow_lasttoggled && 
+				ow_lasttoggled->item->count < 1000000) {
+				if (ow_lasttoggled->item->count == -1)
+					ow_lasttoggled->item->count = 0;
+				ow_lasttoggled->item->count = ow_lasttoggled->item->count * 10 + (key - '0');
 
-				case SDLK_SPACE:
-				case SDLK_ESCAPE:
-					*(int*)result = content_is_text ? V_MENU_ACCEPT : V_MENU_CANCEL;
-					return V_EVENT_HANDLED_FINAL;
-
-				/* handle menu control keys */
-				case SDLK_HOME:     key = MENU_FIRST_PAGE;    /* '^' */ break;
-				case SDLK_END:      key = MENU_LAST_PAGE;     /* '|' */ break;
-
-				/* scroll via arrow keys */
-				case SDLK_PAGEDOWN:
-				case SDLK_KP2:
-				case SDLK_DOWN:
-				case SDLK_RIGHT:
-					update_invscroll(ow_firstcol + 1);
-					return V_EVENT_HANDLED_REDRAW;
-
-				case SDLK_PAGEUP:
-				case SDLK_KP8:
-				case SDLK_UP:
-				case SDLK_LEFT:
-					update_invscroll(ow_firstcol - 1);
-					return V_EVENT_HANDLED_REDRAW;
-
-				case SDLK_BACKSPACE:
-					if (ow_lasttoggled)
-						ow_lasttoggled->item->count = ow_lasttoggled->item->count / 10;
-					return V_EVENT_HANDLED_REDRAW;
-
-				default: break;
-			}
-
-			if (!key)
-				/* a function or modifier key, but not one we recognize, was pressed */
-				return V_EVENT_HANDLED_NOREDRAW;
-
-			switch (key)
-			{
-				case MENU_PREVIOUS_PAGE:
-					update_invscroll(ow_firstcol - 1);
-					return V_EVENT_HANDLED_REDRAW;
-
-				case MENU_NEXT_PAGE:
-					update_invscroll(ow_firstcol + 1);
-					return V_EVENT_HANDLED_REDRAW;
-
-				case MENU_FIRST_PAGE:
-					update_invscroll(0);
-					return V_EVENT_HANDLED_REDRAW;
-
-				case MENU_LAST_PAGE:
-					update_invscroll(999999);
-					return V_EVENT_HANDLED_REDRAW;
-
-
-				case MENU_SELECT_ALL:
-				case MENU_UNSELECT_ALL:
-					/* invalid for single selection menus */
-					if (select_how == PICK_ONE)
-						return V_EVENT_HANDLED_NOREDRAW;
-
-					for (winelem = first_child; winelem; winelem = winelem->sib_next) {
-						if (winelem->v_type == V_WINTYPE_OBJITEM) {
-							static_cast<objitemwin*>(winelem)->item->selected =
-													(key == MENU_SELECT_ALL);
-							static_cast<objitemwin*>(winelem)->item->count = -1;
-						}
-					}
-					return V_EVENT_HANDLED_REDRAW;
-
-
-				case MENU_INVERT_ALL:
-					/* invalid for single selection menus */
-					if (select_how == PICK_ONE)
-						return V_EVENT_HANDLED_NOREDRAW;
-
-					for (winelem = first_child; winelem; winelem = winelem->sib_next) {
-						if (winelem->v_type == V_WINTYPE_OBJITEM) {
-							static_cast<objitemwin*>(winelem)->item->selected = 
-							!static_cast<objitemwin*>(winelem)->item->selected;
-							static_cast<objitemwin*>(winelem)->item->count = -1;
-						}
-					}
-					return V_EVENT_HANDLED_REDRAW;
-
-
-				case MENU_SELECT_PAGE:
-				case MENU_UNSELECT_PAGE:
-					/* invalid for single selection menus */
-					if (select_how == PICK_ONE)
-						return V_EVENT_HANDLED_NOREDRAW;
-
-					for (winelem = first_child; winelem; winelem = winelem->sib_next) {
-						if (winelem->v_type == V_WINTYPE_OBJITEM && winelem->visible) {
-							static_cast<objitemwin*>(winelem)->item->selected = (key == MENU_SELECT_PAGE);
-							static_cast<objitemwin*>(winelem)->item->count = -1;
-						}
-					}
-					return V_EVENT_HANDLED_REDRAW;
-
-
-				case MENU_INVERT_PAGE:
-					/* invalid for single selection menus */
-					if (select_how == PICK_ONE)
-						return V_EVENT_HANDLED_NOREDRAW;
-
-					for (winelem = first_child; winelem; winelem = winelem->sib_next) {
-						if (winelem->v_type == V_WINTYPE_OBJITEM && winelem->visible) {
-							static_cast<objitemwin*>(winelem)->item->selected =
-								!static_cast<objitemwin*>(winelem)->item->selected;
-							static_cast<objitemwin*>(winelem)->item->count = -1;
-						}
-					}
-					return V_EVENT_HANDLED_REDRAW;
-
-
-				case MENU_SEARCH:
-					char str_to_find[512];
-					str_to_find[0] = '\0';
-					if (vultures_get_input(-1, -1, "What are you looking for?", str_to_find) != -1)
-					{
-						itemcount = 0;
-						for (winelem = first_child; winelem; winelem = winelem->sib_next) {
-							itemcount++;
-							if (winelem->caption.find(str_to_find)) {
-								colno = itemcount / ow_vrows;
-								update_invscroll(colno);
-								break;
-							}
-						}
-
-						if (ow_lasttoggled)
-							ow_lasttoggled->last_toggled = false;
-						ow_lasttoggled = static_cast<objitemwin*>(winelem);
-						if (ow_lasttoggled)
-							ow_lasttoggled->last_toggled = true;
-					}
-					return V_EVENT_HANDLED_REDRAW;
-
-				default:
-					/* numbers are part of a count */
-					if (key >= '0' && key <= '9' && ow_lasttoggled && 
-						ow_lasttoggled->item->count < 1000000) {
-						if (ow_lasttoggled->item->count == -1)
-							ow_lasttoggled->item->count = 0;
-						ow_lasttoggled->item->count = ow_lasttoggled->item->count * 10 + (key - '0');
-
-						return V_EVENT_HANDLED_REDRAW;
-					}
-
-					/* try to match the key to an accelerator */
-					target = find_accel(key);//vultures_accel_to_win(handler, key);
-					if (target)
-					{
-						select_option(static_cast<objitemwin*>(target), -1);
-// 						handler->pd.count = 0;
-						if (select_how == PICK_ONE) {
-							*(int*)result = V_MENU_ACCEPT;
-							return V_EVENT_HANDLED_FINAL;
-						}
-
-						if (ow_lasttoggled)
-							ow_lasttoggled->last_toggled = 0;
-						ow_lasttoggled = static_cast<objitemwin*>(target);
-						ow_lasttoggled->last_toggled = 1;
-
-
-						/* if the selected element isn't visible bring it into view */
-						if (!target->visible) {
-							itemcount = 0;
-							for (winelem = first_child; winelem && winelem != target;
-								winelem = winelem->sib_next)
-								itemcount++;
-							
-							colno = itemcount / ow_vrows;
-							update_invscroll(colno);
-						}
-						return V_EVENT_HANDLED_REDRAW;
-					}
-					break;
-			}
-			break;
-
-		case SDL_VIDEORESIZE:
-			if (visible) {
-				/* hide_window takes care of the background */
-				hide();
-
-				/* resize */
-				layout();
-
-				/* redraw */
-				visible = 1;
-				need_redraw = 1;
 				return V_EVENT_HANDLED_REDRAW;
 			}
-	}
 
+			/* try to match the key to an accelerator */
+			target = find_accel(key);
+			if (target) {
+				select_option(static_cast<objitemwin*>(target), -1);
+				if (select_how == PICK_ONE) {
+					*(int*)result = V_MENU_ACCEPT;
+					return V_EVENT_HANDLED_FINAL;
+				}
+
+				if (ow_lasttoggled)
+					ow_lasttoggled->last_toggled = 0;
+				ow_lasttoggled = static_cast<objitemwin*>(target);
+				ow_lasttoggled->last_toggled = 1;
+
+
+				/* if the selected element isn't visible bring it into view */
+				if (!target->visible) {
+					itemcount = 0;
+					for (winelem = first_child; winelem && winelem != target;
+						winelem = winelem->sib_next)
+						itemcount++;
+					
+					colno = itemcount / ow_vrows;
+					update_invscroll(colno);
+				}
+				return V_EVENT_HANDLED_REDRAW;
+			}
+			break;
+	}
+	
 	return V_EVENT_HANDLED_NOREDRAW;
 }
 
+
+eventresult inventory::handle_resize_event(window* target, void* result, int res_w, int res_h)
+{
+	if (visible) {
+		/* hide_window takes care of the background */
+		hide();
+
+		/* resize */
+		layout();
+
+		/* redraw */
+		visible = 1;
+		need_redraw = 1;
+		return V_EVENT_HANDLED_REDRAW;
+	}
+	
+	return V_EVENT_HANDLED_NOREDRAW;
+}
 
 
 void inventory::layout()

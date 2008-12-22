@@ -157,18 +157,23 @@ bool messagewin::draw()
 }
 
 
-eventresult messagewin::event_handler(window* target, void* result, SDL_Event* event)
+eventresult messagewin::handle_mousemotion_event(window* target, void* result,
+                                            int xrel, int yrel, int state)
 {
-	point mouse;
-	window *new_target;
+	point mouse = vultures_get_mouse_pos();
+	window *new_target = levwin->get_window_from_point(mouse);
 
-	if (event->type == SDL_VIDEORESIZE)
-		return V_EVENT_HANDLED_NOREDRAW;
+	return levwin->handle_mousemotion_event(new_target, result, xrel, yrel, state);
+}
 
-	mouse = vultures_get_mouse_pos();
-	new_target = levwin->get_window_from_point(mouse);
 
-	return levwin->event_handler(new_target, result, event);
+eventresult messagewin::handle_mousebuttonup_event(window* target, void* result,
+                                            int mouse_x, int mouse_y, int button, int state)
+{
+	point mouse = vultures_get_mouse_pos();
+	window *new_target = levwin->get_window_from_point(mouse);
+
+	return levwin->handle_mousebuttonup_event(new_target, result, mouse_x, mouse_y, button, state);
 }
 
 

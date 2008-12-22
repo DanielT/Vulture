@@ -62,9 +62,3 @@ void textwin::set_caption(string str)
 	window::set_caption(str);
 	w = vultures_text_length(V_FONT_MENU, caption) + 10;
 }
-
-
-eventresult textwin::event_handler(window* target, void* result, SDL_Event* event)
-{
-	return V_EVENT_UNHANDLED;
-}

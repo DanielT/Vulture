@@ -82,23 +82,29 @@ bool button::draw()
 	return false;
 }
 
-eventresult button::event_handler(window* target, void* result, SDL_Event* event)
+
+eventresult button::handle_mousebuttonup_event(window* target, void* result,
+                                            int mouse_x, int mouse_y, int button, int state)
+{
+	if (selected)
+		need_redraw = 1;
+	selected = 0;
+	return V_EVENT_UNHANDLED_REDRAW;
+}
+
+
+eventresult button::handle_other_event(window* target, void* result, SDL_Event *event)
 {
 	if (this == target && event->type == SDL_MOUSEBUTTONDOWN &&
 	    event->button.button == SDL_BUTTON_LEFT) {
 		selected = 1;
 		need_redraw = 1;
-	}
-	else if (event->type == SDL_MOUSEBUTTONUP || event->type == SDL_MOUSEMOVEOUT)
-	{
+	} else if (event->type == SDL_MOUSEMOVEOUT) {
 		if (selected)
 			need_redraw = 1;
 		selected = 0;
 	}
-	else if (event->type == SDL_TIMEREVENT)
-		/* no need to send these to our parent... */
-		return V_EVENT_HANDLED_NOREDRAW;
-
+	
 	if (need_redraw)
 		return V_EVENT_UNHANDLED_REDRAW;
 

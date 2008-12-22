@@ -17,7 +17,6 @@ public:
 	optionwin(window *p, menuitem* mi, string cap,
 	          char accel, int glyph, bool selected, bool is_checkbox);
 	virtual bool draw();
-	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
 	
 	int glyph;
 	menuitem *item;

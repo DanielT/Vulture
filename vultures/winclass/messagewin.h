@@ -18,7 +18,10 @@ public:
 	messagewin(window *p);
 	~messagewin();
 	virtual bool draw();
-	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
+	virtual eventresult handle_mousemotion_event(window* target, void* result, 
+	                                             int mouse_x, int mouse_y, int state);
+	virtual eventresult handle_mousebuttonup_event(window* target, void* result,
+	                                       int mouse_x, int mouse_y, int button, int state);
 	
 	void add_message(string msg);
 	void setshown(int first);

@@ -49,8 +49,3 @@ bool scrollbar::draw()
 
 	return false;
 }
-
-eventresult scrollbar::event_handler(window* target, void* result, SDL_Event* event)
-{
-	return V_EVENT_UNHANDLED;
-}

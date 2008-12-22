@@ -54,7 +54,14 @@ public:
 	menuwin(window *p);
 	virtual ~menuwin();
 	virtual bool draw();
-	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
+	virtual eventresult handle_mousemotion_event(window* target, void* result, 
+	                                             int xrel, int yrel, int state);
+	virtual eventresult handle_mousebuttonup_event(window* target, void* result,
+	                                       int mouse_x, int mouse_y, int button, int state);
+	virtual eventresult handle_keydown_event(window* target, void* result, SDL_keysym keysym);
+	virtual eventresult handle_resize_event(window* target, void* result, int w, int h);
+
+	
 	virtual menuwin* replace_win(menuwin* win);
 	virtual void layout();
 	void reset();

@@ -95,15 +95,16 @@ bool endingwin::draw()
 }
 
 
-eventresult endingwin::event_handler(window* target, void* result, SDL_Event* event)
+eventresult endingwin::handle_mousebuttonup_event(window* target, void* result,
+                                            int mouse_x, int mouse_y, int button, int state)
 {
-	switch (event->type)
-	{
-		case SDL_KEYDOWN:
-		case SDL_MOUSEBUTTONUP:
-			return V_EVENT_HANDLED_FINAL;
-	}
-	return V_EVENT_HANDLED_NOREDRAW;
+	return V_EVENT_HANDLED_FINAL;
+}
+
+
+eventresult endingwin::handle_keydown_event(window* target, void* result, SDL_keysym keysym)
+{
+	return V_EVENT_HANDLED_FINAL;
 }
 
 

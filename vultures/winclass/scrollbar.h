@@ -12,7 +12,6 @@ class scrollbar : public window
 public:
 	scrollbar(window *p, int scrolloff);
 	virtual bool draw();
-	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
 
 	int scrollpos;
 private:

@@ -162,40 +162,47 @@ bool objitemwin::draw()
 	return 0;
 }
 
-eventresult objitemwin::event_handler(window* target, void* result, SDL_Event* event)
+
+eventresult objitemwin::handle_mousemotion_event(window* target, void* result,
+                                                  int xrel, int yrel, int state)
 {
-	bool prevhover = false;
+	bool prevhover;
+	
+	vultures_set_mcursor(V_CURSOR_NORMAL);
+	prevhover = hover;
+	hover = true;
 
-	switch (event->type)
-	{
-		case SDL_MOUSEMOTION:
-			vultures_set_mcursor(V_CURSOR_NORMAL);
-
-			prevhover = hover;
-			hover = true;
-
-			if (hover != prevhover) {
-				need_redraw = true;
-				return V_EVENT_HANDLED_REDRAW;
-			}
-			return V_EVENT_HANDLED_NOREDRAW;
-
-		case SDL_MOUSEMOVEOUT:
-			prevhover = hover;
-			hover = false;
-
-			if (hover != prevhover) {
-				need_redraw = true;
-				return V_EVENT_HANDLED_REDRAW;
-			}
-			return V_EVENT_HANDLED_NOREDRAW;
-
-		case SDL_MOUSEBUTTONUP:
-			if ((event->button.button == SDL_BUTTON_WHEELUP)||
-				(event->button.button == SDL_BUTTON_WHEELDOWN))
-				hover = false;
-			return V_EVENT_UNHANDLED;
+	if (hover != prevhover) {
+		need_redraw = true;
+		return V_EVENT_HANDLED_REDRAW;
 	}
+	return V_EVENT_HANDLED_NOREDRAW;
+}
 
+
+eventresult objitemwin::handle_other_event(window* target, void* result, SDL_Event *event)
+{
+	bool prevhover;
+
+	if (event->type == SDL_MOUSEMOVEOUT) {
+		prevhover = hover;
+		hover = false;
+
+		if (hover != prevhover) {
+			need_redraw = true;
+			return V_EVENT_HANDLED_REDRAW;
+		}
+		return V_EVENT_HANDLED_NOREDRAW;
+	}
+	
+	return V_EVENT_UNHANDLED;
+}
+
+
+eventresult objitemwin::handle_mousebuttonup_event(window* target, void* result,
+                                int mouse_x, int mouse_y, int button, int state)
+{
+	if (button == SDL_BUTTON_WHEELUP || button == SDL_BUTTON_WHEELDOWN)
+		hover = false;
 	return V_EVENT_UNHANDLED;
 }

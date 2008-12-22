@@ -27,7 +27,11 @@ public:
 	statuswin(window *p);
 	virtual ~statuswin();
 	virtual bool draw();
-	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
+	virtual eventresult handle_mousemotion_event(window* target, void* result, 
+	                                             int xrel, int yrel, int state);
+	virtual eventresult handle_mousebuttonup_event(window* target, void* result,
+	                                       int mouse_x, int mouse_y, int button, int state);
+	virtual eventresult handle_resize_event(window* target, void* result, int res_w, int res_h);
 	void parse_statusline(string str);
 
 private:

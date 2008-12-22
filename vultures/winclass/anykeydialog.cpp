@@ -31,87 +31,95 @@ anykeydialog::anykeydialog(window *p, string ques) : mainwin(p)
 	mainwin::layout();
 }
 
+eventresult anykeydialog::handle_mousemotion_event(window* target, void* result,
+                                                   int xrel, int yrel, int state)
+{
+	vultures_set_mcursor(V_CURSOR_NORMAL);
+	return V_EVENT_HANDLED_NOREDRAW;
+}
 
-eventresult anykeydialog::event_handler(window* target, void* result, SDL_Event* event)
+
+eventresult anykeydialog::handle_mousebuttonup_event(window* target, void* result, int mouse_x, int mouse_y, int button, int state)
+{
+	if (target->accelerator && button == SDL_BUTTON_LEFT) {
+		*(char*)result = target->accelerator;
+		return V_EVENT_HANDLED_FINAL;
+	}
+	return V_EVENT_HANDLED_NOREDRAW;
+}
+
+
+eventresult anykeydialog::handle_keydown_event(window* target, void* result, SDL_keysym keysym)
 {
 	char key;
 	int i;
 	char buffer[32];
 
-	if (event->type == SDL_MOUSEMOTION)
-		vultures_set_mcursor(V_CURSOR_NORMAL);
+	switch (keysym.sym) {
+		case SDLK_ESCAPE:
+			*(char*)result = '\033';
+			return V_EVENT_HANDLED_FINAL;
 
-	else if (event->type == SDL_MOUSEBUTTONUP && target->accelerator &&
-	    event->button.button == SDL_BUTTON_LEFT) {
-		*(char*)result = target->accelerator;
-		return V_EVENT_HANDLED_FINAL;
-	} else if (event->type == SDL_KEYDOWN) {
-		switch (event->key.keysym.sym)
-		{
-			case SDLK_ESCAPE:
-				*(char*)result = '\033';
+		case SDLK_BACKSPACE:
+			count = count / 10;
+			if (count > 0)
+				sprintf(buffer, "Count: %d", count);
+			else
+				sprintf(buffer, "(press any key)");
+			txt->set_caption(buffer);
+			txt->need_redraw = 1;
+			return V_EVENT_HANDLED_REDRAW;
+
+		default:
+			/* was it an accelerator for one of the buttons? */
+			if (keysym.unicode && find_accel(keysym.unicode)) {
+				*(char*)result = keysym.unicode;
 				return V_EVENT_HANDLED_FINAL;
+			}
 
-			case SDLK_BACKSPACE:
-				count = count / 10;
-				if (count > 0)
-					sprintf(buffer, "Count: %d", count);
-				else
-					sprintf(buffer, "(press any key)");
+			/* it isn't, so lets translate it (Stage 1: function keys etc) */
+			key = vultures_convertkey_sdl2nh(&keysym);
+
+			if (!key)
+				/* no translation, it must have been a function key */
+				return V_EVENT_HANDLED_NOREDRAW;
+
+			if (isdigit(key)) {
+				/* we got a digit and only modify the count */
+				if (count < 10000000)
+					count = count * 10 + (key - 0x30);
+				sprintf(buffer, "Count: %d", count);
 				txt->set_caption(buffer);
 				txt->need_redraw = 1;
 				return V_EVENT_HANDLED_REDRAW;
+			}
 
-			default:
-				/* was it an accelerator for one of the buttons? */
-				if (event->key.keysym.unicode && find_accel(event->key.keysym.unicode)) {
-					*(char*)result = event->key.keysym.unicode;
-					return V_EVENT_HANDLED_FINAL;
-				}
+			/* non-digit, non-function-key, non-accelerator: we have a winner! */
+			if (count) {
+				/* retrieve the count and push most of it onto the eventstack */
+				memset(buffer, 0, 16);
+				snprintf(buffer, 16, "%d", count);
+				vultures_eventstack_add(key, -1 , -1, V_RESPOND_ANY);
+				for (i=15; i > 0; i--)
+					if (buffer[i])
+						vultures_eventstack_add(buffer[i], -1, -1, V_RESPOND_ANY);
 
-				/* it isn't, so lets translate it (Stage 1: function keys etc) */
-				key = vultures_convertkey_sdl2nh(&event->key.keysym);
+				/* we return the first digit of the count */
+				key = buffer[0];
+			}
 
-				if (!key)
-					/* no translation, it must have been a function key */
-					return V_EVENT_HANDLED_NOREDRAW;
-
-				if (isdigit(key)) {
-					/* we got a digit and only modify the count */
-					if (count < 10000000)
-						count = count * 10 + (key - 0x30);
-					sprintf(buffer, "Count: %d", count);
-					txt->set_caption(buffer);
-					txt->need_redraw = 1;
-					return V_EVENT_HANDLED_REDRAW;
-				}
-
-				/* non-digit, non-function-key, non-accelerator: we have a winner! */
-				if (count) {
-					/* retrieve the count and push most of it onto the eventstack */
-					memset(buffer, 0, 16);
-					snprintf(buffer, 16, "%d", count);
-					vultures_eventstack_add(key, -1 , -1, V_RESPOND_ANY);
-					for (i=15; i > 0; i--)
-						if (buffer[i])
-							vultures_eventstack_add(buffer[i], -1, -1, V_RESPOND_ANY);
-
-					/* we return the first digit of the count */
-					key = buffer[0];
-				}
-
-				/* return our key */
-				*(char*)result = key;
-				return V_EVENT_HANDLED_FINAL;
-		}
+			/* return our key */
+			*(char*)result = key;
+			return V_EVENT_HANDLED_FINAL;
 	}
-	else if (event->type == SDL_VIDEORESIZE)
-	{
-		x = (parent->w - w) / 2;
-		y = (parent->h - h) / 2;
-		return V_EVENT_HANDLED_NOREDRAW;
-	}
-	
+	return V_EVENT_HANDLED_NOREDRAW;
+}
+
+
+eventresult anykeydialog::handle_resize_event(window* target, void* result, int w, int h)
+{
+	x = (parent->w - w) / 2;
+	y = (parent->h - h) / 2;
 	return V_EVENT_HANDLED_NOREDRAW;
 }
 

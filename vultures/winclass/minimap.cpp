@@ -137,7 +137,17 @@ bool minimap::draw()
 	return false;
 }
 
-eventresult minimap::event_handler(window* target, void* result, SDL_Event* event)
+
+eventresult minimap::handle_mousemotion_event(window* target, void* result, int xrel, 
+                                             int yrel, int state)
+{
+	vultures_set_mcursor(V_CURSOR_NORMAL);
+	return V_EVENT_HANDLED_NOREDRAW;
+}
+
+
+eventresult minimap::handle_mousebuttonup_event(window* target, void* result,
+                                            int mouse_x, int mouse_y, int button, int state)
 {
 	point mouse, mappos;
 	int offs_x, offs_y;
@@ -147,51 +157,40 @@ eventresult minimap::event_handler(window* target, void* result, SDL_Event* even
 
 	offs_x = mouse.x - abs_x - 6 - 40;
 	offs_y = mouse.y - abs_y - 6;
-
 	mappos.x = ( offs_x + 2*offs_y)/4;
 	mappos.y = (-offs_x + 2*offs_y)/4;
 	
-	
-	if (event->type == SDL_VIDEORESIZE)
-	{
-		x = parent->w - (w + 6);
-		return V_EVENT_HANDLED_NOREDRAW;
-	}
-
 	if (mappos.x < 1 || mappos.x > COLNO ||
 		mappos.y < 0 || mappos.y > ROWNO)
 		return V_EVENT_UNHANDLED;
 
-
-	if (event->type == SDL_MOUSEMOTION)
-		vultures_set_mcursor(V_CURSOR_NORMAL);
-
 	/* limited mouse event handling, due to the fact that the minimap
 	* is too small for precise targeting */
-	else if (event->type == SDL_MOUSEBUTTONUP)
-	{
-		/* left button: direct selection of a location (for very imprecise teleport) */
-		if (event->button.button == SDL_BUTTON_LEFT)
-		{
-			if (vultures_whatis_active)
-			{
-				((vultures_event*)result)->num = 0;
-				((vultures_event*)result)->x = mappos.x;
-				((vultures_event*)result)->y = mappos.y;
-				return V_EVENT_HANDLED_FINAL;
-			}
-
-			((vultures_event*)result)->num = map_data->perform_map_action(V_ACTION_TRAVEL, mappos);
+	/* left button: direct selection of a location (for very imprecise teleport) */
+	if (button == SDL_BUTTON_LEFT) {
+		if (vultures_whatis_active) {
+			((vultures_event*)result)->num = 0;
+			((vultures_event*)result)->x = mappos.x;
+			((vultures_event*)result)->y = mappos.y;
 			return V_EVENT_HANDLED_FINAL;
 		}
-		/* right button: travel to location */
-		else if(event->button.button == SDL_BUTTON_RIGHT)
-		{
-			levwin->set_view(mappos.x, mappos.y);
-			levwin->need_redraw = 1;
-			return V_EVENT_HANDLED_REDRAW;
-		}
+
+		((vultures_event*)result)->num = map_data->perform_map_action(V_ACTION_TRAVEL, mappos);
+		return V_EVENT_HANDLED_FINAL;
+	}
+	/* right button: travel to location */
+	else if(button == SDL_BUTTON_RIGHT) {
+		levwin->set_view(mappos.x, mappos.y);
+		levwin->need_redraw = 1;
+		return V_EVENT_HANDLED_REDRAW;
 	}
 
+	return V_EVENT_HANDLED_NOREDRAW;
+}
+
+
+eventresult minimap::handle_resize_event(window* target, void* result, int res_w, int res_h)
+{
+	x = parent->w - (w + 6);
 	return V_EVENT_HANDLED_NOREDRAW;
 }

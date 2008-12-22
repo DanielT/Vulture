@@ -96,12 +96,21 @@ public:
 	virtual ~window();
 
 	virtual bool draw() = 0;
-	virtual eventresult event_handler(window* target, void* result, SDL_Event* event) = 0;
 	virtual window* replace_win(window *win);
 	virtual void set_caption(string str);
 	virtual void hide();
 	virtual void layout() {};
 	virtual void update_background(void);
+	
+	eventresult event_handler(window* target, void* result, SDL_Event* event);
+	virtual eventresult handle_timer_event(window* target, void* result, int time);
+	virtual eventresult handle_mousemotion_event(window* target, void* result, 
+	                                             int xrel, int yrel, int state);
+	virtual eventresult handle_mousebuttonup_event(window* target, void* result,
+	                                       int mouse_x, int mouse_y, int button, int state);
+	virtual eventresult handle_keydown_event(window* target, void* result, SDL_keysym keysym);
+	virtual eventresult handle_resize_event(window* target, void* result, int res_w, int res_h);
+	virtual eventresult handle_other_event(window* target, void* result, SDL_Event* event);
 	
 	window_type get_wintype() { return v_type; };
 	int get_nh_type() { return nh_type; };

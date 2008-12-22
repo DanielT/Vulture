@@ -69,61 +69,62 @@ bool choicedialog::draw()
 }
 
 
-eventresult choicedialog::event_handler(window* target, void* result, SDL_Event* event)
+eventresult choicedialog::handle_mousemotion_event(window* target, void* result, int xrel, 
+                                             int yrel, int state)
 {
-	if (event->type == SDL_MOUSEMOTION)
-		vultures_set_mcursor(V_CURSOR_NORMAL);
-
-	else if (event->type == SDL_MOUSEBUTTONUP && event->button.button == SDL_BUTTON_LEFT)
-	{
-		if (target->accelerator)
-		{
-			*(char*)result = (char)target->accelerator;
-			return V_EVENT_HANDLED_FINAL;
-		}
-	}
-
-	else if (event->type == SDL_KEYDOWN)
-	{
-		switch (event->key.keysym.sym)
-		{
-			case SDLK_KP_ENTER:
-			case SDLK_RETURN:
-				target = defbutton;
-				if (target)
-				{
-					*(char*)result = (char)target->accelerator;
-					return V_EVENT_HANDLED_FINAL;
-				}
-				break;
-
-			case SDLK_ESCAPE:
-				if (find_accel('q'))
-				{
-					*(char*)result = 'q';
-					return V_EVENT_HANDLED_FINAL;
-				}
-				else if (find_accel('n'))
-				{
-					*(char*)result = 'n';
-					return V_EVENT_HANDLED_FINAL;
-				}
-				break;
-
-			default:
-				if (find_accel((char)event->key.keysym.unicode))
-				{
-					*(char*)result = (char)event->key.keysym.unicode;
-					return V_EVENT_HANDLED_FINAL;
-				}
-		}
-	}
-	else if (event->type == SDL_VIDEORESIZE)
-	{
-		x = (parent->w - w) / 2;
-		y = (parent->h - h) / 2;
-		return V_EVENT_HANDLED_NOREDRAW;
-	}
-
+	vultures_set_mcursor(V_CURSOR_NORMAL);
 	return V_EVENT_HANDLED_NOREDRAW;
 }
+
+
+eventresult choicedialog::handle_mousebuttonup_event(window* target, void* result,
+                                            int mouse_x, int mouse_y, int button, int state)
+{
+	if (button == SDL_BUTTON_LEFT && target->accelerator) {
+		*(char*)result = (char)target->accelerator;
+		return V_EVENT_HANDLED_FINAL;
+	}
+	return V_EVENT_HANDLED_NOREDRAW;
+}
+
+
+eventresult choicedialog::handle_keydown_event(window* target, void* result, SDL_keysym keysym)
+{
+	switch (keysym.sym) {
+		case SDLK_KP_ENTER:
+		case SDLK_RETURN:
+			target = defbutton;
+			if (target) {
+				*(char*)result = (char)target->accelerator;
+				return V_EVENT_HANDLED_FINAL;
+			}
+			break;
+
+		case SDLK_ESCAPE:
+			if (find_accel('q')) {
+				*(char*)result = 'q';
+				return V_EVENT_HANDLED_FINAL;
+			}
+			else if (find_accel('n')) {
+				*(char*)result = 'n';
+				return V_EVENT_HANDLED_FINAL;
+			}
+			break;
+
+		default:
+			if (find_accel((char)keysym.unicode)) {
+				*(char*)result = (char)keysym.unicode;
+				return V_EVENT_HANDLED_FINAL;
+			}
+	}
+	return V_EVENT_HANDLED_NOREDRAW;
+}
+
+
+eventresult choicedialog::handle_resize_event(window* target, void* result, int res_w, int res_h)
+{
+	x = (parent->w - w) / 2;
+	y = (parent->h - h) / 2;
+	return V_EVENT_HANDLED_NOREDRAW;
+}
+

@@ -22,7 +22,11 @@ public:
 	scrollwin() {};
 	scrollwin(window *p);
 	virtual bool draw(void);
-	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
+	virtual eventresult handle_mousemotion_event(window* target, void* result, 
+	                                             int xrel, int yrel, int state);
+	virtual eventresult handle_mousebuttonup_event(window* target, void* result,
+	                                       int mouse_x, int mouse_y, int button, int state);
+
 	int get_scrollheight();
 	void set_height(int newheight);
 	void layout(void);

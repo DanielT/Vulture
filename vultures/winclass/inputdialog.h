@@ -14,7 +14,10 @@ public:
 	inputdialog(window *p, string caption, int size,
 	            int force_x, int force_y);
 	virtual bool draw();
-	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
+	virtual eventresult handle_mousemotion_event(window* target, void* result, 
+	                                             int xrel, int yrel, int state);
+	virtual eventresult handle_keydown_event(window* target, void* result, SDL_keysym keysym);
+	virtual eventresult handle_resize_event(window* target, void* result, int res_w, int res_h);
 	void copy_input(char *dest);
 
 private:

@@ -47,8 +47,3 @@ bool objheaderwin::draw()
 
 	return 0;
 }
-
-eventresult objheaderwin::event_handler(window* target, void* result, SDL_Event* event)
-{
-	return V_EVENT_UNHANDLED;
-}

@@ -475,238 +475,241 @@ bool levelwin::draw()
 }
 
 
-
-eventresult levelwin::event_handler(window* target, void* result, SDL_Event* event)
+eventresult levelwin::handle_timer_event(window* target, void* result, int time)
 {
-	int translated_key, key;
-	int macronum, i;
-	point mouse, mappos;
 	string ttext;
+	point mappos, mouse;
 
 	mouse = vultures_get_mouse_pos();
 	mappos = mouse_to_map(mouse);
 
-	switch (event->type)
+	/* hovering on a border: scroll */
+	if (target != this && target->menu_id)
 	{
-		case SDL_MOUSEBUTTONUP:
-			return map_data->handle_click(result, event->button.button, mappos);
-			break;
+		int increment = (time / 500) + 1;
+		switch (target->menu_id)
+		{
+			case V_HOTSPOT_SCROLL_UPLEFT:
+				view_x-=increment; break;
+			case V_HOTSPOT_SCROLL_UP:
+				view_x-=increment; view_y-=increment; break;
+			case V_HOTSPOT_SCROLL_UPRIGHT:
+				view_y-=increment; break;
+			case V_HOTSPOT_SCROLL_LEFT:
+				view_x-=increment; view_y+=increment; break;
+			case V_HOTSPOT_SCROLL_RIGHT:
+				view_x+=increment; view_y-=increment; break;
+			case V_HOTSPOT_SCROLL_DOWNLEFT:
+				view_y+=increment; break;
+			case V_HOTSPOT_SCROLL_DOWN:
+				view_x+=increment; view_y+=increment; break;
+			case V_HOTSPOT_SCROLL_DOWNRIGHT:
+				view_x+=increment; break;
+		}
 
-		/* keyboard events */
-		case SDL_KEYDOWN:
-			switch (event->key.keysym.sym)
-			{
-				case SDLK_TAB:
-					map::toggle();
-					return V_EVENT_HANDLED_REDRAW;
+		view_x = (view_x < 0) ? 0 : view_x;
+		view_y = (view_y < 0) ? 0 : view_y;
+		view_x = (view_x > COLNO) ? COLNO : view_x;
+		view_y = (view_y > ROWNO) ? ROWNO : view_y;
 
-				/* F1- F6 trigger macros */
-				case SDLK_F1:
-				case SDLK_F2:
-				case SDLK_F3:
-				case SDLK_F4:
-				case SDLK_F5:
-				case SDLK_F6:
-					macronum = event->key.keysym.sym - SDLK_F1;
-					if (!vultures_opts.macro[macronum][0])
-						break;
+		need_redraw = 1;
+		return V_EVENT_HANDLED_REDRAW;
+	}
 
-					((vultures_event*)result)->num = vultures_opts.macro[macronum][0];
-					for (i = strlen(vultures_opts.macro[macronum]) - 1; i > 0; i--)
-						vultures_eventstack_add(vultures_opts.macro[macronum][i], -1, -1, V_RESPOND_ANY);
-					return V_EVENT_HANDLED_FINAL;
+	/* hovering over the map: display a tooltip */
+	if (time < HOVERTIMEOUT)
+		return V_EVENT_HANDLED_NOREDRAW;
 
-#if 0
-// #ifdef VULTURESEYE
-				case SDLK_ESCAPE:
-					if (vultures_whatis_active) /* FIXME There are most certainly other places where this should be ignored */
-						break;
-					vultures_show_mainmenu();
-					return V_EVENT_HANDLED_REDRAW;
-#endif
-				/* CTRL+SHIFT+o opens the interface options */
-				case SDLK_o:
-					if (!(event->key.keysym.mod & KMOD_SHIFT) || !(event->key.keysym.mod & KMOD_CTRL))
-						break;
-					vultures_iface_opts();
-					return V_EVENT_HANDLED_REDRAW;
-
-				/* CTRL+SHIFT+p shows the message log */
-				case SDLK_p:
-					if (!(event->key.keysym.mod & KMOD_SHIFT) || !(event->key.keysym.mod & KMOD_CTRL))
-						break;
-					msgwin->view_all();
-					return V_EVENT_HANDLED_REDRAW;
-
-				default:
-					break;
-			}
-
-			/* all other keys are converted and passed to the core */
-			key = vultures_convertkey_sdl2nh(&event->key.keysym);
-
-			if (!key)
-				return V_EVENT_HANDLED_NOREDRAW;
-
-			if (vultures_winid_map && isdigit(key))
-				translated_key = key;
-			else
-				translated_key = vultures_translate_key(key);
-
-			if (translated_key)
-			{
-				((vultures_event*)result)->num = translated_key;
-				return V_EVENT_HANDLED_FINAL;
-			}
-			return V_EVENT_HANDLED_NOREDRAW;
+	if (target != this && !target->caption.empty())
+		vultures_mouse_set_tooltip(target->caption);
+	else {
+		ttext = map_data->map_square_description(mappos, 1);
+		if(!ttext.empty())
+			vultures_mouse_set_tooltip(ttext);
+	}
+	
+	return V_EVENT_HANDLED_NOREDRAW;
+}
 
 
-		case SDL_MOUSEMOTION:
-			if (target != this && target->menu_id)
-			{
-				/* show a map scroll cursor if the mouse is in the edge zone */
-				switch (target->menu_id)
-				{
-					case V_HOTSPOT_SCROLL_UPLEFT:
-						vultures_set_mcursor(V_CURSOR_SCROLLUPLEFT); break;
-					case V_HOTSPOT_SCROLL_UP:
-						vultures_set_mcursor(V_CURSOR_SCROLLUP); break;
-					case V_HOTSPOT_SCROLL_UPRIGHT:
-						vultures_set_mcursor(V_CURSOR_SCROLLUPRIGHT); break;
-					case V_HOTSPOT_SCROLL_LEFT:
-						vultures_set_mcursor(V_CURSOR_SCROLLLEFT); break;
-					case V_HOTSPOT_SCROLL_RIGHT:
-						vultures_set_mcursor(V_CURSOR_SCROLLRIGHT); break;
-					case V_HOTSPOT_SCROLL_DOWNLEFT:
-						vultures_set_mcursor(V_CURSOR_SCROLLDOWNLEFT); break;
-					case V_HOTSPOT_SCROLL_DOWN:
-						vultures_set_mcursor(V_CURSOR_SCROLLDOWN); break;
-					case V_HOTSPOT_SCROLL_DOWNRIGHT:
-						vultures_set_mcursor(V_CURSOR_SCROLLDOWNRIGHT); break;
-					default:
-						vultures_set_mcursor(get_map_cursor(mappos));
-				}
-			}
-			else
-				/* select a cursor for the current position */
+eventresult levelwin::handle_mousemotion_event(window* target, void* result, int xrel, 
+                                             int yrel, int state)
+{
+	point mouse, mappos;
+
+	mouse = vultures_get_mouse_pos();
+	mappos = mouse_to_map(mouse);
+
+	if (target != this && target->menu_id)
+	{
+		/* show a map scroll cursor if the mouse is in the edge zone */
+		switch (target->menu_id)
+		{
+			case V_HOTSPOT_SCROLL_UPLEFT:
+				vultures_set_mcursor(V_CURSOR_SCROLLUPLEFT); break;
+			case V_HOTSPOT_SCROLL_UP:
+				vultures_set_mcursor(V_CURSOR_SCROLLUP); break;
+			case V_HOTSPOT_SCROLL_UPRIGHT:
+				vultures_set_mcursor(V_CURSOR_SCROLLUPRIGHT); break;
+			case V_HOTSPOT_SCROLL_LEFT:
+				vultures_set_mcursor(V_CURSOR_SCROLLLEFT); break;
+			case V_HOTSPOT_SCROLL_RIGHT:
+				vultures_set_mcursor(V_CURSOR_SCROLLRIGHT); break;
+			case V_HOTSPOT_SCROLL_DOWNLEFT:
+				vultures_set_mcursor(V_CURSOR_SCROLLDOWNLEFT); break;
+			case V_HOTSPOT_SCROLL_DOWN:
+				vultures_set_mcursor(V_CURSOR_SCROLLDOWN); break;
+			case V_HOTSPOT_SCROLL_DOWNRIGHT:
+				vultures_set_mcursor(V_CURSOR_SCROLLDOWNRIGHT); break;
+			default:
 				vultures_set_mcursor(get_map_cursor(mappos));
+		}
+	}
+	else
+		/* select a cursor for the current position */
+		vultures_set_mcursor(get_map_cursor(mappos));
 
-			/* if the highlight option is on, store the map position of the mouse
-			* and refresh the current and previous positions */
-			if (vultures_opts.highlight_cursor_square && 
-				(map_highlight.x != mappos.x || map_highlight.y != mappos.y))
-			{
-				mouse = map_to_mouse(map_highlight);
-				add_to_clipregion(mouse.x - V_MAP_XMOD, mouse.y - V_MAP_YMOD,
-				                  mouse.x + V_MAP_XMOD, mouse.y + V_MAP_YMOD);
-				mouse = map_to_mouse(mappos);
-				add_to_clipregion(mouse.x - V_MAP_XMOD, mouse.y - V_MAP_YMOD,
-				                  mouse.x + V_MAP_XMOD, mouse.y + V_MAP_YMOD);
+	/* if the highlight option is on, store the map position of the mouse
+	* and refresh the current and previous positions */
+	if (vultures_opts.highlight_cursor_square && 
+		(map_highlight.x != mappos.x || map_highlight.y != mappos.y))
+	{
+		mouse = map_to_mouse(map_highlight);
+		add_to_clipregion(mouse.x - V_MAP_XMOD, mouse.y - V_MAP_YMOD,
+							mouse.x + V_MAP_XMOD, mouse.y + V_MAP_YMOD);
+		mouse = map_to_mouse(mappos);
+		add_to_clipregion(mouse.x - V_MAP_XMOD, mouse.y - V_MAP_YMOD,
+							mouse.x + V_MAP_XMOD, mouse.y + V_MAP_YMOD);
 
-				map_highlight = mappos;
-				need_redraw = 1;
-				return V_EVENT_HANDLED_REDRAW;
-			}
+		map_highlight = mappos;
+		need_redraw = 1;
+		return V_EVENT_HANDLED_REDRAW;
+	}
+	
+	return V_EVENT_HANDLED_NOREDRAW;
+}
 
-			break;
 
-		case SDL_TIMEREVENT:
-			/* hovering on a border: scroll */
-			if (target != this && target->menu_id)
-			{
-				int increment = (event->user.code / 500) + 1;
-				switch (target->menu_id)
-				{
-					case V_HOTSPOT_SCROLL_UPLEFT:
-						view_x-=increment; break;
-					case V_HOTSPOT_SCROLL_UP:
-						view_x-=increment; view_y-=increment; break;
-					case V_HOTSPOT_SCROLL_UPRIGHT:
-						view_y-=increment; break;
-					case V_HOTSPOT_SCROLL_LEFT:
-						view_x-=increment; view_y+=increment; break;
-					case V_HOTSPOT_SCROLL_RIGHT:
-						view_x+=increment; view_y-=increment; break;
-					case V_HOTSPOT_SCROLL_DOWNLEFT:
-						view_y+=increment; break;
-					case V_HOTSPOT_SCROLL_DOWN:
-						view_x+=increment; view_y+=increment; break;
-					case V_HOTSPOT_SCROLL_DOWNRIGHT:
-						view_x+=increment; break;
-				}
+eventresult levelwin::handle_mousebuttonup_event(window* target, void* result,
+                                            int mouse_x, int mouse_y, int button, int state)
+{
+	point mouse, mappos;
 
-				view_x = (view_x < 0) ? 0 : view_x;
-				view_y = (view_y < 0) ? 0 : view_y;
-				view_x = (view_x > COLNO) ? COLNO : view_x;
-				view_y = (view_y > ROWNO) ? ROWNO : view_y;
+	mouse = vultures_get_mouse_pos();
+	mappos = mouse_to_map(mouse);
 
-				need_redraw = 1;
-				return V_EVENT_HANDLED_REDRAW;
-			}
+	return map_data->handle_click(result, button, mappos);
+}
 
-			/* hovering over the map: display a tooltip */
-			if (event->user.code < HOVERTIMEOUT)
+
+eventresult levelwin::handle_keydown_event(window* target, void* result, SDL_keysym keysym)
+{
+	int translated_key, key;
+	int macronum, i;
+
+	switch (keysym.sym) {
+		case SDLK_TAB:
+			map::toggle();
+			return V_EVENT_HANDLED_REDRAW;
+
+		/* F1- F6 trigger macros */
+		case SDLK_F1:
+		case SDLK_F2:
+		case SDLK_F3:
+		case SDLK_F4:
+		case SDLK_F5:
+		case SDLK_F6:
+			macronum = keysym.sym - SDLK_F1;
+			if (!vultures_opts.macro[macronum][0])
 				break;
 
-			if (target != this && !target->caption.empty())
-				vultures_mouse_set_tooltip(target->caption);
-			else {
-				ttext = map_data->map_square_description(mappos, 1);
-				if(!ttext.empty())
-					vultures_mouse_set_tooltip(ttext);
-			}
-			break;
+			((vultures_event*)result)->num = vultures_opts.macro[macronum][0];
+			for (i = strlen(vultures_opts.macro[macronum]) - 1; i > 0; i--)
+				vultures_eventstack_add(vultures_opts.macro[macronum][i], -1, -1, V_RESPOND_ANY);
+			return V_EVENT_HANDLED_FINAL;
 
-		case SDL_VIDEORESIZE:
-			if (this == target) {
-				w = event->resize.w;
-				h = event->resize.h;
-			} else {
-				switch (target->menu_id)
-				{
-					/* case V_HOTSPOT_SCROLL_UPLEFT: never needs updating on resize*/
+		/* CTRL+SHIFT+o opens the interface options */
+		case SDLK_o:
+			if (!(keysym.mod & KMOD_SHIFT) || !(keysym.mod & KMOD_CTRL))
+				break;
+			vultures_iface_opts();
+			return V_EVENT_HANDLED_REDRAW;
 
-					case V_HOTSPOT_SCROLL_UP:
-						target->w = w - 40;
-						break;
-
-					case V_HOTSPOT_SCROLL_UPRIGHT:
-						target->x = w - 20;
-						break;
-
-					case V_HOTSPOT_SCROLL_LEFT:
-						target->h = h - 40;
-						break;
-
-					case V_HOTSPOT_SCROLL_RIGHT:
-						target->h = h - 40;
-						target->x = w - 20;
-						break;
-
-					case V_HOTSPOT_SCROLL_DOWNLEFT:
-						target->y = h - 20;
-						break;
-
-					case V_HOTSPOT_SCROLL_DOWN:
-						target->y = h - 20;
-						target->w = w - 40;
-						break;
-
-					case V_HOTSPOT_SCROLL_DOWNRIGHT:
-						target->x = w - 20;
-						target->y = h - 20;
-						break;
-				}
-			}
-			break;
+		/* CTRL+SHIFT+p shows the message log */
+		case SDLK_p:
+			if (!(keysym.mod & KMOD_SHIFT) || !(keysym.mod & KMOD_CTRL))
+				break;
+			msgwin->view_all();
+			return V_EVENT_HANDLED_REDRAW;
 
 		default:
 			break;
 	}
 
+	/* all other keys are converted and passed to the core */
+	key = vultures_convertkey_sdl2nh(&keysym);
+
+	if (!key)
+		return V_EVENT_HANDLED_NOREDRAW;
+
+	if (vultures_winid_map && isdigit(key))
+		translated_key = key;
+	else
+		translated_key = vultures_translate_key(key);
+
+	if (translated_key)
+	{
+		((vultures_event*)result)->num = translated_key;
+		return V_EVENT_HANDLED_FINAL;
+	}
 	return V_EVENT_HANDLED_NOREDRAW;
 }
 
+
+eventresult levelwin::handle_resize_event(window* target, void* result, int res_w, int res_h)
+{
+	if (this == target) {
+		w = res_w;
+		h = res_h;
+	} else {
+		switch (target->menu_id)
+		{
+			/* case V_HOTSPOT_SCROLL_UPLEFT: never needs updating on resize*/
+
+			case V_HOTSPOT_SCROLL_UP:
+				target->w = w - 40;
+				break;
+
+			case V_HOTSPOT_SCROLL_UPRIGHT:
+				target->x = w - 20;
+				break;
+
+			case V_HOTSPOT_SCROLL_LEFT:
+				target->h = h - 40;
+				break;
+
+			case V_HOTSPOT_SCROLL_RIGHT:
+				target->h = h - 40;
+				target->x = w - 20;
+				break;
+
+			case V_HOTSPOT_SCROLL_DOWNLEFT:
+				target->y = h - 20;
+				break;
+
+			case V_HOTSPOT_SCROLL_DOWN:
+				target->y = h - 20;
+				target->w = w - 40;
+				break;
+
+			case V_HOTSPOT_SCROLL_DOWNRIGHT:
+				target->x = w - 20;
+				target->y = h - 20;
+				break;
+		}
+	}
+	return V_EVENT_HANDLED_NOREDRAW;
+}
 
 
 void levelwin::map_update(glyph_type type, int prev_glyph, int new_glyph, int x, int y)

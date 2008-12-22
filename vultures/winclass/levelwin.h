@@ -26,7 +26,13 @@ public:
 	~levelwin();
 	void init();
 	virtual bool draw();
-	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
+	virtual eventresult handle_timer_event(window* target, void* result, int time);
+	virtual eventresult handle_mousemotion_event(window* target, void* result, 
+	                                             int mouse_x, int mouse_y, int state);
+	virtual eventresult handle_mousebuttonup_event(window* target, void* result,
+	                                       int mouse_x, int mouse_y, int button, int state);
+	virtual eventresult handle_keydown_event(window* target, void* result, SDL_keysym keysym);
+	virtual eventresult handle_resize_event(window* target, void* result, int res_w, int res_h);
 	
 	point mouse_to_map(point mouse);
 	point map_to_mouse(point mappos);

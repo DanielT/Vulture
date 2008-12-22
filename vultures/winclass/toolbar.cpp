@@ -51,85 +51,84 @@ bool toolbar::draw()
 }
 
 
-eventresult toolbar::event_handler(window* target, void* result, SDL_Event* event)
+eventresult toolbar::handle_timer_event(window* target, void* result, int time)
 {
-	switch (event->type)
-	{
-		/* mousemotion sets the correct cursor */
-		case SDL_MOUSEMOTION:
-			vultures_set_mcursor(V_CURSOR_NORMAL);
+	if (time > HOVERTIMEOUT)
+		if (target != this  && !target->caption.empty())
+			vultures_mouse_set_tooltip(target->caption);
+	return V_EVENT_HANDLED_NOREDRAW;
+}
+
+
+eventresult toolbar::handle_mousemotion_event(window* target, void* result, 
+                                              int xrel, int yrel, int state)
+{
+	vultures_set_mcursor(V_CURSOR_NORMAL);
+	return V_EVENT_HANDLED_NOREDRAW;
+}
+
+
+eventresult toolbar::handle_mousebuttonup_event(window* target, void* result,
+                                int mouse_x, int mouse_y, int button, int state)
+{
+	/* throw away uninteresting clicks */
+	if (button != SDL_BUTTON_LEFT || target == this || !target->menu_id)
+		return V_EVENT_HANDLED_NOREDRAW;
+
+	/* one of the buttons was clicked */
+	switch (target->menu_id) {
+		case V_HOTSPOT_BUTTON_LOOK:
+			vultures_eventstack_add('y', -1, -1, V_RESPOND_CHARACTER);
+			((vultures_event*)result)->num = '/';
+			return V_EVENT_HANDLED_FINAL;
+
+		case V_HOTSPOT_BUTTON_EXTENDED:
+			((vultures_event*)result)->num = '#';
+			return V_EVENT_HANDLED_FINAL;
+
+		case V_HOTSPOT_BUTTON_MAP:
+			map::toggle();
+			return V_EVENT_HANDLED_REDRAW;
+
+		case V_HOTSPOT_BUTTON_SPELLBOOK:
+			((vultures_event*)result)->num = 'Z';
+			return V_EVENT_HANDLED_FINAL;
+
+		case V_HOTSPOT_BUTTON_INVENTORY:
+			((vultures_event*)result)->num = 'i';
+			return V_EVENT_HANDLED_FINAL;
+
+		case V_HOTSPOT_BUTTON_DISCOVERIES:
+			((vultures_event*)result)->num = '\\';
+			return V_EVENT_HANDLED_FINAL;
+
+		case V_HOTSPOT_BUTTON_MESSAGES:
+			msgwin->view_all();
 			break;
 
-		/* timer: draw tooltips */
-		case SDL_TIMEREVENT:
-			if (event->user.code > HOVERTIMEOUT)
-				if (target != this  && !target->caption.empty())
-					vultures_mouse_set_tooltip(target->caption);
+		case V_HOTSPOT_BUTTON_OPTIONS:
+			((vultures_event*)result)->num = 'O';
+			return V_EVENT_HANDLED_FINAL;
+
+		case V_HOTSPOT_BUTTON_IFOPTIONS:
+			vultures_iface_opts();
 			break;
 
-		/* click events */
-		case SDL_MOUSEBUTTONUP:
-			/* throw away uninterseting clicks */
-			if (event->button.button != SDL_BUTTON_LEFT ||
-				target == this || !target->menu_id)
-				break;
-
-			/* one of the buttons was clicked */
-			switch (target->menu_id)
-			{
-				case V_HOTSPOT_BUTTON_LOOK:
-					vultures_eventstack_add('y', -1, -1, V_RESPOND_CHARACTER);
-					((vultures_event*)result)->num = '/';
-					return V_EVENT_HANDLED_FINAL;
-
-				case V_HOTSPOT_BUTTON_EXTENDED:
-					((vultures_event*)result)->num = '#';
-					return V_EVENT_HANDLED_FINAL;
-
-				case V_HOTSPOT_BUTTON_MAP:
-					map::toggle();
-					return V_EVENT_HANDLED_REDRAW;
-
-				case V_HOTSPOT_BUTTON_SPELLBOOK:
-					((vultures_event*)result)->num = 'Z';
-					return V_EVENT_HANDLED_FINAL;
-
-				case V_HOTSPOT_BUTTON_INVENTORY:
-					((vultures_event*)result)->num = 'i';
-					return V_EVENT_HANDLED_FINAL;
-
-				case V_HOTSPOT_BUTTON_DISCOVERIES:
-					((vultures_event*)result)->num = '\\';
-					return V_EVENT_HANDLED_FINAL;
-
-				case V_HOTSPOT_BUTTON_MESSAGES:
-					msgwin->view_all();
-					break;
-
-				case V_HOTSPOT_BUTTON_OPTIONS:
-					((vultures_event*)result)->num = 'O';
-					return V_EVENT_HANDLED_FINAL;
-
-				case V_HOTSPOT_BUTTON_IFOPTIONS:
-					vultures_iface_opts();
-					break;
-
-				case V_HOTSPOT_BUTTON_HELP:
-					((vultures_event*)result)->num = '?';
-					return V_EVENT_HANDLED_FINAL;
-			}
-
-
-		case SDL_VIDEORESIZE:
-			this->x = this->parent->w - (this->w + 6);
-			if (this->menu_id == V_WIN_TOOLBAR1)
-				this->y = this->parent->h - (this->h*2 + 8);
-			else
-				this->y = this->parent->h - (this->h + 6);
-			break;
-
-		default: break;
+		case V_HOTSPOT_BUTTON_HELP:
+			((vultures_event*)result)->num = '?';
+			return V_EVENT_HANDLED_FINAL;
 	}
-	
+	return V_EVENT_HANDLED_NOREDRAW;
+}
+
+
+eventresult toolbar::handle_resize_event(window* target, void* result, int res_w, int res_h)
+{
+	x = parent->w - (w + 6);
+	if (menu_id == V_WIN_TOOLBAR1)
+		y = parent->h - (h * 2 + 8);
+	else
+		y = parent->h - (h + 6);
+
 	return V_EVENT_HANDLED_NOREDRAW;
 }

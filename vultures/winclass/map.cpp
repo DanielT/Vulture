@@ -152,10 +152,67 @@ void map::toggle(void)
 }
 
 
-eventresult map::event_handler(window* target, void* result, SDL_Event* event)
+eventresult map::handle_timer_event(window* target, void* result, int time)
+{
+	string ttext;
+	point mappos = get_mouse_mappos();
+	
+	if (time < HOVERTIMEOUT)
+		return V_EVENT_HANDLED_NOREDRAW;
+
+	/* draw the tooltip for the close button */
+	if (this != target && target->menu_id == 1)
+		vultures_mouse_set_tooltip(target->caption);
+	/* draw a tooltip for the map location */
+	else if (mappos.x != -1) {
+		ttext = map_data->map_square_description(mappos, 1);
+		if(!ttext.empty())
+			vultures_mouse_set_tooltip(ttext);
+	}
+
+	return V_EVENT_HANDLED_NOREDRAW;
+}
+
+
+eventresult map::handle_mousemotion_event(window* target, void* result, int xrel, 
+                                             int yrel, int state)
+{
+	vultures_set_mcursor(V_CURSOR_NORMAL);
+	return V_EVENT_HANDLED_NOREDRAW;
+}
+
+
+eventresult map::handle_mousebuttonup_event(window* target, void* result,
+                                            int mouse_x, int mouse_y, int button, int state)
+{
+	point mappos = get_mouse_mappos();
+	
+	/* handler != target if the user clicked on the X in the upper right corner */
+	if (this != target && target->menu_id == 1) {
+		toggle();
+		vultures_mouse_invalidate_tooltip(1);
+		return V_EVENT_HANDLED_REDRAW;
+	}
+
+	/* only handle clicks on valid map locations */
+	if (mappos.x != -1)
+		return map_data->handle_click(result, button, mappos);
+	
+	return V_EVENT_HANDLED_NOREDRAW;
+}
+
+
+eventresult map::handle_resize_event(window* target, void* result, int res_w, int res_h)
+{
+	x = (parent->w - w) / 2;
+	y = (parent->h - h) / 2;
+	return V_EVENT_HANDLED_NOREDRAW;
+}
+
+
+point map::get_mouse_mappos(void)
 {
 	point mouse, mappos;
-	string ttext;
 
 	mouse = vultures_get_mouse_pos();
 	mappos.x = (mouse.x - abs_x - 39) / SYMBOL_WIDTH;
@@ -166,48 +223,6 @@ eventresult map::event_handler(window* target, void* result, SDL_Event* event)
 		mappos.x = -1;
 		mappos.y = -1;
 	}
-
-	switch (event->type)
-	{
-		case SDL_MOUSEBUTTONUP:
-			/* handler != target if the user clicked on the X in the upper right corner */
-			if (this != target && target->menu_id == 1) {
-				toggle();
-				vultures_mouse_invalidate_tooltip(1);
-				return V_EVENT_HANDLED_REDRAW;
-			}
-
-			/* only handle clicks on valid map locations */
-			if (mappos.x != -1)
-				return map_data->handle_click(result, event->button.button, mappos);
-
-			break;
-
-		case SDL_TIMEREVENT:
-			if (event->user.code < HOVERTIMEOUT)
-				return V_EVENT_HANDLED_NOREDRAW;
-
-			/* draw the tooltip for the close button */
-			if (this != target && target->menu_id == 1)
-				vultures_mouse_set_tooltip(target->caption);
-			/* draw a tooltip for the map location */
-			else if (mappos.x != -1) {
-				ttext = map_data->map_square_description(mappos, 1);
-				if(!ttext.empty())
-					vultures_mouse_set_tooltip(ttext);
-			}
-
-			break;
-
-		case SDL_MOUSEMOTION:
-			vultures_set_mcursor(V_CURSOR_NORMAL);
-			break;
-
-		case SDL_VIDEORESIZE:
-			x = (parent->w - w) / 2;
-			y = (parent->h - h) / 2;
-			break;
-	}
-
-	return V_EVENT_HANDLED_NOREDRAW;
+	
+	return mappos;
 }

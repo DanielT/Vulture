@@ -46,72 +46,80 @@ dirdialog::dirdialog(window *p, string ques) : mainwin(p)
 }
 
 
-eventresult dirdialog::event_handler(window* target, void* result, SDL_Event* event)
+eventresult dirdialog::handle_mousemotion_event(window* target, void* result, 
+                                                int xrel, int yrel, int state)
+{
+	vultures_set_mcursor(V_CURSOR_NORMAL);
+	return V_EVENT_HANDLED_NOREDRAW;
+}
+
+
+eventresult dirdialog::handle_mousebuttonup_event(window* target, void* result,
+                                            int mouse_x, int mouse_y, int button, int state)
 {
 	point mouse;
 	int dir_x, dir_y;
 	char choice = 0;
-
 	const char dirkeys[3][3] = {{'8', '9', '6'},
 								{'7', '.', '3'},
 								{'4', '1', '2'}};
-
-	/* mouse motion events are merely used to set the correct cursor */
-	if (event->type == SDL_MOUSEMOTION)
-		vultures_set_mcursor(V_CURSOR_NORMAL);
-
-	/* any key is accepted as a valid choice */
-	else if (event->type == SDL_KEYDOWN)
-	{
-		if (event->key.keysym.sym == SDLK_ESCAPE)
-			choice = -1;
-		else
-			choice = vultures_convertkey_sdl2nh(&event->key.keysym);
-	}
-
-	/* mouse click events: only left clicks on the arrow grid are accepted */
-	else if (event->type == SDL_MOUSEBUTTONUP && event->button.button == SDL_BUTTON_LEFT)
-	{
-		if (target == first_child)
-		{
-			/* get the click coordinates and normalize them to the center of the arrow grid */
-			mouse = vultures_get_mouse_pos();
-			mouse.x -= (target->abs_x + target->w/2);
-			mouse.y -= (target->abs_y + target->h/2);
-
-			/* translate the click position to a direction */
-			dir_x = V_MAP_YMOD * mouse.x + V_MAP_XMOD * mouse.y + V_MAP_XMOD*V_MAP_YMOD;
-			dir_x = dir_x / (2 * V_MAP_XMOD * V_MAP_YMOD) - (dir_x < 0);
-			dir_y = -V_MAP_YMOD * mouse.x + V_MAP_XMOD * mouse.y + V_MAP_XMOD * V_MAP_YMOD;
-			dir_y = dir_y / (2 * V_MAP_XMOD * V_MAP_YMOD) - (dir_y < 0);
-
-			/* convert the chosen direction to a key */
-			choice = 0;
-			if (dir_y >= -1 && dir_y <= 1 && dir_x >= -1 && dir_x <= 1)
-				choice = vultures_numpad_to_hjkl(dirkeys[dir_y + 1][dir_x + 1], 0);
-
-			if (dir_x >= 2 && mouse.x < target->w / 2 && mouse.y < target->h / 2)
-				choice = '>';
-
-			if (dir_x <= -2 && mouse.x > -target->w / 2 && mouse.y > -target->h / 2)
-				choice = '<';
-		}
-	}
-	else if (event->type == SDL_VIDEORESIZE)
-	{
-		x = (parent->w - w) / 2;
-		y = (parent->h - h) / 2;
+	
+	if (button != SDL_BUTTON_LEFT || target != first_child)
 		return V_EVENT_HANDLED_NOREDRAW;
-	}
 
-	if (choice)
-	{
+	/* get the click coordinates and normalize them to the center of the arrow grid */
+	mouse = vultures_get_mouse_pos();
+	mouse.x -= (target->abs_x + target->w/2);
+	mouse.y -= (target->abs_y + target->h/2);
+
+	/* translate the click position to a direction */
+	dir_x = V_MAP_YMOD * mouse.x + V_MAP_XMOD * mouse.y + V_MAP_XMOD*V_MAP_YMOD;
+	dir_x = dir_x / (2 * V_MAP_XMOD * V_MAP_YMOD) - (dir_x < 0);
+	dir_y = -V_MAP_YMOD * mouse.x + V_MAP_XMOD * mouse.y + V_MAP_XMOD * V_MAP_YMOD;
+	dir_y = dir_y / (2 * V_MAP_XMOD * V_MAP_YMOD) - (dir_y < 0);
+
+	/* convert the chosen direction to a key */
+	choice = 0;
+	if (dir_y >= -1 && dir_y <= 1 && dir_x >= -1 && dir_x <= 1)
+		choice = vultures_numpad_to_hjkl(dirkeys[dir_y + 1][dir_x + 1], 0);
+
+	if (dir_x >= 2 && mouse.x < target->w / 2 && mouse.y < target->h / 2)
+		choice = '>';
+
+	if (dir_x <= -2 && mouse.x > -target->w / 2 && mouse.y > -target->h / 2)
+		choice = '<';
+
+	if (choice) {
 		if (!vultures_winid_map)
 			choice = vultures_translate_key(choice);
 		*(char*)result = choice;
 		return V_EVENT_HANDLED_FINAL;
 	}
+	
+	return V_EVENT_HANDLED_NOREDRAW;
+}
 
+
+eventresult dirdialog::handle_keydown_event(window* target, void* result, SDL_keysym keysym)
+{
+	char choice = 0;
+
+	if (keysym.sym == SDLK_ESCAPE)
+		choice = -1;
+	else
+		choice = vultures_convertkey_sdl2nh(&keysym);
+
+	if (!vultures_winid_map)
+		choice = vultures_translate_key(choice);
+	*(char*)result = choice;
+	return V_EVENT_HANDLED_FINAL;
+}
+
+
+eventresult dirdialog::handle_resize_event(window* target, void* result, int res_w, int res_h)
+{
+	x = (parent->w - w) / 2;
+	y = (parent->h - h) / 2;
 	return V_EVENT_HANDLED_NOREDRAW;
 }
 

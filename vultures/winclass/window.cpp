@@ -373,3 +373,72 @@ bool window::intersects_invalid()
 
 	return false;
 }
+
+
+eventresult window::event_handler(window *target, void *result, SDL_Event *event)
+{
+	switch (event->type)
+	{
+		case SDL_TIMEREVENT:
+			return handle_timer_event(target, result, event->user.code);
+
+		case SDL_MOUSEMOTION:
+			return handle_mousemotion_event(target, result, event->motion.xrel,
+			                           event->motion.yrel, event->motion.state);
+
+		case SDL_MOUSEBUTTONUP:
+			return handle_mousebuttonup_event(target, result, event->button.x,
+			        event->button.y, event->button.button, event->button.state);
+
+		case SDL_KEYDOWN:
+			return handle_keydown_event(target, result, event->key.keysym);
+
+		case SDL_VIDEORESIZE:
+			return handle_resize_event(target, result, event->resize.w, event->resize.h);
+		
+		default:
+			return handle_other_event(target, result, event);
+	}
+
+	return V_EVENT_UNHANDLED;
+}
+
+
+/* default event handling functions which do nothing */
+eventresult window::handle_timer_event(window* target, void* result, int time)
+{
+	return V_EVENT_UNHANDLED;
+}
+
+
+eventresult window::handle_mousemotion_event(window* target, void* result, int xrel, 
+                                             int yrel, int state)
+{
+	return V_EVENT_UNHANDLED;
+}
+
+
+eventresult window::handle_mousebuttonup_event(window* target, void* result,
+                                            int mouse_x, int mouse_y, int button, int state)
+{
+	return V_EVENT_UNHANDLED;
+}
+
+
+eventresult window::handle_keydown_event(window* target, void* result, SDL_keysym keysym)
+{
+	return V_EVENT_UNHANDLED;
+}
+
+
+eventresult window::handle_resize_event(window* target, void* result, int res_w, int res_h)
+{
+	return V_EVENT_UNHANDLED;
+}
+
+
+eventresult window::handle_other_event(window* target, void* result, SDL_Event *event)
+{
+	return V_EVENT_UNHANDLED;
+}
+

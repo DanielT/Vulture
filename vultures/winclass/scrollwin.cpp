@@ -373,45 +373,45 @@ eventresult scrollwin::mousescroll(scrollbar *target, int is_drag)
 }
 
 
-eventresult scrollwin::event_handler(window* target, void* result, SDL_Event* event)
+eventresult scrollwin::handle_mousemotion_event(window* target, void* result, int xrel, 
+                                             int yrel, int state)
 {
 	window *winelem;
 	point mouse, oldpos;
 
-	/* menus use the normal cursor */
-	if (event->type == SDL_MOUSEMOTION) {
-		vultures_set_mcursor(V_CURSOR_NORMAL);
+	vultures_set_mcursor(V_CURSOR_NORMAL);
 
-		if (event->motion.state == SDL_PRESSED && 
-			(SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT))) {
-			mouse = vultures_get_mouse_pos();
-			oldpos.x = mouse.x + event->motion.xrel;
-			oldpos.y = mouse.y + event->motion.yrel;
-			winelem = get_window_from_point(oldpos);
+	if (state == SDL_PRESSED && 
+		(SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT))) {
+		mouse = vultures_get_mouse_pos();
+		oldpos.x = mouse.x + xrel;
+		oldpos.y = mouse.y + yrel;
+		winelem = get_window_from_point(oldpos);
 
-			if (target->v_type == V_WINTYPE_SCROLLBAR && winelem == target)
-				return mousescroll(static_cast<scrollbar*>(target), 1);
-		}
+		if (target->v_type == V_WINTYPE_SCROLLBAR && winelem == target)
+			return mousescroll(static_cast<scrollbar*>(target), 1);
 	}
-	
-	/* handle clicks and wheel events */
-	else if (event->type == SDL_MOUSEBUTTONUP) {
-		/* wheel up/down: scroll by one line */
-		if (event->button.button == SDL_BUTTON_WHEELUP)
-			return scrollto(V_SCROLL_LINE_REL, -1);
-
-		if (event->button.button == SDL_BUTTON_WHEELDOWN)
-			return scrollto(V_SCROLL_LINE_REL, 1);
+	return V_EVENT_UNHANDLED;
+}
 
 
-		if (target == this)
-			/* clicks on the menu window itself are not interesting */
-			return V_EVENT_HANDLED_NOREDRAW;
+eventresult scrollwin::handle_mousebuttonup_event(window* target, void* result,
+                                            int mouse_x, int mouse_y, int button, int state)
+{
+	/* wheel up/down: scroll by one line */
+	if (button == SDL_BUTTON_WHEELUP)
+		return scrollto(V_SCROLL_LINE_REL, -1);
 
-		/* a click on the scrollbar */
-		else if (target->v_type == V_WINTYPE_SCROLLBAR)
-			return mousescroll(static_cast<scrollbar*>(target), 0);
-	}
-	
+	if (button == SDL_BUTTON_WHEELDOWN)
+		return scrollto(V_SCROLL_LINE_REL, 1);
+
+	if (target == this)
+		/* clicks on the menu window itself are not interesting */
+		return V_EVENT_HANDLED_NOREDRAW;
+
+	/* a click on the scrollbar */
+	else if (target->v_type == V_WINTYPE_SCROLLBAR)
+		return mousescroll(static_cast<scrollbar*>(target), 0);
+		
 	return V_EVENT_UNHANDLED;
 }

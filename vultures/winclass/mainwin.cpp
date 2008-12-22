@@ -103,12 +103,6 @@ bool mainwin::draw()
 }
 
 
-eventresult mainwin::event_handler(window* target, void* result, SDL_Event* event)
-{
-	return V_EVENT_UNHANDLED;
-}
-
-
 int mainwin::get_frameheight()
 {
 	int capheight = 0;

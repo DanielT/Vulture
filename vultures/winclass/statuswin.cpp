@@ -84,14 +84,25 @@ bool statuswin::draw()
 }
 
 
-eventresult statuswin::event_handler(window* target, void* result, SDL_Event* event)
+eventresult statuswin::handle_mousemotion_event(window* target, void* result, int xrel, 
+                                             int yrel, int state)
 {
-	if (event->type == SDL_MOUSEMOTION)
-		vultures_set_mcursor(V_CURSOR_NORMAL);
-	else if (event->type == SDL_VIDEORESIZE)
-		/* x coordinate does not change */
-		y = parent->h - (h + 6);
+	vultures_set_mcursor(V_CURSOR_NORMAL);
+	return V_EVENT_HANDLED_NOREDRAW;
+}
 
+
+eventresult statuswin::handle_mousebuttonup_event(window* target, void* result,
+                                            int mouse_x, int mouse_y, int button, int state)
+{
+	return V_EVENT_HANDLED_NOREDRAW;
+}
+
+
+eventresult statuswin::handle_resize_event(window* target, void* result, int res_w, int res_h)
+{
+	/* x coordinate does not change */
+	y = parent->h - (h + 6);
 	return V_EVENT_HANDLED_NOREDRAW;
 }
 

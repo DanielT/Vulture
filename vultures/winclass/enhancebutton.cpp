@@ -47,30 +47,42 @@ bool enhancebutton::draw()
 	return true;
 }
 
-eventresult enhancebutton::event_handler(window* target, void* result, SDL_Event* event)
+
+eventresult enhancebutton::handle_timer_event(window* target, void* result, int time)
 {
-	/* change the mouse cursor to indicate that this window is clickable */
-	if (event->type == SDL_MOUSEMOTION)
-		vultures_set_mcursor(V_CURSOR_NORMAL);
-
-	/* respond to clicks */
-	else if (event->type == SDL_MOUSEBUTTONUP && event->button.button == SDL_BUTTON_LEFT)
-	{
-		((vultures_event*)result)->num = META('e');
-		return V_EVENT_HANDLED_FINAL;
-	}
-
-	else if (event->type == SDL_VIDEORESIZE)
-		/* this relies on the fact that the enhance window is created
-		* immediately after the status window */
-		y = sib_prev->y - h;
-
-	/* show a tooltip */
-	else if (event->type == SDL_TIMEREVENT && event->user.code > HOVERTIMEOUT)
+	if (time > HOVERTIMEOUT)
 		vultures_mouse_set_tooltip((char *)"Enhance a skill");
-
 	return V_EVENT_HANDLED_NOREDRAW;
 }
+
+
+eventresult enhancebutton::handle_mousemotion_event(window* target, void* result, int xrel, 
+                                             int yrel, int state)
+{
+	vultures_set_mcursor(V_CURSOR_NORMAL);
+	return V_EVENT_HANDLED_NOREDRAW;
+}
+
+
+eventresult enhancebutton::handle_mousebuttonup_event(window* target, void* result,
+                                            int mouse_x, int mouse_y, int button, int state)
+{
+	if (button != SDL_BUTTON_LEFT)
+		return V_EVENT_HANDLED_NOREDRAW;
+	
+	((vultures_event*)result)->num = META('e');
+	return V_EVENT_HANDLED_FINAL;
+}
+
+
+eventresult enhancebutton::handle_resize_event(window* target, void* result, int res_w, int res_h)
+{
+	/* this relies on the fact that the enhance window is created
+	 * immediately after the status window */
+	y = sib_prev->y - h;
+	return V_EVENT_HANDLED_NOREDRAW;
+}
+
 
 /* enable and display the enhance icon if enhance is possible */
 void enhancebutton::check_enhance(void)

@@ -22,10 +22,16 @@ public:
 	map(levelwin *p, mapdata *data);
 	~map();
 	virtual bool draw();
-	virtual eventresult event_handler(window* target, void* result, SDL_Event* event);
+	virtual eventresult handle_timer_event(window* target, void* result, int time);
+	virtual eventresult handle_mousemotion_event(window* target, void* result, 
+	                                             int xrel, int yrel, int state);
+	virtual eventresult handle_mousebuttonup_event(window* target, void* result,
+	                                       int mouse_x, int mouse_y, int button, int state);
+	virtual eventresult handle_resize_event(window* target, void* result, int res_w, int res_h);
 	static void toggle(void);
 
 private:
+	point get_mouse_mappos(void);
 	SDL_Surface *mapbg;
 	SDL_Surface *map_symbols[V_MAX_MAP_SYMBOLS];
 	mapdata *map_data;
