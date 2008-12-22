@@ -8,8 +8,6 @@
 #include <SDL.h>
 #include "vultures_types.h"
 
-#define ROOTWIN vultures_get_window(0)
-
 #define V_LISTITEM_WIDTH  300
 #define V_LISTITEM_HEIGHT  52
 
@@ -92,11 +90,9 @@ class window
 
 public:
 	window(window *p);
-	window();
 	virtual ~window();
 
 	virtual bool draw() = 0;
-	virtual window* replace_win(window *win);
 	virtual void set_caption(string str);
 	virtual void hide();
 	virtual void layout() {};
@@ -113,8 +109,6 @@ public:
 	virtual eventresult handle_other_event(window* target, void* result, SDL_Event* event);
 	
 	window_type get_wintype() { return v_type; };
-	int get_nh_type() { return nh_type; };
-	int get_id() { return id; };
 	void *get_menu_id() { return menu_id_v; };
 	
 	void draw_windows();
@@ -128,17 +122,10 @@ public:
 	bool need_redraw;
 	bool visible;
 	
-	/* if context_is_text is false, text items are assumed to be headers and
-	 * get spaced ~1/2 line further apart  */
-	bool content_is_text;
-	
 	virtual window* find_accel(char accel);
 
 
 // protected:
-
-	int id;
-	int nh_type;                   /* type assigned by nethack */
 	window_type v_type;
 	string caption;
 	char accelerator;
@@ -166,7 +153,6 @@ protected:
 	SDL_Surface *background;
 };
 
-
-window * vultures_get_window(int winid);
+extern window *ROOTWIN;
 
 #endif

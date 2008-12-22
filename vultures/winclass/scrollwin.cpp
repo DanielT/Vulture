@@ -14,7 +14,7 @@
 #include "vultures_tile.h"
 
 
-scrollwin::scrollwin(window *p) : window(p)
+scrollwin::scrollwin(window *p, bool txt) : window(p), is_text(txt)
 {
 	v_type = V_WINTYPE_SCROLLAREA;
 	scrollpos = 0;
@@ -147,7 +147,7 @@ void scrollwin::layout(void)
 
 		if (winelem->v_type == V_WINTYPE_OPTION || 
 		    winelem->v_type == V_WINTYPE_TEXT) {
-			if (!parent->content_is_text)
+			if (!is_text)
 				winelem->h += 10;
 
 			winelem->x = 0;

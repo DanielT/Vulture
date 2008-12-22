@@ -10,7 +10,6 @@
 class mainwin : public window
 {
 public:
-	mainwin() {};
 	mainwin(window *p);
 	virtual bool draw();
 	virtual void layout();

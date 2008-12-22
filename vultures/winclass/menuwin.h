@@ -5,28 +5,13 @@
 #define _menuwin_h_
 
 #include <list>
-
+#include "menuitem.h"
 #include "mainwin.h"
 
 #define MAX_MENU_HEIGHT 800
 
 class optionwin;
 class scrollwin;
-
-class menuitem
-{
-public:
-	menuitem(string str, bool sel, void *ident, char accel, int glyph) : 
-	         identifier(ident), str(str), glyph(glyph), preselected(sel),
-             accelerator(accel), selected(false), count(-1) {};
-	const void *identifier;
-	string str;
-	int glyph;
-	bool preselected;
-	char accelerator;
-	bool selected;
-	int count;
-};
 
 
 class menuwin : public mainwin
@@ -49,9 +34,8 @@ public:
 		item_iterator end;
 	};
 
-
 	menuwin();
-	menuwin(window *p);
+	menuwin(window *p, std::list<menuitem> &menuitems, int how);
 	virtual ~menuwin();
 	virtual bool draw();
 	virtual eventresult handle_mousemotion_event(window* target, void* result, 
@@ -62,23 +46,18 @@ public:
 	virtual eventresult handle_resize_event(window* target, void* result, int w, int h);
 
 	
-	virtual menuwin* replace_win(menuwin* win);
 	virtual void layout();
-	void reset();
-	void assign_accelerators();
-	void set_selection_type(int how);
 	window *find_accel(char accel);
 	selection_iterator selection_begin() { return selection_iterator(items.begin(), items.end()); }
 	selection_iterator selection_end() { return selection_iterator(items.end(), items.end()); }
 	
-	virtual void add_menuitem(string str, bool preselected, void *identifier, char accelerator, int glyph);
-	
 protected:
+	void assign_accelerators();
 	void select_option(optionwin *target, int count);
 	
 	scrollwin *scrollarea;
-	int select_how;
 	std::list<menuitem> items;
+	int select_how;
 	int count;
 };
 

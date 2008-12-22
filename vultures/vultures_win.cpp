@@ -62,7 +62,7 @@ void vultures_messagebox(string message)
     mainwin *win;
     int dummy;
 
-    win = new mainwin(vultures_get_window(0));
+    win = new mainwin(ROOTWIN);
     win->set_caption(message);
 
 	new button(win, "Continue", 1, '\0');
@@ -78,7 +78,7 @@ void vultures_messagebox(string message)
 int vultures_get_input(int force_x, int force_y, const char *ques, char *input)
 {
 	int response;
-	inputdialog *win = new inputdialog(vultures_get_window(0), ques, 256, force_x, force_y);
+	inputdialog *win = new inputdialog(ROOTWIN, ques, 256, force_x, force_y);
 
 	/* get input */
 	vultures_event_dispatcher(&response, V_RESPOND_INT, win);
@@ -434,7 +434,7 @@ void vultures_win_resize(int width, int height)
 	vultures_event dummy;
 	bool descend = true;
 
-	current = topwin = vultures_get_window(0);
+	current = topwin = ROOTWIN;
 
 	event.type = SDL_VIDEORESIZE;
 	event.resize.w = width;

@@ -20,54 +20,21 @@ extern "C" {
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 
 
-menuwin::menuwin()
-{
-	scrollarea = NULL;
-	count = 0;
-}
-
-menuwin::menuwin(window *p) : mainwin(p)
+menuwin::menuwin(window *p, std::list<menuitem> &menuitems, int how) : 
+                 mainwin(p), items(menuitems), select_how(how)
 {
 	v_type = V_WINTYPE_MENU;
-	nh_type = NHW_MENU;
 	
 	scrollarea = NULL;
 	count = 0;
+	
+	assign_accelerators();
 }
 
 
 menuwin::~menuwin()
 {
 	items.clear();
-}
-
-
-menuwin* menuwin::replace_win(menuwin* win)
-{
-	*this = *win;
-	
-	window::replace_win(win);
-	v_type = V_WINTYPE_MENU;
-	nh_type = NHW_MENU;
-	
-	return this;
-}
-
-
-void menuwin::reset()
-{
-	while (first_child) {
-		delete first_child;
-	}
-	
-	items.clear();
-	
-	scrollarea = NULL;
-	w = 0;
-	
-	if (background)
-		SDL_FreeSurface(background);
-	background = NULL;
 }
 
 
@@ -79,7 +46,6 @@ bool menuwin::draw()
 	/* no need to invalidate the draw region, the call to draw mainwin did that for us */
 	return true;
 }
-
 
 
 void menuwin::select_option(optionwin *target, int count)
@@ -106,6 +72,7 @@ void menuwin::select_option(optionwin *target, int count)
 	if (target->item->selected)
 		target->item->count = count;
 }
+
 
 eventresult menuwin::handle_mousemotion_event(window* target, void* result, int xrel, 
                                              int yrel, int state)
@@ -168,7 +135,7 @@ eventresult menuwin::handle_keydown_event(window* target, void* result, SDL_keys
 
 		case SDLK_SPACE:
 		case SDLK_ESCAPE:
-			*(int*)result = content_is_text ? V_MENU_ACCEPT : V_MENU_CANCEL;
+			*(int*)result = (select_how == PICK_NONE) ? V_MENU_ACCEPT : V_MENU_CANCEL;
 			return V_EVENT_HANDLED_FINAL;
 
 		/* handle menu control keys */
@@ -346,12 +313,6 @@ void menuwin::assign_accelerators()
 }
 
 
-void menuwin::set_selection_type(int how)
-{
-	select_how = how;
-}
-
-
 window * menuwin::find_accel(char accel)
 {
 	for (window *child = first_child; child; child = child->sib_next) {
@@ -374,8 +335,8 @@ void menuwin::layout()
 	if (scrollarea)
 		delete scrollarea;
 	
-	// create & populate new scrollarea
-	scrollarea = new scrollwin(this);
+	/* create & populate new scrollarea */
+	scrollarea = new scrollwin(this, (select_how == PICK_NONE));
 	for (item_iterator i = items.begin(); i != items.end(); ++i) {
 		newcaption = "";
 		if (i->accelerator) {
@@ -406,12 +367,6 @@ void menuwin::layout()
 	
 	/* enlarge scroll area so that the scrollbar will be on the right edge */
 	scrollarea->w = w - border_left - border_right;
-}
-
-
-void menuwin::add_menuitem(string str, bool preselected, void *identifier, char accelerator, int glyph)
-{
-	items.push_back(menuitem(str, preselected, identifier, accelerator, glyph));
 }
 
 

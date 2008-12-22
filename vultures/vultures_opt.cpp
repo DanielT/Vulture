@@ -558,21 +558,21 @@ int vultures_iface_opts(void)
 
 			case V_IOMID_HELPTB:
 				vultures_opts.show_helptb = !vultures_opts.show_helptb;
-				win = vultures_get_window(0); /* map window */
+				win = ROOTWIN; /* map window */
 				static_cast<levelwin*>(win)->toggle_uiwin(V_WIN_TOOLBAR2, vultures_opts.show_helptb);
 				vultures_display_nhwindow(WIN_MAP, 0);
 				break;
 
 			case V_IOMID_ACTIONTB:
 				vultures_opts.show_actiontb = !vultures_opts.show_actiontb;
-				win = vultures_get_window(0); /* map window */
+				win = ROOTWIN; /* map window */
 				static_cast<levelwin*>(win)->toggle_uiwin(V_WIN_TOOLBAR1, vultures_opts.show_actiontb);
 				vultures_display_nhwindow(WIN_MAP, 0);
 				break;
 
 			case V_IOMID_MINIMAP:
 				vultures_opts.show_minimap = !vultures_opts.show_minimap;
-				win = vultures_get_window(0); /* map window */
+				win = ROOTWIN; /* map window */
 				static_cast<levelwin*>(win)->toggle_uiwin(V_WIN_MINIMAP, vultures_opts.show_minimap);
 				vultures_display_nhwindow(WIN_MAP, 0);
 				break;

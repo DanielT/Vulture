@@ -16,6 +16,7 @@ extern "C" {
 #include "minimap.h"
 #include "levelwin.h"
 
+minimap *minimapwin = NULL;
 
 minimap::minimap(levelwin *p, mapdata *data) : window(p), level(p), map_data(data)
 {
@@ -27,12 +28,15 @@ minimap::minimap(levelwin *p, mapdata *data) : window(p), level(p), map_data(dat
 	visible = vultures_opts.show_minimap;
 	menu_id = V_WIN_MINIMAP;
 	autobg = 1;
+	
+	minimapwin = this;
 }
 
 
 minimap::~minimap()
 {
 	SDL_FreeSurface(minimapbg);
+	minimapwin = NULL;
 }
 
 

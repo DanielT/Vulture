@@ -42,7 +42,6 @@ int vultures_map_highlight_objects = 0;
 
 levelwin::levelwin(mapdata *data) : window(NULL), map_data(data)
 {
-	nh_type = NHW_MAP;
 	v_type = V_WINTYPE_LEVEL;
 	
 	x = 0;
@@ -652,13 +651,12 @@ eventresult levelwin::handle_keydown_event(window* target, void* result, SDL_key
 	if (!key)
 		return V_EVENT_HANDLED_NOREDRAW;
 
-	if (vultures_winid_map && isdigit(key))
+	if (mapwin && isdigit(key))
 		translated_key = key;
 	else
 		translated_key = vultures_translate_key(key);
 
-	if (translated_key)
-	{
+	if (translated_key) {
 		((vultures_event*)result)->num = translated_key;
 		return V_EVENT_HANDLED_FINAL;
 	}
@@ -783,10 +781,9 @@ void levelwin::map_clear()
 point levelwin::mouse_to_map(point mouse)
 {
 	point mappos, px_offset;
-	struct window * map = vultures_get_window(0);
 
-	px_offset.x = mouse.x - (map->w / 2) + (view_x - view_y) * V_MAP_XMOD;
-	px_offset.y = mouse.y - (map->h / 2) + (view_x+view_y)*V_MAP_YMOD;
+	px_offset.x = mouse.x - (w / 2) + (view_x - view_y) * V_MAP_XMOD;
+	px_offset.y = mouse.y - (h / 2) + (view_x + view_y)*V_MAP_YMOD;
 
 	mappos.x = ( V_MAP_YMOD * px_offset.x + V_MAP_XMOD * px_offset.y +
 			V_MAP_XMOD*V_MAP_YMOD)/(2*V_MAP_XMOD*V_MAP_YMOD);
@@ -799,9 +796,8 @@ point levelwin::mouse_to_map(point mouse)
 
 point levelwin::map_to_mouse(point mappos)
 {
-	struct window * map = vultures_get_window(WIN_MAP);
-	int map_centre_x = map->w / 2;
-	int map_centre_y = map->h / 2;
+	int map_centre_x = w / 2;
+	int map_centre_y = h / 2;
 	point mouse;
 
 	mouse.x = map_centre_x + V_MAP_XMOD*(mappos.x - mappos.y + view_y - view_x);

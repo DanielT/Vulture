@@ -13,7 +13,6 @@ class menuitem;
 class optionwin : public window
 {
 public:
-	optionwin() {};
 	optionwin(window *p, menuitem* mi, string cap,
 	          char accel, int glyph, bool selected, bool is_checkbox);
 	virtual bool draw();

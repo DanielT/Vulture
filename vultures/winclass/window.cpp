@@ -8,44 +8,13 @@
 #include "vultures_sdl.h"
 
 
-window **vultures_windows = NULL;
-int windowcount = 0;
-int windowcount_max = 0;
-
-window* vultures_get_window(int winid)
-{
-	return vultures_windows[winid];
-}
-
-
-window::window()
-{
-}
+window *ROOTWIN = NULL;
 
 window::window(window *p) : parent(p)
 {
-	id = 0;
-	
-	if (windowcount != 0 && !parent)
-		printf("Treason uncloaked! New window is not parented to rootwin\n");
-	
-	/* if necessary make space in the vultures_windows array */
-	if (windowcount == windowcount_max)
-	{
-		vultures_windows = (window**)realloc(vultures_windows, (windowcount_max + 16) * sizeof(window*));
-		memset(&vultures_windows[windowcount_max], 0, 16 * sizeof(window*));
-		windowcount_max += 16;
+	if (!parent && ROOTWIN)
+		parent = ROOTWIN;
 
-		/* no need to search through the first windowcount_cur ids, they're definitely taken */
-		id = windowcount;
-	}
-	else
-		while (vultures_windows[id] != NULL && id < windowcount_max)
-			id++;
-	
-	windowcount++;
-	vultures_windows[id] = this;
-	
 	first_child = last_child = NULL;
 	sib_next = sib_prev = NULL;
 	abs_x = abs_y = x = y = w = h = 0;
@@ -54,7 +23,6 @@ window::window(window *p) : parent(p)
 	background = NULL;
 	autobg = false;
 	menu_id_v = NULL;
-	content_is_text = false;
 	
 	need_redraw = true;
 	visible = true;
@@ -68,21 +36,15 @@ window::window(window *p) : parent(p)
 		else
 			parent->first_child = this;
 		parent->last_child = this;
-	}
+	} else
+		ROOTWIN = this;
 	
-	nh_type = 0;
 	v_type = V_WINTYPE_CUSTOM;
 }
 
 
 window::~window()
 {
-	/* id == -1 if the window is being replaced */
-	if (id > -1) {
-		vultures_windows[id] = NULL;
-		windowcount--;
-	}
-	
 	/* the root window has no parent */
 	if (parent) {
 		/* unlink the window everywhere */
@@ -107,13 +69,6 @@ window::~window()
 			first_child->visible = 0;
 		delete first_child; // deleting a child will unlink it; eventually first_child will be NULL
 	}
-	
-	/* clean up after the last window is gone */
-	if (windowcount == 0) {
-		free(vultures_windows);
-		vultures_windows = NULL;
-		windowcount_max = 0;
-	}
 
 	/* we may want to restore the background before deleting it */
 	if (visible && background != NULL && autobg && (!parent || parent->visible)) {
@@ -124,36 +79,9 @@ window::~window()
 	/* make sure the background gets freed even if it doesn't get restored */
 	if (background)
 		SDL_FreeSurface(background);
-}
-
-
-window* window::replace_win(window *win)
-{
-	*this = *win;
 	
-	vultures_windows[id] = this;
-
-	if (parent) {
-		if (parent->first_child == win)
-			parent->first_child = this;
-
-		if (parent->last_child == win)
-			parent->last_child = this;
-	}
-
-	if (sib_prev)
-		sib_prev->sib_next = this;
-
-	if (sib_next)
-		sib_next->sib_prev = this;
-		
-	win->first_child = win->last_child = win->parent = NULL;
-	win->background = NULL;
-	win->id = -1;
-	
-	delete win;
-	
-	return this;
+	if (ROOTWIN == this)
+		ROOTWIN = NULL;
 }
 
 

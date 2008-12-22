@@ -27,7 +27,6 @@ static Uint32 warn_colors[V_MAX_WARN];
 statuswin::statuswin(window *p) : window(p)
 {
 	window *subwin;
-	nh_type = NHW_STATUS;
 	
 	statusbg = vultures_load_graphic(V_FILENAME_STATUS_BAR);
 	this->w = statusbg->w;

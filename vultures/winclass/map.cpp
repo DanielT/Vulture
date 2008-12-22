@@ -24,6 +24,7 @@ extern "C" {
 #define SYMBOL_WIDTH   7
 #define SYMBOL_HEIGHT 14
 
+window *mapwin = NULL;
 
 
 map::map(levelwin *p, mapdata *data) : window(p), map_data(data)
@@ -133,21 +134,16 @@ bool map::draw()
 
 void map::toggle(void)
 {
-	static window *mapwin = NULL;
-
 	if (!mapwin) {
 		mapwin = new map(levwin, ::map_data);
 
 		mapwin->x = (mapwin->parent->w - mapwin->w) / 2;
 		mapwin->y = (mapwin->parent->h - mapwin->h) / 2;
-
-		vultures_winid_map = mapwin->id;
 	}
 	else {
 		mapwin->hide();
 		delete mapwin;
 		mapwin = NULL;
-		vultures_winid_map = 0;
 	}
 }
 

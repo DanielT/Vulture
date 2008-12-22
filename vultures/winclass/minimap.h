@@ -53,5 +53,6 @@ private:
 	mapdata *map_data;
 };
 
+extern minimap *minimapwin;
 
 #endif

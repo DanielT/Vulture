@@ -26,7 +26,6 @@ messagewin::messagewin(window *p) : window(p)
 	int i;
 	Uint32 color;
 
-	nh_type = NHW_MESSAGE;
 	v_type = V_WINTYPE_CUSTOM;
 	
 	bg_img = SDL_CreateRGBSurface(SDL_SWSURFACE, 40, 20, 32,

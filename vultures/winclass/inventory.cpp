@@ -28,34 +28,13 @@ extern const char *disrobing;
 #define CTRL(c) (0x1f & (c))
 
 
-inventory::inventory()
+inventory::inventory(window *p, std::list<menuitem> &menuitems, int how, int id) :
+                     menuwin(p, menuitems, how), nhid(id)
 {
 	v_type = V_WINTYPE_OBJWIN;
-	nh_type = NHW_MENU;
+
 	ow_ncols = ow_vcols = ow_firstcol = ow_vrows = 0;
 	ow_lasttoggled = NULL;
-}
-
-inventory::inventory(window *p) : menuwin(p)
-{
-	v_type = V_WINTYPE_OBJWIN;
-	nh_type = NHW_MENU;
-	ow_ncols = ow_vcols = ow_firstcol = ow_vrows = 0;
-	ow_lasttoggled = NULL;
-}
-
-
-menuwin* inventory::replace_win(menuwin* win)
-{
-	*(static_cast<menuwin*>(this)) = *win;
-
-	window::replace_win(win);
-	v_type = V_WINTYPE_OBJWIN;
-	nh_type = NHW_MENU;
-	ow_ncols = ow_vcols = ow_firstcol = ow_vrows = 0;
-	ow_lasttoggled = NULL;
-	
-	return this;
 }
 
 
@@ -393,7 +372,7 @@ eventresult inventory::handle_keydown_event(window* target, void* result, SDL_ke
 
 		case SDLK_SPACE:
 		case SDLK_ESCAPE:
-			*(int*)result = content_is_text ? V_MENU_ACCEPT : V_MENU_CANCEL;
+			*(int*)result = (select_how == PICK_NONE) ? V_MENU_ACCEPT : V_MENU_CANCEL;
 			return V_EVENT_HANDLED_FINAL;
 
 		/* handle menu control keys */
@@ -672,7 +651,7 @@ void inventory::layout()
 				 * chars, small ints and pointers */
 				if (winelem->menu_id_v > (void*)0x10000)
 					static_cast<objitemwin*>(winelem)->obj = (struct obj *)winelem->menu_id_v; 
-				else if (id == WIN_INVEN) {
+				else if (nhid == WIN_INVEN) {
 					invitem = invent;
 					while (invitem && invitem->invlet != winelem->accelerator)
 						invitem = invitem->nobj;

@@ -112,8 +112,6 @@ extern void vultures_show_mainmenu(void);
 /* exported variables */
 extern vultures_window_graphics vultures_winelem;
 extern int vultures_suppress_helpmsg;
-extern int vultures_winid_map;
-extern int vultures_winid_minimap;
 extern int vultures_whatis_singleshot;
 extern int vultures_windows_inited;
 

@@ -16,7 +16,8 @@ extern "C" {
 #include "endingwin.h"
 
 
-endingwin::endingwin(int how) : menuwin()
+endingwin::endingwin(window *p, std::list<menuitem> &menuitems, int how) :
+                     menuwin(p, menuitems, 0)
 {
 	ending_type = how;
 }
@@ -105,14 +106,4 @@ eventresult endingwin::handle_mousebuttonup_event(window* target, void* result,
 eventresult endingwin::handle_keydown_event(window* target, void* result, SDL_keysym keysym)
 {
 	return V_EVENT_HANDLED_FINAL;
-}
-
-
-menuwin* endingwin::replace_win(menuwin *win)
-{
-	menuwin::replace_win(win);
-	v_type = V_WINTYPE_ENDING;
-	nh_type = NHW_TEXT;
-	
-	return this;
 }

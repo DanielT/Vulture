@@ -37,4 +37,6 @@ private:
 	mapdata *map_data;
 };
 
+extern window *mapwin;
+
 #endif

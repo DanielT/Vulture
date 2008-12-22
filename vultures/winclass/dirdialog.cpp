@@ -11,6 +11,7 @@
 
 #include "dirdialog.h"
 #include "hotspot.h"
+#include "map.h"
 
 /* for defs of V_MAP_XMOD and V_MAP_YMOD */
 #include "levelwin.h"
@@ -90,7 +91,7 @@ eventresult dirdialog::handle_mousebuttonup_event(window* target, void* result,
 		choice = '<';
 
 	if (choice) {
-		if (!vultures_winid_map)
+		if (!mapwin)
 			choice = vultures_translate_key(choice);
 		*(char*)result = choice;
 		return V_EVENT_HANDLED_FINAL;
@@ -109,7 +110,7 @@ eventresult dirdialog::handle_keydown_event(window* target, void* result, SDL_ke
 	else
 		choice = vultures_convertkey_sdl2nh(&keysym);
 
-	if (!vultures_winid_map)
+	if (!mapwin)
 		choice = vultures_translate_key(choice);
 	*(char*)result = choice;
 	return V_EVENT_HANDLED_FINAL;

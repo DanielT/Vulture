@@ -19,8 +19,7 @@ enum scrolltypes {
 class scrollwin : public window
 {
 public:
-	scrollwin() {};
-	scrollwin(window *p);
+	scrollwin(window *p, bool txt);
 	virtual bool draw(void);
 	virtual eventresult handle_mousemotion_event(window* target, void* result, 
 	                                             int xrel, int yrel, int state);
@@ -39,6 +38,7 @@ private:
 	bool layout_done;
 	int scrollpos;
 	scrollbar *scroll;
+	bool is_text;
 };
 
 

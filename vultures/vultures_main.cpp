@@ -35,6 +35,7 @@ extern "C" {
 #include "vultures_mou.h"
 #include "vultures_opt.h"
 
+#include "winclass/nhwindow.h"
 #include "winclass/anykeydialog.h"
 #include "winclass/button.h"
 #include "winclass/choicedialog.h"
@@ -45,6 +46,8 @@ extern "C" {
 #include "winclass/messagewin.h"
 #include "winclass/statuswin.h"
 #include "winclass/mapdata.h"
+#include "winclass/map.h"
+#include "winclass/minimap.h"
 
 /* Interface definition, for windows.c */
 struct window_procs vultures_procs = {
@@ -209,41 +212,37 @@ void vultures_exit_nhwindows(const char * str)
 
 winid vultures_create_nhwindow(int type)
 {
-	window *win;
+	nhwindow *win = new nhwindow(type);
 
 	switch(type) {
 		case NHW_STATUS:
-			win = new statuswin(vultures_get_window(0));
+			win->impl = new statuswin(NULL);
 			break;
 
 		case NHW_MESSAGE:
-			win = new messagewin(vultures_get_window(0));
-			win = new messagewin(vultures_get_window(0));
-			win = new messagewin(vultures_get_window(0));
+			win->impl = new messagewin(NULL);
 			break;
 
 		case NHW_MAP:
-			win = vultures_get_window(0);
-			static_cast<levelwin*>(win)->init();
+			win->impl = ROOTWIN;
+			static_cast<levelwin*>(ROOTWIN)->init();
 			break;
 
 		case NHW_MENU:
 		case NHW_TEXT:
-			win = new menuwin(vultures_get_window(0));
-			win->visible = false;
 			break;
 
 		default:
 			return WIN_ERR;
 	}
-	return win->get_id();
+	return win->id;
 }
 
 
 
 void vultures_clear_nhwindow(int winid)
 {
-	if (!vultures_get_window(winid))
+	if (!vultures_get_nhwindow(winid))
 		return;
 
 	/* this doesn't seem to be used for anything other than the map ... */
@@ -256,7 +255,7 @@ void vultures_clear_nhwindow(int winid)
 
 
 /* helper called by vultures_display_nhwindow */
-static void vultures_display_nhmap(struct window * win, vultures_event *result, BOOLEAN_P blocking)
+static void vultures_display_nhmap(window *win, vultures_event *result, BOOLEAN_P blocking)
 {
 	if (u.uz.dlevel != 0) {
 		/* u.uz.dlevel == 0 when the game hasn't been fully initialized yet
@@ -267,11 +266,11 @@ static void vultures_display_nhmap(struct window * win, vultures_event *result, 
 		    (vultures_opts.recenter || !levwin->need_recenter(u.ux, u.uy)))
 			levwin->set_view(u.ux, u.uy);
 
-		if (vultures_winid_map)
-			vultures_get_window(vultures_winid_map)->need_redraw = 1;
+		if (mapwin)
+			mapwin->need_redraw = 1;
 
 		if (vultures_opts.show_minimap)
-			vultures_get_window(vultures_winid_minimap)->need_redraw = 1;
+			minimapwin->need_redraw = 1;
 
 		win->need_redraw = 1;
 
@@ -299,23 +298,27 @@ static void vultures_display_nhmap(struct window * win, vultures_event *result, 
 
 void vultures_display_nhwindow(int winid, BOOLEAN_P blocking)
 {
-	window * win = vultures_get_window(winid);
-	menu_item * menu_list;    /* Dummy pointer for displaying NHW_MENU windows */
+	nhwindow *win = vultures_get_nhwindow(winid);
+	menu_item *menu_list;    /* Dummy pointer for displaying NHW_MENU windows */
 	vultures_event result = {-1,-1,0};
 
 	if (!win)
 		return;
 
-	switch(win->get_nh_type()) {
+	switch(win->type) {
 		case NHW_TEXT:
-			if (win->get_wintype() == V_WINTYPE_ENDING) {
+			if (win->ending_type > 0) {
 				int response;
 
-				win->need_redraw = 1;
-				win->visible = 1;
+				win->impl = new endingwin(ROOTWIN, win->items, win->ending_type);
+				win->impl->need_redraw = 1;
+				win->impl->visible = 1;
 
 				/* need to run the eventloop manually */
-				vultures_event_dispatcher(&response, V_RESPOND_INT, win);
+				vultures_event_dispatcher(&response, V_RESPOND_INT, win->impl);
+				
+				delete win->impl;
+				win->impl = NULL;
 
 				vultures_fade_out(0.5);
 				return;
@@ -323,39 +326,38 @@ void vultures_display_nhwindow(int winid, BOOLEAN_P blocking)
 			/* else fall through */
 
 		case NHW_MENU:
-			win->need_redraw = 1;
-			win->visible = 1;
+			/* note that win->impl is NULL for menu windows! */
 			vultures_end_menu(winid, NULL);
 			vultures_select_menu(winid, PICK_NONE, &menu_list);
 			break;
 
 		case NHW_MAP:
-			vultures_display_nhmap(win, &result, blocking);
+			vultures_display_nhmap(win->impl, &result, blocking);
 			break;
 
 		case NHW_STATUS:
 			/* status is always visible, so we consider this a request for redraw */
-			win->visible = 1;
-			win->need_redraw = 1;
+			win->impl->visible = 1;
+			win->impl->need_redraw = 1;
 			break;
 
 		case NHW_MESSAGE:
-			win->need_redraw = 1;
+			win->impl->need_redraw = 1;
 			/* we need to actually draw here so that we get output even when the
 			* message window isn't on the current drawing loop */
-			win->draw_windows();
+			win->impl->draw_windows();
 			vultures_refresh_window_region();
 			break;
 
 		default:
-			win->need_redraw = 1;
+			win->impl->need_redraw = 1;
 	}
 }
 
 
 void vultures_destroy_nhwindow(int winid)
 {
-	window * win = vultures_get_window(winid);
+	nhwindow *win = vultures_get_nhwindow(winid);
 
 	if (winid == WIN_MAP) {
 		vultures_fade_out(0.2);
@@ -363,7 +365,7 @@ void vultures_destroy_nhwindow(int winid)
 	}
 
 	else if (win && winid == WIN_STATUS)
-		win->visible = 0;
+		win->impl->visible = 0;
 
 	delete win;
 }
@@ -371,21 +373,16 @@ void vultures_destroy_nhwindow(int winid)
 
 void vultures_start_menu(int winid)
 {
-	window *win = vultures_get_window(winid);
-	menuwin *menu;
+	nhwindow *win = vultures_get_nhwindow(winid);
 
 	/* sanity checks */
 	if(!win)
 		return;
 
-	if (win->get_nh_type() != NHW_MENU)
+	if (win->type != NHW_MENU)
 		return;
 	
-	menu = static_cast<menuwin*>(win);
-	menu->reset();
-	
-	/* possibly convert an inventory type window back to a regular menu window */
-	(new menuwin())->replace_win(menu);
+	win->reset();
 }
 
 
@@ -394,92 +391,87 @@ void vultures_add_menu(int winid, int glyph, const ANY_P * identifier,
 					CHAR_P accelerator, CHAR_P groupacc, int attr,
 					const char *str, BOOLEAN_P preselected)
 {
-	menuwin *menu = static_cast<menuwin*>(vultures_get_window(winid));
-	if (!menu)
+	nhwindow *win = vultures_get_nhwindow(winid);
+	if (!win)
 		return;
 	
-    bool may_convert = ((winid == WIN_INVEN && !vultures_opts.use_standard_inventory) ||
-                        (winid != WIN_INVEN && !vultures_opts.use_standard_object_menus));
-
-	/* convert a menu window to an object window */
-	if (glyph_is_object(glyph) && menu->get_wintype() != V_WINTYPE_OBJWIN && may_convert)
-		menu = (new inventory())->replace_win(menu);
+	if (glyph_is_object(glyph))
+		win->has_objects = true;
 	
-	menu->add_menuitem(str, !!preselected, identifier->a_void, accelerator, glyph);
+	win->add_menuitem(str, !!preselected, identifier->a_void, accelerator, glyph);
 }
 
 
 /* finalize a menu window and add the title and accelerators */
 void vultures_end_menu(int winid, const char *prompt)
 {
-	window * win = vultures_get_window(winid);
-
+	nhwindow *win = vultures_get_nhwindow(winid);
 	if(!win)
 		return;
 
 	/* we (ab)use the prompt as the window title */
 	if (prompt)
-		win->set_caption(prompt);
-
-	/* assign accelerators to menuitems, if necessary */
-	static_cast<menuwin*>(win)->assign_accelerators();
+		win->caption = prompt;
 }
 
 
 
 int vultures_select_menu(int winid, int how, menu_item **menu_list)
 {
+	nhwindow *nhwin;
 	menuwin *win;
-	window *win_elem;
 	int response, n_selected;
-	vultures_event * queued_event;
+	vultures_event *queued_event;
+	
+    bool objwin_ok = ((winid == WIN_INVEN && !vultures_opts.use_standard_inventory) ||
+                      (winid != WIN_INVEN && !vultures_opts.use_standard_object_menus));
 
-	win = static_cast<menuwin*>(vultures_get_window(winid));
-
-	if(!win)
+	nhwin = vultures_get_nhwindow(winid);
+	if(!nhwin)
 		return -1;
 
-	win->set_selection_type(how);
+
+	/* assign accelerators to menuitems, if necessary */
 	*menu_list = NULL; /* realloc blows up if this contains a random memory location */
 
-	if (how != PICK_NONE) {
-		/* check for an autoresponse to this menu */
-		if ((queued_event = vultures_eventstack_get()) &&
-            queued_event->rtype == V_RESPOND_ANY) {
-			win_elem = win->find_accel((char)queued_event->num);
-			if (win_elem) {
+	/* check for an autoresponse to this menu */
+	if (how != PICK_NONE && (queued_event = vultures_eventstack_get()) &&
+		queued_event->rtype == V_RESPOND_ANY) {
+		for (nhwindow::item_iterator iter = nhwin->items.begin();
+		     iter != nhwin->items.end(); ++iter) {
+			if (iter->accelerator == (char)queued_event->num) {
 				*menu_list = (menu_item *)malloc(sizeof(menu_item));
-				(*menu_list)[0].item.a_void = win_elem->get_menu_id();
-				(*menu_list)[0].count = -1; 
-				return 1;
+				(*menu_list)[0].item.a_void = (void*)iter->identifier;
+				(*menu_list)[0].count = -1;
+				return -1;
 			}
 		}
-	} else
-		win->content_is_text = true;
+	}
 
-	if (win->get_wintype() != V_WINTYPE_OBJWIN) {
-		if ( /* TODO FIXME win->content_is_text || */ how == PICK_NONE )
+	if (objwin_ok && nhwin->has_objects) {
+		win = new inventory(ROOTWIN, nhwin->items, how, nhwin->id);
+	}else {
+		win = new menuwin(ROOTWIN, nhwin->items, how);
+		if (how == PICK_NONE )
 			new button(win, "Continue", V_MENU_ACCEPT, 0);
-		else
-		{
+		else {
 			new button(win, "Accept", V_MENU_ACCEPT, 0);
 			new button(win, "Cancel", V_MENU_CANCEL, 0);
 		}
 	}
 
+	win->caption = nhwin->caption;
 	win->visible = 1;
 	win->need_redraw = 1;
 	win->layout();
 
 	vultures_event_dispatcher(&response, V_RESPOND_INT, win);
 
-	/* don't destroy the window here, nethack will either call destroy_nhwindow on it
-	* or re-use it and call start_menu. However we do need to get it off the screen */
-	win->hide();
-
 	/* nothing selected, because the window was canceled or no selection was requested */
-	if (response == V_MENU_CANCEL || how == PICK_NONE)
+	if (response == V_MENU_CANCEL || how == PICK_NONE) {
+		delete win;
 		return -1;
+	}
 
 	n_selected = 0;
 	
@@ -491,6 +483,7 @@ int vultures_select_menu(int winid, int how, menu_item **menu_list)
 			(*menu_list)[n_selected-1].count = (*iter).count;
 	}
 
+	delete win;
 	return n_selected;
 }
 
@@ -532,7 +525,7 @@ void vultures_raw_print_bold(const char *str)
 
 void vultures_putstr(int winid, int attr, const char *str)
 {
-	struct window * win;
+	nhwindow *win;
 
 	if (!str)
 		return;
@@ -543,18 +536,17 @@ void vultures_putstr(int winid, int attr, const char *str)
 		return;
 	}
 
-	win = vultures_get_window(winid);
+	win = vultures_get_nhwindow(winid);
 
 	/*
 	* For windows of type NHW_MESSAGE, both the messages
 	* and their send time are stored.
 	*/
-	switch (win->get_nh_type()) {
+	switch (win->type) {
 		case NHW_MESSAGE:
 			/* If "what's this" is active,skip the help messages
 			* associated with NetHack's lookat command. */
-			if (vultures_suppress_helpmsg)
-			{
+			if (vultures_suppress_helpmsg) {
 				/* Skip help line [Please move the cursor to an unknown object.] */
 				if (strncmp(str, "Please move", 11) == 0) return;
 				/* Skip help line [(For instructions type a ?)] */
@@ -578,17 +570,16 @@ void vultures_putstr(int winid, int attr, const char *str)
 			/* Redisplay message window */
 			vultures_display_nhwindow(winid, FALSE);
 			break;
-			break;
 
 		case NHW_TEXT:
 		case NHW_MENU:
 			/* Add the new text line as a menu item */
-			static_cast<menuwin*>(win)->add_menuitem(str, false, NULL, '\0', 0);
+			win->add_menuitem(str, false, NULL, '\0', 0);
 			break;
 
 		case NHW_STATUS:
 			stwin->parse_statusline(str);
-			win->need_redraw = 1;
+			stwin->need_redraw = 1;
 			break;
 	}
 }
@@ -635,22 +626,20 @@ int vultures_nh_poskey(int *x, int *y, int *mod)
 
 char vultures_yn_function(const char *ques, const char *choices, CHAR_P defchoice)
 {
-	window *win, *root;
+	window *win;
 	char response;
-
-	root = vultures_get_window(0);
 
 	/* a save: yes/no or ring: right/left question  */
 	if (choices)
-		win = new choicedialog(root, ques, choices, 0);
+		win = new choicedialog(ROOTWIN, ques, choices, 0);
 
 	/* An "In what direction ..." question */
 	else if (strstr(ques, "n what direc"))
-		win = new dirdialog(root, ques);
+		win = new dirdialog(ROOTWIN, ques);
 
 	/* default case: What do you want to <foo>, where any key is a valid response */
 	else
-		win = new anykeydialog(root, ques);
+		win = new anykeydialog(ROOTWIN, ques);
 
 	/* get input for our window */
 	vultures_event_dispatcher(&response, V_RESPOND_CHARACTER, win);
@@ -677,12 +666,12 @@ void vultures_getlin(const char *ques, char *input)
 
 void vultures_outrip(int winid, int how)
 {
-	window * win = vultures_get_window(winid);
+	nhwindow *win = vultures_get_nhwindow(winid);
 
 	if (!win)
 		return;
 
-	(new endingwin(how))->replace_win(static_cast<menuwin*>(win));
+	win->ending_type = how;
 }
 
 
@@ -799,14 +788,14 @@ void vultures_display_file(const char *fname, BOOLEAN_P complain)
 
 int vultures_doprev_message(void)
 {
-	struct window * messages;
+	nhwindow *messages;
 
 	int pos = msgwin->getshown();
 	msgwin->setshown(pos+1);
 
-	messages = vultures_get_window(WIN_MESSAGE);
-	messages->need_redraw = 1;
-	messages->draw_windows();
+	messages = vultures_get_nhwindow(WIN_MESSAGE);
+	messages->impl->need_redraw = 1;
+	messages->impl->draw_windows();
 	vultures_refresh_window_region();
 
 	return 0;
