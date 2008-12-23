@@ -1,14 +1,15 @@
 /* Copyright (c) Daniel Thaler, 2008                              */
 /* NetHack may be freely redistributed.  See license for details. */
 
-#include <cstdlib>
-#include <cstring>
 #include "nhwindow.h"
 #include "window.h"
 
-static nhwindow **vultures_nhwindows = NULL;
+#include <vector>
+using std::vector;
+
+static vector<nhwindow*> vultures_nhwindows(8);
 int windowcount = 0;
-int windowcount_max = 0;
+int windowcount_max = 8;
 
 nhwindow* vultures_get_nhwindow(int winid)
 {
@@ -21,11 +22,9 @@ nhwindow::nhwindow(int type)
 	id = 0;
 	
 	/* if necessary make space in the vultures_windows array */
-	if (windowcount == windowcount_max)
-	{
-		vultures_nhwindows = (nhwindow**)realloc(vultures_nhwindows, (windowcount_max + 16) * sizeof(nhwindow*));
-		memset(&vultures_nhwindows[windowcount_max], 0, 16 * sizeof(nhwindow*));
-		windowcount_max += 16;
+	if (windowcount == windowcount_max) {
+		vultures_nhwindows.resize(windowcount_max + 8, NULL);
+		windowcount_max += 8;
 
 		/* no need to search through the first windowcount_cur ids, they're definitely taken */
 		id = windowcount;
@@ -55,8 +54,7 @@ nhwindow::~nhwindow()
 	
 	/* clean up after the last window is gone */
 	if (windowcount == 0) {
-		free(vultures_nhwindows);
-		vultures_nhwindows = NULL;
+		vultures_nhwindows.clear();
 		windowcount_max = 0;
 	}
 }
