@@ -319,7 +319,8 @@ eventresult window::event_handler(window *target, void *result, SDL_Event *event
 			        event->button.y, event->button.button, event->button.state);
 
 		case SDL_KEYDOWN:
-			return handle_keydown_event(target, result, event->key.keysym);
+			return handle_keydown_event(target, result, event->key.keysym.sym,
+			                  event->key.keysym.mod, event->key.keysym.unicode);
 
 		case SDL_VIDEORESIZE:
 			return handle_resize_event(target, result, event->resize.w, event->resize.h);
@@ -353,7 +354,7 @@ eventresult window::handle_mousebuttonup_event(window* target, void* result,
 }
 
 
-eventresult window::handle_keydown_event(window* target, void* result, SDL_keysym keysym)
+eventresult window::handle_keydown_event(window* target, void* result, int sym, int mod, int unicode)
 {
 	return V_EVENT_UNHANDLED;
 }

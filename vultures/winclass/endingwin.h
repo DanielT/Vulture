@@ -24,7 +24,7 @@ public:
 	virtual bool draw();
 	virtual eventresult handle_mousebuttonup_event(window* target, void* result,
 	                                       int mouse_x, int mouse_y, int button, int state);
-	virtual eventresult handle_keydown_event(window* target, void* result, SDL_keysym keysym);
+	virtual eventresult handle_keydown_event(window* target, void* result, int sym, int mod, int unicode);
 
 private:
 	int ending_type;

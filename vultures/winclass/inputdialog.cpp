@@ -69,11 +69,12 @@ eventresult inputdialog::handle_mousemotion_event(window* target, void* result, 
 }
 
 
-eventresult inputdialog::handle_keydown_event(window* target, void* result, SDL_keysym keysym)
+eventresult inputdialog::handle_keydown_event(window* target, void* result, 
+                                              int sym, int mod, int unicode)
 {
 	string &text = first_child->caption;
 	
-	switch (keysym.sym) {
+	switch (sym) {
 		case SDLK_KP_ENTER:
 		case SDLK_RETURN:
 			/* done! */
@@ -95,8 +96,8 @@ eventresult inputdialog::handle_keydown_event(window* target, void* result, SDL_
 		default:
 			/* add characters up to a maximum of 256 */
 			if (text.length() < 256 && vultures_text_length(V_FONT_MENU, text) <
-				(first_child->w - 10) && isprint(keysym.unicode)) {
-				text.push_back((char)keysym.unicode);
+				(first_child->w - 10) && isprint(unicode)) {
+				text.push_back((char)unicode);
 				first_child->need_redraw = 1;
 			}
 			/* only the child needs to be redrawn */

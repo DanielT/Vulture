@@ -300,7 +300,7 @@ void vultures_display_nhwindow(int winid, BOOLEAN_P blocking)
 {
 	nhwindow *win = vultures_get_nhwindow(winid);
 	menu_item *menu_list;    /* Dummy pointer for displaying NHW_MENU windows */
-	vultures_event result = {-1,-1,0};
+	vultures_event result = {-1, -1, 0, 0};
 
 	if (!win)
 		return;
@@ -602,14 +602,14 @@ int vultures_nhgetch(void)
 
 	vultures_wait_key(&event);
 
-	return vultures_translate_key(vultures_convertkey_sdl2nh(&event.key.keysym));
+	return vultures_translate_key(vultures_make_nh_key(event.key.keysym.sym, event.key.keysym.mod, event.key.keysym.unicode));
 }
 
 
 
 int vultures_nh_poskey(int *x, int *y, int *mod)
 {
-	vultures_event result = {-1,-1,0};
+	vultures_event result = {-1, -1, 0, 0};
 
 	/* Play ambient music or sound effects */
 	vultures_play_ambient_sound(0);

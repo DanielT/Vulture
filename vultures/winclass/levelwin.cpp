@@ -601,12 +601,12 @@ eventresult levelwin::handle_mousebuttonup_event(window* target, void* result,
 }
 
 
-eventresult levelwin::handle_keydown_event(window* target, void* result, SDL_keysym keysym)
+eventresult levelwin::handle_keydown_event(window* target, void* result, int sym, int mod, int unicode)
 {
 	int translated_key, key;
 	int macronum, i;
 
-	switch (keysym.sym) {
+	switch (sym) {
 		case SDLK_TAB:
 			map::toggle();
 			return V_EVENT_HANDLED_REDRAW;
@@ -618,7 +618,7 @@ eventresult levelwin::handle_keydown_event(window* target, void* result, SDL_key
 		case SDLK_F4:
 		case SDLK_F5:
 		case SDLK_F6:
-			macronum = keysym.sym - SDLK_F1;
+			macronum = sym - SDLK_F1;
 			if (!vultures_opts.macro[macronum][0])
 				break;
 
@@ -629,14 +629,14 @@ eventresult levelwin::handle_keydown_event(window* target, void* result, SDL_key
 
 		/* CTRL+SHIFT+o opens the interface options */
 		case SDLK_o:
-			if (!(keysym.mod & KMOD_SHIFT) || !(keysym.mod & KMOD_CTRL))
+			if (!(mod & KMOD_SHIFT) || !(mod & KMOD_CTRL))
 				break;
 			vultures_iface_opts();
 			return V_EVENT_HANDLED_REDRAW;
 
 		/* CTRL+SHIFT+p shows the message log */
 		case SDLK_p:
-			if (!(keysym.mod & KMOD_SHIFT) || !(keysym.mod & KMOD_CTRL))
+			if (!(mod & KMOD_SHIFT) || !(mod & KMOD_CTRL))
 				break;
 			msgwin->view_all();
 			return V_EVENT_HANDLED_REDRAW;
@@ -646,7 +646,7 @@ eventresult levelwin::handle_keydown_event(window* target, void* result, SDL_key
 	}
 
 	/* all other keys are converted and passed to the core */
-	key = vultures_convertkey_sdl2nh(&keysym);
+	key = vultures_make_nh_key(sym, mod, unicode);
 
 	if (!key)
 		return V_EVENT_HANDLED_NOREDRAW;

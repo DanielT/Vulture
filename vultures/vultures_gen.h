@@ -56,6 +56,7 @@ extern int vultures_chdir_to_datadir(char * argv0);
 
 extern int vultures_translate_key(int cmd_key);
 extern int vultures_numpad_to_hjkl(int cmd_key, int shift);
+extern int vultures_make_nh_key(int sym, int mod, int ch);
 
 
 #endif

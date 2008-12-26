@@ -101,14 +101,15 @@ eventresult dirdialog::handle_mousebuttonup_event(window* target, void* result,
 }
 
 
-eventresult dirdialog::handle_keydown_event(window* target, void* result, SDL_keysym keysym)
+eventresult dirdialog::handle_keydown_event(window* target, void* result,
+                                            int sym, int mod, int unicode)
 {
 	char choice = 0;
 
-	if (keysym.sym == SDLK_ESCAPE)
+	if (sym == SDLK_ESCAPE)
 		choice = -1;
 	else
-		choice = vultures_convertkey_sdl2nh(&keysym);
+		choice = vultures_make_nh_key(sym, mod, unicode);
 
 	if (!mapwin)
 		choice = vultures_translate_key(choice);

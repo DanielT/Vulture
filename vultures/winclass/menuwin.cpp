@@ -117,7 +117,7 @@ eventresult menuwin::handle_mousebuttonup_event(window* target, void* result,
 }
 
 
-eventresult menuwin::handle_keydown_event(window* target, void* result, SDL_keysym keysym)
+eventresult menuwin::handle_keydown_event(window* target, void* result, int sym, int mod, int unicode)
 {
 	optionwin *opt;
 	window *winelem;
@@ -125,8 +125,8 @@ eventresult menuwin::handle_keydown_event(window* target, void* result, SDL_keys
 	char * str_to_find;
 
 	need_redraw = 1;
-	key = keysym.unicode;
-	switch (keysym.sym)
+	key = unicode;
+	switch (sym)
 	{
 		case SDLK_RETURN:
 		case SDLK_KP_ENTER:

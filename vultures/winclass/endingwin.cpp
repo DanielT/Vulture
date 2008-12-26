@@ -103,7 +103,7 @@ eventresult endingwin::handle_mousebuttonup_event(window* target, void* result,
 }
 
 
-eventresult endingwin::handle_keydown_event(window* target, void* result, SDL_keysym keysym)
+eventresult endingwin::handle_keydown_event(window* target, void* result, int sym, int mod, int unicode)
 {
 	return V_EVENT_HANDLED_FINAL;
 }

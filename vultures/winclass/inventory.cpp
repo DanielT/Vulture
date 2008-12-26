@@ -357,14 +357,14 @@ eventresult inventory::handle_mousebuttonup_event(window* target, void* result,
 }
 
 
-eventresult inventory::handle_keydown_event(window* target, void* result, SDL_keysym keysym)
+eventresult inventory::handle_keydown_event(window* target, void* result, int sym, int mod, int unicode)
 {
 	window *winelem;
 	int itemcount, colno, key;
 
 	need_redraw = 1;
-	key = keysym.unicode;
-	switch (keysym.sym) {
+	key = unicode;
+	switch (sym) {
 		case SDLK_RETURN:
 		case SDLK_KP_ENTER:
 			*(int*)result = V_MENU_ACCEPT;

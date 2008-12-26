@@ -29,7 +29,6 @@ extern void vultures_refresh(void);
 extern void vultures_refresh_region(int, int, int, int);
 
 /* Miscellaneous */
-extern int vultures_convertkey_sdl2nh(SDL_keysym *keysym);
 extern void vultures_set_screensize(void);
 
 

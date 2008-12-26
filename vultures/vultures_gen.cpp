@@ -283,3 +283,77 @@ int vultures_numpad_to_hjkl(int cmd_key, int shift)
 	return translation_table[cmd_key -'0' - 1] | (!shift << 5);
 }
 
+
+
+/* convert sdl keycodes so that nethack can use them */
+int vultures_make_nh_key(int sym, int mod, int ch)
+{
+	int shift = mod & KMOD_SHIFT;
+	int ctrl = mod & KMOD_CTRL;
+	int alt = mod & KMOD_ALT;
+
+	if (ch=='!')
+		return 0; // damn shell thing :/
+
+	/* ctrl+z (suspend) should be disabled in vultures_conf.h, but let'e be sure... */
+	if ((ctrl && ch == 'z') || (ch == ('z' - ('a' - 1))))
+		return 0; // lets just ignore this nasty lil bugger...
+
+	if (ctrl && ch >= 'a' && ch < 'z')
+		return ch - ('a' - 1);
+
+	if (alt && ch >= 'a' && ch <= 'z')
+		return (0x80 | (ch));
+
+	if (ch >= 'a' && ch <= 'z') {
+		if (shift)
+			ch += 'A'-'a';
+		return ch;
+	}
+
+	switch (sym) {
+		case SDLK_BACKSPACE: return '\b';
+		case SDLK_KP_ENTER:
+		case SDLK_RETURN: return '\n';
+		case SDLK_ESCAPE: return '\033';
+		case SDLK_TAB: return '\t';
+
+		/* make sure the keypad and arrow keys work no matter which options are set */
+		case SDLK_KP8:
+		case SDLK_UP:
+			return vultures_numpad_to_hjkl('8', shift);
+
+		case SDLK_KP2:
+		case SDLK_DOWN:
+			return vultures_numpad_to_hjkl('2', shift);
+
+		case SDLK_KP4:
+		case SDLK_LEFT:
+			return vultures_numpad_to_hjkl('4', shift);
+
+		case SDLK_KP6:
+		case SDLK_RIGHT:
+			return vultures_numpad_to_hjkl('6', shift);
+
+		case SDLK_KP7:
+			return vultures_numpad_to_hjkl('7', shift);
+
+		case SDLK_KP9:
+			return vultures_numpad_to_hjkl('9', shift);
+
+		case SDLK_KP1:
+			return vultures_numpad_to_hjkl('1', shift);
+
+		case SDLK_KP3:
+			return vultures_numpad_to_hjkl('3', shift);
+
+		/* prevent "enumeration value ... not handled in switch" warning */
+		default: break; 
+	}
+
+	/* high-bit characters are not useable */
+	if ((ch > 0) && (ch < 0x7e))
+		return ch;
+
+	return 0;
+}

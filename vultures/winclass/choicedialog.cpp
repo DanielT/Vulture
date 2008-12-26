@@ -88,9 +88,9 @@ eventresult choicedialog::handle_mousebuttonup_event(window* target, void* resul
 }
 
 
-eventresult choicedialog::handle_keydown_event(window* target, void* result, SDL_keysym keysym)
+eventresult choicedialog::handle_keydown_event(window* target, void* result, int sym, int mod, int unicode)
 {
-	switch (keysym.sym) {
+	switch (sym) {
 		case SDLK_KP_ENTER:
 		case SDLK_RETURN:
 			target = defbutton;
@@ -112,8 +112,8 @@ eventresult choicedialog::handle_keydown_event(window* target, void* result, SDL
 			break;
 
 		default:
-			if (find_accel((char)keysym.unicode)) {
-				*(char*)result = (char)keysym.unicode;
+			if (find_accel((char)unicode)) {
+				*(char*)result = (char)unicode;
 				return V_EVENT_HANDLED_FINAL;
 			}
 	}

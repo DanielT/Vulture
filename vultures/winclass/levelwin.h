@@ -31,7 +31,7 @@ public:
 	                                             int mouse_x, int mouse_y, int state);
 	virtual eventresult handle_mousebuttonup_event(window* target, void* result,
 	                                       int mouse_x, int mouse_y, int button, int state);
-	virtual eventresult handle_keydown_event(window* target, void* result, SDL_keysym keysym);
+	virtual eventresult handle_keydown_event(window* target, void* result, int sym, int mod, int unicode);
 	virtual eventresult handle_resize_event(window* target, void* result, int res_w, int res_h);
 	
 	point mouse_to_map(point mouse);

@@ -5,6 +5,7 @@
 #include "vultures_sdl.h"
 #include "vultures_mou.h"
 #include "vultures_txt.h"
+#include "vultures_gen.h"
 #include "vultures_tile.h"
 
 
@@ -49,13 +50,14 @@ eventresult anykeydialog::handle_mousebuttonup_event(window* target, void* resul
 }
 
 
-eventresult anykeydialog::handle_keydown_event(window* target, void* result, SDL_keysym keysym)
+eventresult anykeydialog::handle_keydown_event(window* target, void* result,
+                                               int sym, int mod, int unicode)
 {
 	char key;
 	int i;
 	char buffer[32];
 
-	switch (keysym.sym) {
+	switch (sym) {
 		case SDLK_ESCAPE:
 			*(char*)result = '\033';
 			return V_EVENT_HANDLED_FINAL;
@@ -72,13 +74,13 @@ eventresult anykeydialog::handle_keydown_event(window* target, void* result, SDL
 
 		default:
 			/* was it an accelerator for one of the buttons? */
-			if (keysym.unicode && find_accel(keysym.unicode)) {
-				*(char*)result = keysym.unicode;
+			if (unicode && find_accel(unicode)) {
+				*(char*)result = unicode;
 				return V_EVENT_HANDLED_FINAL;
 			}
 
 			/* it isn't, so lets translate it (Stage 1: function keys etc) */
-			key = vultures_convertkey_sdl2nh(&keysym);
+			key = vultures_make_nh_key(sym, mod, unicode);
 
 			if (!key)
 				/* no translation, it must have been a function key */
