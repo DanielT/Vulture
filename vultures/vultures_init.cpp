@@ -24,6 +24,8 @@ using std::string;
 #include "vultures_tile.h"
 #include "vultures_opt.h"
 
+#include "winclass/introwin.h"
+
 #include "date.h" /* this is in <variant>/include it's needed for VERSION_ID */
 
 static void vultures_show_intro(string introscript_name);
@@ -117,15 +119,14 @@ static void vultures_show_intro(string introscript_name)
 {
 	FILE *f;
 	char buffer[1024];
-	unsigned int nr_scenes, i, j, pos_x, pos_y, lineno;
+	unsigned int nr_scenes, lineno;
 	string line;
 	vector<string> imagenames;
 	vector< vector<string> > subtitles;
-	int lineheight = vultures_get_lineheight(V_FONT_INTRO);
-	SDL_Event event;
-	SDL_Surface *image = NULL;
-	SDL_Rect textrect = {0, 0, vultures_screen->w, 0};
+	introwin *iw;
+    int dummy;
 
+	/* read intro script */
 	f = fopen(introscript_name.c_str(), "rb");
 	if (f == NULL) {
 		vultures_write_log(V_LOG_NOTE, NULL, 0, "intro script %s not found\n",
@@ -176,58 +177,10 @@ static void vultures_show_intro(string introscript_name)
 		return;
 	}
 	
-	/*
-	* Show each scene of the introduction in four steps:
-	* - Erase previous image, load and fade in new image
-	* - Print the subtitles
-	* - Wait out a set delay
-	* - Erase subtitles, Fade out 
-	*/
-	vultures_set_draw_region(0, 0, vultures_screen->w - 1, vultures_screen->h - 1);
-	for (i = 0; i < nr_scenes; i++) {
-		/* If we are starting, or the previous image was different, fade in the current image */
-		if (i == 0 || imagenames[i-1] != imagenames[i]) {
-			if (image)
-				SDL_FreeSurface(image);
-			
-			image = vultures_load_graphic(imagenames[i]);
-			SDL_FillRect(vultures_screen, NULL, CLR32_BLACK);
-			if (image != NULL)
-				vultures_put_img((vultures_screen->w - image->w) / 2,
-				                 (vultures_screen->h - image->h) / 6, image);
-			vultures_fade_in(0.2);
-		}
-		
-		/* Show subtitles */
-		for (j = 0; j < subtitles[i].size() && image != NULL; j++) {
-			pos_x = (vultures_screen->w - vultures_text_length(V_FONT_INTRO, subtitles[i][j])) / 2;
-			pos_y = 2 * (vultures_screen->h - image->h) / 6 + image->h + lineheight * j;
-			vultures_put_text(V_FONT_INTRO, subtitles[i][j], vultures_screen,
-			                  pos_x, pos_y, V_COLOR_INTRO_TEXT);
-		}
-		vultures_refresh();
-
-		/* Wait until scene is over or player pressed a key */
-		vultures_wait_input(&event, 5000);
-		if (event.type != SDL_TIMEREVENT)
-			i = nr_scenes;
-
-		/* Erase subtitles */
-		if (image) {
-			textrect.y = (vultures_screen->h - image->h) / 6 + image->h;
-			textrect.h = vultures_screen->h - textrect.y;
-			SDL_FillRect(vultures_screen, &textrect, CLR32_BLACK);
-			vultures_refresh();
-		}
-	
-		/* If we are at the end, or the next image is different, fade out the current image */
-		if ((i >= nr_scenes - 1) || imagenames[i] != imagenames[i+1])
-			vultures_fade_out(0.2);
-	}
-	
-	/* Clean up */
-	if (image)
-		SDL_FreeSurface(image);
+	/* display intro */
+	iw = new introwin(NULL, imagenames, subtitles);
+	vultures_event_dispatcher(&dummy, V_RESPOND_INT, iw);
+	delete iw;
 }
 
 
