@@ -41,7 +41,9 @@ extern struct vultures_optstruct vultures_opts;
 
 
 extern void vultures_read_options(void);
+extern "C" {
 extern int vultures_iface_opts(void);
+}
 extern void vultures_write_userconfig(void);
 
 #endif
