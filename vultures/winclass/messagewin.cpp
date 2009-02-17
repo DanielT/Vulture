@@ -199,14 +199,15 @@ int messagewin::getshown()
 /* retrieve a message from the message buffer, offset messages before the current one */
 string messagewin::get_message(int offset, int *age)
 {
-	if (offset >= V_MESSAGEBUF_SIZE)
-		return NULL;
+	if (offset < V_MESSAGEBUF_SIZE)
+	{
+    int msg_id = (message_cur - offset + V_MESSAGEBUF_SIZE) % V_MESSAGEBUF_SIZE;
 
-	int msg_id = (message_cur - offset + V_MESSAGEBUF_SIZE) % V_MESSAGEBUF_SIZE;
-
-	if (message_ages[msg_id]) {
-		*age = message_ages[msg_id];
-		return message_buf[msg_id];
+    if (message_ages[msg_id])
+    {
+      *age = message_ages[msg_id];
+      return message_buf[msg_id];
+    }
 	}
 
 	*age = 0;
