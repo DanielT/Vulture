@@ -492,7 +492,7 @@ int vultures_monster_to_tile(int mon_id, int x, int y)
 #ifdef REINCARNATION
 	/* transform all moster tiles to the "uppercase letter" replacements */
 	if (Is_rogue_level(&u.uz)) {
-		char sym = monsyms[mons[mon_id].mlet];
+		char sym = monsyms[static_cast<int>(mons[mon_id].mlet)];
 		if ((mon_id >= 0) && (mon_id < NUMMONS) &&
 		    !(x == u.ux && y == u.uy) && isalpha(sym))
 			return V_MISC_ROGUE_LEVEL_A + (toupper(sym) - 'A');
