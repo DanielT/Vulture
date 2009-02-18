@@ -640,6 +640,8 @@ void mapdata::set_map_data(glyph_type type, int x, int y, int newval, bool force
 			/* raw glyph values are only stored, not printed */
 			map_glyph[y][x] = newval;
 			return;
+    default:
+      throw "Invalid type for map data";
 	}
 
 	if ((*data_array)[y][x] != newval || force) {
