@@ -3,8 +3,10 @@
 
 #include <errno.h>
 
-#include "hack.h"
-#include "epri.h"
+extern "C" {
+	#include "hack.h"
+	#include "epri.h"
+}
 
 #if !defined WIN32
 	#include <sys/mman.h>
