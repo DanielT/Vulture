@@ -328,7 +328,7 @@ eventresult scrollwin::scrollto(int scrolltype, int scrolldir)
 
 eventresult scrollwin::mousescroll(scrollbar *target, int is_drag)
 {
-	int scrollind_y, scrollpos;
+	int scrollind_y;
 	point mouse;
 	int scrollarea_top = target->abs_y + vultures_winelem.scrollbutton_up->h;
 	int scrollarea_bottom = target->abs_y + target->h - vultures_winelem.scrollbutton_down->h;
@@ -351,22 +351,14 @@ eventresult scrollwin::mousescroll(scrollbar *target, int is_drag)
 
 	/* click on the scrollbar above the indicator */
 	else if (mouse.y <= scrollarea_top + scrollind_y) {
-		scrollpos = ((mouse.y - scrollarea_top) * 8192.0 / 
-						(scrollarea_bottom - scrollarea_top - 
-						vultures_winelem.scroll_indicator->h));
-		target->scrollpos = scrollpos;
-		this->need_redraw = 1;
-		return V_EVENT_HANDLED_REDRAW;
+		if (!is_drag)
+			return scrollto(V_SCROLL_PAGE_REL, -1);
 	}
 
 	/*click on the scrollbar below the indicator */
 	else if (mouse.y >= scrollarea_top + vultures_winelem.scroll_indicator->h + scrollind_y) {
-		scrollpos = ((mouse.y - scrollarea_top - vultures_winelem.scroll_indicator->h) * 
-						8192.0 / (scrollarea_bottom - scrollarea_top -
-						vultures_winelem.scroll_indicator->h));
-		target->scrollpos = scrollpos;
-		this->need_redraw = 1;
-		return V_EVENT_HANDLED_REDRAW;
+		if (!is_drag)
+			return scrollto(V_SCROLL_PAGE_REL, 1);
 	}
 
 	return V_EVENT_HANDLED_NOREDRAW;
