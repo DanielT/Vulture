@@ -5,7 +5,6 @@
 
 #include "vultures_types.h"
 #include <string>
-using std::string;
 
 class window;
 
@@ -84,7 +83,7 @@ typedef struct event {
 /* exported functions */
 
 /* high-level window functions */
-extern void vultures_messagebox(string message);
+extern void vultures_messagebox(std::string message);
 extern int vultures_get_input(int x, int y, const char *ques, char *input);
 
 

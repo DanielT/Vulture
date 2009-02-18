@@ -8,7 +8,7 @@
 #include "objheaderwin.h"
 
 
-objheaderwin::objheaderwin(window *parent, string cap) : window(parent)
+objheaderwin::objheaderwin(window *parent, std::string cap) : window(parent)
 {
 	v_type = V_WINTYPE_OBJITEMHEADER;
 	w = V_LISTITEM_WIDTH;

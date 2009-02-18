@@ -8,7 +8,7 @@
 #include "button.h"
 
 
-button::button(window *p, string caption, int menuid, char accel) : window(p)
+button::button(window *p, std::string caption, int menuid, char accel) : window(p)
 {
 	v_type = V_WINTYPE_BUTTON;
 

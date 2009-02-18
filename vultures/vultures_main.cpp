@@ -558,7 +558,7 @@ void vultures_putstr(int winid, int attr, const char *str)
 			if (strncmp(str, "Done.", 5) == 0)
 				return;
 
-			msgwin->add_message(string(str));
+			msgwin->add_message(std::string(str));
 
 			/* Play any event sounds associated with this message */
 			vultures_play_event_sound(str);

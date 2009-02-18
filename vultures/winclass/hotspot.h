@@ -9,7 +9,7 @@
 class hotspot : public window
 {
 public:
-	hotspot(window *parent, int x, int y, int w, int h, int menu_id, string name);
+	hotspot(window *parent, int x, int y, int w, int h, int menu_id, std::string name);
 	virtual bool draw();
 };
 

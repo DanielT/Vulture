@@ -4,9 +4,8 @@
 #include "window.h"
 
 #include <vector>
-using std::vector;
 
-static vector<nhwindow*> vultures_nhwindows(8);
+static std::vector<nhwindow*> vultures_nhwindows(8);
 int windowcount = 0;
 int windowcount_max = 8;
 
@@ -59,7 +58,7 @@ nhwindow::~nhwindow()
 }
 
 
-void nhwindow::add_menuitem(string str, bool preselected, void *identifier, char accelerator, int glyph)
+void nhwindow::add_menuitem(std::string str, bool preselected, void *identifier, char accelerator, int glyph)
 {
 	items.push_back(menuitem(str, preselected, identifier, accelerator, glyph));
 }

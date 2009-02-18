@@ -107,18 +107,18 @@ eventresult statuswin::handle_resize_event(window* target, void* result, int res
 }
 
 
-void statuswin::parse_statusline(string str)
+void statuswin::parse_statusline(std::string str)
 {
 	int hp, hpmax, nconds;
 	long val;
-	string txt;
+  std::string txt;
 	int cap = near_capacity();
 	size_t pos;
 	char buf[64];
 
 	/* get player name + title */
 	pos = str.find("St:", 0);
-	if (pos != string::npos)
+	if (pos != std::string::npos)
 		tokenarray[0][0]->caption = str.substr(0, pos);
 
 	/* strength needs special treatment */
@@ -273,7 +273,7 @@ void statuswin::parse_statusline(string str)
 }
 
 
-void statuswin::add_cond(string str, int warnno, int color)
+void statuswin::add_cond(std::string str, int warnno, int color)
 {
 	static const point pos[9] = {{4,1}, {4,2}, {4,3}, {4,4}, {3,4}, {2,4}, {1,4}, {0,4}, {4,0}};
 	if (warnno >= 9)

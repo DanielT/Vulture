@@ -149,7 +149,7 @@ void map::toggle(void)
 
 eventresult map::handle_timer_event(window* target, void* result, int time)
 {
-	string ttext;
+  std::string ttext;
 	point mappos = get_mouse_mappos();
 	
 	if (time < HOVERTIMEOUT)

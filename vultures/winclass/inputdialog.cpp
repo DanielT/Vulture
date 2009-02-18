@@ -9,7 +9,7 @@
 #include "textwin.h"
 
 
-inputdialog::inputdialog(window *p, string ques, int size,
+inputdialog::inputdialog(window *p, std::string ques, int size,
                          int force_x, int force_y) : mainwin(p)
 {
 	caption = ques;
@@ -71,7 +71,7 @@ eventresult inputdialog::handle_mousemotion_event(window* target, void* result, 
 eventresult inputdialog::handle_keydown_event(window* target, void* result, 
                                               int sym, int mod, int unicode)
 {
-	string &text = first_child->caption;
+  std::string &text = first_child->caption;
 	
 	switch (sym) {
 		case SDLK_KP_ENTER:

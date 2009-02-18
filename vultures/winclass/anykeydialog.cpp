@@ -13,7 +13,7 @@
 #include "button.h"
 
 
-anykeydialog::anykeydialog(window *p, string ques) : mainwin(p)
+anykeydialog::anykeydialog(window *p, std::string ques) : mainwin(p)
 {
 	caption = ques;
 	count = 0;

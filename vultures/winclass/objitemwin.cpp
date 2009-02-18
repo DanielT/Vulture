@@ -11,7 +11,7 @@
 #include "objitemwin.h"
 
 
-objitemwin::objitemwin(window *p, menuitem* mi, string cap, char accel,
+objitemwin::objitemwin(window *p, menuitem* mi, std::string cap, char accel,
                        int glyph, bool selected, bool multiselect) : 
                        optionwin(p, mi, cap, accel, glyph, selected, multiselect)
 {

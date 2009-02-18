@@ -17,12 +17,12 @@
 /* Remove/undefine this to have all log messages end up in stderr */
 #define V_LOG_FILENAME "vultures_log.txt"
 
-static string vultures_game_path;
+static std::string vultures_game_path;
 
 #ifdef WIN32
-static const string slash = "\\";
+static const std::string slash = "\\";
 #else
-static const string slash = "/";
+static const std::string slash = "/";
 #endif
 
 
@@ -48,12 +48,12 @@ char *vultures_basename(const char *filename)
 }
 
 
-string& trim(string &str)
+std::string& trim(std::string &str)
 {
 	size_t start = str.find_first_not_of(" \t\r\n\0");
 	size_t end =  str.find_last_not_of(" \t\r\n\0");
 	
-	if (start == string::npos)
+	if (start == std::string::npos)
 		start = 0;
 	
 	str = str.substr(start, end - start + 1);
@@ -62,9 +62,9 @@ string& trim(string &str)
 
 
 /* appends the name of a data file to it's subdir name to get a name relative to the executable */
-string vultures_make_filename(string subdir1, string subdir2, string name)
+std::string vultures_make_filename(std::string subdir1, std::string subdir2, std::string name)
 {
-	string filename = vultures_game_path;
+  std::string filename = vultures_game_path;
 	
 	if (!subdir1.empty())
 		filename.append(slash).append(subdir1);

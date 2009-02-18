@@ -9,9 +9,9 @@
 class textwin : public window
 {
 public:
-	textwin(window *p, string cap);
+	textwin(window *p, std::string cap);
 	textwin(window *p, int destsize);
-	virtual void set_caption(string str);
+	virtual void set_caption(std::string str);
 	virtual bool draw();
 	
 	int textcolor;

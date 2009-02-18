@@ -16,7 +16,7 @@ class toolbar : public window
 {
 public:
 	toolbar(window *p, int menuid, bool visible, int x, int y,
-	        string imgfile, const tb_buttondesc buttons[5]);
+	        std::string imgfile, const tb_buttondesc buttons[5]);
 	virtual ~toolbar();
 	virtual bool draw();
 	virtual eventresult handle_timer_event(window* target, void* result, int time);

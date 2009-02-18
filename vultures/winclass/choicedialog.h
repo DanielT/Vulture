@@ -10,7 +10,7 @@ class button;
 class choicedialog : public mainwin
 {
 public:
-	choicedialog(window *p, string question, const char *choices, char defchoice);
+	choicedialog(window *p, std::string question, const char *choices, char defchoice);
 	virtual bool draw();
 	virtual eventresult handle_mousemotion_event(window* target, void* result, 
 	                                             int xrel, int yrel, int state);

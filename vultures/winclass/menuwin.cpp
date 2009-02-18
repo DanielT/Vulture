@@ -328,7 +328,7 @@ void menuwin::layout()
 	int scrollheight = 0;
 	int buttonheight = vultures_get_lineheight(V_FONT_MENU) + 15;
 	int menu_height_limit;
-	string newcaption;
+  std::string newcaption;
 	
 	// remove existing scrollarea
 	if (scrollarea)

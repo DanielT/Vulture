@@ -10,7 +10,6 @@
 #define V_LISTITEM_WIDTH  300
 #define V_LISTITEM_HEIGHT  52
 
-using std::string;
 
 typedef enum {
 	V_WINTYPE_NONE, /* only the root window has this type */
@@ -92,7 +91,7 @@ public:
 	virtual ~window();
 
 	virtual bool draw() = 0;
-	virtual void set_caption(string str);
+	virtual void set_caption(std::string str);
 	virtual void hide();
 	virtual void layout() {};
 	virtual void update_background(void);
@@ -127,7 +126,7 @@ public:
 
 // protected:
 	window_type v_type;
-	string caption;
+  std::string caption;
 	char accelerator;
 
 

@@ -475,7 +475,7 @@ bool levelwin::draw()
 
 eventresult levelwin::handle_timer_event(window* target, void* result, int time)
 {
-	string ttext;
+  std::string ttext;
 	point mappos, mouse;
 
 	mouse = vultures_get_mouse_pos();

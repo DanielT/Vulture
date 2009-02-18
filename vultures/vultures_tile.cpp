@@ -275,7 +275,7 @@ void vultures_put_tilehighlight(int x, int y, int tile_id)
 
 int vultures_load_gametiles(void)
 {
-	string filename;
+  std::string filename;
 	FILE * fp;
 
 	/* load gametiles.bin */

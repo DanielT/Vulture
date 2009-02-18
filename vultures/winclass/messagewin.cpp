@@ -61,7 +61,7 @@ bool messagewin::draw()
 {
 	int age, textlen, num_messages;
 	int pos_x, pos_y, i;
-	string message;
+  std::string message;
 	int refresh_x, refresh_y, refresh_h, refresh_w;
 	int time_cur = moves;
 
@@ -175,7 +175,7 @@ eventresult messagewin::handle_mousebuttonup_event(window* target, void* result,
 }
 
 
-void messagewin::add_message(string str)
+void messagewin::add_message(std::string str)
 {
 	message_cur = message_top = (message_top + 1) % V_MESSAGEBUF_SIZE;
 	message_buf[message_top] = str;
@@ -196,7 +196,7 @@ int messagewin::getshown()
 
 
 /* retrieve a message from the message buffer, offset messages before the current one */
-string messagewin::get_message(int offset, int *age)
+std::string messagewin::get_message(int offset, int *age)
 {
 	if (offset < V_MESSAGEBUF_SIZE)
 	{
@@ -217,7 +217,7 @@ string messagewin::get_message(int offset, int *age)
 void messagewin::view_all(void)
 {
 	int offset, time, winid;
-	string message;
+  std::string message;
 	char menuline[256];
 
 	winid = vultures_create_nhwindow(NHW_MENU);

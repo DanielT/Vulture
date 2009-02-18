@@ -11,8 +11,6 @@ extern "C" {
 
 #include <string>
 #include <vector>
-using std::string;
-using std::vector;
 
 typedef enum {
 	MAP_MON,
@@ -73,7 +71,7 @@ public:
 	void clear();
 	void set_glyph(int x, int y, int glyph);
 	int get_glyph(glyph_type type, int x, int y) const;
-	string map_square_description(point target, int include_seen);
+  std::string map_square_description(point target, int include_seen);
 	eventresult handle_click(void* result, int button, point mappos);
 	map_action get_map_action(point mappos);
 	map_action get_map_contextmenu(point mappos);
@@ -102,7 +100,7 @@ private:
 	int vultures_tilemap_engulf[NUMMONS];
 	int vultures_tilemap_misc[MAXPCHARS];
 
-	vector<mapviewer*> views;
+  std::vector<mapviewer*> views;
 };
 
 extern mapdata *map_data;

@@ -6,7 +6,6 @@
 #include <string>
 #include "SDL_ttf.h"
 
-using std::string;
 
 /* Font indices. Currently, there're only 2 fonts (large & small). */
 #define V_FONT_SMALL 0
@@ -34,17 +33,17 @@ using std::string;
 extern int vultures_load_font (int font_id, const char *ttf_filename,
                                int fontindex, int pointsize);
 
-extern int vultures_put_text (int font_id, string str, SDL_Surface *dest,
+extern int vultures_put_text (int font_id, std::string str, SDL_Surface *dest,
                               int x, int y, Uint32 color);
 
-extern int vultures_put_text_shadow (int font_id, string str, SDL_Surface *dest,
+extern int vultures_put_text_shadow (int font_id, std::string str, SDL_Surface *dest,
                                      int x, int y, Uint32 textcolor, Uint32 shadowcolor);
-extern void vultures_put_text_multiline(int font_id, string str, SDL_Surface *dest,
+extern void vultures_put_text_multiline(int font_id, std::string str, SDL_Surface *dest,
                                        int x, int y, Uint32 color, Uint32 shadowcolor, int maxlen);
 
-extern int vultures_text_length (int font_id, string str);
+extern int vultures_text_length (int font_id, std::string str);
 
-extern int vultures_text_height (int font_id, string str);
+extern int vultures_text_height (int font_id, std::string str);
 
 extern int vultures_get_lineheight(int font_id);
 

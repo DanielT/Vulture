@@ -9,7 +9,7 @@
 #include "vultures_txt.h"
 
 
-optionwin::optionwin(window *p, menuitem* mi, string cap, char accel, 
+optionwin::optionwin(window *p, menuitem* mi, std::string cap, char accel, 
                      int glyph, bool selected, bool is_checkbox) : window(p),
                      glyph(glyph), item(mi), is_checkbox(is_checkbox)
 {

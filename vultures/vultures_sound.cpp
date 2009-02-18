@@ -16,7 +16,7 @@
 /*******************************************************************/
 
 
-vector<vultures_event_sound> vultures_event_sounds;
+std::vector<vultures_event_sound> vultures_event_sounds;
 int vultures_n_background_songs;
 int vultures_sound_inited = 0;
 
@@ -33,9 +33,9 @@ Mix_Music *vultures_current_music=NULL;
 
 /*******************************************************************/
 
-static void vultures_play_song(string midifilename);
-static void vultures_play_cd_track(string cdtrackname);
-static void vultures_play_sound(string wavefilename);
+static void vultures_play_song(std::string midifilename);
+static void vultures_play_cd_track(std::string cdtrackname);
+static void vultures_play_sound(std::string wavefilename);
 static int vultures_is_music_playing(void);
 
 /*******************************************************************/
@@ -134,7 +134,7 @@ void vultures_play_ambient_sound(int force_play)
 }
 
 
-static void vultures_play_song(string midifilename)
+static void vultures_play_song(std::string midifilename)
 {
 	if (!vultures_opts.play_music)
 		return;
@@ -147,7 +147,7 @@ static void vultures_play_song(string midifilename)
 }
 
 
-static void vultures_play_cd_track(string cdtrackname)
+static void vultures_play_cd_track(std::string cdtrackname)
 {
 	int nTrack;
 
@@ -174,7 +174,7 @@ static void vultures_play_cd_track(string cdtrackname)
 }
 
 
-static void vultures_play_sound(string wavefilename)
+static void vultures_play_sound(std::string wavefilename)
 {
 	int i;
 	int sound_exists;

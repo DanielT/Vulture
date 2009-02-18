@@ -198,7 +198,7 @@ void vultures_read_sound_config(FILE * fp)
 
 
 
-string vultures_get_userdir(void)
+std::string vultures_get_userdir(void)
 {
 	char userdir[512];
 	
@@ -217,9 +217,9 @@ string vultures_get_userdir(void)
 void vultures_read_options(void)
 {
 	FILE *fp;
-	string filename;
+  std::string filename;
 	int i;
-	string userdir = vultures_get_userdir();
+  std::string userdir = vultures_get_userdir();
 	
 	/* initialize these, in case they aren't set in the config file */
 	vultures_opts.wall_opacity = 1.0;
@@ -303,7 +303,7 @@ void vultures_read_options(void)
 
 void vultures_write_userconfig(void)
 {
-	string filename, dir;
+  std::string filename, dir;
 	struct stat statbuf;
 	mode_t oldmask;
 	int i;

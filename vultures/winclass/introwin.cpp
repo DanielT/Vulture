@@ -12,7 +12,7 @@
 #include "vultures_mou.h"
 #include "vultures_tile.h"
 
-introwin::introwin(window *p, vector<string> &imagenames, vector< vector<string> > &subtitles) :
+introwin::introwin(window *p, std::vector<std::string> &imagenames, std::vector< std::vector<std::string> > &subtitles) :
                    window(p), imagenames(imagenames), subtitles(subtitles)
 {
 	current_scene = -1;

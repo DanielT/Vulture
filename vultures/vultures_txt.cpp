@@ -53,12 +53,12 @@ int vultures_load_font (int font_id, const char * ttf_filename, int fontindex, i
 }
 
 
-int vultures_put_text (int font_id, string str, SDL_Surface *dest, int x, int y, Uint32 color)
+int vultures_put_text (int font_id, std::string str, SDL_Surface *dest, int x, int y, Uint32 color)
 {
 	SDL_Surface *textsurface;
 	SDL_Color fontcolor;
 	SDL_Rect dstrect;
-	string cleaned_str;
+  std::string cleaned_str;
 	unsigned int i;
 
 	if (font_id >= VULTURES_MAX_FONTS || (!vultures_fonts[font_id].fontptr) || str.empty())
@@ -95,7 +95,7 @@ int vultures_put_text (int font_id, string str, SDL_Surface *dest, int x, int y,
 
 
 
-int vultures_put_text_shadow (int font_id, string str, SDL_Surface *dest,
+int vultures_put_text_shadow (int font_id, std::string str, SDL_Surface *dest,
 							int x, int y, Uint32 textcolor, Uint32 shadowcolor)
 {
 	/* draw the shadow first */
@@ -106,10 +106,10 @@ int vultures_put_text_shadow (int font_id, string str, SDL_Surface *dest,
 
 
 /* draw text over multiple lines if its length exceeds maxlen */
-void vultures_put_text_multiline(int font_id, string str, SDL_Surface *dest,
+void vultures_put_text_multiline(int font_id, std::string str, SDL_Surface *dest,
 								int x, int y, Uint32 color, Uint32 shadowcolor, int maxlen)
 {
-	string str_copy;
+  std::string str_copy;
 	int lastfit, txtlen, lineno, text_height;
 	size_t endpos, startpos;
 
@@ -123,7 +123,7 @@ void vultures_put_text_multiline(int font_id, string str, SDL_Surface *dest,
 		lastfit = 1;
 
 		startpos = startpos + endpos;
-		str_copy = str.substr(startpos, string::npos);
+		str_copy = str.substr(startpos, std::string::npos);
 		endpos = str_copy.length() - 1;
 
 		txtlen = vultures_text_length(font_id, str_copy);
@@ -137,7 +137,7 @@ void vultures_put_text_multiline(int font_id, string str, SDL_Surface *dest,
 			endpos = str_copy.find_last_of(" \t\n");
 
 			/* prevent infinite loops if a long word doesn't fit */
-			if (endpos == string::npos) {
+			if (endpos == std::string::npos) {
 				endpos = str_copy.length() - 1;
 				lastfit = 1;
 				break;
@@ -155,7 +155,7 @@ void vultures_put_text_multiline(int font_id, string str, SDL_Surface *dest,
 
 
 
-int vultures_text_length (int font_id, string str)
+int vultures_text_length (int font_id, std::string str)
 {
 	int width = 0;
 
@@ -169,7 +169,7 @@ int vultures_text_length (int font_id, string str)
 
 
 
-int vultures_text_height (int font_id, string str)
+int vultures_text_height (int font_id, std::string str)
 {
 	int height = 0;
 

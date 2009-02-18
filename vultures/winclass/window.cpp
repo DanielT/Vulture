@@ -84,7 +84,7 @@ window::~window()
 }
 
 
-void window::set_caption(string str)
+void window::set_caption(std::string str)
 {
 	caption = str;
 }

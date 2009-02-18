@@ -16,7 +16,7 @@
 #include "levelwin.h"
 
 
-dirdialog::dirdialog(window *p, string ques) : mainwin(p)
+dirdialog::dirdialog(window *p, std::string ques) : mainwin(p)
 {
 	int arrows_w, arrows_h;
 

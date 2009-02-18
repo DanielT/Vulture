@@ -3,8 +3,6 @@
 #include <vector>
 #include <string>
 
-using std::vector;
-using std::string;
 
 #include <errno.h>
 
@@ -26,7 +24,7 @@ using std::string;
 
 #include "date.h" /* this is in <variant>/include it's needed for VERSION_ID */
 
-static void vultures_show_intro(string introscript_name);
+static void vultures_show_intro(std::string introscript_name);
 
 
 /*----------------------------
@@ -71,7 +69,7 @@ void vultures_show_logo_screen(void)
 void vultures_player_selection(void)
 {
 	SDL_Surface *logo;
-	string filename;
+  std::string filename;
 
 	SDL_FillRect(vultures_screen, NULL, CLR32_BLACK);
 	logo = vultures_load_graphic(V_FILENAME_CHARACTER_GENERATION);
@@ -113,14 +111,14 @@ void vultures_askname(void)
 }
 
 
-static void vultures_show_intro(string introscript_name)
+static void vultures_show_intro(std::string introscript_name)
 {
 	FILE *f;
 	char buffer[1024];
 	unsigned int nr_scenes, lineno;
-	string line;
-	vector<string> imagenames;
-	vector< vector<string> > subtitles;
+  std::string line;
+  std::vector<std::string> imagenames;
+  std::vector< std::vector<std::string> > subtitles;
 	introwin *iw;
     int dummy;
 
@@ -138,7 +136,7 @@ static void vultures_show_intro(string introscript_name)
 		
 		if (buffer[0] == '%') {
 			/* new scene */
-			line = string(&buffer[1]);
+			line = std::string(&buffer[1]);
 			trim(line);
 			
 			if (line.length() == 0)
@@ -162,7 +160,7 @@ static void vultures_show_intro(string introscript_name)
 				continue;
 			}
 			
-			line = string(buffer);
+			line = std::string(buffer);
 			trim(line);
 			
 			subtitles[nr_scenes - 1].push_back(line);
@@ -223,7 +221,7 @@ int vultures_init_graphics(void)
 {
 	int all_ok = TRUE;
 	SDL_Surface *image;
-	string fullname;
+  std::string fullname;
 	int font_loaded = 0;
 
 

@@ -6,26 +6,24 @@
 #include "menuitem.h"
 #include <string>
 #include <list>
-using std::string;
-using std::list;
 
 class window;
 
 class nhwindow {
 public:
-	typedef list<menuitem>::iterator item_iterator;
+	typedef std::list<menuitem>::iterator item_iterator;
 
 	nhwindow(int type);
 	~nhwindow();
-	void add_menuitem(string str, bool preselected, void *identifier, char accelerator, int glyph);
+	void add_menuitem(std::string str, bool preselected, void *identifier, char accelerator, int glyph);
 	void reset();
 	
 	int id;
 	int type;
 	int ending_type;
-	string caption;
+  std::string caption;
 	window *impl;
-	list<menuitem> items;
+  std::list<menuitem> items;
 	bool has_objects;
 };
 

@@ -153,11 +153,11 @@ loads the given file into a buffer and calls vultures_load_surface
 subdir:  [in] subdirectory in which to look
 name:    [in] filename of the image
 ---------------------------------------*/
-SDL_Surface *vultures_load_graphic(string name)
+SDL_Surface *vultures_load_graphic(std::string name)
 {
 	SDL_Surface *image;
 	int fsize;
-	string filename;
+  std::string filename;
 	FILE * fp;
 	char * srcbuf;
 
@@ -192,7 +192,7 @@ SDL_Surface *vultures_load_graphic(string name)
 /*--------------------------------------------
 Save the contents of the surface to a png file
 --------------------------------------------*/
-void vultures_save_png(SDL_Surface *surface, string filename, int with_alpha)
+void vultures_save_png(SDL_Surface *surface, std::string filename, int with_alpha)
 {
 	png_structp png_ptr;
 	png_infop info_ptr;
@@ -249,9 +249,9 @@ back buffer) into a BMP file.
 ---------------------------------------*/
 void vultures_save_screenshot(void)
 {
-	string filename;
+  std::string filename;
 	int i;
-	string msg;
+  std::string msg;
 	char namebuf[20];
 
 	for (i = 0; i < 1000; i++)
@@ -261,7 +261,7 @@ void vultures_save_screenshot(void)
 		if (access(filename.c_str(), R_OK) != 0)
 		{
 			vultures_save_png(vultures_screen, filename, 0);
-			msg = string("Screenshot saved as ") + namebuf + ".";
+			msg = std::string("Screenshot saved as ") + namebuf + ".";
 
 			if (vultures_windows_inited)
 				vultures_messagebox(msg);

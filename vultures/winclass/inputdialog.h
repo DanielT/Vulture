@@ -10,7 +10,7 @@ class textwin;
 class inputdialog : public mainwin
 {
 public:
-	inputdialog(window *p, string caption, int size,
+	inputdialog(window *p, std::string caption, int size,
 	            int force_x, int force_y);
 	virtual bool draw();
 	virtual eventresult handle_mousemotion_event(window* target, void* result, 

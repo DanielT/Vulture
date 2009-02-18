@@ -9,7 +9,7 @@
 class objheaderwin : public window
 {
 public:
-	objheaderwin(window *parent, string cap);
+	objheaderwin(window *parent, std::string cap);
 	virtual bool draw();
 };
 

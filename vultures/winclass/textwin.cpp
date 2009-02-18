@@ -8,7 +8,7 @@
 #include "textwin.h"
 
 
-textwin::textwin(window *p, string cap) : window(p)
+textwin::textwin(window *p, std::string cap) : window(p)
 {
 	v_type = V_WINTYPE_TEXT;
 	caption = cap;
@@ -56,7 +56,7 @@ bool textwin::draw()
 }
 
 
-void textwin::set_caption(string str)
+void textwin::set_caption(std::string str)
 {
 	window::set_caption(str);
 	w = vultures_text_length(V_FONT_MENU, caption) + 10;

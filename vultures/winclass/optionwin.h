@@ -12,7 +12,7 @@ class menuitem;
 class optionwin : public window
 {
 public:
-	optionwin(window *p, menuitem* mi, string cap,
+	optionwin(window *p, menuitem* mi, std::string cap,
 	          char accel, int glyph, bool selected, bool is_checkbox);
 	virtual bool draw();
 	

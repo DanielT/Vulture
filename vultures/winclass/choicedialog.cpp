@@ -11,7 +11,7 @@
 #include "button.h"
 
 
-choicedialog::choicedialog(window *p, string question, const char *choices, char defchoice) : mainwin(p)
+choicedialog::choicedialog(window *p, std::string question, const char *choices, char defchoice) : mainwin(p)
 {
 	button *btn;
 	int nbuttons = 0, longdesc = 0;

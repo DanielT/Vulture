@@ -22,16 +22,16 @@ public:
 	virtual eventresult handle_mousebuttonup_event(window* target, void* result,
 	                                       int mouse_x, int mouse_y, int button, int state);
 	
-	void add_message(string msg);
+	void add_message(std::string msg);
 	void setshown(int first);
 	int getshown(void);
-	string get_message(int offset, int *age);
+  std::string get_message(int offset, int *age);
 	void view_all(void);
 
 private:
 	SDL_Surface *bg_img;
 	int message_ages[V_MESSAGEBUF_SIZE];
-	string message_buf[V_MESSAGEBUF_SIZE];
+  std::string message_buf[V_MESSAGEBUF_SIZE];
 	int message_cur, message_top;
 };
 

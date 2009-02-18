@@ -10,7 +10,7 @@ class hotspot;
 class dirdialog : public mainwin
 {
 public:
-	dirdialog(window *p, string ques);
+	dirdialog(window *p, std::string ques);
 	virtual bool draw();
 	virtual eventresult handle_mousemotion_event(window* target, void* result, 
 	                                             int xrel, int yrel, int state);

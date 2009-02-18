@@ -11,22 +11,21 @@ extern "C" {
 #include "vultures_opt.h"
 
 #include <vector>
-using std::vector;
 
 class tmp_tile {
 public:
 	tmp_tile() : filename(""), ptr_type(0), ptr_num(0), hs_x(0), hs_y(0) {};
 
-	string filename;
+  std::string filename;
 	int ptr_type, ptr_num;
 	int hs_x, hs_y;
 };
 
 
-vector< vector<string> > tilenames(NUM_TILETYPES);
+std::vector< std::vector<std::string> > tilenames(NUM_TILETYPES);
 int tmp_wallstyles[V_WALL_STYLE_MAX][8];
 int tmp_flooredges[V_FLOOR_EDGE_MAX][12];
-vector<tmp_tile> tmp_gametiles[NUM_TILETYPES];
+std::vector<tmp_tile> tmp_gametiles[NUM_TILETYPES];
 tmp_tile deftiles[NUM_TILETYPES];
 
 /* things that get used by vultures later */
@@ -38,16 +37,16 @@ int vultures_typecount[NUM_TILETYPES];
 int glassgems[CLR_MAX];
 
 /* names for the various tiletypes */
-static vector<string> typenames(NUM_TILETYPES);
-static vector<string> floorstylenames(V_FLOOR_STYLE_MAX);
-static vector<string> wallstylenames(V_WALL_STYLE_MAX);
-static vector<string> edgestylenames(V_FLOOR_EDGE_MAX);
+static std::vector<std::string> typenames(NUM_TILETYPES);
+static std::vector<std::string> floorstylenames(V_FLOOR_STYLE_MAX);
+static std::vector<std::string> wallstylenames(V_WALL_STYLE_MAX);
+static std::vector<std::string> edgestylenames(V_FLOOR_EDGE_MAX);
 
 /* the enum for the misc tiles starts at MISCTILEOFFSET so that the enumerated
 * names can be used diretly in the code; here however this means we need to
 * subtract MISCTILEOFFSET everywhere to get usable array indices */
-static vector<string> miscnames(MISCTILECOUNT);
-static vector<string> cursornames(V_CURSOR_MAX);
+static std::vector<std::string> miscnames(MISCTILECOUNT);
+static std::vector<std::string> cursornames(V_CURSOR_MAX);
 
 
 static void init_typenames();

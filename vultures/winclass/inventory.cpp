@@ -39,7 +39,7 @@ inventory::inventory(window *p, std::list<menuitem> &menuitems, int how, int id)
 
 bool inventory::draw()
 {
-	string stored_caption;
+  std::string stored_caption;
 	char label[32];
 	int ix ,iy, iw, ih, labelwidth, buttonspace;
 

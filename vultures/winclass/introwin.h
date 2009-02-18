@@ -7,15 +7,13 @@
 
 #include <string>
 #include <vector>
-using std::string;
-using std::vector;
 
 #define SCENETIME 5000
 
 class introwin : public window
 {
 public:
-	introwin(window *p, vector<string> &imagenames, vector< vector<string> > &subtitles);
+	introwin(window *p, std::vector<std::string> &imagenames, std::vector< std::vector<std::string> > &subtitles);
 	virtual ~introwin();
 	virtual bool draw();
 	virtual eventresult handle_timer_event(window* target, void* result, int time);
@@ -32,8 +30,8 @@ private:
 	
 	int current_scene;
 	SDL_Surface *image;
-	vector<string> imagenames;
-	vector< vector<string> > subtitles;
+  std::vector<std::string> imagenames;
+  std::vector< std::vector<std::string> > subtitles;
 	bool image_changed;
 	int starttick;
 };

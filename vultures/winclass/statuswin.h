@@ -31,10 +31,10 @@ public:
 	virtual eventresult handle_mousebuttonup_event(window* target, void* result,
 	                                       int mouse_x, int mouse_y, int button, int state);
 	virtual eventresult handle_resize_event(window* target, void* result, int res_w, int res_h);
-	void parse_statusline(string str);
+	void parse_statusline(std::string str);
 
 private:
-	void add_cond(string str, int warnno, int color);
+	void add_cond(std::string str, int warnno, int color);
 	SDL_Surface *statusbg;
 	textwin *tokenarray[5][5];
 };

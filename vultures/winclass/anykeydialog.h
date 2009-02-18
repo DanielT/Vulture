@@ -10,7 +10,7 @@ class textwin;
 class anykeydialog : public mainwin
 {
 public:
-	anykeydialog(window *p, string ques);
+	anykeydialog(window *p, std::string ques);
 	virtual bool draw();
 	virtual eventresult handle_mousemotion_event(window* target, void* result, 
 	                                             int xrel, int yrel, int state);

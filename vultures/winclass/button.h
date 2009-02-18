@@ -9,7 +9,7 @@
 class button : public window
 {
 public:
-	button(window *p, string caption, int menuid, char accel);
+	button(window *p, std::string caption, int menuid, char accel);
 	virtual ~button();
 	virtual bool draw();
 	virtual eventresult handle_mousebuttonup_event(window* target, void* result,

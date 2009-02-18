@@ -22,7 +22,7 @@ static struct {
 static struct {
 	point cur;
 	SDL_Surface *background, *tip;
-	string text;
+  std::string text;
 	int valid;
 	SDL_Rect refresh;
 } vultures_tooltip = {{0, 0}, NULL, NULL, "", 0, {0,0,0,0}};
@@ -257,7 +257,7 @@ void vultures_mouse_invalidate_tooltip(int force)
 
 
 
-void vultures_mouse_set_tooltip(string str)
+void vultures_mouse_set_tooltip(std::string str)
 {
 	int length, height;
 

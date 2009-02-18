@@ -80,7 +80,7 @@ int scrollwin::get_menuitem_width(window *item, int colwidths[8])
 {
 	int width, i, thiscol, btnwidth;
 	size_t prevpos, pos;
-	string coltxt;
+  std::string coltxt;
 	
 	/* if this is an option leave space for the checkbox in the first column */
 	btnwidth = 0;
@@ -88,7 +88,7 @@ int scrollwin::get_menuitem_width(window *item, int colwidths[8])
 		btnwidth = vultures_winelem.checkbox_off->w + 4;
 		
 	pos = item->caption.find_first_of('\t');
-	if (pos == string::npos)
+	if (pos == std::string::npos)
 		return vultures_text_length(V_FONT_MENU, item->caption) + btnwidth + 5;
 
 	width = prevpos = i = 0;
@@ -113,7 +113,7 @@ int scrollwin::get_menuitem_width(window *item, int colwidths[8])
 		prevpos = ++pos;
 		i++;
 		pos = item->caption.find_first_of('\t', prevpos);
-	} while (prevpos-1 != string::npos && i <= 7);
+	} while (prevpos-1 != std::string::npos && i <= 7);
 	
 	return width;
 }
@@ -125,7 +125,7 @@ void scrollwin::layout(void)
 	int i, elem_maxwidth, saved_scrollpos, height;
 	int colwidths[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 	int colstart[8] = {0, 0, 0, 0, 0, 0, 0, 0};
-	string txt, orig_caption;
+  std::string txt, orig_caption;
 	bool done = false;
 	elem_maxwidth = height = 0;
 	saved_scrollpos = scrollpos;
@@ -176,7 +176,7 @@ void scrollwin::layout(void)
 		done = false;
 		/* skip over elements without tab chars */
 		pos = prevpos = winelem->caption.find_first_of('\t');
-		if (pos == string::npos)
+		if (pos == std::string::npos)
 			continue;
 		
 		orig_caption = winelem->caption;
@@ -185,7 +185,7 @@ void scrollwin::layout(void)
 		i = 1;
 		do {
 			pos = orig_caption.find_first_of('\t', prevpos);
-			if (pos == string::npos)
+			if (pos == std::string::npos)
 				done = true;
 			txt = orig_caption.substr(prevpos, pos - prevpos);
 			trim(txt);

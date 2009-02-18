@@ -56,7 +56,7 @@ static int vultures_handle_event(struct window * topwin, struct window * win,
 /******************************
 * High-level window functions
 ******************************/
-void vultures_messagebox(string message)
+void vultures_messagebox(std::string message)
 {
     mainwin *win;
     int dummy;
