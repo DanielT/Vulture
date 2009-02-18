@@ -29,27 +29,10 @@ bool objitemwin::draw()
 {
 	char tmpstr[32];
 	int text_start_x, text_start_y, txt_height;
-	int tile_x, tile_y;
 	int x = abs_x;
 	int y = abs_y;
-	int tile = 0;
 	int weight = 0;
 	Uint32 textcolor;
-
-	if (obj) {
-		tile = vultures_object_to_tile(obj->otyp, -1, -1, obj);
-		weight = obj->owt;
-
-		tile_x = x + h/2;
-		tile_y = y + h * 3 / 4;
-
-		if (TILE_IS_OBJECT(tile))
-		{
-			tile = tile - OBJTILEOFFSET + ICOTILEOFFSET;
-			tile_x = x + 2;
-			tile_y = y + 2;
-		}
-	}
 
 	vultures_set_draw_region(x, y, x + w - 1, y + h - 1);
 
@@ -136,7 +119,25 @@ bool objitemwin::draw()
 		vultures_fill_rect(x + 2, y + 2, x + h - 3, y + h - 3, CLR32_CURSE_RED);
 
 	/* draw the object tile */
-	vultures_put_tile(tile_x, tile_y, tile);
+	if (obj) {
+    int tile_x, tile_y;
+    int tile = 0;
+
+		tile = vultures_object_to_tile(obj->otyp, -1, -1, obj);
+		weight = obj->owt;
+
+		tile_x = x + h/2;
+		tile_y = y + h * 3 / 4;
+
+		if (TILE_IS_OBJECT(tile))
+		{
+			tile = tile - OBJTILEOFFSET + ICOTILEOFFSET;
+			tile_x = x + 2;
+			tile_y = y + 2;
+		}
+
+    vultures_put_tile(tile_x, tile_y, tile);
+	}
 
 	/* draw the item letter on the top left corner of the object tile */
 	snprintf(tmpstr, 11, "%c", accelerator);
