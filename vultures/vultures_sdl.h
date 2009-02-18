@@ -1,4 +1,3 @@
-/* Copyright (c) Jaakko Peltonen, 2001				  */
 /* NetHack may be freely redistributed.  See license for details. */
 
 /*-------------------------------------------------------------------

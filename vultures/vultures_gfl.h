@@ -1,4 +1,3 @@
-/* Copyright (c) Daniel Thaler, 2006   */
 /* NetHack may be freely redistributed under the Nethack General Public License
  * See nethack/dat/license for details */
 

@@ -1,5 +1,4 @@
 /* NetHack may be freely redistributed.  See license for details. */
-/* Copyright (c)Daniel Thaler, 2006 */
 
 #ifndef _vultures_opt_h_
 #define _vultures_opt_h_

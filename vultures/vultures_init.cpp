@@ -1,6 +1,4 @@
 /* NetHack may be freely redistributed.  See license for details. */
-/* Copyright (c) Jaakko Peltonen, 2000				  */
-/* Copyright (c) Daniel Thaler, 2008                              */
 
 #include <vector>
 #include <string>

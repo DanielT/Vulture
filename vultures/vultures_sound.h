@@ -1,6 +1,4 @@
 /* NetHack may be freely redistributed.  See license for details. */
-/* Copyright (c) Jaakko Peltonen, 2000				  */
-/* Copyright (c) Daniel Thaler, 2006				  */
 
 #ifndef _vultures_sound_h_
 #define _vultures_sound_h_

@@ -1,4 +1,3 @@
-/* Copyright (c) Jaakko Peltonen, 2000				  */
 /* NetHack may be freely redistributed.  See license for details. */
 
 #ifndef _vultures_gen_h_

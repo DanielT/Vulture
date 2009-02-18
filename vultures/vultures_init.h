@@ -1,5 +1,4 @@
 /* NetHack may be freely redistributed.  See license for details. */
-/* Copyright (c) Jaakko Peltonen, 2000 */
 
 #ifndef _vultures_init_h_
 #define _vultures_init_h_
