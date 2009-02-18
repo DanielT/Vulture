@@ -20,6 +20,8 @@ extern const char *const enc_stat[];   /* defined in botl.c */
 #include "enhancebutton.h"
 #include "textwin.h"
 
+#include <sstream>
+
 statuswin *stwin;
 static const int status_xpos[5] = { 0, 60, 100, 180, 250};
 static Uint32 warn_colors[V_MAX_WARN];
@@ -262,8 +264,11 @@ void statuswin::parse_statusline(string str)
 
 #ifdef SHOW_WEIGHT
 	if (flags.showweight && !tokenarray[0][4]->caption[0])
-		sprintf(tokenarray[0][4]->caption, "Wt:%ld/%ld", (long)(inv_weight()+weight_cap()),
-			(long)weight_cap());
+  {
+    std::stringstream stream;
+    stream << "Wt:" << static_cast<long>((inv_weight()+weight_cap())) << "/" << static_cast<long>(weight_cap()) ;
+    tokenarray[0][4]->caption = stream.str();
+  }
 #endif
 
 }
