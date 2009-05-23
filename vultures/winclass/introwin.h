@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#define SCENETIME 5000
+#define MSEC_PER_CHAR 50
 
 class introwin : public window
 {
@@ -34,6 +34,7 @@ private:
   std::vector< std::vector<std::string> > subtitles;
 	bool image_changed;
 	int starttick;
+	unsigned int scenetime;
 };
 
 

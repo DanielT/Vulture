@@ -24,6 +24,7 @@ introwin::introwin(window *p, std::vector<std::string> &imagenames, std::vector<
 	image_changed = false;
 	starttick = 0;
 	need_redraw = true;
+	scenetime = 0;
 }
 
 
@@ -59,6 +60,7 @@ bool introwin::draw()
 			pos_y = 2 * img_y + image->h + lineheight * j;
 			vultures_put_text(V_FONT_INTRO, subtitles[current_scene][j], vultures_screen,
 								pos_x, pos_y, V_COLOR_INTRO_TEXT);
+			scenetime += subtitles[current_scene][j].length() * MSEC_PER_CHAR;
 		}
 	} else
 		SDL_FillRect(vultures_screen, NULL, CLR32_BLACK);
@@ -71,7 +73,7 @@ bool introwin::draw()
 eventresult introwin::handle_timer_event(window* target, void* result, int time)
 {
 	/* next scene? */
-	if (SDL_GetTicks() - starttick > SCENETIME)
+	if (SDL_GetTicks() - starttick > scenetime)
 		return next_scene();
 	return V_EVENT_HANDLED_NOREDRAW;
 }
@@ -84,7 +86,7 @@ eventresult introwin::handle_mousemotion_event(window* target, void* result, int
 	vultures_set_mcursor(V_TILE_NONE);
 	
 	/* next scene? */
-	if (SDL_GetTicks() - starttick > SCENETIME)
+	if (SDL_GetTicks() - starttick > scenetime)
 		return next_scene();
 	return V_EVENT_HANDLED_NOREDRAW;
 }
@@ -119,6 +121,7 @@ eventresult introwin::next_scene()
 	starttick = SDL_GetTicks();
 	
 	current_scene++;
+	scenetime = 0;
 	if (current_scene >= (int)imagenames.size())
 		return V_EVENT_HANDLED_FINAL;
 	
