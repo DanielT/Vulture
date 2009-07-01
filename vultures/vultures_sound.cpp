@@ -56,7 +56,7 @@ void vultures_init_sound(void)
 		return;
 	}
 
-	if (Mix_OpenAudio(44100, AUDIO_S16SYS, 2, 1024) < 0) {
+	if (Mix_OpenAudio(44100, AUDIO_S16SYS, 2, 4096) < 0) {
 		vultures_opts.play_effects = 0;
 		vultures_opts.play_music = 0;
 		vultures_sound_inited = 0;
