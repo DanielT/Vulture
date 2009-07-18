@@ -209,6 +209,7 @@ $(DISTDIR)/$(FULLNAME): $(DISTDIR)
 	git submodule update
 	git clone ./ $@
 	rm -rf $@/nethack
+	rm -rf $@/slashem
 	git clone ./nethack/ $@/nethack
 	git clone ./slashem/ $@/slashem
 	rm -rf $@/.git
