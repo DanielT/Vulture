@@ -210,9 +210,11 @@ $(DISTDIR)/$(FULLNAME): $(DISTDIR)
 	git clone ./ $@
 	rm -rf $@/nethack
 	git clone ./nethack/ $@/nethack
+	git clone ./slashem/ $@/slashem
 	rm -rf $@/.git
 	rm -rf $@/.gitmodules
 	rm -rf $@/nethack/.git
+	rm -rf $@/slashem/.git
 	echo "#define $(GAMEDEF)_PORT_VERSION \"$(VERSION)\"">$@/$(GAME)/$(GAME)version.h
 	ln -s ../../$(GAME) $@/nethack/win/$(GAME)
 	ln -s ../../$(GAME) $@/slashem/win/$(GAME)
