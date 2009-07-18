@@ -5,7 +5,8 @@
 # final gameplay. If you want to play vultures either check if
 # your distribution of unix has a port for it, or if you are
 # comfortable with system installation yourself then read and
-# follow the instructions of INSTALL_unix in the doc directory
+# follow the instructions of the README in the sys/unix directory
+# of NetHack and/or Slash'EM
 
 GAME = vultures
 GAMEDEF = VULTURES
@@ -132,12 +133,12 @@ $(DISTDIR)/$(FULLNAME)-full.tar.gz: $(DISTDIR)/$(FULLNAME)
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-full.tar.gz > $(FULLNAME)-full.tar.gz.sha256
 
 $(DISTDIR)/$(FULLNAME)-$(NETHACK).tar.gz: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); tar zcvfh $(FULLNAME)-$(NETHACK).tar.gz $(FULLNAME)/nethack $(FULLNAME)/doc
+	cd $(DISTDIR); tar zcvfh $(FULLNAME)-$(NETHACK).tar.gz $(FULLNAME)/nethack
 	cd $(DISTDIR); $(MD5) $(FULLNAME)-$(NETHACK).tar.gz > $(FULLNAME)-$(NETHACK).tar.gz.md5
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-$(NETHACK).tar.gz > $(FULLNAME)-$(NETHACK).tar.gz.sha256
 
 $(DISTDIR)/$(FULLNAME)-$(SLASHEM).tar.gz: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); tar zcvfh $(FULLNAME)-$(SLASHEM).tar.gz $(FULLNAME)/slashem $(FULLNAME)/doc
+	cd $(DISTDIR); tar zcvfh $(FULLNAME)-$(SLASHEM).tar.gz $(FULLNAME)/slashem
 	cd $(DISTDIR); $(MD5) $(FULLNAME)-$(SLASHEM).tar.gz > $(FULLNAME)-$(SLASHEM).tar.gz.md5
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-$(SLASHEM).tar.gz > $(FULLNAME)-$(SLASHEM).tar.gz.sha256
 
@@ -147,12 +148,12 @@ $(DISTDIR)/$(FULLNAME)-full.tar.bz2: $(DISTDIR)/$(FULLNAME)
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-full.tar.bz2 > $(FULLNAME)-full.tar.bz2.sha256
 
 $(DISTDIR)/$(FULLNAME)-$(NETHACK).tar.bz2: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); tar jcvfh $(FULLNAME)-$(NETHACK).tar.bz2 $(FULLNAME)/nethack $(FULLNAME)/doc
+	cd $(DISTDIR); tar jcvfh $(FULLNAME)-$(NETHACK).tar.bz2 $(FULLNAME)/nethack
 	cd $(DISTDIR); $(MD5) $(FULLNAME)-$(NETHACK).tar.bz2 > $(FULLNAME)-$(NETHACK).tar.bz2.md5
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-$(NETHACK).tar.bz2 > $(FULLNAME)-$(NETHACK).tar.bz2.sha256
 
 $(DISTDIR)/$(FULLNAME)-$(SLASHEM).tar.bz2: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); tar jcvfh $(FULLNAME)-$(SLASHEM).tar.bz2 $(FULLNAME)/slashem $(FULLNAME)/doc
+	cd $(DISTDIR); tar jcvfh $(FULLNAME)-$(SLASHEM).tar.bz2 $(FULLNAME)/slashem
 	cd $(DISTDIR); $(MD5) $(FULLNAME)-$(SLASHEM).tar.bz2 > $(FULLNAME)-$(SLASHEM).tar.bz2.md5
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-$(SLASHEM).tar.bz2 > $(FULLNAME)-$(SLASHEM).tar.bz2.sha256
 
@@ -162,12 +163,12 @@ $(DISTDIR)/$(FULLNAME)-full.zip: $(DISTDIR)/$(FULLNAME)
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-full.zip > $(FULLNAME)-full.zip.sha256
 
 $(DISTDIR)/$(FULLNAME)-$(NETHACK).zip: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); zip -r -9 $(FULLNAME)-$(NETHACK).zip $(FULLNAME)/nethack $(FULLNAME)/doc
+	cd $(DISTDIR); zip -r -9 $(FULLNAME)-$(NETHACK).zip $(FULLNAME)/nethack
 	cd $(DISTDIR); $(MD5) $(FULLNAME)-$(NETHACK).zip > $(FULLNAME)-$(NETHACK).zip.md5
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-$(NETHACK).zip > $(FULLNAME)-$(NETHACK).zip.sha256
 
 $(DISTDIR)/$(FULLNAME)-$(SLASHEM).zip: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); zip -r -9 $(FULLNAME)-$(SLASHEM).zip $(FULLNAME)/slashem $(FULLNAME)/doc
+	cd $(DISTDIR); zip -r -9 $(FULLNAME)-$(SLASHEM).zip $(FULLNAME)/slashem
 	cd $(DISTDIR); $(MD5) $(FULLNAME)-$(SLASHEM).zip > $(FULLNAME)-$(SLASHEM).zip.md5
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-$(SLASHEM).zip > $(FULLNAME)-$(SLASHEM).zip.sha256
 
@@ -177,12 +178,12 @@ $(DISTDIR)/$(FULLNAME)-full.7z: $(DISTDIR)/$(FULLNAME)
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-full.7z > $(FULLNAME)-full.7z.sha256
 
 $(DISTDIR)/$(FULLNAME)-$(NETHACK).7z: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); 7z a -y -r -mx=9 $(FULLNAME)-$(NETHACK).7z $(FULLNAME)/nethack $(FULLNAME)/doc
+	cd $(DISTDIR); 7z a -y -r -mx=9 $(FULLNAME)-$(NETHACK).7z $(FULLNAME)/nethack
 	cd $(DISTDIR); $(MD5) $(FULLNAME)-$(NETHACK).7z > $(FULLNAME)-$(NETHACK).7z.md5
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-$(NETHACK).7z > $(FULLNAME)-$(NETHACK).7z.sha256
 
 $(DISTDIR)/$(FULLNAME)-$(SLASHEM).7z: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); 7z a -y -r -mx=9 $(FULLNAME)-$(SLASHEM).7z $(FULLNAME)/slashem $(FULLNAME)/doc
+	cd $(DISTDIR); 7z a -y -r -mx=9 $(FULLNAME)-$(SLASHEM).7z $(FULLNAME)/slashem
 	cd $(DISTDIR); $(MD5) $(FULLNAME)-$(SLASHEM).7z > $(FULLNAME)-$(SLASHEM).7z.md5
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-$(SLASHEM).7z > $(FULLNAME)-$(SLASHEM).7z.sha256
 
