@@ -433,6 +433,8 @@ void vultures_win_resize(int width, int height)
 	vultures_event dummy;
 	bool descend = true;
 
+  if ( !ROOTWIN ) return;
+
 	current = topwin = ROOTWIN;
 
 	event.type = SDL_VIDEORESIZE;
