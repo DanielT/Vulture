@@ -15,7 +15,7 @@ SLASHEM = claw
 GAMENETHACK = $(GAME)$(NETHACK)
 GAMESLASHEM = $(GAME)$(SLASHEM)
 DATE := $(shell date +%Y%m%d%H%M%S)
-GITREVISION := $(strip $(shell git rev-list `git describe --tags --abbrev=0`..master|wc -l))
+GITREVISION := $(strip $(shell if ! [ -f .git-revision ]; then git rev-list `git describe --tags --abbrev=0`..master|wc -l > .git-revision; fi; cat .git-revision))
 VERSION = 2.2.$(GITREVISION)
 RELEASE = 1
 FULLNAME = $(GAME)-$(VERSION)
@@ -209,6 +209,7 @@ $(DISTDIR)/$(FULLNAME): $(DISTDIR)
 	git submodule init
 	git submodule update
 	git clone ./ $@
+	cp .git-revision $@/.
 	rm -rf $@/nethack
 	rm -rf $@/slashem
 	git clone ./nethack/ $@/nethack
@@ -217,7 +218,7 @@ $(DISTDIR)/$(FULLNAME): $(DISTDIR)
 	rm -rf $@/.gitmodules
 	rm -rf $@/nethack/.git
 	rm -rf $@/slashem/.git
-	echo "#define $(GAMEDEF)_PORT_VERSION \"$(VERSION)\"">$@/$(GAME)/$(GAME)version.h
+	echo "#define $(GAMEDEF)_PORT_VERSION \"$(VERSION)\"">$@/$(GAME)/$(GAME)_port_version.h
 	ln -s ../../$(GAME) $@/nethack/win/$(GAME)
 	ln -s ../../$(GAME) $@/slashem/win/$(GAME)
 

@@ -1,3 +1,4 @@
 vultures/build_n
 vultures/build_s
 *.swp
+.git-revision
