@@ -688,24 +688,32 @@ void inventory::layout()
 	}
 
 	if (select_how != PICK_NONE) {
-		int btn1_width = vultures_text_length(V_FONT_MENU, "Accept") + 14;
+    int btn1_width = 0;
+    if ( select_how == PICK_ANY )
+		  btn1_width = vultures_text_length(V_FONT_MENU, "Accept") + 14;
 		int btn2_width = vultures_text_length(V_FONT_MENU, "Cancel") + 14;
 		int max_width = (btn1_width > btn2_width) ? btn1_width : btn2_width;
-		int total_width = 2 * max_width + 10;
+		int total_width = max_width;
 
 		h += textheight + 14;
 
-		btn = new button(this, "Accept", V_MENU_ACCEPT, '\0');
-		btn->h = textheight + 10;
-		btn->y = h - border_bottom - (textheight + 12);
-		btn->w = max_width;
-		btn->x = (w - rightoffset - leftoffset - total_width) / 2 + leftoffset;
+    if ( select_how == PICK_ANY )
+    {
+      total_width += max_width + 10;
+      btn = new button(this, "Accept", V_MENU_ACCEPT, '\0');
+      btn->h = textheight + 10;
+      btn->y = h - border_bottom - (textheight + 12);
+      btn->w = max_width;
+      btn->x = (w - rightoffset - leftoffset - total_width) / 2 + leftoffset;
+    }
 
 		btn = new button(this, "Cancel", V_MENU_CANCEL, '\0');
 		btn->h = textheight + 10;
 		btn->y = h - border_bottom - (textheight + 12);
 		btn->w = max_width;
-		btn->x = (w - rightoffset - leftoffset - total_width) / 2 + leftoffset + max_width + 10;
+		btn->x = (w - rightoffset - leftoffset - total_width) / 2 + leftoffset;
+    if ( select_how == PICK_ANY )
+      btn->x += max_width + 10;
 	} else {
 		btn = new button(this, "", V_INV_CLOSE, '\0');
 		btn->visible = 1;

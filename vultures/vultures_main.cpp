@@ -454,7 +454,8 @@ int vultures_select_menu(int winid, int how, menu_item **menu_list)
 		if (how == PICK_NONE )
 			new button(win, "Continue", V_MENU_ACCEPT, 0);
 		else {
-			new button(win, "Accept", V_MENU_ACCEPT, 0);
+      if (how == PICK_ANY )
+        new button(win, "Accept", V_MENU_ACCEPT, 0);
 			new button(win, "Cancel", V_MENU_CANCEL, 0);
 		}
 	}
