@@ -41,11 +41,7 @@ bool inventory::draw()
 {
   std::string stored_caption;
 	char label[32];
-	int ix ,iy, iw, ih, labelwidth, buttonspace;
-
-	buttonspace = 0;
-	if (select_how != PICK_NONE)
-		buttonspace = vultures_get_lineheight(V_FONT_LARGE) + 14;
+	int ix ,iy, iw, ih, labelwidth;
 
 	/* draw the window, but prevent draw_mainwin from drawing the caption */
 	stored_caption = caption;
@@ -73,13 +69,16 @@ bool inventory::draw()
 							iy+headline_height/2+2, CLR32_WHITE, CLR32_GRAY20);
 
 	if (ow_ncols > ow_vcols) {
-		vultures_line(x, y+h-buttonspace-25, x+w-1, y+h-buttonspace-25, CLR32_GRAY77);
 		
-		snprintf(label, 32, "%d - %d / %d", ow_firstcol + 1, ow_firstcol + ow_vcols, ow_ncols);
+    if ( ow_firstcol + 1 == ow_firstcol + ow_vcols )
+      snprintf(label, 32, "Page %d of %d", ow_firstcol + 1, ow_ncols);
+    else
+      snprintf(label, 32, "Pages %d to %d of %d", ow_firstcol + 1, ow_firstcol + ow_vcols, ow_ncols);
+
 		labelwidth = vultures_text_length(V_FONT_MENU, label);
 
 		vultures_put_text_shadow(V_FONT_MENU, label, vultures_screen, x+(w-labelwidth)/2,
-								y+h-buttonspace-18, CLR32_BLACK, CLR32_GRAY20);
+								y+h-21, CLR32_BLACK, CLR32_GRAY20);
 	}
 
 	return 1;
