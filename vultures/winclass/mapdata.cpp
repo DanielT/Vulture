@@ -508,7 +508,6 @@ int mapdata::perform_map_action(int action_id, point mappos)
 		case V_ACTION_PICK_UP:     return ',';
 		case V_ACTION_GO_DOWN:     return '>';
 		case V_ACTION_GO_UP:       return '<';
-		case V_ACTION_DRINK:       return 'q';
 		case V_ACTION_SEARCH:      return 's';
 		case V_ACTION_ENGRAVE:     return 'E';
 		case V_ACTION_LOOK_AROUND: return ':';
@@ -521,6 +520,14 @@ int mapdata::perform_map_action(int action_id, point mappos)
 		case V_ACTION_WIPE_FACE:   return META('w');
 		case V_ACTION_FORCE_LOCK:  return META('f');
 		case V_ACTION_MONSTER_ABILITY: return META('m');
+
+		case V_ACTION_DRINK:
+			vultures_eventstack_add(mappos_to_dirkey(mappos),-1,-1, V_RESPOND_CHARACTER);
+      return 'q';
+
+		case V_ACTION_READ:
+			vultures_eventstack_add(mappos_to_dirkey(mappos),-1,-1, V_RESPOND_CHARACTER);
+			return 'r';
 
 		case V_ACTION_KICK:
 			vultures_eventstack_add(mappos_to_dirkey(mappos),-1,-1, V_RESPOND_CHARACTER);
@@ -558,6 +565,9 @@ int mapdata::perform_map_action(int action_id, point mappos)
 		case V_ACTION_FIGHT:
 			vultures_eventstack_add(mappos_to_dirkey(mappos),-1,-1, V_RESPOND_POSKEY);
 			return 'F';
+
+		case V_ACTION_FIRE:
+			return 'f';
 
 		case V_ACTION_NAMEMON:
 			vultures_eventstack_add(0, mappos.x, mappos.y, V_RESPOND_POSKEY);
@@ -784,6 +794,10 @@ map_action mapdata::get_map_action(point mappos)
 					return V_ACTION_GO_UP;
 
 				case V_MISC_FOUNTAIN:
+				case V_MISC_SINK:
+#ifdef VULTURESCLAW
+				case V_MISC_TOILET:
+#endif
 					return V_ACTION_DRINK;
 			}
 
@@ -832,6 +846,8 @@ map_action mapdata::get_map_contextmenu(point mappos)
 	if ((u.ux == mappos. x) && (u.uy == mappos. y))
 	{
 		/* Add personal options: */
+		menu->add_item("Fire", V_ACTION_FIRE);
+
 		menu->add_item("Engrave", V_ACTION_ENGRAVE);
 		menu->add_item("Look around", V_ACTION_LOOK_AROUND);
 		menu->add_item("Monster ability", V_ACTION_MONSTER_ABILITY);
@@ -922,7 +938,10 @@ map_action mapdata::get_map_contextmenu(point mappos)
 					menu->add_item("Go up", V_ACTION_GO_UP);
 				break;
 
-			case V_MISC_FOUNTAIN:
+			case V_MISC_FOUNTAIN: case V_MISC_SINK:
+#ifdef VULTURESCLAW
+			case V_MISC_TOILET:
+#endif
 				if ((u.ux == mappos. x) && (u.uy == mappos. y))
 					menu->add_item("Drink", V_ACTION_DRINK);
 				break;
@@ -951,6 +970,11 @@ map_action mapdata::get_map_contextmenu(point mappos)
 				else
 					menu->add_item("Kick", V_ACTION_KICK);
 				break;
+
+      case V_MISC_GRAVE:
+				if ((u.ux == mappos. x) && (u.uy == mappos. y))
+					menu->add_item("Read", V_ACTION_READ);
+        break;
 
 			default:
 				if ((u.ux != mappos. x) || (u.uy != mappos. y))

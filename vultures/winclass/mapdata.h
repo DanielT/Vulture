@@ -44,6 +44,7 @@ typedef enum {
     V_ACTION_OFFER,
     V_ACTION_PRAY,
     V_ACTION_REST,
+    V_ACTION_READ,
     V_ACTION_SIT,
     V_ACTION_TURN_UNDEAD,
     V_ACTION_WIPE_FACE,
@@ -54,6 +55,7 @@ typedef enum {
     V_ACTION_MONSTER_ABILITY,
     V_ACTION_CHAT,
     V_ACTION_FIGHT,
+    V_ACTION_FIRE,
     V_ACTION_NAMEMON
 } map_action;
 

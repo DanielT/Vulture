@@ -158,6 +158,7 @@ eventresult inventory::context_menu(objitemwin *target)
 	}
 
 	menu->add_item("Wield", V_INVACTION_WIELD);
+	menu->add_item("Quiver", V_INVACTION_QUIVER);
 
 	if (target->obj->owornmask)
 		menu->add_item("Remove", V_INVACTION_REMOVE);
@@ -187,6 +188,7 @@ eventresult inventory::context_menu(objitemwin *target)
 			case V_INVACTION_WEAR:  key = 'W'; break;
 			case V_INVACTION_PUT_ON:key = 'P'; break;
 			case V_INVACTION_WIELD: key = 'w'; break;
+			case V_INVACTION_QUIVER: key = 'Q'; break;
 			case V_INVACTION_REMOVE:
 				/* we call a bunch of functions in do_wear.c directly here;
 					* we can do so safely because take_off() directly accounts for
