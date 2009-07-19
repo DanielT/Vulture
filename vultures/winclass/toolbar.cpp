@@ -12,6 +12,8 @@
 #include "hotspot.h"
 #include "messagewin.h"
 #include "map.h"
+#include "levelwin.h"
+#include "contextmenu.h"
 
 
 toolbar::toolbar(window *p, int menuid, bool visible, int x, int y, std::string imgfile, const tb_buttondesc buttons[5]) : window(p)
@@ -30,6 +32,7 @@ toolbar::toolbar(window *p, int menuid, bool visible, int x, int y, std::string 
 	new hotspot(this, 84, 0, 38, 39, buttons[2].menu_id, buttons[2].name);
 	new hotspot(this, 124, 0, 38, 39, buttons[3].menu_id, buttons[3].name);
 	new hotspot(this, 164, 0, 38, 39, buttons[4].menu_id, buttons[4].name);
+	new hotspot(this, 184, 0, 38, 39, buttons[5].menu_id, buttons[5].name);
 
 }
 
@@ -76,6 +79,46 @@ eventresult toolbar::handle_mousebuttonup_event(window* target, void* result,
 
 	/* one of the buttons was clicked */
 	switch (target->menu_id) {
+    case V_HOTSPOT_BUTTON_GOLD:
+      {
+        int action;
+        contextmenu *menu = new contextmenu( levwin );
+
+        menu->add_item("Check Wallet", V_ACTION_GOLD_QUERY);
+        menu->add_item("Drop Gold", V_ACTION_GOLD_DROP);
+        menu->add_item("Throw Gold", V_ACTION_GOLD_THROW);
+        if (*u.ushops)
+          menu->add_item("Pay shopkeeper", V_ACTION_GOLD_PAY);
+
+        menu->layout();
+        vultures_event_dispatcher(&action, V_RESPOND_INT, menu );
+
+        switch (action) {
+
+          case V_ACTION_GOLD_QUERY:
+            ((vultures_event*)result)->num = '$';
+            break;
+
+          case V_ACTION_GOLD_DROP:
+            vultures_eventstack_add('$', -1, -1, V_RESPOND_CHARACTER);
+            ((vultures_event*)result)->num = 'd';
+            break;
+
+          case V_ACTION_GOLD_THROW:
+            vultures_eventstack_add('$', -1, -1, V_RESPOND_CHARACTER);
+            ((vultures_event*)result)->num = 't';
+            break;
+
+          case V_ACTION_GOLD_PAY:
+            ((vultures_event*)result)->num = 'p';
+            break;
+
+        }
+
+        delete menu;
+      }
+			return V_EVENT_HANDLED_FINAL;
+
 		case V_HOTSPOT_BUTTON_LOOK:
 			vultures_eventstack_add('y', -1, -1, V_RESPOND_CHARACTER);
 			((vultures_event*)result)->num = '/';

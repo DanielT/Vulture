@@ -62,6 +62,7 @@ enum hotspots {
 	V_WIN_ENHANCE,
 
 	/* child windows of the statusbar */
+	V_HOTSPOT_BUTTON_GOLD,
 	V_HOTSPOT_BUTTON_LOOK,
 	V_HOTSPOT_BUTTON_EXTENDED,
 	V_HOTSPOT_BUTTON_MAP,
