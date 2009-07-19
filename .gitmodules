@@ -4,3 +4,6 @@
 [submodule "slashem"]
 	path = slashem
 	url = git://github.com/clivecrous/nethack.git
+[submodule "sporkhack"]
+	path = sporkhack
+	url = git://github.com/clivecrous/nethack.git
