@@ -12,7 +12,8 @@ URL:            http://clivecrous.github.com/vultures
 #=======
 #Source:		git clone git://github.com/clivecrous/vultures.git
 #>>>>>>> ./nethack-vultures.spec.r7
-Source0:        http://github.com/clivecrous/vultures/tarball/%{version}
+Source0:        http://github.com/clivecrous/vultures/tarball/%{version}/vultures-%{version}-full.tar.bz2
+
 %if 0%{?suse_version}
 Source1:        SuSE.tar.bz2
 Patch0:         suse-nethack-config.patch
@@ -230,6 +231,8 @@ install -d $RPM_BUILD_ROOT%{_var}/games/vulturesclaw
 ##        $RPM_BUILD_ROOT/var/games/nethack/record \
 ##        $RPM_BUILD_ROOT/var/games/nethack/logfile
 ##chmod -R 0775 $RPM_BUILD_ROOT/var/games/nethack
+%fdupes $RPM_BUILD_ROOT%{_prefix}/games/vultureseye/
+%fdupes $RPM_BUILD_ROOT%{_prefix}/games/vultureseye/tiles/
 %fdupes $RPM_BUILD_ROOT%{_var}/games/vultureseye/
 %fdupes $RPM_BUILD_ROOT%{_var}/games/vultureseye/save
 install -d $RPM_BUILD_ROOT%{_var}/games/vultureseye/
@@ -243,6 +246,8 @@ chmod -R 0775 $RPM_BUILD_ROOT%{_var}/games/vultureseye
 ##touch $RPM_BUILD_ROOT/var/games/vultureseye/record
 ##touch $RPM_BUILD_ROOT/var/games/vultureseye/logfile
 ##chmod -R 0775 $RPM_BUILD_ROOT/var/games/vultureseye
+%fdupes $RPM_BUILD_ROOT%{_prefix}/games/vulturesclaw/
+%fdupes $RPM_BUILD_ROOT%{_prefix}/games/vulturesclaw/tiles/
 %fdupes $RPM_BUILD_ROOT%{_var}/games/vulturesclaw/
 %fdupes $RPM_BUILD_ROOT%{_var}/games/vulturesclaw/save
 touch $RPM_BUILD_ROOT%{_var}/games/vulturesclaw/perm
@@ -550,8 +555,6 @@ rm /var/games/vultureseye/save /usr/share/games/vultureseye/save &>/dev/null
 #/usr/bin/vultureseye-recover
 %attr(2775,games,games) /usr/bin/vulturesclaw
 %attr(666,games,games) /usr/bin/vulturesclaw-recover
-#/usr/bin/vulturesclaw
-#/usr/bin/vulturesclaw-recover
 /usr/games/vultureseye
 /usr/games/vulturesclaw
 /usr/share/games/vultureseye
@@ -587,6 +590,12 @@ rm /var/games/vultureseye/save /usr/share/games/vultureseye/save &>/dev/null
 #%attr(2775,games,games) /usr/share/games/vulturesclaw/vulturesclaw
 %{_datadir}/applications/*vultures*.desktop
 #/usr/share/games/applications/*vultures*.desktop
+#/usr/share/icons/hicolor/
+#/usr/share/icons/hicolor/48x48/
+#/usr/share/icons/hicolor/48x48/apps/
+%dir %{_datadir}/icons/hicolor/
+%dir %{_datadir}/icons/hicolor/48x48/
+%dir %{_datadir}/icons/hicolor/48x48/apps/
 %{_datadir}/icons/hicolor/48x48/apps/vultures*.png
 #/usr/share/games/icons/hicolor/48x48/apps/vultures*.png
 %defattr(666,games,games,775)
