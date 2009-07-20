@@ -7,12 +7,12 @@ Summary:        NetHack - Vulture's Eye and Vulture's Claw
 Group:          Amusements/Games
 License:        NetHack General Public License
 
-URL:            http://clivecrous.lighthouseapp.com/projects/11282/home
+URL:            http://clivecrous.github.com/vultures
 #<<<<<<< ./nethack-vultures.spec.mine
 #=======
 #Source:		git clone git://github.com/clivecrous/vultures.git
 #>>>>>>> ./nethack-vultures.spec.r7
-Source0:        http://www.darkarts.co.za/projects/vultures/downloads/vultures-%{version}/vultures-%{version}-full.tar.bz2
+Source0:        http://github.com/clivecrous/vultures/tarball/%{version}
 %if 0%{?suse_version}
 Source1:        SuSE.tar.bz2
 Patch0:         suse-nethack-config.patch
