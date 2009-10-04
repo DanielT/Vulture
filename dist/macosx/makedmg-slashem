@@ -7,7 +7,7 @@ VERSION=$4
 VARIANTSUFFIX=$5
 RELEASE=$6
 
-LIB_DIR=/usr/lib
+LIB_DIR=/opt/local/lib
 
 LIB_SDL=libSDL-1.2.0.dylib
 LIB_SDLMIXER=libSDL_mixer-1.2.0.dylib
