@@ -429,7 +429,7 @@ int vultures_handle_global_event(SDL_Event * event)
 
 
 
-static void vultures_sdl_error(const char *file, int line, const char *what)
+static void vultures_sdl_error(char *file, int line, const char *what)
 {
 	vultures_write_log(V_LOG_ERROR, file, line, "%s: %s\n", what, SDL_GetError());
 }

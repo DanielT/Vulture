@@ -39,16 +39,16 @@
 #define OOM(do_exit) vultures_oom(do_exit, __FILE__, __LINE__)
 
 extern std::string& trim(std::string &str);
-extern char *vultures_basename(const char *filename);
+extern char *vultures_basename(char *filename);
 extern std::string vultures_make_filename(std::string subdir1, std::string subdir2, std::string name);
 extern void vultures_init_gamepath(void);
 
-extern void vultures_write_log(int msgtype, const char *file,
+extern void vultures_write_log(int msgtype, char *file,
                     int line, const char * logmessage, ...) __attribute__ ((format(printf, 4, 5)));
 
-extern void vultures_write_log_va(int msgtype, const char *file, int line,
+extern void vultures_write_log_va(int msgtype, char *file, int line,
                                   const char * logmessage, va_list args);
-extern void vultures_oom(int do_exit, const char *file, int line);
+extern void vultures_oom(int do_exit, char *file, int line);
 
 extern int vultures_chdir_to_datadir(char * argv0);
 
