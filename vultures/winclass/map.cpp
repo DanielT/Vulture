@@ -1,5 +1,8 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
+#include "vultures_sdl.h" /* XXX this must be the first include,
+                             no idea why but it won't compile otherwise */
+
 extern "C" {
 	#include "hack.h"
 	
@@ -10,7 +13,6 @@ extern "C" {
 #include "vultures_gfl.h"
 #include "vultures_win.h"
 #include "vultures_txt.h"
-#include "vultures_sdl.h"
 #include "vultures_mou.h"
 #include "vultures_tile.h"
 

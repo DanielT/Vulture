@@ -1,5 +1,8 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
+#include "vultures_sdl.h" /* XXX this must be the first include,
+                             no idea why but it won't compile otherwise */
+
 #include <stdlib.h>
 
 #ifdef WIN32
@@ -10,7 +13,6 @@
 
 #include "hack.h"
 
-#include "vultures_sdl.h"
 #include "vultures_gen.h"
 #include "vultures_opt.h"
 

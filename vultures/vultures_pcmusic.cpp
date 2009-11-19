@@ -1,3 +1,5 @@
+#include "vultures_sdl.h" /* XXX this must be the first include,
+                             no idea why but it won't compile otherwise */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,7 +21,6 @@
 #undef USE_RWOPS
 
 #include "vultures_gen.h"
-#include "vultures_sdl.h"
 #include "vultures_sound.h"
 #include "vultures_pcmusic.h"
 #include "vultures_opt.h"
