@@ -173,17 +173,17 @@ $(DISTDIR)/$(FULLNAME)-$(SLASHEM).zip: $(DISTDIR)/$(FULLNAME)
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-$(SLASHEM).zip > $(FULLNAME)-$(SLASHEM).zip.sha256
 
 $(DISTDIR)/$(FULLNAME)-full.7z: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); 7z a -y -r -mx=9 $(FULLNAME)-full.7z $(FULLNAME)
+	cd $(DISTDIR); 7zr a -y -r -mx=9 $(FULLNAME)-full.7z $(FULLNAME)
 	cd $(DISTDIR); $(MD5) $(FULLNAME)-full.7z > $(FULLNAME)-full.7z.md5
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-full.7z > $(FULLNAME)-full.7z.sha256
 
 $(DISTDIR)/$(FULLNAME)-$(NETHACK).7z: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); 7z a -y -r -mx=9 $(FULLNAME)-$(NETHACK).7z $(FULLNAME)/nethack
+	cd $(DISTDIR); 7zr a -y -r -mx=9 $(FULLNAME)-$(NETHACK).7z $(FULLNAME)/nethack
 	cd $(DISTDIR); $(MD5) $(FULLNAME)-$(NETHACK).7z > $(FULLNAME)-$(NETHACK).7z.md5
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-$(NETHACK).7z > $(FULLNAME)-$(NETHACK).7z.sha256
 
 $(DISTDIR)/$(FULLNAME)-$(SLASHEM).7z: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); 7z a -y -r -mx=9 $(FULLNAME)-$(SLASHEM).7z $(FULLNAME)/slashem
+	cd $(DISTDIR); 7zr a -y -r -mx=9 $(FULLNAME)-$(SLASHEM).7z $(FULLNAME)/slashem
 	cd $(DISTDIR); $(MD5) $(FULLNAME)-$(SLASHEM).7z > $(FULLNAME)-$(SLASHEM).7z.md5
 	cd $(DISTDIR); $(SHA256) $(FULLNAME)-$(SLASHEM).7z > $(FULLNAME)-$(SLASHEM).7z.sha256
 
