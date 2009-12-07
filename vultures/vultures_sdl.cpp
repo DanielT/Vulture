@@ -410,10 +410,10 @@ int vultures_handle_global_event(SDL_Event * event)
 				vultures_opts.width = 540;
 			}
 			vultures_opts.height = event->resize.h;
-			if (event->resize.h < 510)
+			if (event->resize.h < 300)
 			{
 				need_kludge = 1;
-				vultures_opts.height = 510;
+				vultures_opts.height = 300;
 			}
 
 			/* SDL will not actually change the size of the window here, only the size of the buffer.
