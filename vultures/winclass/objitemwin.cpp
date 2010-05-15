@@ -80,6 +80,10 @@ bool objitemwin::draw()
 	vultures_put_text_multiline(V_FONT_MENU, caption, vultures_screen, x + h,
 								y + 3, textcolor, CLR32_BLACK, w - h - 6);
 
+  if ( obj ) {
+    weight = obj->owt;
+  }
+
 	/* weight is in line 3 */
 	txt_height = vultures_text_height(V_FONT_MENU, caption);
 	text_start_y = y + txt_height*2 + 4;
@@ -124,7 +128,6 @@ bool objitemwin::draw()
     int tile = 0;
 
 		tile = vultures_object_to_tile(obj->otyp, -1, -1, obj);
-		weight = obj->owt;
 
 		tile_x = x + h/2;
 		tile_y = y + h * 3 / 4;
