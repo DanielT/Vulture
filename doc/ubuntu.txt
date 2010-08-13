@@ -1,0 +1,14 @@
+Install Dependencies
+sudo apt-get install git-core bison libsdl1.2-dev build-dependencies
+Clone the project
+git clone git://github.com/clivecrous/vultures.git
+cd vultures
+git submodule init
+git submodule update
+Make
+patch -Np1 -i dist/linux/debian/debian.patch
+sudo dpkg-buildpackage
+cd ../
+sudo gdebi vultures-data_2.1.90-1_all.deb
+sudo gdebi vultureseye_2.1.90-1_amd64.deb
+Grab a cup of coffee, and wait about 15 minutes.

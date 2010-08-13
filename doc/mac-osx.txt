@@ -1,0 +1,30 @@
+Thanks to eben for providing the following guide:
+
+Here?s a rough guide as to how I compiled it:
+
+This is done on 10.6.1
+
+Install Xcode
+
+Update to the latest Vulture?s source code
+
+git clone git://github.com/clivecrous/vultures.git
+cd vultures
+git submodule init
+git submodule update
+install MacPorts ( Configure as per instructions on macports.org )
+
+Install dependency libraries
+
+sudo port install libsdl
+sudo port install libpng
+sudo port install libsdl_ttf
+sudo port install libsdl_mixer
+Build Vulture?s Eye
+
+make nethack-home
+Create a dmg
+
+I?ve also tested this on a Mac that does not have MacPorts installed, there?s a problem with the linked libraries not functioning properly.
+
+make nethack-dmg
