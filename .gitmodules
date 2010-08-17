@@ -1,12 +1,12 @@
 [submodule "nethack"]
 	path = nethack
-	url = git://github.com/clivecrous/nethack.git
+	url = http://dl.dropbox.com/u/2939773/git/nethack
 [submodule "slashem"]
 	path = slashem
-	url = git://github.com/clivecrous/nethack.git
+	url = http://dl.dropbox.com/u/2939773/git/nethack
 [submodule "sporkhack"]
 	path = sporkhack
-	url = git://github.com/clivecrous/nethack.git
+	url = http://dl.dropbox.com/u/2939773/git/nethack
 [submodule "unnethack"]
 	path = unnethack
-	url = git://github.com/clivecrous/nethack.git
+	url = http://dl.dropbox.com/u/2939773/git/nethack
