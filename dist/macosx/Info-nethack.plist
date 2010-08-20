@@ -3,12 +3,12 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleExecutable</key>
-	<string>vultureseye</string>
+	<string>vulture-nethack</string>
 	<key>CFBundleGetInfoHTML</key>
 	<string>http://www.darkarts.co.za/projects/vultures/</string>
 	<key>CFBundleGetInfoString</key>
 	<string>Copyright (C) 1985-2003 Stichting Mathematisch Centrum; XXX</string>
 	<key>CFBundleIconFile</key>
-	<string>vultureseye.icns</string>
+	<string>vulture-nethack.icns</string>
 </dict>
 </plist>

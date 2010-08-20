@@ -30,7 +30,7 @@ APP_APPLIB=$APP_DIR/Contents/Frameworks
 DMG_NAME=$DST_ROOT/vultures-$VERSION-$VARIANTSUFFIX_macosx-$RELEASE.dmg
 
 
-REAL_EXECUTABLE=$APP_GAMERESOURCES/vulturesclaw
+REAL_EXECUTABLE=$APP_GAMERESOURCES/vulture-slashem
 
 LOCAL_LIBREF=@executable_path/../Contents/Frameworks
 
@@ -55,11 +55,11 @@ cp -r $GAME_DIR/* $APP_GAMERESOURCES
 cp $CUSTOM_DATA/Info-slashem.plist $APP_STARTDIR/Info.plist
 
 # copy icon(s)
-cp $CUSTOM_DATA/vulturesclaw.icns $APP_APPRESOURCES 
+cp $CUSTOM_DATA/vulture-slashem.icns $APP_APPRESOURCES 
 
 # copy starter
-cp $CUSTOM_DATA/vulturesclaw $APP_APPSTART
-chmod u+x $APP_APPSTART/vulturesclaw
+cp $CUSTOM_DATA/vulture-slashem $APP_APPSTART
+chmod u+x $APP_APPSTART/vulture-slashem
 
 # copy needed libraries
 cp $LIB_DIR/$LIB_SDL $APP_APPLIB/$LIB_SDL

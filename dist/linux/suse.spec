@@ -92,23 +92,23 @@ sed -i "s/^CFLAGS.*/& $RPM_OPT_FLAGS/" nethack/sys/unix/Makefile*
 %endif
 
 %if 0%{?suse_version}
-sed -i -e 's|/usr/games/lib/nethackdir|/var/games/vultureseye|g' \
+sed -i -e 's|/usr/games/lib/nethackdir|/var/games/vulture-nethack|g' \
     nethack/doc/{nethack,recover}.6 nethack/include/config.h
-sed -i -e 's|/var/lib/games/nethack|/var/games/vultureseye|g' \
+sed -i -e 's|/var/lib/games/nethack|/var/games/vulture-nethack|g' \
     nethack/include/unixconf.h
-sed -i -e 's|/usr/games/lib/nethackdir|/var/games/vulturesclaw|g' \
+sed -i -e 's|/usr/games/lib/nethackdir|/var/games/vulture-slashem|g' \
     slashem/doc/{nethack,recover}.6 slashem/include/config.h
-sed -i -e 's|/var/lib/games/nethack|/var/games/vulturesclaw|' \
+sed -i -e 's|/var/lib/games/nethack|/var/games/vulture-slashem|' \
     slashem/include/unixconf.h
 %endif
 %if 0%{?fedora_version}
-sed -i -e 's|/usr/games/lib/nethackdir|%{_prefix}/games/vultureseye|g' \
+sed -i -e 's|/usr/games/lib/nethackdir|%{_prefix}/games/vulture-nethack|g' \
     nethack/doc/{nethack,recover}.6 nethack/include/config.h
-sed -i -e 's|/var/lib/games/nethack|%{_var}/games/vultureseye|g' \
+sed -i -e 's|/var/lib/games/nethack|%{_var}/games/vulture-nethack|g' \
     nethack/include/unixconf.h
-sed -i -e 's|/usr/games/lib/nethackdir|%{_prefix}/games/vulturesclaw|g' \
+sed -i -e 's|/usr/games/lib/nethackdir|%{_prefix}/games/vulture-slashem|g' \
     slashem/doc/{nethack,recover}.6 slashem/include/config.h
-sed -i -e 's|/var/lib/games/nethack|%{_var}/games/vulturesclaw|' \
+sed -i -e 's|/var/lib/games/nethack|%{_var}/games/vulture-slashem|' \
     slashem/include/unixconf.h
 %endif
 
@@ -119,20 +119,20 @@ sed -i -e 's|/var/lib/games/nethack|%{_var}/games/vulturesclaw|' \
 cd nethack
 sh sys/unix/setup.sh 1
 # tty
-cp -f ../SuSE/vultures/config.h.vultureseye include/config.h
-cp -f ../SuSE/vultures/unixconf.h.vultureseye include/unixconf.h
-cp -f ../SuSE/vultures/Makefile.src.vultureseye src/Makefile
-cp -f ../SuSE/vultures/Makefile.top.vultureseye sys/unix/Makefile.top
+cp -f ../SuSE/vultures/config.h.vulture-nethack include/config.h
+cp -f ../SuSE/vultures/unixconf.h.vulture-nethack include/unixconf.h
+cp -f ../SuSE/vultures/Makefile.src.vulture-nethack src/Makefile
+cp -f ../SuSE/vultures/Makefile.top.vulture-nethack sys/unix/Makefile.top
 cd ..
 
 # create symlinks to makefiles
 cd slashem
 sh sys/unix/setup.sh 1
 # tty
-cp -f ../SuSE/vultures/config.h.vulturesclaw include/config.h
-cp -f ../SuSE/vultures/unixconf.h.vulturesclaw include/unixconf.h
-cp -f ../SuSE/vultures/Makefile.src.vulturesclaw src/Makefile
-cp -f ../SuSE/vultures/Makefile.top.vulturesclaw sys/unix/Makefile.top
+cp -f ../SuSE/vultures/config.h.vulture-slashem include/config.h
+cp -f ../SuSE/vultures/unixconf.h.vulture-slashem include/unixconf.h
+cp -f ../SuSE/vultures/Makefile.src.vulture-slashem src/Makefile
+cp -f ../SuSE/vultures/Makefile.top.vulture-slashem sys/unix/Makefile.top
 cd ..
 %endif
 
@@ -158,11 +158,11 @@ install -d $RPM_BUILD_ROOT/usr/lib/nethack
 install -d $RPM_BUILD_ROOT/usr/games
 install -d $RPM_BUILD_ROOT/usr/share/games/nethack
 install -d $RPM_BUILD_ROOT/%{_mandir}/man6
-install -d $RPM_BUILD_ROOT/usr/lib/vultureseye
-install -d $RPM_BUILD_ROOT/usr/share/games/vultureseye
+install -d $RPM_BUILD_ROOT/usr/lib/vulture-nethack
+install -d $RPM_BUILD_ROOT/usr/share/games/vulture-nethack
 install -d $RPM_BUILD_ROOT/usr/games
-install -d $RPM_BUILD_ROOT/usr/lib/vulturesclaw
-install -d $RPM_BUILD_ROOT/usr/share/games/vulturesclaw
+install -d $RPM_BUILD_ROOT/usr/lib/vulture-slashem
+install -d $RPM_BUILD_ROOT/usr/share/games/vulture-slashem
 install -d $RPM_BUILD_ROOT/usr/games
 
 # game directory
@@ -171,16 +171,16 @@ install -d $RPM_BUILD_ROOT/usr/games
 #        $RPM_BUILD_ROOT/var/games/nethack/record \
 #        $RPM_BUILD_ROOT/var/games/nethack/logfile
 #chmod -R 0775 $RPM_BUILD_ROOT/var/games/nethack
-install -d $RPM_BUILD_ROOT/var/games/vultureseye/save
-touch $RPM_BUILD_ROOT/var/games/vultureseye/perm
-touch $RPM_BUILD_ROOT/var/games/vultureseye/record
-touch $RPM_BUILD_ROOT/var/games/vultureseye/logfile
-chmod -R 0775 $RPM_BUILD_ROOT/var/games/vultureseye
-install -d $RPM_BUILD_ROOT/var/games/vulturesclaw/save
-touch $RPM_BUILD_ROOT/var/games/vulturesclaw/perm
-touch $RPM_BUILD_ROOT/var/games/vulturesclaw/record
-touch $RPM_BUILD_ROOT/var/games/vulturesclaw/logfile
-chmod -R 0775 $RPM_BUILD_ROOT/var/games/vulturesclaw
+install -d $RPM_BUILD_ROOT/var/games/vulture-nethack/save
+touch $RPM_BUILD_ROOT/var/games/vulture-nethack/perm
+touch $RPM_BUILD_ROOT/var/games/vulture-nethack/record
+touch $RPM_BUILD_ROOT/var/games/vulture-nethack/logfile
+chmod -R 0775 $RPM_BUILD_ROOT/var/games/vulture-nethack
+install -d $RPM_BUILD_ROOT/var/games/vulture-slashem/save
+touch $RPM_BUILD_ROOT/var/games/vulture-slashem/perm
+touch $RPM_BUILD_ROOT/var/games/vulture-slashem/record
+touch $RPM_BUILD_ROOT/var/games/vulture-slashem/logfile
+chmod -R 0775 $RPM_BUILD_ROOT/var/games/vulture-slashem
 # binaries
 # install -m 2755 nethack/src/nethack.tty $RPM_BUILD_ROOT/usr/lib/nethack/
 # scripts
@@ -194,10 +194,10 @@ chmod -R 0775 $RPM_BUILD_ROOT/var/games/vulturesclaw
 #mkdir -p $RPM_BUILD_ROOT/usr/lib/vultures
 #install -m 644 nethack/dat/options.tty $RPM_BUILD_ROOT/usr/lib/vultures/
 # man pages
-install -m 644 nethack/doc/nethack.6 $RPM_BUILD_ROOT/%{_mandir}/man6/vultureseye.6
-install -m 644 nethack/doc/recover.6 $RPM_BUILD_ROOT/%{_mandir}/man6/vultureseye-recover.6
-install -m 644 slashem/doc/nethack.6 $RPM_BUILD_ROOT/%{_mandir}/man6/vulturesclaw.6
-install -m 644 slashem/doc/recover.6 $RPM_BUILD_ROOT/%{_mandir}/man6/vulturesclaw-recover.6
+install -m 644 nethack/doc/nethack.6 $RPM_BUILD_ROOT/%{_mandir}/man6/vulture-nethack.6
+install -m 644 nethack/doc/recover.6 $RPM_BUILD_ROOT/%{_mandir}/man6/vulture-nethack-recover.6
+install -m 644 slashem/doc/nethack.6 $RPM_BUILD_ROOT/%{_mandir}/man6/vulture-slashem.6
+install -m 644 slashem/doc/recover.6 $RPM_BUILD_ROOT/%{_mandir}/man6/vulture-slashem-recover.6
 
 # doc
 mkdir -p $RPM_BUILD_ROOT/%{_docdir}/nethack
@@ -236,33 +236,33 @@ done
 # the font is added into fonts.dir by SuSEconfig.fonts
 
 make -C nethack install CHGRP=: CHOWN=: \
-    GAMEDIR=$RPM_BUILD_ROOT/usr/share/games/vultureseye \
-    VARDIR=$RPM_BUILD_ROOT/var/games/vultureseye \
+    GAMEDIR=$RPM_BUILD_ROOT/usr/share/games/vulture-nethack \
+    VARDIR=$RPM_BUILD_ROOT/var/games/vulture-nethack \
     SHELLDIR=$RPM_BUILD_ROOT/usr/games/
 
-mkdir -p $RPM_BUILD_ROOT/usr/share/games/vultureseye/graphics
-cp -p vultures/gamedata/graphics/gametiles.bin $RPM_BUILD_ROOT/usr/share/games/vultureseye/graphics/
+mkdir -p $RPM_BUILD_ROOT/usr/share/games/vulture-nethack/graphics
+cp -p vultures/gamedata/graphics/gametiles.bin $RPM_BUILD_ROOT/usr/share/games/vulture-nethack/graphics/
 
-cp -f SuSE/vultures/Makefile.top.vulturesclaw slashem/sys/unix/Makefile.top
+cp -f SuSE/vultures/Makefile.top.vulture-slashem slashem/sys/unix/Makefile.top
 
 make -C slashem install CHGRP=: CHOWN=: \
-    GAMEDIR=$RPM_BUILD_ROOT/usr/share/games/vulturesclaw \
-    VARDIR=$RPM_BUILD_ROOT/var/games/vulturesclaw \
+    GAMEDIR=$RPM_BUILD_ROOT/usr/share/games/vulture-slashem \
+    VARDIR=$RPM_BUILD_ROOT/var/games/vulture-slashem \
     SHELLDIR=$RPM_BUILD_ROOT/usr/games/
 
 mkdir -p $RPM_BUILD_ROOT/usr/share/games/vultureclaw/graphics
-cp -p vultures/gamedata/graphics/gametiles.bin $RPM_BUILD_ROOT/usr/share/games/vulturesclaw/graphics/
+cp -p vultures/gamedata/graphics/gametiles.bin $RPM_BUILD_ROOT/usr/share/games/vulture-slashem/graphics/
 
-# install -dm 755 $RPM_BUILD_ROOT/usr/share/games/vultureseye/icons/hicolor/48x48/apps
-# install -dm 755 $RPM_BUILD_ROOT/usr/share/games/vulturesclaw/icons/hicolor/48x48/apps
+# install -dm 755 $RPM_BUILD_ROOT/usr/share/games/vulture-nethack/icons/hicolor/48x48/apps
+# install -dm 755 $RPM_BUILD_ROOT/usr/share/games/vulture-slashem/icons/hicolor/48x48/apps
 #        --dir=$RPM_BUILD_ROOT/usr/share/games/$i/applications \
 #        $RPM_BUILD_ROOT/usr/share/games/$i/icons/hicolor/48x48/apps/$i.png
 install -dm 755 $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/48x48/apps
 %if %{?suse_version:1}0
-%suse_update_desktop_file -i vultureseye Game RolePlaying
-%suse_update_desktop_file -i vulturesclaw Game RolePlaying
+%suse_update_desktop_file -i vulture-nethack Game RolePlaying
+%suse_update_desktop_file -i vulture-slashem Game RolePlaying
 %endif
-for i in vultureseye vulturesclaw ; do
+for i in vulture-nethack vulture-slashem ; do
 %if %{!?suse_version:1}0
     desktop-file-install \
         --vendor=opensuse \
@@ -277,20 +277,20 @@ for i in vultureseye vulturesclaw ; do
         $RPM_BUILD_ROOT/usr/share/games/$i-recover
 done
 
-touch $RPM_BUILD_ROOT/usr/share/games/vulturesclaw/vultures_log.txt
-touch $RPM_BUILD_ROOT/usr/share/games/vultureseye/vultures_log.txt
-#install -m 644 vultures/build_n/gamedata/graphics/gamestiles.bin  $RPM_BUILD_ROOT/usr/share/games/vultureseye/
-#install -m 644 vultures/build_s/gamedata/graphics/gamestiles.bin  $RPM_BUILD_ROOT/usr/share/games/vulturesclaw/
+touch $RPM_BUILD_ROOT/usr/share/games/vulture-slashem/vultures_log.txt
+touch $RPM_BUILD_ROOT/usr/share/games/vulture-nethack/vultures_log.txt
+#install -m 644 vultures/build_n/gamedata/graphics/gamestiles.bin  $RPM_BUILD_ROOT/usr/share/games/vulture-nethack/
+#install -m 644 vultures/build_s/gamedata/graphics/gamestiles.bin  $RPM_BUILD_ROOT/usr/share/games/vulture-slashem/
 
-#rm -r $RPM_BUILD_ROOT/usr/share/games/vultureseye/manual
-#rm -r $RPM_BUILD_ROOT/usr/share/games/vulturesclaw/manual
+#rm -r $RPM_BUILD_ROOT/usr/share/games/vulture-nethack/manual
+#rm -r $RPM_BUILD_ROOT/usr/share/games/vulture-slashem/manual
 
 # Save some space
 # for f in graphics music sound ; do
 for f in music sound ; do
-    rm -r $RPM_BUILD_ROOT/usr/share/games/vulturesclaw/$f
-    ln -s ../vultureseye/$f \
-        $RPM_BUILD_ROOT/usr/share/games/vulturesclaw/$f
+    rm -r $RPM_BUILD_ROOT/usr/share/games/vulture-slashem/$f
+    ln -s ../vulture-nethack/$f \
+        $RPM_BUILD_ROOT/usr/share/games/vulture-slashem/$f
 done
 
 #chmod -s $RPM_BUILD_ROOT/usr/games/vultures*/vultures* # for stripping
@@ -301,8 +301,8 @@ chmod -s $RPM_BUILD_ROOT/usr/share/games/vultures*/vultures* # for stripping
 #sed -i -e "s|$RPM_BUILD_ROOT||" $RPM_BUILD_ROOT/usr/games/vultures{eye,claw}
 sed -i -e "s|$RPM_BUILD_ROOT||" $RPM_BUILD_ROOT/usr/games/vultures{eye,claw}
 rm $RPM_BUILD_ROOT/usr/share/games/vultures*/*.ico
-chmod -R 0775 $RPM_BUILD_ROOT/var/games/vultureseye
-chmod -R 0775 $RPM_BUILD_ROOT/var/games/vulturesclaw
+chmod -R 0775 $RPM_BUILD_ROOT/var/games/vulture-nethack
+chmod -R 0775 $RPM_BUILD_ROOT/var/games/vulture-slashem
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -310,25 +310,25 @@ rm -rf $RPM_BUILD_ROOT
 %post
 [ $1 -eq 1 ] && \
 gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
-ln -s /var/games/vulturesclaw/logfile /usr/share/games/vulturesclaw/logfile &>/dev/null 
-ln -s /var/games/vulturesclaw/perm /usr/share/games/vulturesclaw/perm &>/dev/null 
-ln -s /var/games/vulturesclaw/record /usr/share/games/vulturesclaw/record &>/dev/null 
-ln -s /var/games/vulturesclaw/save /usr/share/games/vulturesclaw/save &>/dev/null 
-ln -s /var/games/vultureseye/logfile /usr/share/games/vultureseye/logfile &>/dev/null 
-ln -s /var/games/vultureeye/perm /usr/share/games/vultureseye/perm &>/dev/null 
-ln -s /var/games/vultureseye/record /usr/share/games/vultureseye/record &>/dev/null 
-ln -s /var/games/vultureseye/save /usr/share/games/vultureseye/save &>/dev/null 
+ln -s /var/games/vulture-slashem/logfile /usr/share/games/vulture-slashem/logfile &>/dev/null 
+ln -s /var/games/vulture-slashem/perm /usr/share/games/vulture-slashem/perm &>/dev/null 
+ln -s /var/games/vulture-slashem/record /usr/share/games/vulture-slashem/record &>/dev/null 
+ln -s /var/games/vulture-slashem/save /usr/share/games/vulture-slashem/save &>/dev/null 
+ln -s /var/games/vulture-nethack/logfile /usr/share/games/vulture-nethack/logfile &>/dev/null 
+ln -s /var/games/vultureeye/perm /usr/share/games/vulture-nethack/perm &>/dev/null 
+ln -s /var/games/vulture-nethack/record /usr/share/games/vulture-nethack/record &>/dev/null 
+ln -s /var/games/vulture-nethack/save /usr/share/games/vulture-nethack/save &>/dev/null 
 
 %postun
 gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
-ln -s /var/games/vulturesclaw/logfile /usr/share/games/vulturesclaw/logfile &>/dev/null 
-ln -s /var/games/vulturesclaw/perm /usr/share/games/vulturesclaw/perm &>/dev/null 
-ln -s /var/games/vulturesclaw/record /usr/share/games/vulturesclaw/record &>/dev/null 
-ln -s /var/games/vulturesclaw/save /usr/share/games/vulturesclaw/save &>/dev/null 
-ln -s /var/games/vultureseye/logfile /usr/share/games/vultureseye/logfile &>/dev/null 
-ln -s /var/games/vultureeye/perm /usr/share/games/vultureseye/perm &>/dev/null 
-ln -s /var/games/vultureseye/record /usr/share/games/vultureseye/record &>/dev/null 
-ln -s /var/games/vultureseye/save /usr/share/games/vultureseye/save &>/dev/null 
+ln -s /var/games/vulture-slashem/logfile /usr/share/games/vulture-slashem/logfile &>/dev/null 
+ln -s /var/games/vulture-slashem/perm /usr/share/games/vulture-slashem/perm &>/dev/null 
+ln -s /var/games/vulture-slashem/record /usr/share/games/vulture-slashem/record &>/dev/null 
+ln -s /var/games/vulture-slashem/save /usr/share/games/vulture-slashem/save &>/dev/null 
+ln -s /var/games/vulture-nethack/logfile /usr/share/games/vulture-nethack/logfile &>/dev/null 
+ln -s /var/games/vultureeye/perm /usr/share/games/vulture-nethack/perm &>/dev/null 
+ln -s /var/games/vulture-nethack/record /usr/share/games/vulture-nethack/record &>/dev/null 
+ln -s /var/games/vulture-nethack/save /usr/share/games/vulture-nethack/save &>/dev/null 
 
 %run_permissions
 
@@ -342,83 +342,83 @@ ln -s /var/games/vultureseye/save /usr/share/games/vultureseye/save &>/dev/null
 /etc/vultures
 /etc/vultures/vulturesrc.vultures
 /usr/games
-/usr/games/vultureseye
-/usr/games/vulturesclaw
-/usr/share/games/vultureseye
-/usr/share/games/vulturesclaw
-/var/games/vultureseye
-/var/games/vulturesclaw
-%attr(0777,games,games) /var/games/vultureseye
-%attr(0777,games,games) /var/games/vulturesclaw
+/usr/games/vulture-nethack
+/usr/games/vulture-slashem
+/usr/share/games/vulture-nethack
+/usr/share/games/vulture-slashem
+/var/games/vulture-nethack
+/var/games/vulture-slashem
+%attr(0777,games,games) /var/games/vulture-nethack
+%attr(0777,games,games) /var/games/vulture-slashem
 #%doc slashem/readme.txt slashem/history.txt slashem/slamfaq.txt vultures/win/jtp/gamedata/manual/
 %doc slashem/readme.txt slashem/history.txt slashem/slamfaq.txt
-%attr(0777,games,games) %dir /usr/share/games/vultureseye/
-/usr/share/games/vultureseye/config/
-/usr/share/games/vultureseye/defaults.nh
-/usr/share/games/vultureseye/graphics/
-/usr/share/games/vultureseye/license
-/usr/share/games/vultureseye/music/
-/usr/share/games/vultureseye/nhdat
-/usr/share/games/vultureseye/sound/
-%attr(666,games,games) /usr/share/games/vultureseye-recover
-%attr(666,games,games) /usr/share/games/vultureseye/vultures_log.txt
-%attr(2777,games,games) /usr/share/games/vultureseye/vultureseye
-%attr(0777,games,games) %dir /usr/share/games/vulturesclaw/
-/usr/share/games/vulturesclaw/config/
-/usr/share/games/vulturesclaw/defaults.nh
-/usr/share/games/vulturesclaw/graphics/
-/usr/share/games/vulturesclaw/Guidebook.txt
-/usr/share/games/vulturesclaw/license
-/usr/share/games/vulturesclaw/music/
-/usr/share/games/vulturesclaw/nh*share
-/usr/share/games/vulturesclaw/sound/
-%attr(666,games,games) /usr/share/games/vulturesclaw-recover
-%attr(666,games,games) /usr/share/games/vulturesclaw/vultures_log.txt
-%attr(2777,games,games) /usr/share/games/vulturesclaw/vulturesclaw
+%attr(0777,games,games) %dir /usr/share/games/vulture-nethack/
+/usr/share/games/vulture-nethack/config/
+/usr/share/games/vulture-nethack/defaults.nh
+/usr/share/games/vulture-nethack/graphics/
+/usr/share/games/vulture-nethack/license
+/usr/share/games/vulture-nethack/music/
+/usr/share/games/vulture-nethack/nhdat
+/usr/share/games/vulture-nethack/sound/
+%attr(666,games,games) /usr/share/games/vulture-nethack-recover
+%attr(666,games,games) /usr/share/games/vulture-nethack/vultures_log.txt
+%attr(2777,games,games) /usr/share/games/vulture-nethack/vulture-nethack
+%attr(0777,games,games) %dir /usr/share/games/vulture-slashem/
+/usr/share/games/vulture-slashem/config/
+/usr/share/games/vulture-slashem/defaults.nh
+/usr/share/games/vulture-slashem/graphics/
+/usr/share/games/vulture-slashem/Guidebook.txt
+/usr/share/games/vulture-slashem/license
+/usr/share/games/vulture-slashem/music/
+/usr/share/games/vulture-slashem/nh*share
+/usr/share/games/vulture-slashem/sound/
+%attr(666,games,games) /usr/share/games/vulture-slashem-recover
+%attr(666,games,games) /usr/share/games/vulture-slashem/vultures_log.txt
+%attr(2777,games,games) /usr/share/games/vulture-slashem/vulture-slashem
 %{_datadir}/applications/*vultures*.desktop
 %{_datadir}/icons/hicolor/48x48/apps/vultures*.png
 %defattr(666,games,games,775)
-%dir /var/games/vultureseye/
-%config(noreplace) %attr(666,games,games) /var/games/vultureseye/record
-%config(noreplace) %attr(666,games,games) /var/games/vultureseye/perm
-%config(noreplace) %attr(666,games,games) /var/games/vultureseye/logfile
-%dir /var/games/vultureseye/save/
-%dir /var/games/vulturesclaw/
-%config(noreplace) %attr(666,games,games) /var/games/vulturesclaw/record
-%config(noreplace) %attr(666,games,games) /var/games/vulturesclaw/perm
-%config(noreplace) %attr(666,games,games) /var/games/vulturesclaw/logfile
-%dir /var/games/vulturesclaw/save/
-/usr/share/games/vulturesclaw/fonts/VeraSe.ttf
-/usr/share/games/vultureseye/fonts/VeraSe.ttf
-/usr/share/man/man6/vulturesclaw-recover.6.gz
-/usr/share/man/man6/vulturesclaw.6.gz
-/usr/share/man/man6/vultureseye-recover.6.gz
-/usr/share/man/man6/vultureseye.6.gz
+%dir /var/games/vulture-nethack/
+%config(noreplace) %attr(666,games,games) /var/games/vulture-nethack/record
+%config(noreplace) %attr(666,games,games) /var/games/vulture-nethack/perm
+%config(noreplace) %attr(666,games,games) /var/games/vulture-nethack/logfile
+%dir /var/games/vulture-nethack/save/
+%dir /var/games/vulture-slashem/
+%config(noreplace) %attr(666,games,games) /var/games/vulture-slashem/record
+%config(noreplace) %attr(666,games,games) /var/games/vulture-slashem/perm
+%config(noreplace) %attr(666,games,games) /var/games/vulture-slashem/logfile
+%dir /var/games/vulture-slashem/save/
+/usr/share/games/vulture-slashem/fonts/VeraSe.ttf
+/usr/share/games/vulture-nethack/fonts/VeraSe.ttf
+/usr/share/man/man6/vulture-slashem-recover.6.gz
+/usr/share/man/man6/vulture-slashem.6.gz
+/usr/share/man/man6/vulture-nethack-recover.6.gz
+/usr/share/man/man6/vulture-nethack.6.gz
 %endif
 
 
 %if 0%{?fedora_version}
 make -C nethack install CHGRP=: CHOWN=: \
-    GAMEDIR=$RPM_BUILD_ROOT%{_prefix}/games/vultureseye \
-    VARDIR=$RPM_BUILD_ROOT%{_var}/games/vultureseye \
+    GAMEDIR=$RPM_BUILD_ROOT%{_prefix}/games/vulture-nethack \
+    VARDIR=$RPM_BUILD_ROOT%{_var}/games/vulture-nethack \
     SHELLDIR=$RPM_BUILD_ROOT%{_bindir}
 make -C slashem install CHGRP=: CHOWN=: \
-    GAMEDIR=$RPM_BUILD_ROOT%{_prefix}/games/vulturesclaw \
-    VARDIR=$RPM_BUILD_ROOT%{_var}/games/vulturesclaw \
+    GAMEDIR=$RPM_BUILD_ROOT%{_prefix}/games/vulture-slashem \
+    VARDIR=$RPM_BUILD_ROOT%{_var}/games/vulture-slashem \
     SHELLDIR=$RPM_BUILD_ROOT%{_bindir}
 
 install -dm 755 $RPM_BUILD_ROOT%{_mandir}/man6
 install -pm 644 nethack/doc/nethack.6 \
-    $RPM_BUILD_ROOT%{_mandir}/man6/vultureseye.6
+    $RPM_BUILD_ROOT%{_mandir}/man6/vulture-nethack.6
 install -pm 644 nethack/doc/recover.6 \
-    $RPM_BUILD_ROOT%{_mandir}/man6/vultureseye-recover.6
+    $RPM_BUILD_ROOT%{_mandir}/man6/vulture-nethack-recover.6
 install -pm 644 slashem/doc/nethack.6 \
-    $RPM_BUILD_ROOT%{_mandir}/man6/vulturesclaw.6
+    $RPM_BUILD_ROOT%{_mandir}/man6/vulture-slashem.6
 install -pm 644 slashem/doc/recover.6 \
-    $RPM_BUILD_ROOT%{_mandir}/man6/vulturesclaw-recover.6
+    $RPM_BUILD_ROOT%{_mandir}/man6/vulture-slashem-recover.6
 
 install -dm 755 $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/48x48/apps
-for i in vultureseye vulturesclaw ; do
+for i in vulture-nethack vulture-slashem ; do
     desktop-file-install \
         --vendor=fedora \
         --dir=$RPM_BUILD_ROOT%{_datadir}/applications \
@@ -431,14 +431,14 @@ for i in vultureseye vulturesclaw ; do
         $RPM_BUILD_ROOT%{_bindir}/$i-recover
 done
 
-rm -r $RPM_BUILD_ROOT%{_prefix}/games/vultureseye/manual
-rm -r $RPM_BUILD_ROOT%{_prefix}/games/vulturesclaw/manual
+rm -r $RPM_BUILD_ROOT%{_prefix}/games/vulture-nethack/manual
+rm -r $RPM_BUILD_ROOT%{_prefix}/games/vulture-slashem/manual
 
 # Save some space
 for f in graphics music sound ; do
-    rm -r $RPM_BUILD_ROOT%{_prefix}/games/vulturesclaw/$f
-    ln -s ../vultureseye/$f \
-        $RPM_BUILD_ROOT%{_prefix}/games/vulturesclaw/$f
+    rm -r $RPM_BUILD_ROOT%{_prefix}/games/vulture-slashem/$f
+    ln -s ../vulture-nethack/$f \
+        $RPM_BUILD_ROOT%{_prefix}/games/vulture-slashem/$f
 done
 
 chmod -s $RPM_BUILD_ROOT%{_prefix}/games/vultures*/vultures* # for stripping
@@ -465,41 +465,41 @@ gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
 #%doc slashem/readme.txt slashem/history.txt slashem/slamfaq.txt vultures/win/jtp/gamedata/manual/
 %doc slashem/readme.txt slashem/history.txt slashem/slamfaq.txt
 %{_bindir}/vultures*
-%dir %{_prefix}/games/vultureseye/
-%{_prefix}/games/vultureseye/config/
-%{_prefix}/games/vultureseye/defaults.nh
-%{_prefix}/games/vultureseye/graphics/
-%{_prefix}/games/vultureseye/license
-%{_prefix}/games/vultureseye/music/
-%{_prefix}/games/vultureseye/nhdat
-%{_prefix}/games/vultureseye/sound/
-%attr(2755,root,games) %{_prefix}/games/vultureseye/vultureseye
-%dir %{_prefix}/games/vulturesclaw/
-%{_prefix}/games/vulturesclaw/config/
-%{_prefix}/games/vulturesclaw/defaults.nh
-%{_prefix}/games/vulturesclaw/graphics/
-%{_prefix}/games/vulturesclaw/Guidebook.txt
-%{_prefix}/games/vulturesclaw/license
-%{_prefix}/games/vulturesclaw/music/
-%{_prefix}/games/vulturesclaw/nh*share
-%{_prefix}/games/vulturesclaw/sound/
-%attr(2755,root,games) %{_prefix}/games/vulturesclaw/vulturesclaw
+%dir %{_prefix}/games/vulture-nethack/
+%{_prefix}/games/vulture-nethack/config/
+%{_prefix}/games/vulture-nethack/defaults.nh
+%{_prefix}/games/vulture-nethack/graphics/
+%{_prefix}/games/vulture-nethack/license
+%{_prefix}/games/vulture-nethack/music/
+%{_prefix}/games/vulture-nethack/nhdat
+%{_prefix}/games/vulture-nethack/sound/
+%attr(2755,root,games) %{_prefix}/games/vulture-nethack/vulture-nethack
+%dir %{_prefix}/games/vulture-slashem/
+%{_prefix}/games/vulture-slashem/config/
+%{_prefix}/games/vulture-slashem/defaults.nh
+%{_prefix}/games/vulture-slashem/graphics/
+%{_prefix}/games/vulture-slashem/Guidebook.txt
+%{_prefix}/games/vulture-slashem/license
+%{_prefix}/games/vulture-slashem/music/
+%{_prefix}/games/vulture-slashem/nh*share
+%{_prefix}/games/vulture-slashem/sound/
+%attr(2755,root,games) %{_prefix}/games/vulture-slashem/vulture-slashem
 %{_datadir}/applications/*vultures*.desktop
 %{_datadir}/icons/hicolor/48x48/apps/vultures*.png
 %{_mandir}/man6/vultures*.6*
 %defattr(664,root,games,775)
-%dir %{_var}/games/vultureseye/
-%config(noreplace) %{_var}/games/vultureseye/record
-%config(noreplace) %{_var}/games/vultureseye/perm
-%config(noreplace) %{_var}/games/vultureseye/logfile
-%dir %{_var}/games/vultureseye/save/
-%dir %{_var}/games/vulturesclaw/
-%config(noreplace) %{_var}/games/vulturesclaw/record
-%config(noreplace) %{_var}/games/vulturesclaw/perm
-%config(noreplace) %{_var}/games/vulturesclaw/logfile
-%dir %{_var}/games/vulturesclaw/save/
-%{_prefix}/games/vulturesclaw/fonts/VeraSe.ttf
-%{_prefix}/games/vultureseye/fonts/VeraSe.ttf
+%dir %{_var}/games/vulture-nethack/
+%config(noreplace) %{_var}/games/vulture-nethack/record
+%config(noreplace) %{_var}/games/vulture-nethack/perm
+%config(noreplace) %{_var}/games/vulture-nethack/logfile
+%dir %{_var}/games/vulture-nethack/save/
+%dir %{_var}/games/vulture-slashem/
+%config(noreplace) %{_var}/games/vulture-slashem/record
+%config(noreplace) %{_var}/games/vulture-slashem/perm
+%config(noreplace) %{_var}/games/vulture-slashem/logfile
+%dir %{_var}/games/vulture-slashem/save/
+%{_prefix}/games/vulture-slashem/fonts/VeraSe.ttf
+%{_prefix}/games/vulture-nethack/fonts/VeraSe.ttf
 %endif
 
 %changelog

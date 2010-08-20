@@ -18,10 +18,10 @@ LIB_VORBIS=libvorbis.0.dylib
 LIB_OGG=libogg.0.dylib
 LIB_FREETYPE=libfreetype.6.dylib
 
-GAME_DIR=$SRC_ROOT/lib/vultureseyedir
+GAME_DIR=$SRC_ROOT/lib/vulture-nethackdir
 
 APP_DIR=$DST_ROOT/Vulture-NetHack.app
-APP_GAMERESOURCES=$APP_DIR/vultureseyedir
+APP_GAMERESOURCES=$APP_DIR/vulture-nethackdir
 APP_STARTDIR=$APP_DIR/Contents
 APP_APPRESOURCES=$APP_DIR/Contents/Resources
 APP_APPSTART=$APP_DIR/Contents/MacOS
@@ -30,7 +30,7 @@ APP_APPLIB=$APP_DIR/Contents/Frameworks
 DMG_NAME=$DST_ROOT/vultures-$VERSION-$VARIANTSUFFIX_macosx-$RELEASE.dmg
 
 
-REAL_EXECUTABLE=$APP_GAMERESOURCES/vultureseye
+REAL_EXECUTABLE=$APP_GAMERESOURCES/vulture-nethack
 
 LOCAL_LIBREF=@executable_path/../Contents/Frameworks
 
@@ -55,11 +55,11 @@ cp -r $GAME_DIR/* $APP_GAMERESOURCES
 cp $CUSTOM_DATA/Info-nethack.plist $APP_STARTDIR/Info.plist
 
 # copy icon(s)
-cp $CUSTOM_DATA/vultureseye.icns $APP_APPRESOURCES 
+cp $CUSTOM_DATA/vulture-nethack.icns $APP_APPRESOURCES 
 
 # copy starter
-cp $CUSTOM_DATA/vultureseye $APP_APPSTART
-chmod u+x $APP_APPSTART/vultureseye
+cp $CUSTOM_DATA/vulture-nethack $APP_APPSTART
+chmod u+x $APP_APPSTART/vulture-nethack
 
 # copy needed libraries
 cp $LIB_DIR/$LIB_SDL $APP_APPLIB/$LIB_SDL
