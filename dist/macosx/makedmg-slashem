@@ -20,7 +20,7 @@ LIB_FREETYPE=libfreetype.6.dylib
 
 GAME_DIR=$SRC_ROOT/slashemdir
 
-APP_DIR=$DST_ROOT/VulturesClaw.app
+APP_DIR=$DST_ROOT/Vulture-SlashEM.app
 APP_GAMERESOURCES=$APP_DIR/slashemdir
 APP_STARTDIR=$APP_DIR/Contents
 APP_APPRESOURCES=$APP_DIR/Contents/Resources

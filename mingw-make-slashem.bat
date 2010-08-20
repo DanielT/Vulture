@@ -13,7 +13,7 @@ cd ..\..\src
 mingw32-make -f Makefile.gcc spotless
 mingw32-make -f Makefile.gcc all
 cd ..\..
-strip --strip-all slashem\binary\VulturesClaw.exe
+strip --strip-all slashem\binary\Vulture-SlashEM.exe
 
 goto EOF
 

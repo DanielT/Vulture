@@ -20,7 +20,7 @@ LIB_FREETYPE=libfreetype.6.dylib
 
 GAME_DIR=$SRC_ROOT/lib/vultureseyedir
 
-APP_DIR=$DST_ROOT/VulturesEye.app
+APP_DIR=$DST_ROOT/Vulture-NetHack.app
 APP_GAMERESOURCES=$APP_DIR/vultureseyedir
 APP_STARTDIR=$APP_DIR/Contents
 APP_APPRESOURCES=$APP_DIR/Contents/Resources

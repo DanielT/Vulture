@@ -29,30 +29,30 @@ Section ""
   SetOutPath $INSTDIR\fonts
   File ..\..\slashem\binary\fonts\*
 
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VulturesClaw" "DisplayName" "Vulture's Claw"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VulturesClaw" "UninstallString" '"$INSTDIR\uninstall.exe"'
-  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VulturesClaw" "NoModify" 1
-  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VulturesClaw" "NoRepair" 1
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vulture-SlashEM" "DisplayName" "Vulture's Claw"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vulture-SlashEM" "UninstallString" '"$INSTDIR\uninstall.exe"'
+  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vulture-SlashEM" "NoModify" 1
+  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vulture-SlashEM" "NoRepair" 1
   WriteUninstaller "uninstall.exe"
 SectionEnd
 
 Section "Desktop icon" SecDesktop
   SetOutPath $INSTDIR
-  CreateShortcut "$DESKTOP\Vulture's Claw.lnk" "$INSTDIR\VulturesClaw.exe" "" "$INSTDIR\VulturesClaw.exe" 0
+  CreateShortcut "$DESKTOP\Vulture's Claw.lnk" "$INSTDIR\Vulture-SlashEM.exe" "" "$INSTDIR\Vulture-SlashEM.exe" 0
 SectionEnd
 
 Section "Start Menu Shortcuts"
   SetOutPath $INSTDIR
   CreateDirectory "$SMPROGRAMS\Vulture's Claw"
-  CreateShortCut "$SMPROGRAMS\Vulture's Claw\Play Vulture's Claw.lnk" "$INSTDIR\VulturesClaw.exe" "" "$INSTDIR\VulturesClaw.exe" 0
+  CreateShortCut "$SMPROGRAMS\Vulture's Claw\Play Vulture's Claw.lnk" "$INSTDIR\Vulture-SlashEM.exe" "" "$INSTDIR\Vulture-SlashEM.exe" 0
   CreateShortCut "$SMPROGRAMS\Vulture's Claw\Manual.lnk" "$INSTDIR\manual\index.html" "" "$INSTDIR\manual\index.html" 0
   CreateShortCut "$SMPROGRAMS\Vulture's Claw\Darkarts Studios.lnk" "http://www.darkarts.co.za" "" "http://www.darkarts.co.za" 0
   CreateShortCut "$SMPROGRAMS\Vulture's Claw\Uninstall Vulture's Claw.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
 SectionEnd
 
 Section "Uninstall"
-  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\VulturesClaw"
-  DeleteRegKey HKLM SOFTWARE\VulturesClaw
+  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vulture-SlashEM"
+  DeleteRegKey HKLM SOFTWARE\Vulture-SlashEM
   Delete $INSTDIR\config\*
   Delete $INSTDIR\graphics\*
   Delete $INSTDIR\manual\img\*

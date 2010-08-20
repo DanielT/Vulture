@@ -52,15 +52,15 @@ SectionEnd
 
 Section "Desktop icon" SecDesktop
   SetOutPath $INSTDIR
-  CreateShortcut "$DESKTOP\Vulture's Eye.lnk" "$INSTDIR\Eye\VulturesEye.exe" "" "$INSTDIR\Eye\VulturesEye.exe" 0
-  CreateShortcut "$DESKTOP\Vulture's Claw.lnk" "$INSTDIR\Claw\VulturesClaw.exe" "" "$INSTDIR\Claw\VulturesClaw.exe" 0
+  CreateShortcut "$DESKTOP\Vulture's Eye.lnk" "$INSTDIR\Eye\Vulture-NetHack.exe" "" "$INSTDIR\Eye\Vulture-NetHack.exe" 0
+  CreateShortcut "$DESKTOP\Vulture's Claw.lnk" "$INSTDIR\Claw\Vulture-SlashEM.exe" "" "$INSTDIR\Claw\Vulture-SlashEM.exe" 0
 SectionEnd
 
 Section "Start Menu Shortcuts"
   SetOutPath $INSTDIR
   CreateDirectory "$SMPROGRAMS\Vulture's"
-  CreateShortCut "$SMPROGRAMS\Vulture's\Play Vulture's Eye.lnk" "$INSTDIR\Eye\VulturesEye.exe" "" "$INSTDIR\Eye\VulturesEye.exe" 0
-  CreateShortCut "$SMPROGRAMS\Vulture's\Play Vulture's Claw.lnk" "$INSTDIR\Claw\VulturesClaw.exe" "" "$INSTDIR\Claw\VulturesClaw.exe" 0
+  CreateShortCut "$SMPROGRAMS\Vulture's\Play Vulture's Eye.lnk" "$INSTDIR\Eye\Vulture-NetHack.exe" "" "$INSTDIR\Eye\Vulture-NetHack.exe" 0
+  CreateShortCut "$SMPROGRAMS\Vulture's\Play Vulture's Claw.lnk" "$INSTDIR\Claw\Vulture-SlashEM.exe" "" "$INSTDIR\Claw\Vulture-SlashEM.exe" 0
   CreateShortCut "$SMPROGRAMS\Vulture's\Manual.lnk" "$INSTDIR\Eye\manual\index.html" "" "$INSTDIR\Eye\manual\index.html" 0
   CreateShortCut "$SMPROGRAMS\Vulture's\Darkarts Studios.lnk" "http://www.darkarts.co.za" "" "http://www.darkarts.co.za" 0
   CreateShortCut "$SMPROGRAMS\Vulture's\Uninstall Vulture's.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0

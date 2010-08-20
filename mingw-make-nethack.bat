@@ -13,7 +13,7 @@ cd ..\..\src
 mingw32-make -f Makefile.gcc spotless
 mingw32-make -f Makefile.gcc all
 cd ..\..
-strip --strip-all nethack\binary\VulturesEye.exe
+strip --strip-all nethack\binary\Vulture-NetHack.exe
 
 goto EOF
 
