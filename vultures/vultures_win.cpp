@@ -464,7 +464,7 @@ void vultures_win_resize(int width, int height)
 }
 
 
-#ifdef VULTURESEYE
+#ifdef VULTURE_NETHACK
 /* show a main menu with common options when the user presses esc */
 void vultures_show_mainmenu()
 {

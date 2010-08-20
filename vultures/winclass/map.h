@@ -5,7 +5,7 @@
 
 #include "window.h"
 
-#ifdef VULTURESEYE
+#ifdef VULTURE_NETHACK
 # define V_MAX_MAP_SYMBOLS  (40*30)
 #endif
 #ifdef VULTURE_SLASHEM

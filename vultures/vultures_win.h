@@ -22,7 +22,7 @@ class window;
 /*
 * graphics files, without ".png" extension
 */
-#ifdef VULTURESEYE
+#ifdef VULTURE_NETHACK
 #define V_FILENAME_NETHACK_LOGO         "nh_ve_1"
 #define V_FILENAME_MAP_SYMBOLS          "nh_tiles"
 #endif

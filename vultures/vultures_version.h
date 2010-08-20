@@ -1,4 +1,4 @@
-#ifdef VULTURESEYE
+#ifdef VULTURE_NETHACK
 # define VULTURES_PORT_ID_NAME "Eye"
 #else
 # ifdef VULTURE_SLASHEM
