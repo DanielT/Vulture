@@ -27,7 +27,7 @@ ifeq ($(BUILD), nethack)
 	CFLAGS += -DVULTURESEYE
 else
 	BUILDDIR := build_s
-	CFLAGS += -DVULTURESCLAW
+	CFLAGS += -DVULTURE_SLASHEM
 endif
 
 # build target

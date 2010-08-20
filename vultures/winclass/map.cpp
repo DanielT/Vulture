@@ -94,7 +94,7 @@ bool map::draw()
 	vultures_put_img(abs_x, abs_y, mapbg);
 
 	/* Draw the level name */
-#ifdef VULTURESCLAW
+#ifdef VULTURE_SLASHEM
 	describe_level(buffer, TRUE);
 #else
 	if (!describe_level(buffer))

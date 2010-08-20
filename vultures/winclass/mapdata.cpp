@@ -69,7 +69,7 @@ mapdata::mapdata()
 	vultures_tilemap_engulf[PM_JUIBLEX]      = V_MISC_ENGULF_JUIBLEX;
 
 	/* build "special tile" array: these are the tiles for dungeon glyphs */
-#ifdef VULTURESCLAW
+#ifdef VULTURE_SLASHEM
 	vultures_tilemap_misc[S_toilet] = V_MISC_TOILET;
 #endif
 
@@ -798,7 +798,7 @@ map_action mapdata::get_map_action(point mappos)
 
 				case V_MISC_FOUNTAIN:
 				case V_MISC_SINK:
-#ifdef VULTURESCLAW
+#ifdef VULTURE_SLASHEM
 				case V_MISC_TOILET:
 #endif
 					return V_ACTION_DRINK;
@@ -866,7 +866,7 @@ map_action mapdata::get_map_contextmenu(point mappos)
 		/* do a minimum check to leave turn undead out for those who _definitely_ can't do it */
 #ifdef VULTURESEYE
 		if (Role_if(PM_PRIEST) || Role_if(PM_KNIGHT) ||
-#else /* VULTURESCLAW */
+#else /* VULTURE_SLASHEM */
 		if (tech_known(T_TURN_UNDEAD) ||
 #endif
 			objects[SPE_TURN_UNDEAD].oc_name_known)
@@ -942,7 +942,7 @@ map_action mapdata::get_map_contextmenu(point mappos)
 				break;
 
 			case V_MISC_FOUNTAIN: case V_MISC_SINK:
-#ifdef VULTURESCLAW
+#ifdef VULTURE_SLASHEM
 			case V_MISC_TOILET:
 #endif
 				if ((u.ux == mappos. x) && (u.uy == mappos. y))

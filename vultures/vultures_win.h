@@ -26,7 +26,7 @@ class window;
 #define V_FILENAME_NETHACK_LOGO         "nh_ve_1"
 #define V_FILENAME_MAP_SYMBOLS          "nh_tiles"
 #endif
-#ifdef VULTURESCLAW
+#ifdef VULTURE_SLASHEM
 #define V_FILENAME_NETHACK_LOGO         "se_vc_1"
 #define V_FILENAME_MAP_SYMBOLS          "se_tiles"
 #endif

@@ -8,7 +8,7 @@
 #ifdef VULTURESEYE
 # define V_MAX_MAP_SYMBOLS  (40*30)
 #endif
-#ifdef VULTURESCLAW
+#ifdef VULTURE_SLASHEM
 # define V_MAX_MAP_SYMBOLS  (40*36)
 #endif
 
