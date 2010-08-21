@@ -8,12 +8,13 @@
 # follow the instructions of the README in the sys/unix directory
 # of NetHack and/or Slash'EM
 
-GAME = vultures
-GAMEDEF = VULTURES
-NETHACK = eye
-SLASHEM = claw
-GAMENETHACK = $(GAME)$(NETHACK)
-GAMESLASHEM = $(GAME)$(SLASHEM)
+GAME = vulture
+GAMEDEF = VULTURE
+NETHACK = NetHack
+SLASHEM = SlashEM
+GAMENETHACK = $(GAME)-$(NETHACK)
+GAMESLASHEM = $(GAME)-$(SLASHEM)
+GAMEDIRSUFFIX = -data
 DATE := $(shell date +%Y%m%d%H%M%S)
 GITREVISION := $(strip $(shell if ! [ -f .git-revision ]; then git rev-list `git describe --tags --abbrev=0`..master|wc -l > .git-revision; fi; cat .git-revision))
 VERSION = 2.2.$(GITREVISION)
@@ -48,15 +49,15 @@ test-win32:
 test-unix: nethack-test slashem-test
 
 nethack-home: nethack/Makefile nethack/win/$(GAME)
-	@echo "Building and installing NetHack in "$(INSTPREFIX)/$(GAMENETHACK)dir
-	@mkdir -p $(INSTPREFIX)/$(GAMENETHACK)dir
-	@$(MAKE) PREFIX=$(INSTPREFIX) GAMEDIR=$(INSTPREFIX)/$(GAMENETHACK)dir SHELLDIR=$(INSTPREFIX) \
+	@echo "Building and installing NetHack in "$(INSTPREFIX)/$(GAMENETHACK)${GAMEDIRSUFFIX}
+	@mkdir -p $(INSTPREFIX)/$(GAMENETHACK)${GAMEDIRSUFFIX}
+	@$(MAKE) PREFIX=$(INSTPREFIX) GAMEDIR=$(INSTPREFIX)/$(GAMENETHACK)${GAMEDIRSUFFIX} SHELLDIR=$(INSTPREFIX) \
 	         GAMEPERM=0755 CHOWN=true CHGRP=true -C nethack install >/dev/null
 
 slashem-home: slashem/Makefile slashem/win/$(GAME)
-	@echo "Building and installing Slash'EM in "$(INSTPREFIX)/$(GAMESLASHEM)dir
-	@mkdir -p $(INSTPREFIX)/$(GAMESLASHEM)dir
-	@$(MAKE) PREFIX=$(INSTPREFIX) GAMEDIR=$(INSTPREFIX)/$(GAMESLASHEM)dir SHELLDIR=$(INSTPREFIX) \
+	@echo "Building and installing Slash'EM in "$(INSTPREFIX)/$(GAMESLASHEM)${GAMEDIRSUFFIX}
+	@mkdir -p $(INSTPREFIX)/$(GAMESLASHEM)${GAMEDIRSUFFIX}
+	@$(MAKE) PREFIX=$(INSTPREFIX) GAMEDIR=$(INSTPREFIX)/$(GAMESLASHEM)${GAMEDIRSUFFIX} SHELLDIR=$(INSTPREFIX) \
 	         GAMEPERM=0755 CHOWN=true CHGRP=true -C slashem install >/dev/null
 
 $(TESTDIR):
