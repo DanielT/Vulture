@@ -1,4 +1,4 @@
---- ../vultures-2.1.0.orig/nethack/sys/unix/Makefile.utl
+--- ../vulture-2.1.0.orig/nethack/sys/unix/Makefile.utl
 +++ ./nethack/sys/unix/Makefile.utl
 @@ -101,8 +101,9 @@
  
@@ -11,7 +11,7 @@
  # YACC     = bison -y
  # YACC     = byacc
  # LEX      = flex
---- ../vultures-2.1.0.orig/slashem/sys/unix/Makefile.utl
+--- ../vulture-2.1.0.orig/slashem/sys/unix/Makefile.utl
 +++ ./slashem/sys/unix/Makefile.utl
 @@ -101,8 +101,9 @@
  

@@ -1,4 +1,4 @@
---- ../vultures-2.1.0.orig/nethack/include/unixconf.h
+--- ../vulture-2.1.0.orig/nethack/include/unixconf.h
 +++ ./nethack/include/unixconf.h
 @@ -322,10 +322,8 @@
  

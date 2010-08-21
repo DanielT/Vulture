@@ -47,7 +47,7 @@ public:
 	
 private:
 	SDL_Surface *minimapbg;
-	char vultures_minimap_syms[ROWNO][COLNO];
+	char vulture_minimap_syms[ROWNO][COLNO];
 	levelwin *level;
 	mapdata *map_data;
 };

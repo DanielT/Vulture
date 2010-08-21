@@ -4,13 +4,13 @@
 #include "scrollbar.h"
 #include "textwin.h"
 
-#include "vultures_gen.h"
-#include "vultures_gra.h"
-#include "vultures_win.h"
-#include "vultures_sdl.h"
-#include "vultures_txt.h"
-#include "vultures_mou.h"
-#include "vultures_tile.h"
+#include "vulture_gen.h"
+#include "vulture_gra.h"
+#include "vulture_win.h"
+#include "vulture_sdl.h"
+#include "vulture_txt.h"
+#include "vulture_mou.h"
+#include "vulture_tile.h"
 
 
 scrollwin::scrollwin(window *p, bool txt) : window(p), is_text(txt)
@@ -29,7 +29,7 @@ bool scrollwin::draw()
 	scrolloffset = (scrollpos * (get_scrollheight() - this->h)) / 8192.0;
 
 	/* ensure correct clipping */
-	vultures_set_draw_region(abs_x, abs_y, abs_x + w, abs_y + h);
+	vulture_set_draw_region(abs_x, abs_y, abs_x + w, abs_y + h);
 
 	for (struct window *winelem = first_child; winelem; winelem = winelem->sib_next) {
 		winelem->abs_x = abs_x + winelem->x;
@@ -49,7 +49,7 @@ bool scrollwin::draw()
 	}
 	
 	/* unrestricted drawing */
-	vultures_set_draw_region(0, 0, vultures_screen->w-1, vultures_screen->h-1);
+	vulture_set_draw_region(0, 0, vulture_screen->w-1, vulture_screen->h-1);
 	
 	return false;
 }
@@ -71,7 +71,7 @@ int scrollwin::get_scrollheight(void)
 	}
 	
 	/* add one line of extra space, to make sure the last element can be scrolled into view */
-	return max_y + vultures_get_lineheight(V_FONT_MENU); 
+	return max_y + vulture_get_lineheight(V_FONT_MENU); 
 }
 
 
@@ -85,11 +85,11 @@ int scrollwin::get_menuitem_width(window *item, int colwidths[8])
 	/* if this is an option leave space for the checkbox in the first column */
 	btnwidth = 0;
 	if (item->v_type == V_WINTYPE_OPTION)
-		btnwidth = vultures_winelem.checkbox_off->w + 4;
+		btnwidth = vulture_winelem.checkbox_off->w + 4;
 		
 	pos = item->caption.find_first_of('\t');
 	if (pos == std::string::npos)
-		return vultures_text_length(V_FONT_MENU, item->caption) + btnwidth + 5;
+		return vulture_text_length(V_FONT_MENU, item->caption) + btnwidth + 5;
 
 	width = prevpos = i = 0;
 	do {
@@ -100,7 +100,7 @@ int scrollwin::get_menuitem_width(window *item, int colwidths[8])
 		trim(coltxt);
 
 		/* get the item's width */
-		thiscol = vultures_text_length(V_FONT_MENU, coltxt) + 5;
+		thiscol = vulture_text_length(V_FONT_MENU, coltxt) + 5;
 		
 		if (i == 0)
 			thiscol += btnwidth;
@@ -142,7 +142,7 @@ void scrollwin::layout(void)
 
 	for (winelem = first_child; winelem; winelem = winelem->sib_next) {
 		winelem->w = get_menuitem_width(winelem, colwidths);
-		winelem->h = vultures_text_height(V_FONT_MENU, winelem->caption);
+		winelem->h = vulture_text_height(V_FONT_MENU, winelem->caption);
 
 		if (winelem->v_type == V_WINTYPE_OPTION || 
 		    winelem->v_type == V_WINTYPE_TEXT) {
@@ -218,7 +218,7 @@ void scrollwin::set_height(int scrollheight)
 	/* add the scrollbar */
 	if (inner_height > scrollheight) {
 		scroll = new scrollbar(this, scrollpos);
-		scroll->w = vultures_winelem.scrollbar->w;
+		scroll->w = vulture_winelem.scrollbar->w;
 		scroll->h = h;
 		scroll->x = w + 5;
 		scroll->y = 0;
@@ -329,14 +329,14 @@ eventresult scrollwin::mousescroll(scrollbar *target, int is_drag)
 {
 	int scrollind_y;
 	point mouse;
-	int scrollarea_top = target->abs_y + vultures_winelem.scrollbutton_up->h;
-	int scrollarea_bottom = target->abs_y + target->h - vultures_winelem.scrollbutton_down->h;
+	int scrollarea_top = target->abs_y + vulture_winelem.scrollbutton_up->h;
+	int scrollarea_bottom = target->abs_y + target->h - vulture_winelem.scrollbutton_down->h;
 
 	scrollind_y = ((scrollarea_bottom - scrollarea_top -
-					vultures_winelem.scroll_indicator->h) *
+					vulture_winelem.scroll_indicator->h) *
 					(int)target->scrollpos) / 8192.0;
 
-	mouse = vultures_get_mouse_pos();
+	mouse = vulture_get_mouse_pos();
 
 	/* click on the scroll-up button */
 	if (mouse.y <= scrollarea_top) {
@@ -355,7 +355,7 @@ eventresult scrollwin::mousescroll(scrollbar *target, int is_drag)
 	}
 
 	/*click on the scrollbar below the indicator */
-	else if (mouse.y >= scrollarea_top + vultures_winelem.scroll_indicator->h + scrollind_y) {
+	else if (mouse.y >= scrollarea_top + vulture_winelem.scroll_indicator->h + scrollind_y) {
 		if (!is_drag)
 			return scrollto(V_SCROLL_PAGE_REL, 1);
 	}
@@ -370,11 +370,11 @@ eventresult scrollwin::handle_mousemotion_event(window* target, void* result, in
 	window *winelem;
 	point mouse, oldpos;
 
-	vultures_set_mcursor(V_CURSOR_NORMAL);
+	vulture_set_mcursor(V_CURSOR_NORMAL);
 
 	if (state == SDL_PRESSED && 
 		(SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT))) {
-		mouse = vultures_get_mouse_pos();
+		mouse = vulture_get_mouse_pos();
 		oldpos.x = mouse.x + xrel;
 		oldpos.y = mouse.y + yrel;
 		winelem = get_window_from_point(oldpos);

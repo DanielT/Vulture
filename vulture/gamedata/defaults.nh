@@ -9,7 +9,7 @@
 
 # Use the Vulture's Eye window port.
 # For more options related to Vulture's Eye, see the 'config' directory.
-OPTIONS=windowtype:vultures
+OPTIONS=windowtype:vulture
 
 # *** OPTIONS ***
 # Some options to set personal preferences.  Uncomment and change these to

@@ -1,6 +1,6 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
-#include "vultures_sdl.h" /* XXX this must be the first include,
+#include "vulture_sdl.h" /* XXX this must be the first include,
                              no idea why but it won't compile otherwise */
 
 extern "C" {
@@ -8,11 +8,11 @@ extern "C" {
 boolean can_advance(int skill, int speedy);
 }
 
-#include "vultures_win.h"
-#include "vultures_gra.h"
-#include "vultures_gfl.h"
-#include "vultures_mou.h"
-#include "vultures_tile.h"
+#include "vulture_win.h"
+#include "vulture_gra.h"
+#include "vulture_gfl.h"
+#include "vulture_mou.h"
+#include "vulture_tile.h"
 
 #include "enhancebutton.h"
 
@@ -23,7 +23,7 @@ enhancebutton *enhancebtn;
 
 enhancebutton::enhancebutton(window *p) : window(p)
 {
-	image = vultures_load_graphic(V_FILENAME_ENHANCE);
+	image = vulture_load_graphic(V_FILENAME_ENHANCE);
 	w = image->w;
 	h = image->h;
 	
@@ -39,11 +39,11 @@ enhancebutton::~enhancebutton()
 
 bool enhancebutton::draw()
 {
-	vultures_set_draw_region(abs_x, abs_y, abs_x + w - 1, abs_y + h - 1);
-	vultures_put_img(abs_x, abs_y, image);
-	vultures_set_draw_region(0, 0, vultures_screen->w-1, vultures_screen->h-1);
+	vulture_set_draw_region(abs_x, abs_y, abs_x + w - 1, abs_y + h - 1);
+	vulture_put_img(abs_x, abs_y, image);
+	vulture_set_draw_region(0, 0, vulture_screen->w-1, vulture_screen->h-1);
 
-	vultures_invalidate_region(abs_x, abs_y, w, h);
+	vulture_invalidate_region(abs_x, abs_y, w, h);
 
 	return true;
 }
@@ -52,7 +52,7 @@ bool enhancebutton::draw()
 eventresult enhancebutton::handle_timer_event(window* target, void* result, int time)
 {
 	if (time > HOVERTIMEOUT)
-		vultures_mouse_set_tooltip((char *)"Enhance a skill");
+		vulture_mouse_set_tooltip((char *)"Enhance a skill");
 	return V_EVENT_HANDLED_NOREDRAW;
 }
 
@@ -60,7 +60,7 @@ eventresult enhancebutton::handle_timer_event(window* target, void* result, int 
 eventresult enhancebutton::handle_mousemotion_event(window* target, void* result, int xrel, 
                                              int yrel, int state)
 {
-	vultures_set_mcursor(V_CURSOR_NORMAL);
+	vulture_set_mcursor(V_CURSOR_NORMAL);
 	return V_EVENT_HANDLED_NOREDRAW;
 }
 
@@ -71,7 +71,7 @@ eventresult enhancebutton::handle_mousebuttonup_event(window* target, void* resu
 	if (button != SDL_BUTTON_LEFT)
 		return V_EVENT_HANDLED_NOREDRAW;
 	
-	((vultures_event*)result)->num = META('e');
+	((vulture_event*)result)->num = META('e');
 	return V_EVENT_HANDLED_FINAL;
 }
 

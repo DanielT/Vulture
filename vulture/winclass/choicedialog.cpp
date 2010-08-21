@@ -2,10 +2,10 @@
 
 #include <cstring>
 
-#include "vultures_win.h"
-#include "vultures_mou.h"
-#include "vultures_txt.h"
-#include "vultures_tile.h"
+#include "vulture_win.h"
+#include "vulture_mou.h"
+#include "vulture_txt.h"
+#include "vulture_tile.h"
 
 #include "choicedialog.h"
 #include "button.h"
@@ -71,7 +71,7 @@ bool choicedialog::draw()
 eventresult choicedialog::handle_mousemotion_event(window* target, void* result, int xrel, 
                                              int yrel, int state)
 {
-	vultures_set_mcursor(V_CURSOR_NORMAL);
+	vulture_set_mcursor(V_CURSOR_NORMAL);
 	return V_EVENT_HANDLED_NOREDRAW;
 }
 

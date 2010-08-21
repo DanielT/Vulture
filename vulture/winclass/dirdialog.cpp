@@ -1,12 +1,12 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
-#include "vultures_win.h"
-#include "vultures_gen.h"
-#include "vultures_gra.h"
-#include "vultures_sdl.h"
-#include "vultures_txt.h"
-#include "vultures_mou.h"
-#include "vultures_tile.h"
+#include "vulture_win.h"
+#include "vulture_gen.h"
+#include "vulture_gra.h"
+#include "vulture_sdl.h"
+#include "vulture_txt.h"
+#include "vulture_mou.h"
+#include "vulture_tile.h"
 
 #include "dirdialog.h"
 #include "hotspot.h"
@@ -22,17 +22,17 @@ dirdialog::dirdialog(window *p, std::string ques) : mainwin(p)
 
 	caption = ques;
 
-	arrows_w = vultures_winelem.direction_arrows->w;
-	arrows_h = vultures_winelem.direction_arrows->h;
+	arrows_w = vulture_winelem.direction_arrows->w;
+	arrows_h = vulture_winelem.direction_arrows->h;
 
 
 	/* calculate window layout */
 	if (!ques.empty())
-		w = vultures_text_length(V_FONT_HEADLINE, ques);
+		w = vulture_text_length(V_FONT_HEADLINE, ques);
 	w = (w > arrows_w) ? w : arrows_w;
 	w += border_left + border_right;
 
-	arroffset_y = border_top + vultures_get_lineheight(V_FONT_HEADLINE) * 1.5;
+	arroffset_y = border_top + vulture_get_lineheight(V_FONT_HEADLINE) * 1.5;
 	arroffset_x = (w - arrows_w) / 2;
 
 	h = arroffset_y + arrows_h + border_bottom;
@@ -49,7 +49,7 @@ dirdialog::dirdialog(window *p, std::string ques) : mainwin(p)
 eventresult dirdialog::handle_mousemotion_event(window* target, void* result, 
                                                 int xrel, int yrel, int state)
 {
-	vultures_set_mcursor(V_CURSOR_NORMAL);
+	vulture_set_mcursor(V_CURSOR_NORMAL);
 	return V_EVENT_HANDLED_NOREDRAW;
 }
 
@@ -68,7 +68,7 @@ eventresult dirdialog::handle_mousebuttonup_event(window* target, void* result,
 		return V_EVENT_HANDLED_NOREDRAW;
 
 	/* get the click coordinates and normalize them to the center of the arrow grid */
-	mouse = vultures_get_mouse_pos();
+	mouse = vulture_get_mouse_pos();
 	mouse.x -= (target->abs_x + target->w/2);
 	mouse.y -= (target->abs_y + target->h/2);
 
@@ -81,7 +81,7 @@ eventresult dirdialog::handle_mousebuttonup_event(window* target, void* result,
 	/* convert the chosen direction to a key */
 	choice = 0;
 	if (dir_y >= -1 && dir_y <= 1 && dir_x >= -1 && dir_x <= 1)
-		choice = vultures_numpad_to_hjkl(dirkeys[dir_y + 1][dir_x + 1], 0);
+		choice = vulture_numpad_to_hjkl(dirkeys[dir_y + 1][dir_x + 1], 0);
 
 	if (dir_x >= 2 && mouse.x < target->w / 2 && mouse.y < target->h / 2)
 		choice = '>';
@@ -91,7 +91,7 @@ eventresult dirdialog::handle_mousebuttonup_event(window* target, void* result,
 
 	if (choice) {
 		if (!mapwin)
-			choice = vultures_translate_key(choice);
+			choice = vulture_translate_key(choice);
 		*(char*)result = choice;
 		return V_EVENT_HANDLED_FINAL;
 	}
@@ -108,10 +108,10 @@ eventresult dirdialog::handle_keydown_event(window* target, void* result,
 	if (sym == SDLK_ESCAPE)
 		choice = -1;
 	else
-		choice = vultures_make_nh_key(sym, mod, unicode);
+		choice = vulture_make_nh_key(sym, mod, unicode);
 
 	if (!mapwin)
-		choice = vultures_translate_key(choice);
+		choice = vulture_translate_key(choice);
 	*(char*)result = choice;
 	return V_EVENT_HANDLED_FINAL;
 }
@@ -129,12 +129,12 @@ bool dirdialog::draw()
 {
 	mainwin::draw();
 	
-	vultures_set_draw_region(arr->abs_x, arr->abs_y, 
+	vulture_set_draw_region(arr->abs_x, arr->abs_y, 
 	                         arr->abs_x + arr->w - 1, arr->abs_y + arr->h - 1);
-	vultures_put_img(arr->abs_x, arr->abs_y, vultures_winelem.direction_arrows);
-	vultures_set_draw_region(0, 0, vultures_screen->w - 1, vultures_screen->h - 1);
+	vulture_put_img(arr->abs_x, arr->abs_y, vulture_winelem.direction_arrows);
+	vulture_set_draw_region(0, 0, vulture_screen->w - 1, vulture_screen->h - 1);
 
-	vultures_invalidate_region(abs_x, abs_y, w, h);
+	vulture_invalidate_region(abs_x, abs_y, w, h);
 
 	return false;
 }

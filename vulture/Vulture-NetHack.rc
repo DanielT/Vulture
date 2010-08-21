@@ -1,2 +1,2 @@
 #define ICON_APPWND      100
-ICON_APPWND  ICON  "../win/vultures/gamedata/nh_icon.ico"
+ICON_APPWND  ICON  "../win/vulture/gamedata/nh_icon.ico"

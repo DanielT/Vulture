@@ -1,18 +1,18 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
-#include "vultures_sdl.h" /* XXX this must be the first include,
+#include "vulture_sdl.h" /* XXX this must be the first include,
                              no idea why but it won't compile otherwise */
 
 extern "C" {
 #include "hack.h"
 }
 
-#include "vultures_types.h"
-#include "vultures_win.h"
-#include "vultures_gra.h"
-#include "vultures_gfl.h"
-#include "vultures_txt.h"
-#include "vultures_sound.h"
+#include "vulture_types.h"
+#include "vulture_win.h"
+#include "vulture_gra.h"
+#include "vulture_gfl.h"
+#include "vulture_txt.h"
+#include "vulture_sound.h"
 
 #include "endingwin.h"
 
@@ -39,23 +39,23 @@ bool endingwin::draw()
 	}
 
 	/* make sure the screen is cleared */
-	SDL_FillRect(vultures_screen, NULL, CLR32_BLACK);
+	SDL_FillRect(vulture_screen, NULL, CLR32_BLACK);
 
 	switch (ending_type-1)
 	{
 		case QUIT:
-			image = vultures_load_graphic(V_FILENAME_ENDING_QUIT);
-			vultures_play_event_sound("nhfe_music_end_quit");
+			image = vulture_load_graphic(V_FILENAME_ENDING_QUIT);
+			vulture_play_event_sound("nhfe_music_end_quit");
 			break;
 
 		case ASCENDED:
-			image = vultures_load_graphic(V_FILENAME_ENDING_ASCENDED);
-			vultures_play_event_sound("nhfe_music_end_ascended");
+			image = vulture_load_graphic(V_FILENAME_ENDING_ASCENDED);
+			vulture_play_event_sound("nhfe_music_end_ascended");
 			break;
 
 		case ESCAPED:
-			image = vultures_load_graphic(V_FILENAME_ENDING_ESCAPED);
-			vultures_play_event_sound("nhfe_music_end_ascended");
+			image = vulture_load_graphic(V_FILENAME_ENDING_ESCAPED);
+			vulture_play_event_sound("nhfe_music_end_ascended");
 			break;
 
 		case PANICKED:
@@ -63,14 +63,14 @@ bool endingwin::draw()
 			break;
 
 		default:
-			image = vultures_load_graphic(V_FILENAME_ENDING_DIED);
-			vultures_play_event_sound("nhfe_music_end_died");
+			image = vulture_load_graphic(V_FILENAME_ENDING_DIED);
+			vulture_play_event_sound("nhfe_music_end_died");
 	}
 
 	if (image != NULL) {
-		vultures_put_img((vultures_screen->w - image->w) / 2, (vultures_screen->h - image->h) / 2, image);
+		vulture_put_img((vulture_screen->w - image->w) / 2, (vulture_screen->h - image->h) / 2, image);
 		SDL_FreeSurface(image);
-		vultures_fade_in(0.5);
+		vulture_fade_in(0.5);
 	}
 
 	/* Count n. of rows to display */
@@ -80,19 +80,19 @@ bool endingwin::draw()
 	lines++;
 
 	/* Display the rows */
-	textpos_y = vultures_screen->h - (lines+1) * vultures_get_lineheight(V_FONT_INTRO);
+	textpos_y = vulture_screen->h - (lines+1) * vulture_get_lineheight(V_FONT_INTRO);
 	for (item_iterator i = items.begin(); i != items.end(); ++i) {
-		textpos_x = (vultures_screen->w - vultures_text_length(V_FONT_INTRO, i->str))/2;
-		vultures_put_text_shadow(V_FONT_INTRO, i->str, vultures_screen, textpos_x,
+		textpos_x = (vulture_screen->w - vulture_text_length(V_FONT_INTRO, i->str))/2;
+		vulture_put_text_shadow(V_FONT_INTRO, i->str, vulture_screen, textpos_x,
 								textpos_y, V_COLOR_INTRO_TEXT, V_COLOR_BACKGROUND);
-		textpos_y += vultures_get_lineheight(V_FONT_INTRO);
+		textpos_y += vulture_get_lineheight(V_FONT_INTRO);
 	}
 
-	textpos_x = (vultures_screen->w - vultures_text_length(V_FONT_INTRO, "(press any key)"))/2;
-	vultures_put_text_shadow(V_FONT_INTRO, "(press any key)", vultures_screen, textpos_x,
+	textpos_x = (vulture_screen->w - vulture_text_length(V_FONT_INTRO, "(press any key)"))/2;
+	vulture_put_text_shadow(V_FONT_INTRO, "(press any key)", vulture_screen, textpos_x,
 							textpos_y, V_COLOR_INTRO_TEXT, V_COLOR_BACKGROUND);
 
-	vultures_refresh();
+	vulture_refresh();
 	return false;
 }
 

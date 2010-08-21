@@ -1,12 +1,12 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
-#include "vultures_gfl.h"
-#include "vultures_gra.h"
-#include "vultures_sdl.h"
-#include "vultures_win.h"
-#include "vultures_mou.h"
-#include "vultures_opt.h"
-#include "vultures_tile.h"
+#include "vulture_gfl.h"
+#include "vulture_gra.h"
+#include "vulture_sdl.h"
+#include "vulture_win.h"
+#include "vulture_mou.h"
+#include "vulture_opt.h"
+#include "vulture_tile.h"
 
 #include "toolbar.h"
 #include "hotspot.h"
@@ -18,7 +18,7 @@
 
 toolbar::toolbar(window *p, int menuid, bool visible, int x, int y, std::string imgfile, const tb_buttondesc buttons[5]) : window(p)
 {
-	this->bgimage = vultures_load_graphic(imgfile);
+	this->bgimage = vulture_load_graphic(imgfile);
 	this->w = bgimage->w;
 	this->h = bgimage->h;
 	this->x = x;
@@ -43,11 +43,11 @@ toolbar::~toolbar()
 
 bool toolbar::draw()
 {
-	vultures_set_draw_region(abs_x, abs_y, abs_x + w - 1, abs_y + h - 1);
-	vultures_put_img(abs_x, abs_y, bgimage);
-	vultures_set_draw_region(0, 0, vultures_screen->w-1, vultures_screen->h-1);
+	vulture_set_draw_region(abs_x, abs_y, abs_x + w - 1, abs_y + h - 1);
+	vulture_put_img(abs_x, abs_y, bgimage);
+	vulture_set_draw_region(0, 0, vulture_screen->w-1, vulture_screen->h-1);
 
-	vultures_invalidate_region(abs_x, abs_y, w, h);
+	vulture_invalidate_region(abs_x, abs_y, w, h);
 	
 	return true;
 }
@@ -57,7 +57,7 @@ eventresult toolbar::handle_timer_event(window* target, void* result, int time)
 {
 	if (time > HOVERTIMEOUT)
 		if (target != this  && !target->caption.empty())
-			vultures_mouse_set_tooltip(target->caption);
+			vulture_mouse_set_tooltip(target->caption);
 	return V_EVENT_HANDLED_NOREDRAW;
 }
 
@@ -65,7 +65,7 @@ eventresult toolbar::handle_timer_event(window* target, void* result, int time)
 eventresult toolbar::handle_mousemotion_event(window* target, void* result, 
                                               int xrel, int yrel, int state)
 {
-	vultures_set_mcursor(V_CURSOR_NORMAL);
+	vulture_set_mcursor(V_CURSOR_NORMAL);
 	return V_EVENT_HANDLED_NOREDRAW;
 }
 
@@ -91,26 +91,26 @@ eventresult toolbar::handle_mousebuttonup_event(window* target, void* result,
           menu->add_item("Pay shopkeeper", V_ACTION_GOLD_PAY);
 
         menu->layout();
-        vultures_event_dispatcher(&action, V_RESPOND_INT, menu );
+        vulture_event_dispatcher(&action, V_RESPOND_INT, menu );
 
         switch (action) {
 
           case V_ACTION_GOLD_QUERY:
-            ((vultures_event*)result)->num = '$';
+            ((vulture_event*)result)->num = '$';
             break;
 
           case V_ACTION_GOLD_DROP:
-            vultures_eventstack_add('$', -1, -1, V_RESPOND_CHARACTER);
-            ((vultures_event*)result)->num = 'd';
+            vulture_eventstack_add('$', -1, -1, V_RESPOND_CHARACTER);
+            ((vulture_event*)result)->num = 'd';
             break;
 
           case V_ACTION_GOLD_THROW:
-            vultures_eventstack_add('$', -1, -1, V_RESPOND_CHARACTER);
-            ((vultures_event*)result)->num = 't';
+            vulture_eventstack_add('$', -1, -1, V_RESPOND_CHARACTER);
+            ((vulture_event*)result)->num = 't';
             break;
 
           case V_ACTION_GOLD_PAY:
-            ((vultures_event*)result)->num = 'p';
+            ((vulture_event*)result)->num = 'p';
             break;
 
         }
@@ -120,12 +120,12 @@ eventresult toolbar::handle_mousebuttonup_event(window* target, void* result,
 			return V_EVENT_HANDLED_FINAL;
 
 		case V_HOTSPOT_BUTTON_LOOK:
-			vultures_eventstack_add('y', -1, -1, V_RESPOND_CHARACTER);
-			((vultures_event*)result)->num = '/';
+			vulture_eventstack_add('y', -1, -1, V_RESPOND_CHARACTER);
+			((vulture_event*)result)->num = '/';
 			return V_EVENT_HANDLED_FINAL;
 
 		case V_HOTSPOT_BUTTON_EXTENDED:
-			((vultures_event*)result)->num = '#';
+			((vulture_event*)result)->num = '#';
 			return V_EVENT_HANDLED_FINAL;
 
 		case V_HOTSPOT_BUTTON_MAP:
@@ -133,15 +133,15 @@ eventresult toolbar::handle_mousebuttonup_event(window* target, void* result,
 			return V_EVENT_HANDLED_REDRAW;
 
 		case V_HOTSPOT_BUTTON_SPELLBOOK:
-			((vultures_event*)result)->num = 'Z';
+			((vulture_event*)result)->num = 'Z';
 			return V_EVENT_HANDLED_FINAL;
 
 		case V_HOTSPOT_BUTTON_INVENTORY:
-			((vultures_event*)result)->num = 'i';
+			((vulture_event*)result)->num = 'i';
 			return V_EVENT_HANDLED_FINAL;
 
 		case V_HOTSPOT_BUTTON_DISCOVERIES:
-			((vultures_event*)result)->num = '\\';
+			((vulture_event*)result)->num = '\\';
 			return V_EVENT_HANDLED_FINAL;
 
 		case V_HOTSPOT_BUTTON_MESSAGES:
@@ -149,15 +149,15 @@ eventresult toolbar::handle_mousebuttonup_event(window* target, void* result,
 			break;
 
 		case V_HOTSPOT_BUTTON_OPTIONS:
-			((vultures_event*)result)->num = 'O';
+			((vulture_event*)result)->num = 'O';
 			return V_EVENT_HANDLED_FINAL;
 
 		case V_HOTSPOT_BUTTON_IFOPTIONS:
-			vultures_iface_opts();
+			vulture_iface_opts();
 			break;
 
 		case V_HOTSPOT_BUTTON_HELP:
-			((vultures_event*)result)->num = '?';
+			((vulture_event*)result)->num = '?';
 			return V_EVENT_HANDLED_FINAL;
 	}
 	return V_EVENT_HANDLED_NOREDRAW;

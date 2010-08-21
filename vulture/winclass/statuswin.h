@@ -8,7 +8,7 @@
 #define V_FILENAME_STATUS_BAR           "statusbar"
 
 /* Indices into warning colors */
-enum vultures_warn_type {
+enum vulture_warn_type {
 	V_WARN_NONE = 0,
 	V_WARN_NORMAL,
 	V_WARN_MORE,

@@ -1,4 +1,4 @@
---- ../vultures-2.1.0.orig/nethack/doc/nethack.6
+--- ../vulture-2.1.0.orig/nethack/doc/nethack.6
 +++ ./nethack/doc/nethack.6
 @@ -197,7 +197,7 @@
  supplies a directory which is to serve as the playground.
@@ -18,7 +18,7 @@
  .br
  NETHACKDIR	Playground.
  .br
---- ../vultures-2.1.0.orig/nethack/util/recover.c
+--- ../vulture-2.1.0.orig/nethack/util/recover.c
 +++ ./nethack/util/recover.c
 @@ -15,6 +15,12 @@
  #include "win32api.h"
@@ -115,7 +115,7 @@
  #endif
  	return fd;
  }
---- ../vultures-2.1.0.orig/nethack/src/cmd.c
+--- ../vulture-2.1.0.orig/nethack/src/cmd.c
 +++ ./nethack/src/cmd.c
 @@ -2133,6 +2133,16 @@
  	    readchar_queue = click_to_cmd(x, y, mod);

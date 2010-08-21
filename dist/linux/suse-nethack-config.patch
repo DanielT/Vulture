@@ -1,4 +1,4 @@
---- ../vultures-2.1.0.orig/nethack/include/unixconf.h	2006-06-06 13:23:33.000000000 -0600
+--- ../vulture-2.1.0.orig/nethack/include/unixconf.h	2006-06-06 13:23:33.000000000 -0600
 +++ ./nethack/include/unixconf.h	2006-09-19 11:57:57.000000000 -0600
 @@ -32,12 +32,12 @@
  
@@ -43,7 +43,7 @@
  # endif
  #endif
  
---- ../vultures-2.1.0.orig/nethack/sys/unix/Makefile.top	2006-06-06 13:23:32.000000000 -0600
+--- ../vulture-2.1.0.orig/nethack/sys/unix/Makefile.top	2006-06-06 13:23:32.000000000 -0600
 +++ ./nethack/sys/unix/Makefile.top	2006-09-19 12:02:21.000000000 -0600
 @@ -35,8 +35,8 @@
  # therefore there should not be anything in GAMEDIR that you want to keep

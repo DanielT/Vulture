@@ -5,7 +5,7 @@
 	<key>CFBundleExecutable</key>
 	<string>vulture-slashem</string>
 	<key>CFBundleGetInfoHTML</key>
-	<string>http://www.darkarts.co.za/projects/vultures/</string>
+	<string>http://www.darkarts.co.za/projects/vulture/</string>
 	<key>CFBundleGetInfoString</key>
 	<string>Copyright (C) 1985-2003 Stichting Mathematisch Centrum; XXX</string>
 	<key>CFBundleIconFile</key>

@@ -4,9 +4,9 @@
 @if ERRORLEVEL 1 GOTO need_gnuwin
 
 REM ---------- NetHack ----------
-del /S /Q nethack\win\vultures
-mkdir nethack\win\vultures
-xcopy /E /-Y vultures\* nethack\win\vultures\
+del /S /Q nethack\win\vulture
+mkdir nethack\win\vulture
+xcopy /E /-Y vulture\* nethack\win\vulture\
 cd nethack\sys\winnt
 call nhsetup
 cd ..\..\src
@@ -19,7 +19,7 @@ goto EOF
 
 :need_gnuwin
 @echo.
-@echo You need flex and bison to build vultures. 
+@echo You need flex and bison to build vulture. 
 @echo A good place to get them is the gnuwin project
 @echo see http://gnuwin32.sourceforge.net/
 @echo.

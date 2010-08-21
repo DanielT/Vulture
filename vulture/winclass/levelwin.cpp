@@ -1,6 +1,6 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
-#include "vultures_sdl.h" /* XXX this must be the first include,
+#include "vulture_sdl.h" /* XXX this must be the first include,
                              no idea why but it won't compile otherwise */
 
 extern "C" {
@@ -16,13 +16,13 @@ extern "C" {
 #include "messagewin.h"
 
 
-#include "vultures_win.h"
-#include "vultures_gra.h"
-#include "vultures_opt.h"
-#include "vultures_tile.h"
-#include "vultures_mou.h"
-#include "vultures_gen.h"
-#include "vultures_main.h"
+#include "vulture_win.h"
+#include "vulture_gra.h"
+#include "vulture_opt.h"
+#include "vulture_tile.h"
+#include "vulture_mou.h"
+#include "vulture_gen.h"
+#include "vulture_main.h"
 
 /* ??????????
  * without this the file will occasionally fail to compile, seemingly at random
@@ -32,13 +32,13 @@ extern "C" {
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 
-#define VULTURES_CLIPMARGIN 200
+#define VULTURE_CLIPMARGIN 200
 
 
 levelwin *levwin;
-int vultures_map_draw_msecs = 0;
-int vultures_map_draw_lastmove = 0;
-int vultures_map_highlight_objects = 0;
+int vulture_map_draw_msecs = 0;
+int vulture_map_draw_lastmove = 0;
+int vulture_map_highlight_objects = 0;
 
 
 levelwin::levelwin(mapdata *data) : window(NULL), map_data(data)
@@ -47,8 +47,8 @@ levelwin::levelwin(mapdata *data) : window(NULL), map_data(data)
 	
 	x = 0;
 	y = 0;
-	w = vultures_screen->w;
-	h = vultures_screen->h;
+	w = vulture_screen->w;
+	h = vulture_screen->h;
 	need_redraw = 1;
 
 
@@ -98,8 +98,8 @@ void levelwin::init()
 		}
 	}
 	
-	w = vultures_screen->w;
-	h = vultures_screen->h;
+	w = vulture_screen->w;
+	h = vulture_screen->h;
 
 	/* create the upper scroll hotspot. NOTE that all other scroll hotspots
 	// 		* are created earlier in the ctor */
@@ -115,7 +115,7 @@ void levelwin::init()
     {0,""}
 	};
 
-	new toolbar(this, V_WIN_TOOLBAR1, vultures_opts.show_actiontb,
+	new toolbar(this, V_WIN_TOOLBAR1, vulture_opts.show_actiontb,
 				w - 215, h - 84, V_FILENAME_TOOLBAR1, tb1_desc);
 
 	/* Toolbar 2: look at, previous messages, options, help */
@@ -128,11 +128,11 @@ void levelwin::init()
 		{V_HOTSPOT_BUTTON_HELP, "Help"}
 	};
 
-	new toolbar(this, V_WIN_TOOLBAR2, vultures_opts.show_helptb,
+	new toolbar(this, V_WIN_TOOLBAR2, vulture_opts.show_helptb,
 				w - 255, h - 45, V_FILENAME_TOOLBAR2, tb2_desc);
 	
 	/* select wall style */
-	switch (vultures_opts.wall_style)
+	switch (vulture_opts.wall_style)
 	{
 		case V_WALL_DISPLAY_STYLE_FULL:
 			walltiles = (struct walls*)walls_full; break;
@@ -169,12 +169,12 @@ bool levelwin::need_recenter(int map_x, int map_y)
 
 	map_x -= view_x;
 	map_y -= view_y;
-	screen_x = vultures_screen->w/2 + V_MAP_XMOD*(map_x - map_y);
-	screen_y = vultures_screen->h/2 + V_MAP_YMOD*(map_x + map_y);
+	screen_x = vulture_screen->w/2 + V_MAP_XMOD*(map_x - map_y);
+	screen_y = vulture_screen->h/2 + V_MAP_YMOD*(map_x + map_y);
 
 	/* if the player is within the outer 1/4 of the screen, the map needs recentering  */
-	if ((screen_x >= vultures_screen->w/4) && (screen_x < vultures_screen->w * 3 / 4) &&
-		(screen_y >= vultures_screen->h/4) && (screen_y < vultures_screen->h * 3 / 4))
+	if ((screen_x >= vulture_screen->w/4) && (screen_x < vulture_screen->w * 3 / 4) &&
+		(screen_y >= vulture_screen->h/4) && (screen_y < vulture_screen->h * 3 / 4))
 		return true;
 
 	return false;
@@ -196,7 +196,7 @@ void levelwin::force_redraw(void)
 bool levelwin::draw()
 {
 	int i, j, dir_idx;
-	vultures_tile * cur_tile;
+	vulture_tile * cur_tile;
 	int x, y;
 	int tile_id, shadelevel;
 	int map_tr_x, map_tr_y, __i, __j, diff, sum;
@@ -243,24 +243,24 @@ bool levelwin::draw()
 	prev_cy = view_y;
 
 	/* Only draw on map area */
-	vultures_set_draw_region(clip_tl_x, clip_tl_y,
+	vulture_set_draw_region(clip_tl_x, clip_tl_y,
 							clip_br_x, clip_br_y);
 
 	/* If swallowed draw ONLY the engulf tile and the player! */
 	if (u.uswallow && map_data->map_swallow != V_TILE_NONE) {
 		/* Clear map area */
-		SDL_FillRect(vultures_screen, NULL, CLR32_BLACK);
+		SDL_FillRect(vulture_screen, NULL, CLR32_BLACK);
 
 		x = map_centre_x + V_MAP_XMOD*(u.ux - u.uy + view_y - view_x);
 		y = map_centre_y + V_MAP_YMOD*(u.ux + u.uy - view_y - view_x);
 
 		/* engulf tile */
-		vultures_put_tile(x, y, map_data->map_swallow);
+		vulture_put_tile(x, y, map_data->map_swallow);
 
 		/* player */
-		vultures_put_tile(x, y, map_data->get_glyph(MAP_MON, u.ux, u.uy));
+		vulture_put_tile(x, y, map_data->get_glyph(MAP_MON, u.ux, u.uy));
 
-		vultures_invalidate_region(clip_tl_x, clip_tl_y,
+		vulture_invalidate_region(clip_tl_x, clip_tl_y,
 								clip_br_x - clip_tl_x,
 								clip_br_y - clip_tl_y);
 		return 1;
@@ -270,7 +270,7 @@ bool levelwin::draw()
 
 
 	/* prevent double redraws if the map view just moved under the mouse cursor */
-	map_highlight = mouse_to_map(vultures_get_mouse_pos());
+	map_highlight = mouse_to_map(vulture_get_mouse_pos());
 
 	/* coords of the top right corner */
 	map_tr_x = (-V_MAP_YMOD * (map_centre_x + 50) + V_MAP_XMOD * (map_centre_y + 50) +
@@ -295,7 +295,7 @@ bool levelwin::draw()
 
 			if (j < 1 || j >= COLNO || i < 0 || i >= ROWNO)
 			{
-				vultures_put_tile(x, y, V_MISC_OFF_MAP);
+				vulture_put_tile(x, y, V_MISC_OFF_MAP);
 				continue;
 			}
 			
@@ -353,19 +353,19 @@ bool levelwin::draw()
 			else if(tile_id == V_TILE_NONE || tile_id == V_TILE_WALL_GENERIC)
 				tile_id = V_MISC_UNMAPPED_AREA;
 
-			vultures_put_tile_shaded(x, y, tile_id, shadelevel);
+			vulture_put_tile_shaded(x, y, tile_id, shadelevel);
 
 			/* shortcut for unmapped case */
 			if (tile_id == V_MISC_UNMAPPED_AREA)
 				continue;
 
-			if (vultures_opts.highlight_cursor_square && 
+			if (vulture_opts.highlight_cursor_square && 
 				(j == map_highlight.x && i == map_highlight.y))
-				vultures_put_tile(x, y, V_MISC_FLOOR_HIGHLIGHT);
+				vulture_put_tile(x, y, V_MISC_FLOOR_HIGHLIGHT);
 
 			/* 3. Floor edges */
 			for (dir_idx = 0; dir_idx < 12; dir_idx++)
-				vultures_put_tile(x, y, maptile_floor_edge[i][j].dir[dir_idx]);
+				vulture_put_tile(x, y, maptile_floor_edge[i][j].dir[dir_idx]);
 		}
 	}
 
@@ -390,51 +390,51 @@ bool levelwin::draw()
 
 			/* 1. West and north walls */
 			if (j > 1)
-				vultures_put_tile_shaded(x, y, maptile_wall[i][j].west,
+				vulture_put_tile_shaded(x, y, maptile_wall[i][j].west,
 										map_data->get_glyph(MAP_DARKNESS, j-1, i));
 			if (i > 1)
-				vultures_put_tile_shaded(x, y, maptile_wall[i][j].north,
+				vulture_put_tile_shaded(x, y, maptile_wall[i][j].north,
 										map_data->get_glyph(MAP_DARKNESS, j, i-1));
 
 			/* shortcut for unmapped case */
 			if (map_back != V_MISC_UNMAPPED_AREA ||
 				map_obj != V_TILE_NONE) {
 				/* 2. Furniture*/
-				vultures_put_tile(x, y, map_data->get_glyph(MAP_FURNITURE, j, i));
+				vulture_put_tile(x, y, map_data->get_glyph(MAP_FURNITURE, j, i));
 
 
 				/* 3. Traps */
-				vultures_put_tile(x, y, map_data->get_glyph(MAP_TRAP, j, i));
+				vulture_put_tile(x, y, map_data->get_glyph(MAP_TRAP, j, i));
 
 
 				/* 4. Objects */
-				vultures_put_tile(x, y, map_obj);
+				vulture_put_tile(x, y, map_obj);
 
 
 				/* 5. Monsters */
-				if ((cur_tile = vultures_get_tile(map_mon)) != NULL) {
-					vultures_put_tile(x, y, map_mon);
+				if ((cur_tile = vulture_get_tile(map_mon)) != NULL) {
+					vulture_put_tile(x, y, map_mon);
 					if (iflags.hilite_pet && map_data->get_glyph(MAP_PET, j, i))
-						vultures_put_img(x + cur_tile->xmod, y + cur_tile->ymod - 10,
-									vultures_get_tile(V_MISC_HILITE_PET)->graphic);
+						vulture_put_img(x + cur_tile->xmod, y + cur_tile->ymod - 10,
+									vulture_get_tile(V_MISC_HILITE_PET)->graphic);
 				}
 
 				/* 6. Effects */
-				vultures_put_tile(x, y, map_data->get_glyph(MAP_SPECIAL, j, i));
+				vulture_put_tile(x, y, map_data->get_glyph(MAP_SPECIAL, j, i));
 			}
 
 			/* 7. South & East walls */
 			if (i < ROWNO - 1)
-				vultures_put_tile_shaded(x, y, maptile_wall[i][j].south,
+				vulture_put_tile_shaded(x, y, maptile_wall[i][j].south,
 										map_data->get_glyph(MAP_DARKNESS, j, i+1));
 			if (j < COLNO - 1)
-				vultures_put_tile_shaded(x, y, maptile_wall[i][j].east,
+				vulture_put_tile_shaded(x, y, maptile_wall[i][j].east,
 										map_data->get_glyph(MAP_DARKNESS, j+1, i));
 		}
 	}
 
 	/* draw object highlights if requested */
-	if (vultures_map_highlight_objects)
+	if (vulture_map_highlight_objects)
 	{
 		for (__i = - map_tr_y; __i <= map_tr_y; __i++)
 		{
@@ -451,14 +451,14 @@ bool levelwin::draw()
 				x = map_centre_x + V_MAP_XMOD*(__j - __i);
 				y = map_centre_y + V_MAP_YMOD*(__j + __i);
 
-				vultures_put_tilehighlight(x, y, map_data->get_glyph(MAP_OBJ, j, i));
+				vulture_put_tilehighlight(x, y, map_data->get_glyph(MAP_OBJ, j, i));
 			}
 		}
 	}
 	/* Restore drawing region */
-	vultures_set_draw_region(0, 0, vultures_screen->w-1, vultures_screen->h-1);
+	vulture_set_draw_region(0, 0, vulture_screen->w-1, vulture_screen->h-1);
 
-	vultures_invalidate_region(clip_tl_x, clip_tl_y,
+	vulture_invalidate_region(clip_tl_x, clip_tl_y,
 							clip_br_x - clip_tl_x,
 							clip_br_y - clip_tl_y);
 
@@ -467,10 +467,10 @@ bool levelwin::draw()
 	clip_br_x = 0;
 	clip_br_y = 0;
 
-	vultures_tilecache_age();
+	vulture_tilecache_age();
 
-	vultures_map_draw_msecs = SDL_GetTicks() - startticks;
-	vultures_map_draw_lastmove = moves;
+	vulture_map_draw_msecs = SDL_GetTicks() - startticks;
+	vulture_map_draw_lastmove = moves;
 
 	return true;
 }
@@ -481,7 +481,7 @@ eventresult levelwin::handle_timer_event(window* target, void* result, int time)
   std::string ttext;
 	point mappos, mouse;
 
-	mouse = vultures_get_mouse_pos();
+	mouse = vulture_get_mouse_pos();
 	mappos = mouse_to_map(mouse);
 
 	/* hovering on a border: scroll */
@@ -522,11 +522,11 @@ eventresult levelwin::handle_timer_event(window* target, void* result, int time)
 		return V_EVENT_HANDLED_NOREDRAW;
 
 	if (target != this && !target->caption.empty())
-		vultures_mouse_set_tooltip(target->caption);
+		vulture_mouse_set_tooltip(target->caption);
 	else {
 		ttext = map_data->map_square_description(mappos, 1);
 		if(!ttext.empty())
-			vultures_mouse_set_tooltip(ttext);
+			vulture_mouse_set_tooltip(ttext);
 	}
 	
 	return V_EVENT_HANDLED_NOREDRAW;
@@ -538,7 +538,7 @@ eventresult levelwin::handle_mousemotion_event(window* target, void* result, int
 {
 	point mouse, mappos;
 
-	mouse = vultures_get_mouse_pos();
+	mouse = vulture_get_mouse_pos();
 	mappos = mouse_to_map(mouse);
 
 	if (target != this && target->menu_id)
@@ -547,32 +547,32 @@ eventresult levelwin::handle_mousemotion_event(window* target, void* result, int
 		switch (target->menu_id)
 		{
 			case V_HOTSPOT_SCROLL_UPLEFT:
-				vultures_set_mcursor(V_CURSOR_SCROLLUPLEFT); break;
+				vulture_set_mcursor(V_CURSOR_SCROLLUPLEFT); break;
 			case V_HOTSPOT_SCROLL_UP:
-				vultures_set_mcursor(V_CURSOR_SCROLLUP); break;
+				vulture_set_mcursor(V_CURSOR_SCROLLUP); break;
 			case V_HOTSPOT_SCROLL_UPRIGHT:
-				vultures_set_mcursor(V_CURSOR_SCROLLUPRIGHT); break;
+				vulture_set_mcursor(V_CURSOR_SCROLLUPRIGHT); break;
 			case V_HOTSPOT_SCROLL_LEFT:
-				vultures_set_mcursor(V_CURSOR_SCROLLLEFT); break;
+				vulture_set_mcursor(V_CURSOR_SCROLLLEFT); break;
 			case V_HOTSPOT_SCROLL_RIGHT:
-				vultures_set_mcursor(V_CURSOR_SCROLLRIGHT); break;
+				vulture_set_mcursor(V_CURSOR_SCROLLRIGHT); break;
 			case V_HOTSPOT_SCROLL_DOWNLEFT:
-				vultures_set_mcursor(V_CURSOR_SCROLLDOWNLEFT); break;
+				vulture_set_mcursor(V_CURSOR_SCROLLDOWNLEFT); break;
 			case V_HOTSPOT_SCROLL_DOWN:
-				vultures_set_mcursor(V_CURSOR_SCROLLDOWN); break;
+				vulture_set_mcursor(V_CURSOR_SCROLLDOWN); break;
 			case V_HOTSPOT_SCROLL_DOWNRIGHT:
-				vultures_set_mcursor(V_CURSOR_SCROLLDOWNRIGHT); break;
+				vulture_set_mcursor(V_CURSOR_SCROLLDOWNRIGHT); break;
 			default:
-				vultures_set_mcursor(get_map_cursor(mappos));
+				vulture_set_mcursor(get_map_cursor(mappos));
 		}
 	}
 	else
 		/* select a cursor for the current position */
-		vultures_set_mcursor(get_map_cursor(mappos));
+		vulture_set_mcursor(get_map_cursor(mappos));
 
 	/* if the highlight option is on, store the map position of the mouse
 	* and refresh the current and previous positions */
-	if (vultures_opts.highlight_cursor_square && 
+	if (vulture_opts.highlight_cursor_square && 
 		(map_highlight.x != mappos.x || map_highlight.y != mappos.y))
 	{
 		mouse = map_to_mouse(map_highlight);
@@ -596,7 +596,7 @@ eventresult levelwin::handle_mousebuttonup_event(window* target, void* result,
 {
 	point mouse, mappos;
 
-	mouse = vultures_get_mouse_pos();
+	mouse = vulture_get_mouse_pos();
 	mappos = mouse_to_map(mouse);
 
 	return map_data->handle_click(result, button, mappos);
@@ -621,19 +621,19 @@ eventresult levelwin::handle_keydown_event(window* target, void* result, int sym
 		case SDLK_F5:
 		case SDLK_F6:
 			macronum = sym - SDLK_F1;
-			if (!vultures_opts.macro[macronum][0])
+			if (!vulture_opts.macro[macronum][0])
 				break;
 
-			((vultures_event*)result)->num = vultures_opts.macro[macronum][0];
-			for (i = strlen(vultures_opts.macro[macronum]) - 1; i > 0; i--)
-				vultures_eventstack_add(vultures_opts.macro[macronum][i], -1, -1, V_RESPOND_ANY);
+			((vulture_event*)result)->num = vulture_opts.macro[macronum][0];
+			for (i = strlen(vulture_opts.macro[macronum]) - 1; i > 0; i--)
+				vulture_eventstack_add(vulture_opts.macro[macronum][i], -1, -1, V_RESPOND_ANY);
 			return V_EVENT_HANDLED_FINAL;
 
 		/* CTRL+SHIFT+o opens the interface options */
 		case SDLK_o:
 			if (!(mod & KMOD_SHIFT) || !(mod & KMOD_CTRL))
 				break;
-			vultures_iface_opts();
+			vulture_iface_opts();
 			return V_EVENT_HANDLED_REDRAW;
 
 		/* CTRL+SHIFT+p shows the message log */
@@ -648,7 +648,7 @@ eventresult levelwin::handle_keydown_event(window* target, void* result, int sym
 	}
 
 	/* all other keys are converted and passed to the core */
-	key = vultures_make_nh_key(sym, mod, unicode);
+	key = vulture_make_nh_key(sym, mod, unicode);
 
 	if (!key)
 		return V_EVENT_HANDLED_NOREDRAW;
@@ -656,10 +656,10 @@ eventresult levelwin::handle_keydown_event(window* target, void* result, int sym
 	if (mapwin && isdigit(key))
 		translated_key = key;
 	else
-		translated_key = vultures_translate_key(key);
+		translated_key = vulture_translate_key(key);
 
 	if (translated_key) {
-		((vultures_event*)result)->num = translated_key;
+		((vulture_event*)result)->num = translated_key;
 		return V_EVENT_HANDLED_FINAL;
 	}
 	return V_EVENT_HANDLED_NOREDRAW;
@@ -716,19 +716,19 @@ void levelwin::map_update(glyph_type type, int prev_glyph, int new_glyph, int x,
 {
 	int pixel_x, pixel_y;
 	int tl_x = 99999, tl_y = 99999, br_x = 0, br_y = 0;
-	vultures_tile *oldtile, *newtile;
+	vulture_tile *oldtile, *newtile;
 
 	pixel_x = (this->w / 2) + V_MAP_XMOD*(x - y + view_y - view_x);
 	pixel_y = (this->h / 2) + V_MAP_YMOD*(x + y - view_y - view_x);
 
-	if (pixel_x < -VULTURES_CLIPMARGIN ||
-		pixel_y < -VULTURES_CLIPMARGIN ||
-		pixel_x > vultures_screen->w + VULTURES_CLIPMARGIN ||
-		pixel_y > vultures_screen->h + VULTURES_CLIPMARGIN)
+	if (pixel_x < -VULTURE_CLIPMARGIN ||
+		pixel_y < -VULTURE_CLIPMARGIN ||
+		pixel_x > vulture_screen->w + VULTURE_CLIPMARGIN ||
+		pixel_y > vulture_screen->h + VULTURE_CLIPMARGIN)
 		return;
 		
-	oldtile = vultures_get_tile(prev_glyph);
-	newtile = vultures_get_tile(new_glyph);
+	oldtile = vulture_get_tile(prev_glyph);
+	newtile = vulture_get_tile(new_glyph);
 
 	if (type != MAP_BACK) {
 		if (oldtile) {
@@ -1216,7 +1216,7 @@ int levelwin::get_map_cursor(point mappos)
 		return V_CURSOR_TARGET_INVALID;
 
 	/* whatis: look or teleport */
-	if (vultures_whatis_active)
+	if (vulture_whatis_active)
 		return V_CURSOR_TARGET_HELP;
 
 	/* monsters and objects get a red circle */

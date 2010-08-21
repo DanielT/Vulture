@@ -5,7 +5,7 @@
 
 #include <string>
 #include <SDL.h>
-#include "vultures_types.h"
+#include "vulture_types.h"
 
 #define V_LISTITEM_WIDTH  300
 #define V_LISTITEM_HEIGHT  52

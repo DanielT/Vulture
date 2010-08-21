@@ -1,9 +1,9 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
-#include "vultures_gra.h"
-#include "vultures_txt.h"
-#include "vultures_win.h"
-#include "vultures_sdl.h"
+#include "vulture_gra.h"
+#include "vulture_txt.h"
+#include "vulture_win.h"
+#include "vulture_sdl.h"
 
 #include "textwin.h"
 
@@ -15,7 +15,7 @@ textwin::textwin(window *p, std::string cap) : window(p)
 	is_input = false;
 	textcolor = V_COLOR_TEXT;
 	autobg = true;
-	w = vultures_text_length(V_FONT_MENU, caption) + 10;
+	w = vulture_text_length(V_FONT_MENU, caption) + 10;
 }
 
 textwin::textwin(window *p, int destsize) : window(p)
@@ -35,22 +35,22 @@ bool textwin::draw()
 
 	if (background) {
 		/* the text might have changed, so redraw the background if there is one */
-		vultures_put_img(abs_x, abs_y, background);
-		vultures_invalidate_region(abs_x-2, abs_y, background->w+4, background->h);
+		vulture_put_img(abs_x, abs_y, background);
+		vulture_invalidate_region(abs_x-2, abs_y, background->w+4, background->h);
 	}
 
-	vultures_put_text_shadow(V_FONT_MENU, caption, vultures_screen,
+	vulture_put_text_shadow(V_FONT_MENU, caption, vulture_screen,
 	                         abs_x, abs_y, textcolor, V_COLOR_BACKGROUND);
 
-	textlen = vultures_text_length(V_FONT_MENU, caption);
+	textlen = vulture_text_length(V_FONT_MENU, caption);
 
 
 	if (is_input)
 		/* draw prompt */
-		vultures_rect(abs_x + textlen + 1, abs_y, abs_x + textlen + 1,
+		vulture_rect(abs_x + textlen + 1, abs_y, abs_x + textlen + 1,
 				abs_y + h - 2, V_COLOR_TEXT);
 
-	vultures_invalidate_region(abs_x-2, abs_y, w+4, h);
+	vulture_invalidate_region(abs_x-2, abs_y, w+4, h);
 
 	return false;
 }
@@ -59,5 +59,5 @@ bool textwin::draw()
 void textwin::set_caption(std::string str)
 {
 	window::set_caption(str);
-	w = vultures_text_length(V_FONT_MENU, caption) + 10;
+	w = vulture_text_length(V_FONT_MENU, caption) + 10;
 }

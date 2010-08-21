@@ -1,11 +1,11 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
-#include "vultures_win.h"
-#include "vultures_sdl.h"
-#include "vultures_mou.h"
-#include "vultures_txt.h"
-#include "vultures_gen.h"
-#include "vultures_tile.h"
+#include "vulture_win.h"
+#include "vulture_sdl.h"
+#include "vulture_mou.h"
+#include "vulture_txt.h"
+#include "vulture_gen.h"
+#include "vulture_tile.h"
 
 
 #include "anykeydialog.h"
@@ -21,7 +21,7 @@ anykeydialog::anykeydialog(window *p, std::string ques) : mainwin(p)
 	/* add it as a menuitem so that menuwin::layout will dtrt */
 	txt = new textwin(this, "(type any key)");
 	txt->y = 0;
-	txt->h = vultures_text_height(V_FONT_MENU, txt->caption) + 10;
+	txt->h = vulture_text_height(V_FONT_MENU, txt->caption) + 10;
 
 	/* create buttons */
 	new button(this, "Show choices", 2, '?');
@@ -34,7 +34,7 @@ anykeydialog::anykeydialog(window *p, std::string ques) : mainwin(p)
 eventresult anykeydialog::handle_mousemotion_event(window* target, void* result,
                                                    int xrel, int yrel, int state)
 {
-	vultures_set_mcursor(V_CURSOR_NORMAL);
+	vulture_set_mcursor(V_CURSOR_NORMAL);
 	return V_EVENT_HANDLED_NOREDRAW;
 }
 
@@ -79,7 +79,7 @@ eventresult anykeydialog::handle_keydown_event(window* target, void* result,
 			}
 
 			/* it isn't, so lets translate it (Stage 1: function keys etc) */
-			key = vultures_make_nh_key(sym, mod, unicode);
+			key = vulture_make_nh_key(sym, mod, unicode);
 
 			if (!key)
 				/* no translation, it must have been a function key */
@@ -100,10 +100,10 @@ eventresult anykeydialog::handle_keydown_event(window* target, void* result,
 				/* retrieve the count and push most of it onto the eventstack */
 				memset(buffer, 0, 16);
 				snprintf(buffer, 16, "%d", count);
-				vultures_eventstack_add(key, -1 , -1, V_RESPOND_ANY);
+				vulture_eventstack_add(key, -1 , -1, V_RESPOND_ANY);
 				for (i=15; i > 0; i--)
 					if (buffer[i])
-						vultures_eventstack_add(buffer[i], -1, -1, V_RESPOND_ANY);
+						vulture_eventstack_add(buffer[i], -1, -1, V_RESPOND_ANY);
 
 				/* we return the first digit of the count */
 				key = buffer[0];

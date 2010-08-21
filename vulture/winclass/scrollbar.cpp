@@ -1,8 +1,8 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
-#include "vultures_gra.h"
-#include "vultures_sdl.h"
-#include "vultures_win.h"
+#include "vulture_gra.h"
+#include "vulture_sdl.h"
+#include "vulture_win.h"
 
 #include "scrollbar.h"
 #include "hotspot.h"
@@ -17,20 +17,20 @@ scrollbar::scrollbar(window *p, int scrolloff) : window(p)
 bool scrollbar::draw()
 {
 	int pos_y, scroll_pos;
-	int scrollarea_top = abs_y + vultures_winelem.scrollbutton_up->h;
-	int scrollarea_bottom = abs_y + h - vultures_winelem.scrollbutton_down->h;
+	int scrollarea_top = abs_y + vulture_winelem.scrollbutton_up->h;
+	int scrollarea_bottom = abs_y + h - vulture_winelem.scrollbutton_down->h;
 
 	/* draw top & bottom buttons */
-	vultures_put_img(abs_x, abs_y, vultures_winelem.scrollbutton_up);
-	vultures_put_img(abs_x, scrollarea_bottom, vultures_winelem.scrollbutton_down);
+	vulture_put_img(abs_x, abs_y, vulture_winelem.scrollbutton_up);
+	vulture_put_img(abs_x, scrollarea_bottom, vulture_winelem.scrollbutton_down);
 
 	/* draw the scrollbar backgound */
-	vultures_set_draw_region(abs_x, scrollarea_top, abs_x +
-						vultures_winelem.scrollbar->w - 1, scrollarea_bottom - 1);
-	for (pos_y = scrollarea_top; pos_y < scrollarea_bottom; pos_y += vultures_winelem.scrollbar->h)
-		vultures_put_img(abs_x, pos_y, vultures_winelem.scrollbar);
+	vulture_set_draw_region(abs_x, scrollarea_top, abs_x +
+						vulture_winelem.scrollbar->w - 1, scrollarea_bottom - 1);
+	for (pos_y = scrollarea_top; pos_y < scrollarea_bottom; pos_y += vulture_winelem.scrollbar->h)
+		vulture_put_img(abs_x, pos_y, vulture_winelem.scrollbar);
 
-	vultures_set_draw_region(0, 0, vultures_screen->w - 1, vultures_screen->h - 1);
+	vulture_set_draw_region(0, 0, vulture_screen->w - 1, vulture_screen->h - 1);
 
 	/* draw scroll indicator */
 
@@ -41,10 +41,10 @@ bool scrollbar::draw()
 	scroll_pos = (scrollpos <= 8192) ? scrollpos : 8192;
 
 	pos_y = scrollarea_top + ((scrollarea_bottom - scrollarea_top -
-			vultures_winelem.scroll_indicator->h) * scroll_pos) / 8192.0;
-	vultures_put_img(abs_x, pos_y, vultures_winelem.scroll_indicator);
+			vulture_winelem.scroll_indicator->h) * scroll_pos) / 8192.0;
+	vulture_put_img(abs_x, pos_y, vulture_winelem.scroll_indicator);
 
-	vultures_invalidate_region(abs_x, abs_y, w, h);
+	vulture_invalidate_region(abs_x, abs_y, w, h);
 
 	return false;
 }

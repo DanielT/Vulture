@@ -1,11 +1,11 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
-#include "vultures_gra.h"
-#include "vultures_sdl.h"
-#include "vultures_win.h"
-#include "vultures_txt.h"
-#include "vultures_mou.h"
-#include "vultures_tile.h"
+#include "vulture_gra.h"
+#include "vulture_sdl.h"
+#include "vulture_win.h"
+#include "vulture_txt.h"
+#include "vulture_mou.h"
+#include "vulture_tile.h"
 
 #include "contextmenu.h"
 #include "button.h"
@@ -31,29 +31,29 @@ bool contextmenu::draw()
 	y = abs_y;
 
 	/* Draw center area */
-	vultures_set_draw_region(abs_x, abs_y, abs_x + w - 1, abs_y + h - 1);
+	vulture_set_draw_region(abs_x, abs_y, abs_x + w - 1, abs_y + h - 1);
 	pos_y = y;
 	while (pos_y <= y + h) {
 		pos_x = x;
 		while (pos_x <= x + w) {
-			vultures_put_img(pos_x, pos_y, vultures_winelem.center);
-			pos_x += vultures_winelem.center->w;
+			vulture_put_img(pos_x, pos_y, vulture_winelem.center);
+			pos_x += vulture_winelem.center->w;
 		}
-		pos_y += vultures_winelem.center->h;
+		pos_y += vulture_winelem.center->h;
 	}
 
 	/* Draw black border */
-	vultures_rect(x, y, x+w-1, y+h-1, 0);
+	vulture_rect(x, y, x+w-1, y+h-1, 0);
 
 	/* Draw edges (raised) */
-	vultures_line(x+1,   y+1,   x+w-3, y+1,   CLR32_GRAY20);
-	vultures_line(x+1,   y+h-2, x+w-2, y+h-2, CLR32_GRAY70);
-	vultures_line(x+w-2, y+1,   x+w-2, y+h-2, CLR32_GRAY77);
-	vultures_line(x+1,   y+1,   x+1,   y+h-3, CLR32_GRAY20);
+	vulture_line(x+1,   y+1,   x+w-3, y+1,   CLR32_GRAY20);
+	vulture_line(x+1,   y+h-2, x+w-2, y+h-2, CLR32_GRAY70);
+	vulture_line(x+w-2, y+1,   x+w-2, y+h-2, CLR32_GRAY77);
+	vulture_line(x+1,   y+1,   x+1,   y+h-3, CLR32_GRAY20);
 
-	vultures_set_draw_region(0, 0, vultures_screen->w-1, vultures_screen->h-1);
+	vulture_set_draw_region(0, 0, vulture_screen->w-1, vulture_screen->h-1);
 
-	vultures_invalidate_region(x, y, w, h);
+	vulture_invalidate_region(x, y, w, h);
 
 	return true;
 }
@@ -70,10 +70,10 @@ void contextmenu::layout(void)
 	if (layout_done)
 		return;
 
-	mouse = vultures_get_mouse_pos();
+	mouse = vulture_get_mouse_pos();
 
 	h = 3;
-	lineheight = vultures_get_lineheight(V_FONT_BUTTON);
+	lineheight = vulture_get_lineheight(V_FONT_BUTTON);
 
 	/* calculate the hight and find the max btn width */
 	for (itemlist::iterator i = items.begin(); i != items.end(); i++) {
@@ -83,7 +83,7 @@ void contextmenu::layout(void)
 		btn->x = 3;
 		h += btn->h + 2;
 
-		btn->w = vultures_text_length(V_FONT_BUTTON, btn->caption) + 11;
+		btn->w = vulture_text_length(V_FONT_BUTTON, btn->caption) + 11;
 		btn_maxwidth = (btn_maxwidth > btn->w) ? btn_maxwidth : btn->w;
 	}
 	h += 2;
@@ -115,7 +115,7 @@ void contextmenu::layout(void)
 eventresult contextmenu::handle_mousemotion_event(window* target, void* result, int xrel, 
                                              int yrel, int state)
 {
-	vultures_set_mcursor(V_CURSOR_NORMAL);
+	vulture_set_mcursor(V_CURSOR_NORMAL);
 	return V_EVENT_HANDLED_NOREDRAW;
 }
 

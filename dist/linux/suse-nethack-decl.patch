@@ -1,4 +1,4 @@
---- ../vultures-2.1.0.orig/nethack/include/system.h
+--- ../vulture-2.1.0.orig/nethack/include/system.h
 +++ ./nethack/include/system.h
 @@ -87,14 +87,18 @@
  #  endif

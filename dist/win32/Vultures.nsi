@@ -1,5 +1,5 @@
 Name "Vulture's"
-OutFile "vultures-a.b.c-full_win32-d.exe"
+OutFile "vulture-a.b.c-full_win32-d.exe"
 InstallDir "$PROGRAMFILES\Vulture's"
 
 ;--------------------------------
@@ -43,10 +43,10 @@ Section ""
   SetOutPath $INSTDIR\Claw\fonts
   File ..\..\slashem\binary\fonts\*
 
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vultures" "DisplayName" "Vulture's"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vultures" "UninstallString" '"$INSTDIR\uninstall.exe"'
-  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vultures" "NoModify" 1
-  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vultures" "NoRepair" 1
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vulture" "DisplayName" "Vulture's"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vulture" "UninstallString" '"$INSTDIR\uninstall.exe"'
+  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vulture" "NoModify" 1
+  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vulture" "NoRepair" 1
   WriteUninstaller "uninstall.exe"
 SectionEnd
 
@@ -67,8 +67,8 @@ Section "Start Menu Shortcuts"
 SectionEnd
 
 Section "Uninstall"
-  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vultures"
-  DeleteRegKey HKLM SOFTWARE\Vultures
+  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vulture"
+  DeleteRegKey HKLM SOFTWARE\Vulture
   Delete $INSTDIR\Eye\config\*
   Delete $INSTDIR\Eye\graphics\*
   Delete $INSTDIR\Eye\manual\*

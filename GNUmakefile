@@ -1,8 +1,8 @@
 # This makefile is for unix and it's clones only.
 # This makefile is meant for developers and people wanting
-# to experiment with vultures only. It is NOT meant for system
+# to experiment with vulture only. It is NOT meant for system
 # installation, nor is it meant for building the game for
-# final gameplay. If you want to play vultures either check if
+# final gameplay. If you want to play vulture either check if
 # your distribution of unix has a port for it, or if you are
 # comfortable with system installation yourself then read and
 # follow the instructions of the README in the sys/unix directory
@@ -10,8 +10,8 @@
 
 GAME = vulture
 GAMEDEF = VULTURE
-NETHACK = NetHack
-SLASHEM = SlashEM
+NETHACK = nethack
+SLASHEM = slashem
 GAMENETHACK = $(GAME)-$(NETHACK)
 GAMESLASHEM = $(GAME)-$(SLASHEM)
 GAMEDIRSUFFIX = -data

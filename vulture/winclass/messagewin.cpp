@@ -1,18 +1,18 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
-#include "vultures_sdl.h" /* XXX this must be the first include,
+#include "vulture_sdl.h" /* XXX this must be the first include,
                              no idea why but it won't compile otherwise */
 
 extern "C" {
 	#include "hack.h"
 }
 
-#include "vultures_main.h"
-#include "vultures_win.h"
-#include "vultures_txt.h"
-#include "vultures_gra.h"
-#include "vultures_opt.h"
-#include "vultures_mou.h"
+#include "vulture_main.h"
+#include "vulture_win.h"
+#include "vulture_txt.h"
+#include "vulture_gra.h"
+#include "vulture_opt.h"
+#include "vulture_mou.h"
 
 #include "messagewin.h"
 #include "levelwin.h"
@@ -30,9 +30,9 @@ messagewin::messagewin(window *p) : window(p)
 	v_type = V_WINTYPE_CUSTOM;
 	
 	bg_img = SDL_CreateRGBSurface(SDL_SWSURFACE, 40, 20, 32,
-								vultures_px_format->Rmask,
-								vultures_px_format->Gmask,
-								vultures_px_format->Bmask, 0);
+								vulture_px_format->Rmask,
+								vulture_px_format->Gmask,
+								vulture_px_format->Bmask, 0);
 	SDL_FillRect(bg_img, NULL, CLR32_BLACK);
 	SDL_SetAlpha(bg_img, SDL_SRCALPHA, 128);
 	
@@ -46,7 +46,7 @@ messagewin::messagewin(window *p) : window(p)
 	/* Set message shading */
 	for (i = 0; i < V_MAX_MESSAGE_COLORS; i++) {
 		color = 255 - (i * 11);
-		message_colors[i] = SDL_MapRGB(vultures_px_format, color, color, color);
+		message_colors[i] = SDL_MapRGB(vulture_px_format, color, color, color);
 	}
 }
 
@@ -76,7 +76,7 @@ bool messagewin::draw()
 
 	/* repaint background and free it */
 	if (background) {
-		vultures_put_img(abs_x, abs_y, background);
+		vulture_put_img(abs_x, abs_y, background);
 		SDL_FreeSurface(background);
 		background = NULL;
 
@@ -94,10 +94,10 @@ bool messagewin::draw()
 
 	/* calculate height & width of new message area */
 	while(!(message = get_message(num_messages, &age)).empty() &&
-		(time_cur-age) < V_MAX_MESSAGE_COLORS && num_messages < vultures_opts.messagelines)
+		(time_cur-age) < V_MAX_MESSAGE_COLORS && num_messages < vulture_opts.messagelines)
 	{
-		h += (vultures_get_lineheight(V_FONT_MESSAGE) + 1);
-		textlen = vultures_text_length(V_FONT_MESSAGE, message);
+		h += (vulture_get_lineheight(V_FONT_MESSAGE) + 1);
+		textlen = vulture_text_length(V_FONT_MESSAGE, message);
 		w = (w < textlen) ? textlen : w;
 		num_messages++;
 	}
@@ -111,33 +111,33 @@ bool messagewin::draw()
 	abs_y = parent->abs_y;
 
 	/* save new background */
-	background = vultures_get_img(abs_x, abs_y,
+	background = vulture_get_img(abs_x, abs_y,
 						abs_x + w-1, abs_y + h-1);
 
 
 	/* shade the message area */
-	vultures_set_draw_region(abs_x, abs_y,
+	vulture_set_draw_region(abs_x, abs_y,
 						abs_x + w-1, abs_y + h-1);
 	pos_y = abs_y;
 	while (pos_y <= abs_y + h) {
 		pos_x = abs_x;
 
 		while (pos_x <= abs_x+w) {
-			vultures_put_img(pos_x, pos_y, bg_img);
+			vulture_put_img(pos_x, pos_y, bg_img);
 			pos_x += bg_img->w;
 		}
 		pos_y += bg_img->h;
 	}
-	vultures_set_draw_region(0, 0, vultures_screen->w-1, vultures_screen->h-1);
+	vulture_set_draw_region(0, 0, vulture_screen->w-1, vulture_screen->h-1);
 
 
 	/* draw the messages */
 	for (i = 0; i < num_messages; i++) {
 		message = get_message(num_messages - i - 1, &age);
 
-		pos_x = abs_x + (w - vultures_text_length(V_FONT_MESSAGE, message)) / 2;
-		pos_y = abs_y + i * (vultures_get_lineheight(V_FONT_MESSAGE) + 1);
-		vultures_put_text(V_FONT_MESSAGE, message, vultures_screen,
+		pos_x = abs_x + (w - vulture_text_length(V_FONT_MESSAGE, message)) / 2;
+		pos_y = abs_y + i * (vulture_get_lineheight(V_FONT_MESSAGE) + 1);
+		vulture_put_text(V_FONT_MESSAGE, message, vulture_screen,
 						pos_x, pos_y, message_colors[time_cur-age]);
 	}
 
@@ -151,7 +151,7 @@ bool messagewin::draw()
 	}
 	refresh_y = (refresh_y < abs_y) ? refresh_y : abs_y;
 
-	vultures_invalidate_region(refresh_x, refresh_y, refresh_w, refresh_h);
+	vulture_invalidate_region(refresh_x, refresh_y, refresh_w, refresh_h);
 
 	return false;
 }
@@ -160,7 +160,7 @@ bool messagewin::draw()
 eventresult messagewin::handle_mousemotion_event(window* target, void* result,
                                             int xrel, int yrel, int state)
 {
-	point mouse = vultures_get_mouse_pos();
+	point mouse = vulture_get_mouse_pos();
 	window *new_target = levwin->get_window_from_point(mouse);
 
 	return levwin->handle_mousemotion_event(new_target, result, xrel, yrel, state);
@@ -170,7 +170,7 @@ eventresult messagewin::handle_mousemotion_event(window* target, void* result,
 eventresult messagewin::handle_mousebuttonup_event(window* target, void* result,
                                             int mouse_x, int mouse_y, int button, int state)
 {
-	point mouse = vultures_get_mouse_pos();
+	point mouse = vulture_get_mouse_pos();
 	window *new_target = levwin->get_window_from_point(mouse);
 
 	return levwin->handle_mousebuttonup_event(new_target, result, mouse_x, mouse_y, button, state);
@@ -222,20 +222,20 @@ void messagewin::view_all(void)
   std::string message;
 	char menuline[256];
 
-	winid = vultures_create_nhwindow(NHW_MENU);
+	winid = vulture_create_nhwindow(NHW_MENU);
 
 	offset = -getshown();
 	while ( !(message = get_message(offset, &time)).empty() )
 	{
 		sprintf(menuline, "T:%d %s", time, message.c_str());
-		vultures_putstr(winid, ATR_NONE, menuline);
+		vulture_putstr(winid, ATR_NONE, menuline);
 		offset++;
 	}
 
 	/* Display the messages */
-	vultures_display_nhwindow(winid, TRUE);
+	vulture_display_nhwindow(winid, TRUE);
 
 	/* Clean up */
-	vultures_destroy_nhwindow(winid);
+	vulture_destroy_nhwindow(winid);
 }
 

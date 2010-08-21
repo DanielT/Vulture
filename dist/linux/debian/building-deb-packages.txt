@@ -1,4 +1,4 @@
-To build a deb deb package for vultures:
+To build a deb deb package for vulture:
 Apply debian.patch to the source tree by running 
 
 	patch -Np1 -i dist/linux/debian/debian.patch
@@ -9,7 +9,7 @@ in the topmost directory. Then run
 
 as root (or possibly "dpkg-buildpackage -rfakeroot" if you don't want to be root)
 
-This will generate 3 deb files: vultures-data_<ver>.deb, vulture-nethack_<ver>.deb
+This will generate 3 deb files: vulture-data_<ver>.deb, vulture-nethack_<ver>.deb
 and vulture-slashem_<ver>.deb. The data package contains the tile images, sounds,
 manual, etc and is over 20MB. The other two packages rely on the data package
 rather than shipping all the data twice.

@@ -1,12 +1,12 @@
-Name:           nethack-vultures
+Name:           nethack-vulture
 Version:        2.1.0
 Release:        7%{?dist}
 Summary:        NetHack - Vulture's Eye and Vulture's Claw
 
 Group:          Amusements/Games
 License:        NetHack General Public License
-URL:            http://www.darkarts.co.za/projects/vultures/
-Source0:        http://www.darkarts.co.za/projects/vultures/downloads/vultures-%{version}/vultures-%{version}-full.tar.bz2
+URL:            http://www.darkarts.co.za/projects/vulture/
+Source0:        http://www.darkarts.co.za/projects/vulture/downloads/vulture-%{version}/vulture-%{version}-full.tar.bz2
 Patch0:         %{name}-1.11.0-optflags.patch
 Patch1:         %{name}-1.11.0-config.patch
 Patch2:         %{name}-1.10.1-clawguide.patch
@@ -35,7 +35,7 @@ Claw, which is based on the Slash'Em core.
 
 
 %prep
-%setup -q -n vultures-%{version}
+%setup -q -n vulture-%{version}
 %patch0 -p1
 %patch1 -p1
 %patch2
@@ -56,7 +56,7 @@ for i in nethack slashem ; do
     make -C $i
     make -C $i/util recover dlb dgn_comp lev_comp
     make -C $i/dat spec_levs quest_levs
-    cp vultures/gamedata/graphics/gametiles.bin vultures/gamedata/graphics/gametiles.bin.$i
+    cp vulture/gamedata/graphics/gametiles.bin vulture/gamedata/graphics/gametiles.bin.$i
 done
 
 
@@ -107,14 +107,14 @@ for f in music sound ; do
         $RPM_BUILD_ROOT%{_prefix}/games/vulture-slashem/$f
 done
 
-mv vultures/gamedata/graphics/gametiles.bin.nethack $RPM_BUILD_ROOT%{_prefix}/games/vulture-nethack/graphics/gametiles.bin
-mv vultures/gamedata/graphics/gametiles.bin.slashem $RPM_BUILD_ROOT%{_prefix}/games/vulture-slashem/graphics/gametiles.bin
+mv vulture/gamedata/graphics/gametiles.bin.nethack $RPM_BUILD_ROOT%{_prefix}/games/vulture-nethack/graphics/gametiles.bin
+mv vulture/gamedata/graphics/gametiles.bin.slashem $RPM_BUILD_ROOT%{_prefix}/games/vulture-slashem/graphics/gametiles.bin
 
-chmod -s $RPM_BUILD_ROOT%{_prefix}/games/vultures*/vultures* # for stripping
+chmod -s $RPM_BUILD_ROOT%{_prefix}/games/vulture*/vulture* # for stripping
 
 # Clean up
-sed -i -e "s|$RPM_BUILD_ROOT||" $RPM_BUILD_ROOT%{_bindir}/vultures{eye,claw}
-rm $RPM_BUILD_ROOT%{_prefix}/games/vultures*/*.ico
+sed -i -e "s|$RPM_BUILD_ROOT||" $RPM_BUILD_ROOT%{_bindir}/vulture{eye,claw}
+rm $RPM_BUILD_ROOT%{_prefix}/games/vulture*/*.ico
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -131,8 +131,8 @@ gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
 %files
 %defattr(-,root,root,-)
 %doc nethack/README nethack/dat/license nethack/dat/history nethack/dat/*help
-%doc slashem/readme.txt slashem/history.txt slashem/slamfaq.txt vultures/gamedata/manual/
-%{_bindir}/vultures*
+%doc slashem/readme.txt slashem/history.txt slashem/slamfaq.txt vulture/gamedata/manual/
+%{_bindir}/vulture*
 %dir %{_prefix}/games/vulture-nethack/
 %{_prefix}/games/vulture-nethack/config/
 %{_prefix}/games/vulture-nethack/defaults.nh
@@ -154,9 +154,9 @@ gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
 %{_prefix}/games/vulture-slashem/sound/
 %{_prefix}/games/vulture-slashem/fonts/
 %attr(2755,root,games) %{_prefix}/games/vulture-slashem/vulture-slashem
-%{_datadir}/applications/*vultures*.desktop
-%{_datadir}/icons/hicolor/48x48/apps/vultures*.png
-%{_mandir}/man6/vultures*.6*
+%{_datadir}/applications/*vulture*.desktop
+%{_datadir}/icons/hicolor/48x48/apps/vulture*.png
+%{_mandir}/man6/vulture*.6*
 %defattr(664,root,games,775)
 %dir %{_var}/games/vulture-nethack/
 %config(noreplace) %{_var}/games/vulture-nethack/record
@@ -223,7 +223,7 @@ gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
 - Upgraded the tarball to the latest version.
 
 * Fri Dec 23 2005 Karen Pease <meme@daughtersoftiresias.org> - 1.11.1-3
-- Modified the specfile to duplicate the slash'em contents into the vultures dirs before rm'ing, to fix a missing-file crash
+- Modified the specfile to duplicate the slash'em contents into the vulture dirs before rm'ing, to fix a missing-file crash
 
 * Wed Dec 21 2005 Karen Pease <meme@daughtersoftiresias.org> - 1.11.1-2
 - Upped revision to try to get package to build on the server.

@@ -1,5 +1,5 @@
 diff -ru nethack-3.4.0.orig/include/config.h nethack-3.4.0/include/config.h
---- ../vultures-2.1.0.orig/nethack/include/config.h	2002-03-21 00:42:43.000000000 +0100
+--- ../vulture-2.1.0.orig/nethack/include/config.h	2002-03-21 00:42:43.000000000 +0100
 +++ ./nethack/include/config.h	2003-02-27 15:38:23.000000000 +0100
 @@ -179,11 +179,11 @@
  

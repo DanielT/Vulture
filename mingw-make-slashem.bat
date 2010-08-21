@@ -4,9 +4,9 @@
 @if ERRORLEVEL 1 GOTO need_gnuwin
 
 REM ---------- Slash'EM ----------
-del /S /Q slashem\win\vultures
-mkdir slashem\win\vultures
-xcopy /E /-Y vultures\* slashem\win\vultures\
+del /S /Q slashem\win\vulture
+mkdir slashem\win\vulture
+xcopy /E /-Y vulture\* slashem\win\vulture\
 cd slashem\sys\winnt
 call nhsetup
 cd ..\..\src
@@ -19,7 +19,7 @@ goto EOF
 
 :need_gnuwin
 @echo.
-@echo You need flex and bison to build vultures. 
+@echo You need flex and bison to build vulture. 
 @echo A good place to get them is the gnuwin project
 @echo see http://gnuwin32.sourceforge.net/
 @echo.

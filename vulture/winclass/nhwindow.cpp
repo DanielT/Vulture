@@ -5,13 +5,13 @@
 
 #include <vector>
 
-static std::vector<nhwindow*> vultures_nhwindows(8);
+static std::vector<nhwindow*> vulture_nhwindows(8);
 int windowcount = 0;
 int windowcount_max = 8;
 
-nhwindow* vultures_get_nhwindow(int winid)
+nhwindow* vulture_get_nhwindow(int winid)
 {
-	return vultures_nhwindows[winid];
+	return vulture_nhwindows[winid];
 }
 
 
@@ -19,20 +19,20 @@ nhwindow::nhwindow(int type)
 {
 	id = 0;
 	
-	/* if necessary make space in the vultures_windows array */
+	/* if necessary make space in the vulture_windows array */
 	if (windowcount == windowcount_max) {
-		vultures_nhwindows.resize(windowcount_max + 8, NULL);
+		vulture_nhwindows.resize(windowcount_max + 8, NULL);
 		windowcount_max += 8;
 
 		/* no need to search through the first windowcount_cur ids, they're definitely taken */
 		id = windowcount;
 	}
 	else
-		while (vultures_nhwindows[id] != NULL && id < windowcount_max)
+		while (vulture_nhwindows[id] != NULL && id < windowcount_max)
 			id++;
 	
 	windowcount++;
-	vultures_nhwindows[id] = this;
+	vulture_nhwindows[id] = this;
 
 	this->type = type;
 	impl = NULL;
@@ -44,7 +44,7 @@ nhwindow::nhwindow(int type)
 
 nhwindow::~nhwindow()
 {
-	vultures_nhwindows[id] = NULL;
+	vulture_nhwindows[id] = NULL;
 	windowcount--;
 	
 	if (impl)
@@ -52,7 +52,7 @@ nhwindow::~nhwindow()
 	
 	/* clean up after the last window is gone */
 	if (windowcount == 0) {
-		vultures_nhwindows.clear();
+		vulture_nhwindows.clear();
 		windowcount_max = 0;
 	}
 }

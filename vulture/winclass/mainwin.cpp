@@ -2,10 +2,10 @@
 
 #include "mainwin.h"
 
-#include "vultures_gra.h"
-#include "vultures_win.h"
-#include "vultures_sdl.h"
-#include "vultures_txt.h"
+#include "vulture_gra.h"
+#include "vulture_win.h"
+#include "vulture_sdl.h"
+#include "vulture_txt.h"
 
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 #define max(a, b) (((a) > (b)) ? (a) : (b))
@@ -13,10 +13,10 @@
 
 mainwin::mainwin(window *p) : window(p)
 {
-	border_right = vultures_winelem.border_right->w;
-	border_left = vultures_winelem.border_left->w;
-	border_top = vultures_winelem.border_top->h;
-	border_bottom = vultures_winelem.border_bottom->h;
+	border_right = vulture_winelem.border_right->w;
+	border_left = vulture_winelem.border_left->w;
+	border_top = vulture_winelem.border_top->h;
+	border_bottom = vulture_winelem.border_bottom->h;
 	autobg = true;
 }
 
@@ -28,64 +28,64 @@ bool mainwin::draw()
 	int pos_x, pos_y;
 
 	/* Draw corners */
-	vultures_put_img(x, y, vultures_winelem.corner_tl);
-	vultures_put_img(x + w - border_right, y, vultures_winelem.corner_tr);
-	vultures_put_img(x, y + h - border_bottom, vultures_winelem.corner_bl);
-	vultures_put_img(x + w - border_right, y + h - border_bottom, vultures_winelem.corner_br);
+	vulture_put_img(x, y, vulture_winelem.corner_tl);
+	vulture_put_img(x + w - border_right, y, vulture_winelem.corner_tr);
+	vulture_put_img(x, y + h - border_bottom, vulture_winelem.corner_bl);
+	vulture_put_img(x + w - border_right, y + h - border_bottom, vulture_winelem.corner_br);
 
 	/* Draw top border */
-	vultures_set_draw_region(x + border_left, y, x + w - border_right, y + border_top);
+	vulture_set_draw_region(x + border_left, y, x + w - border_right, y + border_top);
 	pos_x = x + border_left;
 
 	while (pos_x <= x + w - border_right) {
-		vultures_put_img(pos_x, y, vultures_winelem.border_top);
-		pos_x += vultures_winelem.border_top->w;
+		vulture_put_img(pos_x, y, vulture_winelem.border_top);
+		pos_x += vulture_winelem.border_top->w;
 	}
 
 	/* Draw bottom border */
-	vultures_set_draw_region(x + border_left, y + h - border_bottom,
+	vulture_set_draw_region(x + border_left, y + h - border_bottom,
 						x + w - border_right, y + h);
 	pos_x = x + border_left;
 
-	while (pos_x <= x+this->w-vultures_winelem.border_right->w) {
-		vultures_put_img(pos_x, y + h - border_bottom, vultures_winelem.border_bottom);
-		pos_x += vultures_winelem.border_bottom->w;
+	while (pos_x <= x+this->w-vulture_winelem.border_right->w) {
+		vulture_put_img(pos_x, y + h - border_bottom, vulture_winelem.border_bottom);
+		pos_x += vulture_winelem.border_bottom->w;
 	}
 
 	/* Draw left border */
-	vultures_set_draw_region(x, y + border_top, x + border_left,
+	vulture_set_draw_region(x, y + border_top, x + border_left,
 						y + h - border_bottom);
 	pos_y = y + border_top;
 
 	while (pos_y <= y + h - border_bottom) {
-		vultures_put_img(x, pos_y, vultures_winelem.border_left);
-		pos_y += vultures_winelem.border_left->h;
+		vulture_put_img(x, pos_y, vulture_winelem.border_left);
+		pos_y += vulture_winelem.border_left->h;
 	}
 
 	/* Draw right border */
-	vultures_set_draw_region(x + w - border_right, y + border_top,
+	vulture_set_draw_region(x + w - border_right, y + border_top,
 						x + w, y + h - border_bottom);
 	pos_y = y + border_top;
 
 	while (pos_y <= y + h - border_bottom) {
-		vultures_put_img(x + w - border_right, pos_y, vultures_winelem.border_right);
-		pos_y += vultures_winelem.border_right->h;
+		vulture_put_img(x + w - border_right, pos_y, vulture_winelem.border_right);
+		pos_y += vulture_winelem.border_right->h;
 	}
 
 	/* Draw center area */
-	vultures_set_draw_region(x + border_left, y + border_top,
+	vulture_set_draw_region(x + border_left, y + border_top,
 						x + w - border_right, y + h - border_bottom);
 	pos_y = y + border_top;
 	while (pos_y <= y + h - border_bottom) {
 		pos_x = x + border_left;
 
 		while (pos_x <= x + w - border_right) {
-			vultures_put_img(pos_x, pos_y, vultures_winelem.center);
-			pos_x += vultures_winelem.center->w;
+			vulture_put_img(pos_x, pos_y, vulture_winelem.center);
+			pos_x += vulture_winelem.center->w;
 		}
-		pos_y += vultures_winelem.center->h;
+		pos_y += vulture_winelem.center->h;
 	}
-	vultures_set_draw_region(0, 0, vultures_screen->w-1, vultures_screen->h-1);
+	vulture_set_draw_region(0, 0, vulture_screen->w-1, vulture_screen->h-1);
 
 
 	/* draw title */
@@ -93,10 +93,10 @@ bool mainwin::draw()
 	pos_y = this->abs_y + border_top;
 
 	if (!caption.empty())
-		vultures_put_text_shadow(V_FONT_HEADLINE, caption, vultures_screen, pos_x, 
+		vulture_put_text_shadow(V_FONT_HEADLINE, caption, vulture_screen, pos_x, 
 								pos_y, V_COLOR_TEXT, V_COLOR_BACKGROUND);
 
-	vultures_invalidate_region(x, y, w, h);
+	vulture_invalidate_region(x, y, w, h);
 
 	return true;
 }
@@ -106,7 +106,7 @@ int mainwin::get_frameheight()
 {
 	int capheight = 0;
 	if (!caption.empty())
-		capheight = vultures_text_height(V_FONT_HEADLINE, caption);
+		capheight = vulture_text_height(V_FONT_HEADLINE, caption);
 	return border_top + capheight + border_bottom;
 }
 
@@ -116,12 +116,12 @@ void mainwin::layout()
 	window *winelem;
 	int btncount, btn_maxwidth, btn_totalwidth, pos_x, capheight;
 	int max_y, min_y, offset_top;
-	int max_x = vultures_text_length(V_FONT_HEADLINE, caption);
-	int buttonheight = vultures_get_lineheight(V_FONT_MENU) + 15;
+	int max_x = vulture_text_length(V_FONT_HEADLINE, caption);
+	int buttonheight = vulture_get_lineheight(V_FONT_MENU) + 15;
 	
 	capheight = 0;
 	if (!caption.empty())
-		capheight = vultures_text_height(V_FONT_HEADLINE, caption) * 2;
+		capheight = vulture_text_height(V_FONT_HEADLINE, caption) * 2;
 	
 	btncount = btn_totalwidth = btn_maxwidth = pos_x = 0;
 	max_y = capheight;

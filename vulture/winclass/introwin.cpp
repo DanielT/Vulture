@@ -4,21 +4,21 @@
 
 #include <SDL.h>
 
-#include "vultures_win.h"
-#include "vultures_sdl.h"
-#include "vultures_gra.h"
-#include "vultures_gfl.h"
-#include "vultures_txt.h"
-#include "vultures_mou.h"
-#include "vultures_tile.h"
+#include "vulture_win.h"
+#include "vulture_sdl.h"
+#include "vulture_gra.h"
+#include "vulture_gfl.h"
+#include "vulture_txt.h"
+#include "vulture_mou.h"
+#include "vulture_tile.h"
 
 introwin::introwin(window *p, std::vector<std::string> &imagenames, std::vector< std::vector<std::string> > &subtitles) :
                    window(p), imagenames(imagenames), subtitles(subtitles)
 {
 	current_scene = -1;
 	
-	w = vultures_screen->w;
-	h = vultures_screen->h;
+	w = vulture_screen->w;
+	h = vulture_screen->h;
 	
 	image = NULL;
 	image_changed = false;
@@ -38,34 +38,34 @@ introwin::~introwin()
 bool introwin::draw()
 {
 	int j, pos_x, pos_y, img_x, img_y;
-	int lineheight = vultures_get_lineheight(V_FONT_INTRO);
+	int lineheight = vulture_get_lineheight(V_FONT_INTRO);
 	
-	vultures_set_draw_region(0, 0, w - 1, h - 1);
+	vulture_set_draw_region(0, 0, w - 1, h - 1);
 	if (image) {
 		img_x = (w - image->w) / 2;
 		img_y = (h - image->h) / 6;
 		
 		if (image_changed)
-			vultures_fade_out(0.2);
+			vulture_fade_out(0.2);
 		
-		SDL_FillRect(vultures_screen, NULL, CLR32_BLACK);
-		vultures_put_img(img_x, img_y, image);
+		SDL_FillRect(vulture_screen, NULL, CLR32_BLACK);
+		vulture_put_img(img_x, img_y, image);
 		if (image_changed)
-			vultures_fade_in(0.2);
+			vulture_fade_in(0.2);
 		
 		image_changed = false;
 		
 		for (j = 0; j < (int)subtitles[current_scene].size(); j++) {
-			pos_x = (w - vultures_text_length(V_FONT_INTRO, subtitles[current_scene][j])) / 2;
+			pos_x = (w - vulture_text_length(V_FONT_INTRO, subtitles[current_scene][j])) / 2;
 			pos_y = 2 * img_y + image->h + lineheight * j;
-			vultures_put_text(V_FONT_INTRO, subtitles[current_scene][j], vultures_screen,
+			vulture_put_text(V_FONT_INTRO, subtitles[current_scene][j], vulture_screen,
 								pos_x, pos_y, V_COLOR_INTRO_TEXT);
 			scenetime += subtitles[current_scene][j].length() * MSEC_PER_CHAR;
 		}
 	} else
-		SDL_FillRect(vultures_screen, NULL, CLR32_BLACK);
+		SDL_FillRect(vulture_screen, NULL, CLR32_BLACK);
 	
-	vultures_invalidate_region(0, 0, w, h);
+	vulture_invalidate_region(0, 0, w, h);
 	return false;
 }
 
@@ -83,7 +83,7 @@ eventresult introwin::handle_mousemotion_event(window* target, void* result, int
                                              int yrel, int state)
 {
 	/* hide cursor */
-	vultures_set_mcursor(V_TILE_NONE);
+	vulture_set_mcursor(V_TILE_NONE);
 	
 	/* next scene? */
 	if (SDL_GetTicks() - starttick > scenetime)
@@ -128,7 +128,7 @@ eventresult introwin::next_scene()
 	if (image)
 		SDL_FreeSurface(image);
 	
-	image = vultures_load_graphic(imagenames[current_scene]);
+	image = vulture_load_graphic(imagenames[current_scene]);
 	if (current_scene > 0 && imagenames[current_scene - 1] != imagenames[current_scene])
 		image_changed = true;
 	

@@ -1,9 +1,9 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
-#include "vultures_win.h"
-#include "vultures_txt.h"
-#include "vultures_mou.h"
-#include "vultures_tile.h"
+#include "vulture_win.h"
+#include "vulture_txt.h"
+#include "vulture_mou.h"
+#include "vulture_tile.h"
 
 #include "inputdialog.h"
 #include "textwin.h"
@@ -20,18 +20,18 @@ inputdialog::inputdialog(window *p, std::string ques, int size,
 	input->menu_id = 1;
 
 	/* calc sizes and positions */
-	w = vultures_text_length(V_FONT_HEADLINE, ques);
+	w = vulture_text_length(V_FONT_HEADLINE, ques);
 	w = (w < 500) ? 500 : w;
 
 	input->w = w;
 	w += border_left + border_right;
-	h = border_top + vultures_get_lineheight(V_FONT_HEADLINE) +
-	    3 * vultures_get_lineheight(V_FONT_INPUT) + border_bottom;
-	input->h = vultures_get_lineheight(V_FONT_INPUT) + 1;
+	h = border_top + vulture_get_lineheight(V_FONT_HEADLINE) +
+	    3 * vulture_get_lineheight(V_FONT_INPUT) + border_bottom;
+	input->h = vulture_get_lineheight(V_FONT_INPUT) + 1;
 
 	input->x = (w - input->w) / 2;
-	input->y = border_top + vultures_get_lineheight(V_FONT_HEADLINE) +
-	           vultures_get_lineheight(V_FONT_INPUT);
+	input->y = border_top + vulture_get_lineheight(V_FONT_HEADLINE) +
+	           vulture_get_lineheight(V_FONT_INPUT);
 	
 	if (force_x > -1)
 		x = force_x;
@@ -63,7 +63,7 @@ bool inputdialog::draw()
 eventresult inputdialog::handle_mousemotion_event(window* target, void* result, int xrel, 
                                              int yrel, int state)
 {
-	vultures_set_mcursor(V_CURSOR_NORMAL);
+	vulture_set_mcursor(V_CURSOR_NORMAL);
 	return V_EVENT_HANDLED_NOREDRAW;
 }
 
@@ -94,7 +94,7 @@ eventresult inputdialog::handle_keydown_event(window* target, void* result,
 
 		default:
 			/* add characters up to a maximum of 256 */
-			if (text.length() < 256 && vultures_text_length(V_FONT_MENU, text) <
+			if (text.length() < 256 && vulture_text_length(V_FONT_MENU, text) <
 				(first_child->w - 10) && isprint(unicode)) {
 				text.push_back((char)unicode);
 				first_child->need_redraw = 1;

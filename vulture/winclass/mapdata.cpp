@@ -1,13 +1,13 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
-#include "vultures_sdl.h" /* XXX this must be the first include,
+#include "vulture_sdl.h" /* XXX this must be the first include,
                              no idea why but it won't compile otherwise */
 
-#include "vultures_main.h"
-#include "vultures_win.h"
-#include "vultures_gen.h"
-#include "vultures_mou.h"
-#include "vultures_tile.h"
+#include "vulture_main.h"
+#include "vulture_win.h"
+#include "vulture_gen.h"
+#include "vulture_mou.h"
+#include "vulture_tile.h"
 
 #include "mapdata.h"
 #include "window.h"
@@ -53,102 +53,102 @@ mapdata::mapdata()
 	
 	/* build engulf tile array */
 	for (i = 0; i < NUMMONS; i++)
-		vultures_tilemap_engulf[i] = V_TILE_NONE;
+		vulture_tilemap_engulf[i] = V_TILE_NONE;
 
-	vultures_tilemap_engulf[PM_OCHRE_JELLY]   = V_MISC_ENGULF_OCHRE_JELLY;
-	vultures_tilemap_engulf[PM_LURKER_ABOVE]  = V_MISC_ENGULF_LURKER_ABOVE;
-	vultures_tilemap_engulf[PM_TRAPPER]       = V_MISC_ENGULF_TRAPPER;
-	vultures_tilemap_engulf[PM_PURPLE_WORM]   = V_MISC_ENGULF_PURPLE_WORM;
-	vultures_tilemap_engulf[PM_DUST_VORTEX]   = V_MISC_ENGULF_DUST_VORTEX;
-	vultures_tilemap_engulf[PM_ICE_VORTEX]    = V_MISC_ENGULF_ICE_VORTEX;
-	vultures_tilemap_engulf[PM_ENERGY_VORTEX] = V_MISC_ENGULF_ENERGY_VORTEX;
-	vultures_tilemap_engulf[PM_STEAM_VORTEX]  = V_MISC_ENGULF_STEAM_VORTEX;
-	vultures_tilemap_engulf[PM_FIRE_VORTEX]   = V_MISC_ENGULF_FIRE_VORTEX;
-	vultures_tilemap_engulf[PM_FOG_CLOUD]     = V_MISC_ENGULF_FOG_CLOUD;
-	vultures_tilemap_engulf[PM_AIR_ELEMENTAL] = V_MISC_ENGULF_AIR_ELEMENTAL;
-	vultures_tilemap_engulf[PM_JUIBLEX]      = V_MISC_ENGULF_JUIBLEX;
+	vulture_tilemap_engulf[PM_OCHRE_JELLY]   = V_MISC_ENGULF_OCHRE_JELLY;
+	vulture_tilemap_engulf[PM_LURKER_ABOVE]  = V_MISC_ENGULF_LURKER_ABOVE;
+	vulture_tilemap_engulf[PM_TRAPPER]       = V_MISC_ENGULF_TRAPPER;
+	vulture_tilemap_engulf[PM_PURPLE_WORM]   = V_MISC_ENGULF_PURPLE_WORM;
+	vulture_tilemap_engulf[PM_DUST_VORTEX]   = V_MISC_ENGULF_DUST_VORTEX;
+	vulture_tilemap_engulf[PM_ICE_VORTEX]    = V_MISC_ENGULF_ICE_VORTEX;
+	vulture_tilemap_engulf[PM_ENERGY_VORTEX] = V_MISC_ENGULF_ENERGY_VORTEX;
+	vulture_tilemap_engulf[PM_STEAM_VORTEX]  = V_MISC_ENGULF_STEAM_VORTEX;
+	vulture_tilemap_engulf[PM_FIRE_VORTEX]   = V_MISC_ENGULF_FIRE_VORTEX;
+	vulture_tilemap_engulf[PM_FOG_CLOUD]     = V_MISC_ENGULF_FOG_CLOUD;
+	vulture_tilemap_engulf[PM_AIR_ELEMENTAL] = V_MISC_ENGULF_AIR_ELEMENTAL;
+	vulture_tilemap_engulf[PM_JUIBLEX]      = V_MISC_ENGULF_JUIBLEX;
 
 	/* build "special tile" array: these are the tiles for dungeon glyphs */
 #ifdef VULTURE_SLASHEM
-	vultures_tilemap_misc[S_toilet] = V_MISC_TOILET;
+	vulture_tilemap_misc[S_toilet] = V_MISC_TOILET;
 #endif
 
-	vultures_tilemap_misc[S_stone] = V_MISC_UNMAPPED_AREA;
-	vultures_tilemap_misc[S_vwall] = V_TILE_WALL_GENERIC;
-	vultures_tilemap_misc[S_hwall] = V_TILE_WALL_GENERIC;
-	vultures_tilemap_misc[S_tlcorn] = V_TILE_WALL_GENERIC;
-	vultures_tilemap_misc[S_trcorn] = V_TILE_WALL_GENERIC;
-	vultures_tilemap_misc[S_blcorn] = V_TILE_WALL_GENERIC;
-	vultures_tilemap_misc[S_brcorn] = V_TILE_WALL_GENERIC;
-	vultures_tilemap_misc[S_crwall] = V_TILE_WALL_GENERIC;
-	vultures_tilemap_misc[S_tuwall] = V_TILE_WALL_GENERIC;
-	vultures_tilemap_misc[S_tdwall] = V_TILE_WALL_GENERIC;
-	vultures_tilemap_misc[S_tlwall] = V_TILE_WALL_GENERIC;
-	vultures_tilemap_misc[S_trwall] = V_TILE_WALL_GENERIC;
-	vultures_tilemap_misc[S_ndoor] = V_MISC_DOOR_WOOD_BROKEN;
-	vultures_tilemap_misc[S_vodoor] = V_MISC_VDOOR_WOOD_OPEN;
-	vultures_tilemap_misc[S_hodoor] = V_MISC_HDOOR_WOOD_OPEN;
-	vultures_tilemap_misc[S_vcdoor] = V_MISC_VDOOR_WOOD_CLOSED;
-	vultures_tilemap_misc[S_hcdoor] = V_MISC_HDOOR_WOOD_CLOSED;
-	vultures_tilemap_misc[S_room] = V_TILE_FLOOR_COBBLESTONE;
-	vultures_tilemap_misc[S_corr] = V_TILE_FLOOR_ROUGH;
-	vultures_tilemap_misc[S_upstair] = V_MISC_STAIRS_UP;
-	vultures_tilemap_misc[S_dnstair] = V_MISC_STAIRS_DOWN;
-	vultures_tilemap_misc[S_fountain] = V_MISC_FOUNTAIN;
-	vultures_tilemap_misc[S_altar] = V_MISC_ALTAR;
-	vultures_tilemap_misc[S_teleportation_trap] = V_MISC_TRAP_TELEPORTER;
-	vultures_tilemap_misc[S_tree] = V_MISC_TREE;
-	vultures_tilemap_misc[S_cloud] = V_MISC_CLOUD;
-	vultures_tilemap_misc[S_air] = V_TILE_FLOOR_AIR;
-	vultures_tilemap_misc[S_grave] = V_MISC_GRAVE;
-	vultures_tilemap_misc[S_sink] = V_MISC_SINK;
-	vultures_tilemap_misc[S_bear_trap] = V_MISC_TRAP_BEAR;
-	vultures_tilemap_misc[S_rust_trap] = V_MISC_TRAP_WATER;
-	vultures_tilemap_misc[S_pit] = V_MISC_TRAP_PIT;
-	vultures_tilemap_misc[S_hole] = V_MISC_TRAP_PIT;
-	vultures_tilemap_misc[S_trap_door] = V_MISC_TRAP_DOOR;
-	vultures_tilemap_misc[S_water] = V_TILE_FLOOR_WATER;
-	vultures_tilemap_misc[S_pool] = V_TILE_FLOOR_WATER;
-	vultures_tilemap_misc[S_ice] = V_TILE_FLOOR_ICE;
-	vultures_tilemap_misc[S_lava] = V_TILE_FLOOR_LAVA;
-	vultures_tilemap_misc[S_throne] = V_MISC_THRONE;
-	vultures_tilemap_misc[S_bars] = V_MISC_BARS;
-	vultures_tilemap_misc[S_upladder] = V_MISC_LADDER_UP;
-	vultures_tilemap_misc[S_dnladder] = V_MISC_LADDER_DOWN;
-	vultures_tilemap_misc[S_arrow_trap] = V_MISC_TRAP_ARROW;
-	vultures_tilemap_misc[S_rolling_boulder_trap] = V_MISC_ROLLING_BOULDER_TRAP;
-	vultures_tilemap_misc[S_sleeping_gas_trap] = V_MISC_GAS_TRAP;
-	vultures_tilemap_misc[S_fire_trap] = V_MISC_TRAP_FIRE;
-	vultures_tilemap_misc[S_web] = V_MISC_WEB_TRAP;
-	vultures_tilemap_misc[S_statue_trap] = OBJECT_TO_VTILE(STATUE);
-	vultures_tilemap_misc[S_anti_magic_trap] = V_MISC_TRAP_ANTI_MAGIC;
-	vultures_tilemap_misc[S_polymorph_trap] = V_MISC_TRAP_POLYMORPH;
-	vultures_tilemap_misc[S_vbeam] = V_MISC_ZAP_VERTICAL;
-	vultures_tilemap_misc[S_hbeam] = V_MISC_ZAP_HORIZONTAL;
-	vultures_tilemap_misc[S_lslant] = V_MISC_ZAP_SLANT_LEFT;
-	vultures_tilemap_misc[S_rslant] = V_MISC_ZAP_SLANT_RIGHT;
-	vultures_tilemap_misc[S_litcorr] = V_TILE_FLOOR_ROUGH_LIT;
-	vultures_tilemap_misc[S_ss1] = V_MISC_RESIST_SPELL_1;
-	vultures_tilemap_misc[S_ss2] = V_MISC_RESIST_SPELL_2;
-	vultures_tilemap_misc[S_ss3] = V_MISC_RESIST_SPELL_3;
-	vultures_tilemap_misc[S_ss4] = V_MISC_RESIST_SPELL_4;
-	vultures_tilemap_misc[S_dart_trap] = V_MISC_DART_TRAP;
-	vultures_tilemap_misc[S_falling_rock_trap] = V_MISC_FALLING_ROCK_TRAP;
-	vultures_tilemap_misc[S_squeaky_board] = V_MISC_SQUEAKY_BOARD;
-	vultures_tilemap_misc[S_land_mine] = V_MISC_LAND_MINE;
-	vultures_tilemap_misc[S_magic_portal] = V_MISC_MAGIC_PORTAL;
-	vultures_tilemap_misc[S_spiked_pit] = V_MISC_SPIKED_PIT;
-	vultures_tilemap_misc[S_hole] = V_MISC_HOLE;
-	vultures_tilemap_misc[S_level_teleporter] = V_MISC_LEVEL_TELEPORTER;
-	vultures_tilemap_misc[S_magic_trap] = V_MISC_MAGIC_TRAP;
-	vultures_tilemap_misc[S_digbeam] = V_MISC_DIGBEAM;
-	vultures_tilemap_misc[S_flashbeam] = V_MISC_FLASHBEAM;
-	vultures_tilemap_misc[S_boomleft] = V_MISC_BOOMLEFT;
-	vultures_tilemap_misc[S_boomright] = V_MISC_BOOMRIGHT;
-	vultures_tilemap_misc[S_hcdbridge] = V_MISC_HCDBRIDGE;
-	vultures_tilemap_misc[S_vcdbridge] = V_MISC_VCDBRIDGE;
-	vultures_tilemap_misc[S_hodbridge] = V_MISC_HODBRIDGE;
-	vultures_tilemap_misc[S_vodbridge] = V_MISC_VODBRIDGE;
+	vulture_tilemap_misc[S_stone] = V_MISC_UNMAPPED_AREA;
+	vulture_tilemap_misc[S_vwall] = V_TILE_WALL_GENERIC;
+	vulture_tilemap_misc[S_hwall] = V_TILE_WALL_GENERIC;
+	vulture_tilemap_misc[S_tlcorn] = V_TILE_WALL_GENERIC;
+	vulture_tilemap_misc[S_trcorn] = V_TILE_WALL_GENERIC;
+	vulture_tilemap_misc[S_blcorn] = V_TILE_WALL_GENERIC;
+	vulture_tilemap_misc[S_brcorn] = V_TILE_WALL_GENERIC;
+	vulture_tilemap_misc[S_crwall] = V_TILE_WALL_GENERIC;
+	vulture_tilemap_misc[S_tuwall] = V_TILE_WALL_GENERIC;
+	vulture_tilemap_misc[S_tdwall] = V_TILE_WALL_GENERIC;
+	vulture_tilemap_misc[S_tlwall] = V_TILE_WALL_GENERIC;
+	vulture_tilemap_misc[S_trwall] = V_TILE_WALL_GENERIC;
+	vulture_tilemap_misc[S_ndoor] = V_MISC_DOOR_WOOD_BROKEN;
+	vulture_tilemap_misc[S_vodoor] = V_MISC_VDOOR_WOOD_OPEN;
+	vulture_tilemap_misc[S_hodoor] = V_MISC_HDOOR_WOOD_OPEN;
+	vulture_tilemap_misc[S_vcdoor] = V_MISC_VDOOR_WOOD_CLOSED;
+	vulture_tilemap_misc[S_hcdoor] = V_MISC_HDOOR_WOOD_CLOSED;
+	vulture_tilemap_misc[S_room] = V_TILE_FLOOR_COBBLESTONE;
+	vulture_tilemap_misc[S_corr] = V_TILE_FLOOR_ROUGH;
+	vulture_tilemap_misc[S_upstair] = V_MISC_STAIRS_UP;
+	vulture_tilemap_misc[S_dnstair] = V_MISC_STAIRS_DOWN;
+	vulture_tilemap_misc[S_fountain] = V_MISC_FOUNTAIN;
+	vulture_tilemap_misc[S_altar] = V_MISC_ALTAR;
+	vulture_tilemap_misc[S_teleportation_trap] = V_MISC_TRAP_TELEPORTER;
+	vulture_tilemap_misc[S_tree] = V_MISC_TREE;
+	vulture_tilemap_misc[S_cloud] = V_MISC_CLOUD;
+	vulture_tilemap_misc[S_air] = V_TILE_FLOOR_AIR;
+	vulture_tilemap_misc[S_grave] = V_MISC_GRAVE;
+	vulture_tilemap_misc[S_sink] = V_MISC_SINK;
+	vulture_tilemap_misc[S_bear_trap] = V_MISC_TRAP_BEAR;
+	vulture_tilemap_misc[S_rust_trap] = V_MISC_TRAP_WATER;
+	vulture_tilemap_misc[S_pit] = V_MISC_TRAP_PIT;
+	vulture_tilemap_misc[S_hole] = V_MISC_TRAP_PIT;
+	vulture_tilemap_misc[S_trap_door] = V_MISC_TRAP_DOOR;
+	vulture_tilemap_misc[S_water] = V_TILE_FLOOR_WATER;
+	vulture_tilemap_misc[S_pool] = V_TILE_FLOOR_WATER;
+	vulture_tilemap_misc[S_ice] = V_TILE_FLOOR_ICE;
+	vulture_tilemap_misc[S_lava] = V_TILE_FLOOR_LAVA;
+	vulture_tilemap_misc[S_throne] = V_MISC_THRONE;
+	vulture_tilemap_misc[S_bars] = V_MISC_BARS;
+	vulture_tilemap_misc[S_upladder] = V_MISC_LADDER_UP;
+	vulture_tilemap_misc[S_dnladder] = V_MISC_LADDER_DOWN;
+	vulture_tilemap_misc[S_arrow_trap] = V_MISC_TRAP_ARROW;
+	vulture_tilemap_misc[S_rolling_boulder_trap] = V_MISC_ROLLING_BOULDER_TRAP;
+	vulture_tilemap_misc[S_sleeping_gas_trap] = V_MISC_GAS_TRAP;
+	vulture_tilemap_misc[S_fire_trap] = V_MISC_TRAP_FIRE;
+	vulture_tilemap_misc[S_web] = V_MISC_WEB_TRAP;
+	vulture_tilemap_misc[S_statue_trap] = OBJECT_TO_VTILE(STATUE);
+	vulture_tilemap_misc[S_anti_magic_trap] = V_MISC_TRAP_ANTI_MAGIC;
+	vulture_tilemap_misc[S_polymorph_trap] = V_MISC_TRAP_POLYMORPH;
+	vulture_tilemap_misc[S_vbeam] = V_MISC_ZAP_VERTICAL;
+	vulture_tilemap_misc[S_hbeam] = V_MISC_ZAP_HORIZONTAL;
+	vulture_tilemap_misc[S_lslant] = V_MISC_ZAP_SLANT_LEFT;
+	vulture_tilemap_misc[S_rslant] = V_MISC_ZAP_SLANT_RIGHT;
+	vulture_tilemap_misc[S_litcorr] = V_TILE_FLOOR_ROUGH_LIT;
+	vulture_tilemap_misc[S_ss1] = V_MISC_RESIST_SPELL_1;
+	vulture_tilemap_misc[S_ss2] = V_MISC_RESIST_SPELL_2;
+	vulture_tilemap_misc[S_ss3] = V_MISC_RESIST_SPELL_3;
+	vulture_tilemap_misc[S_ss4] = V_MISC_RESIST_SPELL_4;
+	vulture_tilemap_misc[S_dart_trap] = V_MISC_DART_TRAP;
+	vulture_tilemap_misc[S_falling_rock_trap] = V_MISC_FALLING_ROCK_TRAP;
+	vulture_tilemap_misc[S_squeaky_board] = V_MISC_SQUEAKY_BOARD;
+	vulture_tilemap_misc[S_land_mine] = V_MISC_LAND_MINE;
+	vulture_tilemap_misc[S_magic_portal] = V_MISC_MAGIC_PORTAL;
+	vulture_tilemap_misc[S_spiked_pit] = V_MISC_SPIKED_PIT;
+	vulture_tilemap_misc[S_hole] = V_MISC_HOLE;
+	vulture_tilemap_misc[S_level_teleporter] = V_MISC_LEVEL_TELEPORTER;
+	vulture_tilemap_misc[S_magic_trap] = V_MISC_MAGIC_TRAP;
+	vulture_tilemap_misc[S_digbeam] = V_MISC_DIGBEAM;
+	vulture_tilemap_misc[S_flashbeam] = V_MISC_FLASHBEAM;
+	vulture_tilemap_misc[S_boomleft] = V_MISC_BOOMLEFT;
+	vulture_tilemap_misc[S_boomright] = V_MISC_BOOMRIGHT;
+	vulture_tilemap_misc[S_hcdbridge] = V_MISC_HCDBRIDGE;
+	vulture_tilemap_misc[S_vcdbridge] = V_MISC_VCDBRIDGE;
+	vulture_tilemap_misc[S_hodbridge] = V_MISC_HODBRIDGE;
+	vulture_tilemap_misc[S_vodbridge] = V_MISC_VODBRIDGE;
 }
 
 
@@ -162,7 +162,7 @@ void mapdata::clear()
 			/* ideally this is what we'd do to clear background:
 			 * map_back[i][j] = V_MISC_UNMAPPED_AREA;
 			 * unfortunately doing so breaks dark tiles in rooms... */
-			vultures_print_glyph(0, j, i, cmap_to_glyph(S_stone));
+			vulture_print_glyph(0, j, i, cmap_to_glyph(S_stone));
 			map_trap[i][j] = V_TILE_NONE;
 			map_furniture[i][j] = V_TILE_NONE;
 			map_obj[i][j] = V_TILE_NONE;
@@ -212,8 +212,8 @@ void mapdata::set_glyph(int x, int y, int glyph)
 
 	/* check wether we are swallowed, if so, return, because nothing but the swallow graphic will be drawn anyway */
 	if (glyph_is_swallow(glyph)) {
-		/* we only SET vultures_map_swallow here; we expect vultures_draw_level to reset it */
-		map_swallow = (vultures_tilemap_engulf[(glyph-GLYPH_SWALLOW_OFF) >> 3]);
+		/* we only SET vulture_map_swallow here; we expect vulture_draw_level to reset it */
+		map_swallow = (vulture_tilemap_engulf[(glyph-GLYPH_SWALLOW_OFF) >> 3]);
 		return;
 	}
 
@@ -228,12 +228,12 @@ void mapdata::set_glyph(int x, int y, int glyph)
 		/* various special effects, these occur only during the player's turn and should be
 		* layered on top of everything else */
 		if (glyph >= GLYPH_ZAP_OFF && glyph < GLYPH_WARNING_OFF)
-			map_special = vultures_tilemap_misc[S_vbeam + ((glyph - GLYPH_ZAP_OFF) & 0x03)];
+			map_special = vulture_tilemap_misc[S_vbeam + ((glyph - GLYPH_ZAP_OFF) & 0x03)];
 		else if (glyph >= GLYPH_EXPLODE_OFF && glyph < GLYPH_ZAP_OFF)
 			map_special = EXPTILEOFFSET + (glyph - GLYPH_EXPLODE_OFF);
 		else if (glyph_to_cmap(glyph) >= S_digbeam && glyph_to_cmap(glyph) <= S_ss4)
 			/* digbeam, camera flash, boomerang, magic resistance: these are not floor tiles ... */
-			map_special = vultures_tilemap_misc[glyph_to_cmap(glyph)];
+			map_special = vulture_tilemap_misc[glyph_to_cmap(glyph)];
 
 		/* if the player is invisible and can't see himself, nethack does not print a
 		* glyph for him; we need to insert it ourselves */
@@ -248,7 +248,7 @@ void mapdata::set_glyph(int x, int y, int glyph)
 			/* we need special attributes, so that we can highlight the pet */
 			mapglyph(glyph, &character, &colour, &attr, x, y);
 			is_pet = attr & MG_PET;
-			map_mon =  vultures_monster_to_tile(glyph_to_mon(glyph), x, y);
+			map_mon =  vulture_monster_to_tile(glyph_to_mon(glyph), x, y);
 		}
 		/* handle invisible monsters */
 		else if (glyph_is_invisible(glyph)) {
@@ -271,18 +271,18 @@ void mapdata::set_glyph(int x, int y, int glyph)
 			/* glyph_to_obj(obj_to_glyph(foo)) looks like nonsense, but is actually an elegant
 			* way of handling hallucination, especially the complicated matter of hallucinated
 			* corpses... */
-			map_obj = vultures_object_to_tile(glyph_to_obj(obj_to_glyph( obj)), x, y, NULL);
+			map_obj = vulture_object_to_tile(glyph_to_obj(obj_to_glyph( obj)), x, y, NULL);
 		}
 		/* just to make things interesting, the above does not handle thrown/kicked objects... */
 		else if (glyph_is_object(glyph))
-			map_obj = vultures_object_to_tile(glyph_to_obj(glyph), x, y, NULL);
+			map_obj = vulture_object_to_tile(glyph_to_obj(glyph), x, y, NULL);
 		else
 			map_obj = V_TILE_NONE;
 
 		/* traps that are not covered by lava and have been seen */
 		if ((trap = t_at(x,y)) && !covers_traps(x,y) && trap->tseen)
 			/* what_trap handles hallucination */
-			map_trap = vultures_tilemap_misc[what_trap(trap->ttyp) + S_arrow_trap - 1];
+			map_trap = vulture_tilemap_misc[what_trap(trap->ttyp) + S_arrow_trap - 1];
 		else
 			map_trap = V_TILE_NONE;
 
@@ -291,28 +291,28 @@ void mapdata::set_glyph(int x, int y, int glyph)
 		* type of floor, rather than producing a discolored blob*/
 		if (glyph_to_cmap(glyph) >= S_upstair && glyph_to_cmap(glyph) <= S_fountain) {
 			/* this is a mimic pretending to be part of the dungeon */
-			map_furniture = vultures_tilemap_misc[glyph_to_cmap(glyph)];
+			map_furniture = vulture_tilemap_misc[glyph_to_cmap(glyph)];
 			map_back = V_TILE_FLOOR_COBBLESTONE;
 		}
 		else if (IS_FURNITURE(level.locations[x][y].typ)) {
-			map_furniture = vultures_tilemap_misc[glyph_to_cmap(back_to_glyph(x,y))];
+			map_furniture = vulture_tilemap_misc[glyph_to_cmap(back_to_glyph(x,y))];
 			/* furniture is only found in rooms, so set the background type */
 			map_back = V_TILE_FLOOR_COBBLESTONE;
 		}
 		else if (glyph_to_cmap(glyph) >= S_ndoor && glyph_to_cmap(glyph) <= S_tree) {
 			/* this is a mimic pretending to be part of the dungeon */
-			map_furniture = vultures_tilemap_misc[glyph_to_cmap(glyph)];
+			map_furniture = vulture_tilemap_misc[glyph_to_cmap(glyph)];
 			map_back = V_TILE_FLOOR_ROUGH;
 		}
 		else if (V_EXTRA_FURNITURE(level.locations[x][y].typ)) {
 			/* this stuff is not furniture, but we need to draw it at the same time,
 			* so we pack it in with the furniture ...*/
-			map_furniture = vultures_tilemap_misc[glyph_to_cmap(back_to_glyph(x,y))];
+			map_furniture = vulture_tilemap_misc[glyph_to_cmap(back_to_glyph(x,y))];
 			map_back = V_TILE_FLOOR_ROUGH;
 		}
 		else {
 			map_furniture = V_TILE_NONE;
-			map_back = vultures_tilemap_misc[glyph_to_cmap(back_to_glyph(x,y))];
+			map_back = vulture_tilemap_misc[glyph_to_cmap(back_to_glyph(x,y))];
 			if (map_special == V_TILE_NONE && glyph_to_cmap(glyph) == S_cloud && back_to_glyph(x,y) != glyph)
 				map_special = V_MISC_STINKING_CLOUD;
 		}
@@ -335,7 +335,7 @@ void mapdata::set_glyph(int x, int y, int glyph)
 		if (glyph_is_monster(glyph)) {
 			mapglyph(glyph, &character, &colour, &attr, x, y);
 			is_pet = attr & MG_PET;
-			map_mon = vultures_monster_to_tile(glyph_to_mon(glyph), x, y);
+			map_mon = vulture_monster_to_tile(glyph_to_mon(glyph), x, y);
 
 			/* if seen telepathically in an unexplored area, it might not have a floor */
 			if (map_back == V_MISC_UNMAPPED_AREA && level.locations[x][y].typ != STONE)
@@ -358,14 +358,14 @@ void mapdata::set_glyph(int x, int y, int glyph)
 
 		/* same as above, for objects */
 		else if (glyph_is_object(glyph)) {
-			map_obj = vultures_object_to_tile(glyph_to_obj(glyph), x, y, NULL);
+			map_obj = vulture_object_to_tile(glyph_to_obj(glyph), x, y, NULL);
 			if (map_back == V_MISC_UNMAPPED_AREA && level.locations[x][y].typ != STONE)
 				map_back = V_MISC_FLOOR_NOT_VISIBLE;
 		}
 
 		/* traps are not seen magically (I think?), so this only triggers when loading a level */
 		else if (glyph_is_trap(glyph)) {
-			map_trap = vultures_tilemap_misc[glyph_to_cmap(glyph)];
+			map_trap = vulture_tilemap_misc[glyph_to_cmap(glyph)];
 			if (map_back == V_MISC_UNMAPPED_AREA)
 				map_back = V_MISC_FLOOR_NOT_VISIBLE;
 		}
@@ -377,7 +377,7 @@ void mapdata::set_glyph(int x, int y, int glyph)
 
 			/* IS_FURNITURE() may be true while the cmap is S_stone for dark rooms  */
 			if (IS_FURNITURE(level.locations[x][y].typ) && glyph_to_cmap(glyph) != S_stone) {
-				map_furniture = vultures_tilemap_misc[glyph_to_cmap(glyph)];
+				map_furniture = vulture_tilemap_misc[glyph_to_cmap(glyph)];
 				map_back = V_TILE_FLOOR_COBBLESTONE;
 			}
 			else if (V_EXTRA_FURNITURE(level.locations[x][y].typ) &&
@@ -385,12 +385,12 @@ void mapdata::set_glyph(int x, int y, int glyph)
 				/* V_EXTRA_FURNITURE = doors, drawbridges, iron bars
 				* that stuff is not furniture, but we need to draw it at the same time,
 				* so we pack it in with the furniture ...*/
-				map_furniture = vultures_tilemap_misc[glyph_to_cmap(back_to_glyph(x,y))];
+				map_furniture = vulture_tilemap_misc[glyph_to_cmap(back_to_glyph(x,y))];
 				map_back = V_TILE_FLOOR_ROUGH;
 			}
 			else {
 				map_furniture = V_TILE_NONE;
-				map_back = vultures_tilemap_misc[glyph_to_cmap(glyph)];
+				map_back = vulture_tilemap_misc[glyph_to_cmap(glyph)];
 			}
 		}
 
@@ -398,24 +398,24 @@ void mapdata::set_glyph(int x, int y, int glyph)
 		* whose background we actually know and can display, even though we can't physically see it*/
 		if (level.locations[x][y].seenv != 0 && map_back == V_MISC_FLOOR_NOT_VISIBLE) {
 			if (IS_FURNITURE(level.locations[x][y].typ)) {
-				map_furniture = vultures_tilemap_misc[glyph_to_cmap(back_to_glyph(x,y))];
+				map_furniture = vulture_tilemap_misc[glyph_to_cmap(back_to_glyph(x,y))];
 				/* furniture is only found in rooms, so set the background type */
 				map_back = V_TILE_FLOOR_COBBLESTONE;
 			}
 			else if (V_EXTRA_FURNITURE(level.locations[x][y].typ)) {
 				/* this stuff is not furniture, but we need to draw it at the same time,
 				* so we pack it in with the furniture ...*/
-				map_furniture = vultures_tilemap_misc[glyph_to_cmap(back_to_glyph(x,y))];
+				map_furniture = vulture_tilemap_misc[glyph_to_cmap(back_to_glyph(x,y))];
 				map_back = V_TILE_FLOOR_ROUGH;
 			}
 			else {
 				map_furniture = V_TILE_NONE;
-				map_back = vultures_tilemap_misc[glyph_to_cmap(back_to_glyph(x,y))];
+				map_back = vulture_tilemap_misc[glyph_to_cmap(back_to_glyph(x,y))];
 			}
 		}
 
 		/* handle unlit room tiles; until now we were assuming them to be lit; whereas tiles
-		* converted via vultures_tilemap_misc are currently V_TILE_NONE */
+		* converted via vulture_tilemap_misc are currently V_TILE_NONE */
 		if ( ((!level.locations[x][y].waslit) && map_back == V_TILE_FLOOR_COBBLESTONE) ||
 		      (level.locations[x][y].typ == ROOM && map_back == V_MISC_UNMAPPED_AREA &&
 		       level.locations[x][y].seenv)) {
@@ -438,19 +438,19 @@ void mapdata::set_glyph(int x, int y, int glyph)
 		switch (level.locations[x][y].drawbridgemask & DB_UNDER)
 		{
 			case DB_MOAT:
-				set_map_data(MAP_BACK, x-1, y, vultures_tilemap_misc[S_pool], force_update);
+				set_map_data(MAP_BACK, x-1, y, vulture_tilemap_misc[S_pool], force_update);
 				break;
 
 			case DB_LAVA:
-				set_map_data(MAP_BACK, x-1, y, vultures_tilemap_misc[S_lava], force_update);
+				set_map_data(MAP_BACK, x-1, y, vulture_tilemap_misc[S_lava], force_update);
 				break;
 
 			case DB_ICE:
-				set_map_data(MAP_BACK, x-1, y, vultures_tilemap_misc[S_ice], force_update);
+				set_map_data(MAP_BACK, x-1, y, vulture_tilemap_misc[S_ice], force_update);
 				break;
 
 			case DB_FLOOR:
-				set_map_data(MAP_BACK, x-1, y, vultures_tilemap_misc[S_room], force_update);
+				set_map_data(MAP_BACK, x-1, y, vulture_tilemap_misc[S_room], force_update);
 				break;
 		}
 	}
@@ -463,19 +463,19 @@ void mapdata::set_glyph(int x, int y, int glyph)
 		switch (level.locations[x][y].drawbridgemask & DB_UNDER)
 		{
 			case DB_MOAT:
-				set_map_data(MAP_BACK, x, y-1, vultures_tilemap_misc[S_pool], force_update);
+				set_map_data(MAP_BACK, x, y-1, vulture_tilemap_misc[S_pool], force_update);
 				break;
 
 			case DB_LAVA:
-				set_map_data(MAP_BACK, x, y-1, vultures_tilemap_misc[S_lava], force_update);
+				set_map_data(MAP_BACK, x, y-1, vulture_tilemap_misc[S_lava], force_update);
 				break;
 
 			case DB_ICE:
-				set_map_data(MAP_BACK, x, y-1, vultures_tilemap_misc[S_ice], force_update);
+				set_map_data(MAP_BACK, x, y-1, vulture_tilemap_misc[S_ice], force_update);
 				break;
 
 			case DB_FLOOR:
-				set_map_data(MAP_BACK, x, y-1, vultures_tilemap_misc[S_room], force_update);
+				set_map_data(MAP_BACK, x, y-1, vulture_tilemap_misc[S_room], force_update);
 				break;
 		}
 	}
@@ -525,55 +525,55 @@ int mapdata::perform_map_action(int action_id, point mappos)
 		case V_ACTION_MONSTER_ABILITY: return META('m');
 
 		case V_ACTION_DRINK:
-			vultures_eventstack_add(mappos_to_dirkey(mappos),-1,-1, V_RESPOND_CHARACTER);
+			vulture_eventstack_add(mappos_to_dirkey(mappos),-1,-1, V_RESPOND_CHARACTER);
       return 'q';
 
 		case V_ACTION_READ:
-			vultures_eventstack_add(mappos_to_dirkey(mappos),-1,-1, V_RESPOND_CHARACTER);
+			vulture_eventstack_add(mappos_to_dirkey(mappos),-1,-1, V_RESPOND_CHARACTER);
 			return 'r';
 
 		case V_ACTION_KICK:
-			vultures_eventstack_add(mappos_to_dirkey(mappos),-1,-1, V_RESPOND_CHARACTER);
+			vulture_eventstack_add(mappos_to_dirkey(mappos),-1,-1, V_RESPOND_CHARACTER);
 			return CTRL('d');
 
 		case V_ACTION_OPEN_DOOR:
-			vultures_eventstack_add(mappos_to_dirkey(mappos),-1,-1, V_RESPOND_CHARACTER);
+			vulture_eventstack_add(mappos_to_dirkey(mappos),-1,-1, V_RESPOND_CHARACTER);
 			return 'o';
 
 		case V_ACTION_UNTRAP:
-			vultures_eventstack_add(mappos_to_dirkey(mappos),-1,-1, V_RESPOND_CHARACTER);
+			vulture_eventstack_add(mappos_to_dirkey(mappos),-1,-1, V_RESPOND_CHARACTER);
 			return META('u');
 
 		case V_ACTION_CLOSE_DOOR:
-			vultures_eventstack_add(mappos_to_dirkey(mappos),-1,-1, V_RESPOND_CHARACTER);
+			vulture_eventstack_add(mappos_to_dirkey(mappos),-1,-1, V_RESPOND_CHARACTER);
 			return 'c';
 
 		case V_ACTION_WHATS_THIS:
 			/* events get stored on a STACK, so calls to eventstack add 
 			* need to be done in revers order */
-			vultures_whatis_singleshot = 1;
+			vulture_whatis_singleshot = 1;
 
 			/* select the mapsquare */
-			vultures_eventstack_add(0, mappos.x, mappos.y, V_RESPOND_POSKEY);
+			vulture_eventstack_add(0, mappos.x, mappos.y, V_RESPOND_POSKEY);
 
 			/* yes, we _really do_ want more info */
-			vultures_eventstack_add('y', -1, -1, V_RESPOND_CHARACTER);
+			vulture_eventstack_add('y', -1, -1, V_RESPOND_CHARACTER);
 
 			return '/';
 
 		case V_ACTION_CHAT:
-			vultures_eventstack_add(mappos_to_dirkey(mappos),-1,-1, V_RESPOND_CHARACTER);
+			vulture_eventstack_add(mappos_to_dirkey(mappos),-1,-1, V_RESPOND_CHARACTER);
 			return META('c');
 
 		case V_ACTION_FIGHT:
-			vultures_eventstack_add(mappos_to_dirkey(mappos),-1,-1, V_RESPOND_POSKEY);
+			vulture_eventstack_add(mappos_to_dirkey(mappos),-1,-1, V_RESPOND_POSKEY);
 			return 'F';
 
 		case V_ACTION_FIRE:
 			return 'f';
 
 		case V_ACTION_NAMEMON:
-			vultures_eventstack_add(0, mappos.x, mappos.y, V_RESPOND_POSKEY);
+			vulture_eventstack_add(0, mappos.x, mappos.y, V_RESPOND_POSKEY);
 			return 'C';
 
 
@@ -596,7 +596,7 @@ char mapdata::mappos_to_dirkey(point mappos)
 	if (dx < -1 || dx > 1 || dy < -1 || dy > 1)
 		return 0;
 
-	return vultures_numpad_to_hjkl(chartable[dy+1][dx+1], 0);
+	return vulture_numpad_to_hjkl(chartable[dy+1][dx+1], 0);
 }
 
 
@@ -604,12 +604,12 @@ eventresult mapdata::handle_click(void* result, int button, point mappos)
 {
 	int retval, action_id = 0;
 
-	/* if vultures_whatis_active is set, we want a location (for look or teleport) */
-	if (vultures_whatis_active)
+	/* if vulture_whatis_active is set, we want a location (for look or teleport) */
+	if (vulture_whatis_active)
 	{
-		((vultures_event*)result)->num = 0;
-		((vultures_event*)result)->x = mappos.x;
-		((vultures_event*)result)->y = mappos.y;
+		((vulture_event*)result)->num = 0;
+		((vulture_event*)result)->x = mappos.x;
+		((vulture_event*)result)->y = mappos.y;
 		return V_EVENT_HANDLED_FINAL;
 	}
 
@@ -627,7 +627,7 @@ eventresult mapdata::handle_click(void* result, int button, point mappos)
 		retval = perform_map_action(action_id, mappos);
 		if (retval)
 		{
-			((vultures_event*)result)->num = retval;
+			((vulture_event*)result)->num = retval;
 			return V_EVENT_HANDLED_FINAL;
 		}
 	}
@@ -836,7 +836,7 @@ map_action mapdata::get_map_contextmenu(point mappos)
 	contextmenu *menu;
 	int mapglyph_offset;
 	int result;
-	point mouse_pos = vultures_get_mouse_pos();
+	point mouse_pos = vulture_get_mouse_pos();
 
 
 	/* Dropdown commands are shown only for valid squares */
@@ -1004,7 +1004,7 @@ map_action mapdata::get_map_contextmenu(point mappos)
 	}
 
 	menu->layout();
-	vultures_event_dispatcher(&result, V_RESPOND_INT, menu);
+	vulture_event_dispatcher(&result, V_RESPOND_INT, menu);
 
 	delete menu;
 

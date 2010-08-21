@@ -1,8 +1,8 @@
 #ifndef _levelwin_h_
 #define _levelwin_h_
 
-#include "vultures_tile.h"
-#include "vultures_types.h"
+#include "vulture_tile.h"
+#include "vulture_types.h"
 #include "window.h"
 #include "mapdata.h"
 
@@ -82,8 +82,8 @@ private:
 
 
 extern levelwin *levwin;
-extern int vultures_map_draw_lastmove;
-extern int vultures_map_draw_msecs;
-extern int vultures_map_highlight_objects;
+extern int vulture_map_draw_lastmove;
+extern int vulture_map_draw_msecs;
+extern int vulture_map_highlight_objects;
 
 #endif

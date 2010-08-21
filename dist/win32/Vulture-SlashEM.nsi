@@ -1,5 +1,5 @@
 Name "Vulture's Claw"
-OutFile "vultures-a.b.c-claw_win32-d.exe"
+OutFile "vulture-a.b.c-claw_win32-d.exe"
 InstallDir "$PROGRAMFILES\Vulture's Claw"
 
 ;--------------------------------

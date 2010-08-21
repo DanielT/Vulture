@@ -1,24 +1,24 @@
-diff -Naur vultures/debian/changelog vultures.debian/debian/changelog
---- vultures/debian/changelog	1970-01-01 01:00:00.000000000 +0100
-+++ vultures.debian/debian/changelog	2008-04-03 09:22:43.000000000 +0200
+diff -Naur vulture/debian/changelog vulture.debian/debian/changelog
+--- vulture/debian/changelog	1970-01-01 01:00:00.000000000 +0100
++++ vulture.debian/debian/changelog	2008-04-03 09:22:43.000000000 +0200
 @@ -0,0 +1,7 @@
-+vultures (2.1.90-1) unstable; urgency=low
++vulture (2.1.90-1) unstable; urgency=low
 +
-+  * Built the initial package for vultures using heavy-handed copying of large parts of the debian/
++  * Built the initial package for vulture using heavy-handed copying of large parts of the debian/
 +    directory in the falconseye package.
 +
 + -- Daniel Thaler <daniel@dthaler.de>  Wed, 2 Apr 2008 16:16:16 +0200
 +
-diff -Naur vultures/debian/compat vultures.debian/debian/compat
---- vultures/debian/compat	1970-01-01 01:00:00.000000000 +0100
-+++ vultures.debian/debian/compat	2008-04-03 09:22:43.000000000 +0200
+diff -Naur vulture/debian/compat vulture.debian/debian/compat
+--- vulture/debian/compat	1970-01-01 01:00:00.000000000 +0100
++++ vulture.debian/debian/compat	2008-04-03 09:22:43.000000000 +0200
 @@ -0,0 +1 @@
 +5
-diff -Naur vultures/debian/control vultures.debian/debian/control
---- vultures/debian/control	1970-01-01 01:00:00.000000000 +0100
-+++ vultures.debian/debian/control	2008-04-03 09:22:43.000000000 +0200
+diff -Naur vulture/debian/control vulture.debian/debian/control
+--- vulture/debian/control	1970-01-01 01:00:00.000000000 +0100
++++ vulture.debian/debian/control	2008-04-03 09:22:43.000000000 +0200
 @@ -0,0 +1,52 @@
-+Source: vultures
++Source: vulture
 +Section: games
 +Priority: optional
 +Maintainer: Daniel Thaler <daniel@dthaler.de>
@@ -27,10 +27,10 @@ diff -Naur vultures/debian/control vultures.debian/debian/control
 +
 +Package: vulture-nethack
 +Architecture: any
-+Depends: vultures-data (>= 2.1.90), ${shlibs:Depends}
++Depends: vulture-data (>= 2.1.90), ${shlibs:Depends}
 +Replaces: falconseye
 +Description: A port of NetHack using SDL
-+ Vultureseye is a mouse-driven interface for NetHack that enhances the visuals,
++ Vulture for NetHack is a mouse-driven interface for NetHack that enhances the visuals,
 + audio and accessibility of the game, yet retains all the original gameplay and 
 + game features.
 + .
@@ -46,17 +46,17 @@ diff -Naur vultures/debian/control vultures.debian/debian/control
 +
 +Package: vulture-slashem
 +Architecture: any
-+Depends: vultures-data (>= 2.1.90), ${shlibs:Depends}
++Depends: vulture-data (>= 2.1.90), ${shlibs:Depends}
 +Description: A port of SLASH'em using SDL
-+ Vulturesclaw is a mouse-driven interface for SLASH'em that enhances the visuals,
++ Vulture for Slash'EM is a mouse-driven interface for SLASH'em that enhances the visuals,
 + audio and accessibility of the game, yet retains all the original gameplay and 
 + game features.
 +
 +
-+Package: vultures-data
++Package: vulture-data
 +Architecture: all
-+Description: Data files for Vultureseye and Vulturesclaw
-+ Vultureseye and Vulturesclaw are mouse-driven interfaces for NetHack and SLASH'em
++Description: Data files for Vulture for NetHack and Vulture for Slash'EM
++ Vulture for NetHack and Vulture for Slash'EM are mouse-driven interfaces for NetHack and SLASH'em
 + that enhance the visuals, audio and accessibility of the game, yet retain all the
 + original gameplay and game features.
 + .
@@ -70,15 +70,15 @@ diff -Naur vultures/debian/control vultures.debian/debian/control
 + dungeon and its denizens to be discovered by the player in one of a number of
 + characters: you can pick your race, your role, and your gender.
 +
-diff -Naur vultures/debian/copyright vultures.debian/debian/copyright
---- vultures/debian/copyright	1970-01-01 01:00:00.000000000 +0100
-+++ vultures.debian/debian/copyright	2008-04-03 09:22:43.000000000 +0200
+diff -Naur vulture/debian/copyright vulture.debian/debian/copyright
+--- vulture/debian/copyright	1970-01-01 01:00:00.000000000 +0100
++++ vulture.debian/debian/copyright	2008-04-03 09:22:43.000000000 +0200
 @@ -0,0 +1,109 @@
 +This package was debianized by Daniel Thaler <daniel@dthaler.de> on
 +Wed, 2 Apr 2008 16:16:16 +0200.
 +(based on the falconseye package by Jonathan Hseu <vomjom@debian.org>)
 +
-+It was downloaded from http://darkarts.co.za/project/vultures/download/
++It was downloaded from http://darkarts.co.za/project/vulture/download/
 +
 +Upstream Authors:
 +	Daniel Thaler <daniel@dthaler.de>
@@ -183,26 +183,26 @@ diff -Naur vultures/debian/copyright vultures.debian/debian/copyright
 +other words, go ahead and share NetHack, but don't try to stop anyone else
 +from sharing it farther.
 +
-diff -Naur vultures/debian/README.Debian vultures.debian/debian/README.Debian
---- vultures/debian/README.Debian	1970-01-01 01:00:00.000000000 +0100
-+++ vultures.debian/debian/README.Debian	2008-04-03 09:22:43.000000000 +0200
+diff -Naur vulture/debian/README.Debian vulture.debian/debian/README.Debian
+--- vulture/debian/README.Debian	1970-01-01 01:00:00.000000000 +0100
++++ vulture.debian/debian/README.Debian	2008-04-03 09:22:43.000000000 +0200
 @@ -0,0 +1,13 @@
-+vultures for Debian
++vulture for Debian
 +---------------------
 +
 +NetHack is one of the oldest computer role-playing games still played and
 +developed. The latest version of the game, NetHack 3.4.3, was released in December
 +2003.
 +
-+Vultureseye is a mouse-driven interface for NetHack that enhances the visuals,
++Vulture for NetHack is a mouse-driven interface for NetHack that enhances the visuals,
 +audio and accessibility of the game, yet retains all the original gameplay and
 +game features.
-+Vulturesclaw is the same interface running on the SLASH'em core.
++Vulture for Slash'EM is the same interface running on the SLASH'em core.
 +
 + -- Jonathan Hseu <vomjom@debian.org>, Sat, 23 Jun 2001 16:16:49 -0500
-diff -Naur vultures/debian/rules vultures.debian/debian/rules
---- vultures/debian/rules	1970-01-01 01:00:00.000000000 +0100
-+++ vultures.debian/debian/rules	2008-04-03 09:22:43.000000000 +0200
+diff -Naur vulture/debian/rules vulture.debian/debian/rules
+--- vulture/debian/rules	1970-01-01 01:00:00.000000000 +0100
++++ vulture.debian/debian/rules	2008-04-03 09:22:43.000000000 +0200
 @@ -0,0 +1,214 @@
 +#!/usr/bin/make -f
 +# Sample debian/rules that uses debhelper.
@@ -240,12 +240,12 @@ diff -Naur vultures/debian/rules vultures.debian/debian/rules
 +
 +	# build vulture-nethack
 +	cd nethack && sh sys/unix/setup.sh 1
-+	-@cd nethack/win && ln -s ../../vultures/ vultures
++	-@cd nethack/win && ln -s ../../vulture/ vulture
 +	$(MAKE) -C nethack all
 +
 +	# build vulture-slashem
 +	cd slashem && sh sys/unix/setup.sh 1
-+	-@cd slashem/win && ln -s ../../vultures/ vultures
++	-@cd slashem/win && ln -s ../../vulture/ vulture
 +	$(MAKE) -C slashem all
 +
 +build-indep: build-indep-stamp
@@ -264,10 +264,10 @@ diff -Naur vultures/debian/rules vultures.debian/debian/rules
 +	-$(MAKE) -C slashem spotless
 +	-find nethack/ -name Makefile -print0 | xargs -r -0 rm
 +	-find slashem/ -name Makefile -print0 | xargs -r -0 rm
-+	-@rm -f nethack/win/vultures slashem/win/vultures
++	-@rm -f nethack/win/vulture slashem/win/vulture
 +	
 +	# this file may be created during parallel make, remove it
-+	-@rm -f vultures/vultures
++	-@rm -f vulture/vulture
 +	
 +	dh_clean
 +
@@ -283,44 +283,44 @@ diff -Naur vultures/debian/rules vultures.debian/debian/rules
 +	# debian/<package>-doc.
 +	#INSTALLDOC#
 +
-+	for file in vultures_intro.txt vultures_tiles.conf vultures_sounds.conf vultures.conf; \
++	for file in vulture_intro.txt vulture_tiles.conf vulture_sounds.conf vulture.conf; \
 +	do \
-+	install -m 0644 -o root -g root vultures/gamedata/config/$$file \
-+	  debian/vultures-data/usr/share/games/vultures/config/; \
++	install -m 0644 -o root -g root vulture/gamedata/config/$$file \
++	  debian/vulture-data/usr/share/games/vulture/config/; \
 +	done
 +
-+	install -m 0644 -o root -g root vultures/gamedata/tiles/* \
-+	  debian/vultures-data/usr/share/games/vultures/tiles/
++	install -m 0644 -o root -g root vulture/gamedata/tiles/* \
++	  debian/vulture-data/usr/share/games/vulture/tiles/
 +										
-+	install -m 0644 -o root -g root vultures/gamedata/graphics/* \
-+	  debian/vultures-data/usr/share/games/vultures/graphics/
++	install -m 0644 -o root -g root vulture/gamedata/graphics/* \
++	  debian/vulture-data/usr/share/games/vulture/graphics/
 +										
-+	install -m 0644 -o root -g root vultures/gamedata/music/* \
-+	  debian/vultures-data/usr/share/games/vultures/music/
++	install -m 0644 -o root -g root vulture/gamedata/music/* \
++	  debian/vulture-data/usr/share/games/vulture/music/
 +										
-+	install -m 0644 -o root -g root vultures/gamedata/sound/*.ogg \
-+	  debian/vultures-data/usr/share/games/vultures/sound/
++	install -m 0644 -o root -g root vulture/gamedata/sound/*.ogg \
++	  debian/vulture-data/usr/share/games/vulture/sound/
 +										
-+	install -m 0644 -o root -g root vultures/gamedata/fonts/* \
-+	  debian/vultures-data/usr/share/games/vultures/fonts/
++	install -m 0644 -o root -g root vulture/gamedata/fonts/* \
++	  debian/vulture-data/usr/share/games/vulture/fonts/
 +
-+	install -m 644 -o root -g root vultures/gamedata/manual/*.* \
-+	  debian/vultures-data/usr/share/doc/vultures/manual/
++	install -m 644 -o root -g root vulture/gamedata/manual/*.* \
++	  debian/vulture-data/usr/share/doc/vulture/manual/
 +
-+	install -m 644 -o root -g root vultures/gamedata/manual/img/* \
-+	  debian/vultures-data/usr/share/doc/vultures/manual/img/
++	install -m 644 -o root -g root vulture/gamedata/manual/img/* \
++	  debian/vulture-data/usr/share/doc/vulture/manual/img/
 +	
-+	# Symlink all files just installed to /usr/lib so that vultures,
++	# Symlink all files just installed to /usr/lib so that vulture,
 +	# which has not been modified to look in /usr/share for any of its
 +	# files, will still find them. This symlinking is easier than
-+	# actually patching the source, since vultures expects to find
++	# actually patching the source, since vulture expects to find
 +	# all its support files in one directory.
 +
-+	for x in debian/vultures-data/usr/share/games/vultures/*; do \
-+		ln -s /usr/share/games/vultures/`basename $$x` \
-+		debian/vultures-data/usr/lib/games/vulture-nethack/; \
-+		ln -s /usr/share/games/vultures/`basename $$x` \
-+		debian/vultures-data/usr/lib/games/vulture-slashem/; \
++	for x in debian/vulture-data/usr/share/games/vulture/*; do \
++		ln -s /usr/share/games/vulture/`basename $$x` \
++		debian/vulture-data/usr/lib/games/vulture-nethack/; \
++		ln -s /usr/share/games/vulture/`basename $$x` \
++		debian/vulture-data/usr/lib/games/vulture-slashem/; \
 +	done
 +
 +install-arch:
@@ -353,9 +353,9 @@ diff -Naur vultures/debian/rules vultures.debian/debian/rules
 +	  debian/vulture-nethack/usr/lib/games/vulture-nethack/recover
 +										
 +	install -m 644 -o root -g root debian/vulture-nethackrc \
-+	  debian/vulture-nethack/etc/vultures/vulture-nethackrc
++	  debian/vulture-nethack/etc/vulture/vulture-nethackrc
 +										
-+	install -m 644 -o root -g root vultures/gamedata/nh_icon.png \
++	install -m 644 -o root -g root vulture/gamedata/nh_icon.png \
 +	  debian/vulture-nethack/usr/share/pixmaps/vulture-nethack.png
 +
 +	install -m 644 debian/vulture-nethack.desktop $(CURDIR)/debian/vulture-nethack/usr/share/applications
@@ -381,9 +381,9 @@ diff -Naur vultures/debian/rules vultures.debian/debian/rules
 +	  debian/vulture-slashem/usr/lib/games/vulture-slashem/recover
 +										
 +	install -m 644 -o root -g root debian/vulture-slashemrc \
-+	  debian/vulture-slashem/etc/vultures/vulture-slashemrc
++	  debian/vulture-slashem/etc/vulture/vulture-slashemrc
 +										
-+	install -m 644 -o root -g root vultures/gamedata/se_icon.png \
++	install -m 644 -o root -g root vulture/gamedata/se_icon.png \
 +	  debian/vulture-slashem/usr/share/pixmaps/vulture-slashem.png
 +
 +	install -m 644 debian/vulture-slashem.desktop $(CURDIR)/debian/vulture-slashem/usr/share/applications
@@ -401,7 +401,7 @@ diff -Naur vultures/debian/rules vultures.debian/debian/rules
 +	dh_link
 +	dh_strip
 +	dh_compress 
-+#	dh_fixperms -Xvultures
++#	dh_fixperms -Xvulture
 +	dh_installdeb
 +	dh_shlibdeps
 +#	dh_perl
@@ -418,11 +418,11 @@ diff -Naur vultures/debian/rules vultures.debian/debian/rules
 +
 +binary: binary-arch binary-indep
 +.PHONY: build clean binary-indep binary-arch binary install install-indep install-arch #PHONY_CONFIGURE#
-diff -Naur vultures/debian/vulture-slashem.6 vultures.debian/debian/vulture-slashem.6
---- vultures/debian/vulture-slashem.6	1970-01-01 01:00:00.000000000 +0100
-+++ vultures.debian/debian/vulture-slashem.6	2008-04-03 09:22:43.000000000 +0200
+diff -Naur vulture/debian/vulture-slashem.6 vulture.debian/debian/vulture-slashem.6
+--- vulture/debian/vulture-slashem.6	1970-01-01 01:00:00.000000000 +0100
++++ vulture.debian/debian/vulture-slashem.6	2008-04-03 09:22:43.000000000 +0200
 @@ -0,0 +1,89 @@
-+.TH VULTURESCLAW 6 "April 2008"
++.TH VULTURECLAW 6 "April 2008"
 +.SH NAME
 +vulture-slashem \- play SLASH'em using a mouse-driven isometric graphical interface
 +.SH SYNOPSIS
@@ -433,7 +433,7 @@ diff -Naur vultures/debian/vulture-slashem.6 vultures.debian/debian/vulture-slas
 +[-d \fIdirectory\fR] -s [-v] [-p \fIprofession (role)\fR] [-r \fIrace\fR] [\fIplayer_name\fR] [\fIOPTION\fR]
 +
 +.SH DESCRIPTION
-+Vultures 2.2.0 is an enhanced, highly graphical window port (user
++Vulture 2.2.0 is an enhanced, highly graphical window port (user
 +interface) for SLASH'em. It adds a lot of eye candy and multimedia to the
 +game while keeping the original gameplay of SLASH'em.
 +
@@ -495,25 +495,25 @@ diff -Naur vultures/debian/vulture-slashem.6 vultures.debian/debian/vulture-slas
 +
 +.SH "REPORTING BUGS"
 +
-+Report Vultures-specific bugs on track.darkarts.co.za and
++Report Vulture-specific bugs on track.darkarts.co.za and
 +NetHack bugs to <nethack-bugs@nethack.org>.
 +
 +.SH "SEE ALSO"
 +
 +NetHack is documented in \fBnethack(6)\fR.
 +
-+The full documentation for Vultures is maintained in HTML at
-+/usr/share/doc/vultures/manual/index.html
++The full documentation for Vulture is maintained in HTML at
++/usr/share/doc/vulture/manual/index.html
 +
-+The Vultures project page is http://darkarts.co.za/project/vultures
++The Vulture project page is http://darkarts.co.za/project/vulture
 +
 +The NetHack project page is http://www.nethack.org
 +
 +The SLASH'em project page is http://www.slashem.org
 +
-diff -Naur vultures/debian/vulture-slashem.desktop vultures.debian/debian/vulture-slashem.desktop
---- vultures/debian/vulture-slashem.desktop	1970-01-01 01:00:00.000000000 +0100
-+++ vultures.debian/debian/vulture-slashem.desktop	2008-04-03 09:22:43.000000000 +0200
+diff -Naur vulture/debian/vulture-slashem.desktop vulture.debian/debian/vulture-slashem.desktop
+--- vulture/debian/vulture-slashem.desktop	1970-01-01 01:00:00.000000000 +0100
++++ vulture.debian/debian/vulture-slashem.desktop	2008-04-03 09:22:43.000000000 +0200
 @@ -0,0 +1,11 @@
 +[Desktop Entry]
 +Type=Application
@@ -526,35 +526,35 @@ diff -Naur vultures/debian/vulture-slashem.desktop vultures.debian/debian/vultur
 +Exec=/usr/games/vulture-slashem
 +Terminal=false
 +Categories=Application;Game;
-diff -Naur vultures/debian/vulture-slashem.dirs vultures.debian/debian/vulture-slashem.dirs
---- vultures/debian/vulture-slashem.dirs	1970-01-01 01:00:00.000000000 +0100
-+++ vultures.debian/debian/vulture-slashem.dirs	2008-04-03 09:22:43.000000000 +0200
+diff -Naur vulture/debian/vulture-slashem.dirs vulture.debian/debian/vulture-slashem.dirs
+--- vulture/debian/vulture-slashem.dirs	1970-01-01 01:00:00.000000000 +0100
++++ vulture.debian/debian/vulture-slashem.dirs	2008-04-03 09:22:43.000000000 +0200
 @@ -0,0 +1,6 @@
 +usr/games
 +var/games/vulture-slashem/save
 +usr/lib/games/vulture-slashem
-+etc/vultures
++etc/vulture
 +usr/share/pixmaps
 +usr/share/applications
-diff -Naur vultures/debian/vulture-slashem.manpages vultures.debian/debian/vulture-slashem.manpages
---- vultures/debian/vulture-slashem.manpages	1970-01-01 01:00:00.000000000 +0100
-+++ vultures.debian/debian/vulture-slashem.manpages	2008-04-03 09:22:43.000000000 +0200
+diff -Naur vulture/debian/vulture-slashem.manpages vulture.debian/debian/vulture-slashem.manpages
+--- vulture/debian/vulture-slashem.manpages	1970-01-01 01:00:00.000000000 +0100
++++ vulture.debian/debian/vulture-slashem.manpages	2008-04-03 09:22:43.000000000 +0200
 @@ -0,0 +1 @@
 +debian/vulture-slashem.6
-diff -Naur vultures/debian/vulture-slashem.menu vultures.debian/debian/vulture-slashem.menu
---- vultures/debian/vulture-slashem.menu	1970-01-01 01:00:00.000000000 +0100
-+++ vultures.debian/debian/vulture-slashem.menu	2008-04-03 09:22:43.000000000 +0200
+diff -Naur vulture/debian/vulture-slashem.menu vulture.debian/debian/vulture-slashem.menu
+--- vulture/debian/vulture-slashem.menu	1970-01-01 01:00:00.000000000 +0100
++++ vulture.debian/debian/vulture-slashem.menu	2008-04-03 09:22:43.000000000 +0200
 @@ -0,0 +1,4 @@
 +?package(vulture-nethack):needs="X11" section="Games/Adventure"\
 +  title="Vulture's Eye" \
 +  	icon="/usr/share/pixmaps/vulture-nethack.png" \
 +	command="/usr/games/vulture-nethack"
-diff -Naur vultures/debian/vulture-slashem.postinst vultures.debian/debian/vulture-slashem.postinst
---- vultures/debian/vulture-slashem.postinst	1970-01-01 01:00:00.000000000 +0100
-+++ vultures.debian/debian/vulture-slashem.postinst	2008-04-03 09:22:43.000000000 +0200
+diff -Naur vulture/debian/vulture-slashem.postinst vulture.debian/debian/vulture-slashem.postinst
+--- vulture/debian/vulture-slashem.postinst	1970-01-01 01:00:00.000000000 +0100
++++ vulture.debian/debian/vulture-slashem.postinst	2008-04-03 09:22:43.000000000 +0200
 @@ -0,0 +1,56 @@
 +#! /bin/sh
-+# postinst script for vultures
++# postinst script for vulture
 +#
 +# see: dh_installdeb(1)
 +
@@ -592,7 +592,7 @@ diff -Naur vultures/debian/vulture-slashem.postinst vultures.debian/debian/vultu
 +    ;;
 +esac
 +
-+for file in vultures_log.txt logfile perm record; \
++for file in vulture_log.txt logfile perm record; \
 +do \
 +  if [ ! -f /var/games/vulture-slashem/$file ]; then
 +    touch /var/games/vulture-slashem/$file
@@ -609,12 +609,12 @@ diff -Naur vultures/debian/vulture-slashem.postinst vultures.debian/debian/vultu
 +exit 0
 +
 +
-diff -Naur vultures/debian/vulture-slashem.postrm vultures.debian/debian/vulture-slashem.postrm
---- vultures/debian/vulture-slashem.postrm	1970-01-01 01:00:00.000000000 +0100
-+++ vultures.debian/debian/vulture-slashem.postrm	2008-04-03 09:22:43.000000000 +0200
+diff -Naur vulture/debian/vulture-slashem.postrm vulture.debian/debian/vulture-slashem.postrm
+--- vulture/debian/vulture-slashem.postrm	1970-01-01 01:00:00.000000000 +0100
++++ vulture.debian/debian/vulture-slashem.postrm	2008-04-03 09:22:43.000000000 +0200
 @@ -0,0 +1,42 @@
 +#! /bin/sh
-+# postrm script for vultures
++# postrm script for vulture
 +#
 +# see: dh_installdeb(1)
 +
@@ -655,9 +655,9 @@ diff -Naur vultures/debian/vulture-slashem.postrm vultures.debian/debian/vulture
 +#DEBHELPER#
 +
 +
-diff -Naur vultures/debian/vulture-slashemrc vultures.debian/debian/vulture-slashemrc
---- vultures/debian/vulture-slashemrc	1970-01-01 01:00:00.000000000 +0100
-+++ vultures.debian/debian/vulture-slashemrc	2008-04-03 09:22:43.000000000 +0200
+diff -Naur vulture/debian/vulture-slashemrc vulture.debian/debian/vulture-slashemrc
+--- vulture/debian/vulture-slashemrc	1970-01-01 01:00:00.000000000 +0100
++++ vulture.debian/debian/vulture-slashemrc	2008-04-03 09:22:43.000000000 +0200
 @@ -0,0 +1,72 @@
 +# A '#' at the beginning of a line means the rest of the line is a comment.
 +#
@@ -665,13 +665,13 @@ diff -Naur vultures/debian/vulture-slashemrc vultures.debian/debian/vulture-slas
 +# playing.  For a list of options available see the <opthelp.> file.
 +#
 +# If you want to customize the configuration, you should copy this file
-+# (/etc/vultures/vulture-nethackrc) to ~/.vulture-nethackrc and modify that
++# (/etc/vulture/vulture-nethackrc) to ~/.vulture-nethackrc and modify that
 +#
 +# To change the configuration, comment out the unwanted lines, and
 +# uncomment the configuration you want.
 +
-+# Use the vultures window port
-+OPTIONS=windowtype:vultures
++# Use the vulture window port
++OPTIONS=windowtype:vulture
 +
 +# *** OPTIONS ***
 +# Some options to set personal preferences.  Uncomment and change these to
@@ -686,7 +686,7 @@ diff -Naur vultures/debian/vulture-slashemrc vultures.debian/debian/vulture-slas
 +#OPTIONS=scores:10 top/2 around/own
 +#OPTIONS=nolegacy,noverbose
 +
-+# verbose help messages make no sense for vultures
++# verbose help messages make no sense for vulture
 +OPTIONS=noverbose
 +
 +OPTIONS=toptenwin
@@ -731,9 +731,9 @@ diff -Naur vultures/debian/vulture-slashemrc vultures.debian/debian/vulture-slas
 +#OPTIONS=subkeyvalue:184/91
 +#OPTIONS=subkeyvalue:188/124
 +
-diff -Naur vultures/debian/vulture-slashem.sh vultures.debian/debian/vulture-slashem.sh
---- vultures/debian/vulture-slashem.sh	1970-01-01 01:00:00.000000000 +0100
-+++ vultures.debian/debian/vulture-slashem.sh	2008-04-03 09:22:43.000000000 +0200
+diff -Naur vulture/debian/vulture-slashem.sh vulture.debian/debian/vulture-slashem.sh
+--- vulture/debian/vulture-slashem.sh	1970-01-01 01:00:00.000000000 +0100
++++ vulture.debian/debian/vulture-slashem.sh	2008-04-03 09:22:43.000000000 +0200
 @@ -0,0 +1,66 @@
 +#!/bin/sh
 +#	SCCS Id: @(#)nethack.sh	3.3	90/02/26
@@ -746,7 +746,7 @@ diff -Naur vultures/debian/vulture-slashem.sh vultures.debian/debian/vulture-sla
 +then
 +	NETHACKOPTIONS=~/.vulture-slashemrc
 +else
-+	NETHACKOPTIONS=/etc/vultures/vulture-slashemrc
++	NETHACKOPTIONS=/etc/vulture/vulture-slashemrc
 +fi
 +export NETHACKOPTIONS
 +
@@ -801,27 +801,27 @@ diff -Naur vultures/debian/vulture-slashem.sh vultures.debian/debian/vulture-sla
 +		exec $HACK "$@" $MAXNROFPLAYERS
 +		;;
 +esac
-diff -Naur vultures/debian/vultures-data.dirs vultures.debian/debian/vultures-data.dirs
---- vultures/debian/vultures-data.dirs	1970-01-01 01:00:00.000000000 +0100
-+++ vultures.debian/debian/vultures-data.dirs	2008-04-03 09:22:43.000000000 +0200
+diff -Naur vulture/debian/vulture-data.dirs vulture.debian/debian/vulture-data.dirs
+--- vulture/debian/vulture-data.dirs	1970-01-01 01:00:00.000000000 +0100
++++ vulture.debian/debian/vulture-data.dirs	2008-04-03 09:22:43.000000000 +0200
 @@ -0,0 +1,12 @@
 +usr/lib/games/vulture-nethack
 +usr/lib/games/vulture-slashem
-+usr/share/games/vultures
-+usr/share/games/vultures/config
-+usr/share/games/vultures/graphics
-+usr/share/games/vultures/music
-+usr/share/games/vultures/sound
-+usr/share/games/vultures/tiles
-+usr/share/games/vultures/fonts
-+usr/share/doc/vultures/manual
-+usr/share/doc/vultures/manual/img
++usr/share/games/vulture
++usr/share/games/vulture/config
++usr/share/games/vulture/graphics
++usr/share/games/vulture/music
++usr/share/games/vulture/sound
++usr/share/games/vulture/tiles
++usr/share/games/vulture/fonts
++usr/share/doc/vulture/manual
++usr/share/doc/vulture/manual/img
 +usr/share/applications
-diff -Naur vultures/debian/vulture-nethack.6 vultures.debian/debian/vulture-nethack.6
---- vultures/debian/vulture-nethack.6	1970-01-01 01:00:00.000000000 +0100
-+++ vultures.debian/debian/vulture-nethack.6	2008-04-03 09:22:43.000000000 +0200
+diff -Naur vulture/debian/vulture-nethack.6 vulture.debian/debian/vulture-nethack.6
+--- vulture/debian/vulture-nethack.6	1970-01-01 01:00:00.000000000 +0100
++++ vulture.debian/debian/vulture-nethack.6	2008-04-03 09:22:43.000000000 +0200
 @@ -0,0 +1,87 @@
-+.TH VULTURESEYE 6 "April 2008"
++.TH VULTUREEYE 6 "April 2008"
 +.SH NAME
 +vulture-nethack \- play NetHack using a mouse-driven isometric graphical interface
 +.SH SYNOPSIS
@@ -832,7 +832,7 @@ diff -Naur vultures/debian/vulture-nethack.6 vultures.debian/debian/vulture-neth
 +[-d \fIdirectory\fR] -s [-v] [-p \fIprofession (role)\fR] [-r \fIrace\fR] [\fIplayer_name\fR] [\fIOPTION\fR]
 +
 +.SH DESCRIPTION
-+Vultures 2.2.0 is an enhanced, highly graphical window port (user
++Vulture 2.2.0 is an enhanced, highly graphical window port (user
 +interface) for NetHack. It adds a lot of eye candy and multimedia to the
 +game while keeping the original gameplay of NetHack.
 +
@@ -894,23 +894,23 @@ diff -Naur vultures/debian/vulture-nethack.6 vultures.debian/debian/vulture-neth
 +
 +.SH "REPORTING BUGS"
 +
-+Report Vultures-specific bugs on track.darkarts.co.za and
++Report Vulture-specific bugs on track.darkarts.co.za and
 +NetHack bugs to <nethack-bugs@nethack.org>.
 +
 +.SH "SEE ALSO"
 +
 +NetHack is documented in \fBnethack(6)\fR.
 +
-+The full documentation for Vultures is maintained in HTML at
-+/usr/share/doc/vultures/manual/index.html
++The full documentation for Vulture is maintained in HTML at
++/usr/share/doc/vulture/manual/index.html
 +
-+The Vultures project page is http://darkarts.co.za/project/vultures
++The Vulture project page is http://darkarts.co.za/project/vulture
 +
 +The NetHack project page is http://www.nethack.org
 +
-diff -Naur vultures/debian/vulture-nethack.desktop vultures.debian/debian/vulture-nethack.desktop
---- vultures/debian/vulture-nethack.desktop	1970-01-01 01:00:00.000000000 +0100
-+++ vultures.debian/debian/vulture-nethack.desktop	2008-04-03 09:22:43.000000000 +0200
+diff -Naur vulture/debian/vulture-nethack.desktop vulture.debian/debian/vulture-nethack.desktop
+--- vulture/debian/vulture-nethack.desktop	1970-01-01 01:00:00.000000000 +0100
++++ vulture.debian/debian/vulture-nethack.desktop	2008-04-03 09:22:43.000000000 +0200
 @@ -0,0 +1,11 @@
 +[Desktop Entry]
 +Type=Application
@@ -923,35 +923,35 @@ diff -Naur vultures/debian/vulture-nethack.desktop vultures.debian/debian/vultur
 +Exec=/usr/games/vulture-nethack
 +Terminal=false
 +Categories=Application;Game;
-diff -Naur vultures/debian/vulture-nethack.dirs vultures.debian/debian/vulture-nethack.dirs
---- vultures/debian/vulture-nethack.dirs	1970-01-01 01:00:00.000000000 +0100
-+++ vultures.debian/debian/vulture-nethack.dirs	2008-04-03 09:22:43.000000000 +0200
+diff -Naur vulture/debian/vulture-nethack.dirs vulture.debian/debian/vulture-nethack.dirs
+--- vulture/debian/vulture-nethack.dirs	1970-01-01 01:00:00.000000000 +0100
++++ vulture.debian/debian/vulture-nethack.dirs	2008-04-03 09:22:43.000000000 +0200
 @@ -0,0 +1,6 @@
 +usr/games
 +var/games/vulture-nethack/save
 +usr/lib/games/vulture-nethack
-+etc/vultures
++etc/vulture
 +usr/share/pixmaps
 +usr/share/applications
-diff -Naur vultures/debian/vulture-nethack.manpages vultures.debian/debian/vulture-nethack.manpages
---- vultures/debian/vulture-nethack.manpages	1970-01-01 01:00:00.000000000 +0100
-+++ vultures.debian/debian/vulture-nethack.manpages	2008-04-03 09:22:43.000000000 +0200
+diff -Naur vulture/debian/vulture-nethack.manpages vulture.debian/debian/vulture-nethack.manpages
+--- vulture/debian/vulture-nethack.manpages	1970-01-01 01:00:00.000000000 +0100
++++ vulture.debian/debian/vulture-nethack.manpages	2008-04-03 09:22:43.000000000 +0200
 @@ -0,0 +1 @@
 +debian/vulture-nethack.6
-diff -Naur vultures/debian/vulture-nethack.menu vultures.debian/debian/vulture-nethack.menu
---- vultures/debian/vulture-nethack.menu	1970-01-01 01:00:00.000000000 +0100
-+++ vultures.debian/debian/vulture-nethack.menu	2008-04-03 09:22:43.000000000 +0200
+diff -Naur vulture/debian/vulture-nethack.menu vulture.debian/debian/vulture-nethack.menu
+--- vulture/debian/vulture-nethack.menu	1970-01-01 01:00:00.000000000 +0100
++++ vulture.debian/debian/vulture-nethack.menu	2008-04-03 09:22:43.000000000 +0200
 @@ -0,0 +1,4 @@
 +?package(vulture-nethack):needs="X11" section="Games/Adventure"\
 +  title="Vulture's Eye" \
 +  	icon="/usr/share/pixmaps/vulture-nethack.png" \
 +	command="/usr/games/vulture-nethack"
-diff -Naur vultures/debian/vulture-nethack.postinst vultures.debian/debian/vulture-nethack.postinst
---- vultures/debian/vulture-nethack.postinst	1970-01-01 01:00:00.000000000 +0100
-+++ vultures.debian/debian/vulture-nethack.postinst	2008-04-03 09:22:43.000000000 +0200
+diff -Naur vulture/debian/vulture-nethack.postinst vulture.debian/debian/vulture-nethack.postinst
+--- vulture/debian/vulture-nethack.postinst	1970-01-01 01:00:00.000000000 +0100
++++ vulture.debian/debian/vulture-nethack.postinst	2008-04-03 09:22:43.000000000 +0200
 @@ -0,0 +1,56 @@
 +#! /bin/sh
-+# postinst script for vultures
++# postinst script for vulture
 +#
 +# see: dh_installdeb(1)
 +
@@ -989,7 +989,7 @@ diff -Naur vultures/debian/vulture-nethack.postinst vultures.debian/debian/vultu
 +    ;;
 +esac
 +
-+for file in vultures_log.txt logfile perm record; \
++for file in vulture_log.txt logfile perm record; \
 +do \
 +  if [ ! -f /var/games/vulture-nethack/$file ]; then
 +    touch /var/games/vulture-nethack/$file
@@ -1006,12 +1006,12 @@ diff -Naur vultures/debian/vulture-nethack.postinst vultures.debian/debian/vultu
 +exit 0
 +
 +
-diff -Naur vultures/debian/vulture-nethack.postrm vultures.debian/debian/vulture-nethack.postrm
---- vultures/debian/vulture-nethack.postrm	1970-01-01 01:00:00.000000000 +0100
-+++ vultures.debian/debian/vulture-nethack.postrm	2008-04-03 09:22:43.000000000 +0200
+diff -Naur vulture/debian/vulture-nethack.postrm vulture.debian/debian/vulture-nethack.postrm
+--- vulture/debian/vulture-nethack.postrm	1970-01-01 01:00:00.000000000 +0100
++++ vulture.debian/debian/vulture-nethack.postrm	2008-04-03 09:22:43.000000000 +0200
 @@ -0,0 +1,42 @@
 +#! /bin/sh
-+# postrm script for vultures
++# postrm script for vulture
 +#
 +# see: dh_installdeb(1)
 +
@@ -1052,9 +1052,9 @@ diff -Naur vultures/debian/vulture-nethack.postrm vultures.debian/debian/vulture
 +#DEBHELPER#
 +
 +
-diff -Naur vultures/debian/vulture-nethackrc vultures.debian/debian/vulture-nethackrc
---- vultures/debian/vulture-nethackrc	1970-01-01 01:00:00.000000000 +0100
-+++ vultures.debian/debian/vulture-nethackrc	2008-04-03 09:22:43.000000000 +0200
+diff -Naur vulture/debian/vulture-nethackrc vulture.debian/debian/vulture-nethackrc
+--- vulture/debian/vulture-nethackrc	1970-01-01 01:00:00.000000000 +0100
++++ vulture.debian/debian/vulture-nethackrc	2008-04-03 09:22:43.000000000 +0200
 @@ -0,0 +1,52 @@
 +# A '#' at the beginning of a line means the rest of the line is a comment.
 +#
@@ -1062,13 +1062,13 @@ diff -Naur vultures/debian/vulture-nethackrc vultures.debian/debian/vulture-neth
 +# playing.  For a list of options available see the <opthelp.> file.
 +#
 +# If you want to customize the configuration, you should copy this file
-+# (/etc/vultures/vulture-nethackrc) to ~/.vulture-nethackrc and modify that
++# (/etc/vulture/vulture-nethackrc) to ~/.vulture-nethackrc and modify that
 +#
 +# To change the configuration, comment out the unwanted lines, and
 +# uncomment the configuration you want.
 +
-+# Use the vultures window port
-+OPTIONS=windowtype:vultures
++# Use the vulture window port
++OPTIONS=windowtype:vulture
 +
 +# *** OPTIONS ***
 +# Some options to set personal preferences.  Uncomment and change these to
@@ -1083,7 +1083,7 @@ diff -Naur vultures/debian/vulture-nethackrc vultures.debian/debian/vulture-neth
 +#OPTIONS=scores:10 top/2 around/own
 +#OPTIONS=nolegacy,noverbose
 +
-+# verbose help messages make no sense for vultures
++# verbose help messages make no sense for vulture
 +OPTIONS=noverbose
 +
 +OPTIONS=toptenwin
@@ -1108,9 +1108,9 @@ diff -Naur vultures/debian/vulture-nethackrc vultures.debian/debian/vulture-neth
 +#LEVELS=c:\games\nethack\bones
 +#SAVE=c:\games\nethack\bones
 +
-diff -Naur vultures/debian/vulture-nethack.sh vultures.debian/debian/vulture-nethack.sh
---- vultures/debian/vulture-nethack.sh	1970-01-01 01:00:00.000000000 +0100
-+++ vultures.debian/debian/vulture-nethack.sh	2008-04-03 09:22:43.000000000 +0200
+diff -Naur vulture/debian/vulture-nethack.sh vulture.debian/debian/vulture-nethack.sh
+--- vulture/debian/vulture-nethack.sh	1970-01-01 01:00:00.000000000 +0100
++++ vulture.debian/debian/vulture-nethack.sh	2008-04-03 09:22:43.000000000 +0200
 @@ -0,0 +1,66 @@
 +#!/bin/sh
 +#	SCCS Id: @(#)nethack.sh	3.3	90/02/26
@@ -1123,7 +1123,7 @@ diff -Naur vultures/debian/vulture-nethack.sh vultures.debian/debian/vulture-net
 +then
 +	NETHACKOPTIONS=~/.vulture-nethackrc
 +else
-+	NETHACKOPTIONS=/etc/vultures/vulture-nethackrc
++	NETHACKOPTIONS=/etc/vulture/vulture-nethackrc
 +fi
 +export NETHACKOPTIONS
 +
@@ -1178,9 +1178,9 @@ diff -Naur vultures/debian/vulture-nethack.sh vultures.debian/debian/vulture-net
 +		exec $HACK "$@" $MAXNROFPLAYERS
 +		;;
 +esac
-diff -Naur vultures/nethack/include/config.h vultures.debian/nethack/include/config.h
---- vultures/nethack/include/config.h	2008-03-29 00:52:19.000000000 +0100
-+++ vultures.debian/nethack/include/config.h	2008-04-03 09:14:52.000000000 +0200
+diff -Naur vulture/nethack/include/config.h vulture.debian/nethack/include/config.h
+--- vulture/nethack/include/config.h	2008-03-29 00:52:19.000000000 +0100
++++ vulture.debian/nethack/include/config.h	2008-04-03 09:14:52.000000000 +0200
 @@ -153,7 +153,7 @@
  
  #ifndef WIZARD		/* allow for compile-time or Makefile changes */
@@ -1233,9 +1233,9 @@ diff -Naur vultures/nethack/include/config.h vultures.debian/nethack/include/con
  #define DUMP_LOG        /* Dump game end information to a file */
  /* #define DUMP_FN "/tmp/%n.nh" */      /* Fixed dumpfile name, if you want
                                           * to prevent definition by users */
-diff -Naur vultures/nethack/include/unixconf.h vultures.debian/nethack/include/unixconf.h
---- vultures/nethack/include/unixconf.h	2008-03-29 00:52:19.000000000 +0100
-+++ vultures.debian/nethack/include/unixconf.h	2008-04-03 09:16:21.000000000 +0200
+diff -Naur vulture/nethack/include/unixconf.h vulture.debian/nethack/include/unixconf.h
+--- vulture/nethack/include/unixconf.h	2008-03-29 00:52:19.000000000 +0100
++++ vulture.debian/nethack/include/unixconf.h	2008-04-03 09:16:21.000000000 +0200
 @@ -37,7 +37,7 @@
  #define NETWORK		/* if running on a networked system */
  			/* e.g. Suns sharing a playground through NFS */
@@ -1254,9 +1254,9 @@ diff -Naur vultures/nethack/include/unixconf.h vultures.debian/nethack/include/u
  
  
  /*
-diff -Naur vultures/slashem/include/config.h vultures.debian/slashem/include/config.h
---- vultures/slashem/include/config.h	2008-03-29 00:52:03.000000000 +0100
-+++ vultures.debian/slashem/include/config.h	2008-04-03 09:19:16.000000000 +0200
+diff -Naur vulture/slashem/include/config.h vulture.debian/slashem/include/config.h
+--- vulture/slashem/include/config.h	2008-03-29 00:52:03.000000000 +0100
++++ vulture.debian/slashem/include/config.h	2008-04-03 09:19:16.000000000 +0200
 @@ -209,7 +209,7 @@
  
  #ifndef WIZARD		/* allow for compile-time or Makefile changes */
@@ -1292,9 +1292,9 @@ diff -Naur vultures/slashem/include/config.h vultures.debian/slashem/include/con
  
  /* End of Section 5 */
  
-diff -Naur vultures/slashem/include/unixconf.h vultures.debian/slashem/include/unixconf.h
---- vultures/slashem/include/unixconf.h	2008-03-29 00:52:03.000000000 +0100
-+++ vultures.debian/slashem/include/unixconf.h	2008-04-03 09:19:53.000000000 +0200
+diff -Naur vulture/slashem/include/unixconf.h vulture.debian/slashem/include/unixconf.h
+--- vulture/slashem/include/unixconf.h	2008-03-29 00:52:03.000000000 +0100
++++ vulture.debian/slashem/include/unixconf.h	2008-04-03 09:19:53.000000000 +0200
 @@ -174,7 +174,7 @@
   * If you want the static parts of your playground on a read-only file
   * system, define VAR_PLAYGROUND to be where the variable parts are kept.

@@ -1,19 +1,19 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
-#include "vultures_sdl.h" /* XXX this must be the first include,
+#include "vulture_sdl.h" /* XXX this must be the first include,
                              no idea why but it won't compile otherwise */
 
 extern "C" {
 	#include "hack.h"
 }
 
-#include "vultures_main.h"
-#include "vultures_win.h"
-#include "vultures_opt.h"
-#include "vultures_gfl.h"
-#include "vultures_gra.h"
-#include "vultures_mou.h"
-#include "vultures_tile.h"
+#include "vulture_main.h"
+#include "vulture_win.h"
+#include "vulture_opt.h"
+#include "vulture_gfl.h"
+#include "vulture_gra.h"
+#include "vulture_mou.h"
+#include "vulture_tile.h"
 
 #include "minimap.h"
 #include "levelwin.h"
@@ -22,12 +22,12 @@ minimap *minimapwin = NULL;
 
 minimap::minimap(levelwin *p, mapdata *data) : window(p), level(p), map_data(data)
 {
-	minimapbg = vultures_load_graphic(V_FILENAME_MINIMAPBG);
+	minimapbg = vulture_load_graphic(V_FILENAME_MINIMAPBG);
 	w = minimapbg->w;
 	h = minimapbg->h;
 	x = parent->w - (w + 6);
 	y = 6;
-	visible = vultures_opts.show_minimap;
+	visible = vulture_opts.show_minimap;
 	menu_id = V_WIN_MINIMAP;
 	autobg = 1;
 	
@@ -56,7 +56,7 @@ bool minimap::draw()
 		return false;
 		
 	if (this->background)
-		vultures_put_img(abs_x, abs_y, background);
+		vulture_put_img(abs_x, abs_y, background);
 
 
 	for (map_y = 0; map_y < ROWNO; map_y++)
@@ -106,9 +106,9 @@ bool minimap::draw()
 				sym = V_MMTILE_YOU;
 
 			/* draw symbols that changed onto the "minimap surface" */
-			if (sym != vultures_minimap_syms[map_y][map_x])
+			if (sym != vulture_minimap_syms[map_y][map_x])
 			{
-				vultures_minimap_syms[map_y][map_x] = sym;
+				vulture_minimap_syms[map_y][map_x] = sym;
 
 				destrect.x = 40 + 2*map_x - 2*map_y;
 				destrect.y = map_x + map_y;
@@ -136,9 +136,9 @@ bool minimap::draw()
 		}
 	}
 
-	vultures_put_img(abs_x, abs_y, minimapbg);
+	vulture_put_img(abs_x, abs_y, minimapbg);
 
-	vultures_invalidate_region(abs_x, abs_y, w, h);
+	vulture_invalidate_region(abs_x, abs_y, w, h);
 
 	return false;
 }
@@ -147,7 +147,7 @@ bool minimap::draw()
 eventresult minimap::handle_mousemotion_event(window* target, void* result, int xrel, 
                                              int yrel, int state)
 {
-	vultures_set_mcursor(V_CURSOR_NORMAL);
+	vulture_set_mcursor(V_CURSOR_NORMAL);
 	return V_EVENT_HANDLED_NOREDRAW;
 }
 
@@ -159,7 +159,7 @@ eventresult minimap::handle_mousebuttonup_event(window* target, void* result,
 	int offs_x, offs_y;
 
 	/* translate the mouse position to a map coordinate */
-	mouse = vultures_get_mouse_pos();
+	mouse = vulture_get_mouse_pos();
 
 	offs_x = mouse.x - abs_x - 6 - 40;
 	offs_y = mouse.y - abs_y - 6;
@@ -174,14 +174,14 @@ eventresult minimap::handle_mousebuttonup_event(window* target, void* result,
 	* is too small for precise targeting */
 	/* left button: direct selection of a location (for very imprecise teleport) */
 	if (button == SDL_BUTTON_LEFT) {
-		if (vultures_whatis_active) {
-			((vultures_event*)result)->num = 0;
-			((vultures_event*)result)->x = mappos.x;
-			((vultures_event*)result)->y = mappos.y;
+		if (vulture_whatis_active) {
+			((vulture_event*)result)->num = 0;
+			((vulture_event*)result)->x = mappos.x;
+			((vulture_event*)result)->y = mappos.y;
 			return V_EVENT_HANDLED_FINAL;
 		}
 
-		((vultures_event*)result)->num = map_data->perform_map_action(V_ACTION_TRAVEL, mappos);
+		((vulture_event*)result)->num = map_data->perform_map_action(V_ACTION_TRAVEL, mappos);
 		return V_EVENT_HANDLED_FINAL;
 	}
 	/* right button: travel to location */

@@ -104,8 +104,8 @@ private:
 	int map_darkness[ROWNO][COLNO];
 	int map_pet[ROWNO][COLNO]; /* special attributes, we use them to highlight the pet */
 
-	int vultures_tilemap_engulf[NUMMONS];
-	int vultures_tilemap_misc[MAXPCHARS];
+	int vulture_tilemap_engulf[NUMMONS];
+	int vulture_tilemap_misc[MAXPCHARS];
 
   std::vector<mapviewer*> views;
 };

@@ -1,6 +1,6 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
-#include "vultures_sdl.h" /* XXX this must be the first include,
+#include "vulture_sdl.h" /* XXX this must be the first include,
                              no idea why but it won't compile otherwise */
 
 extern "C" {
@@ -10,12 +10,12 @@ extern const char *hu_stat[];           /* defined in eat.c */
 extern const char *const enc_stat[];   /* defined in botl.c */
 }
 
-#include "vultures_win.h"
-#include "vultures_gra.h"
-#include "vultures_gfl.h"
-#include "vultures_txt.h"
-#include "vultures_mou.h"
-#include "vultures_tile.h"
+#include "vulture_win.h"
+#include "vulture_gra.h"
+#include "vulture_gfl.h"
+#include "vulture_txt.h"
+#include "vulture_mou.h"
+#include "vulture_tile.h"
 
 #include "statuswin.h"
 #include "enhancebutton.h"
@@ -31,11 +31,11 @@ statuswin::statuswin(window *p) : window(p)
 {
 	window *subwin;
 	
-	statusbg = vultures_load_graphic(V_FILENAME_STATUS_BAR);
+	statusbg = vulture_load_graphic(V_FILENAME_STATUS_BAR);
 	this->w = statusbg->w;
 	this->h = statusbg->h;
 	this->x = 6;
-	this->y = vultures_screen->h - (this->h + 6);
+	this->y = vulture_screen->h - (this->h + 6);
 	this->menu_id = V_WIN_STATUSBAR;
 
 	/* The enhance symbol: usually invisible, it is shown only when skill enhancement is possible */
@@ -49,9 +49,9 @@ statuswin::statuswin(window *p) : window(p)
 		{
 			tokenarray[i][j] = new textwin(this, "");
 			tokenarray[i][j]->x = 3 + status_xpos[i];
-			tokenarray[i][j]->y = 2 + j*vultures_get_lineheight(V_FONT_STATUS);
+			tokenarray[i][j]->y = 2 + j*vulture_get_lineheight(V_FONT_STATUS);
 			tokenarray[i][j]->w = 100;
-			tokenarray[i][j]->h = vultures_get_lineheight(V_FONT_STATUS);
+			tokenarray[i][j]->h = vulture_get_lineheight(V_FONT_STATUS);
 		}
 
 	/* the player is longer than everything else */
@@ -76,11 +76,11 @@ statuswin::~statuswin()
 
 bool statuswin::draw()
 {
-	vultures_set_draw_region(abs_x, abs_y, abs_x + w - 1, abs_y + h - 1);
-	vultures_put_img(abs_x, abs_y, statusbg);
-	vultures_set_draw_region(0, 0, vultures_screen->w-1, vultures_screen->h-1);
+	vulture_set_draw_region(abs_x, abs_y, abs_x + w - 1, abs_y + h - 1);
+	vulture_put_img(abs_x, abs_y, statusbg);
+	vulture_set_draw_region(0, 0, vulture_screen->w-1, vulture_screen->h-1);
 
-	vultures_invalidate_region(abs_x, abs_y, w, h);
+	vulture_invalidate_region(abs_x, abs_y, w, h);
 	
 	return true;
 }
@@ -89,7 +89,7 @@ bool statuswin::draw()
 eventresult statuswin::handle_mousemotion_event(window* target, void* result, int xrel, 
                                              int yrel, int state)
 {
-	vultures_set_mcursor(V_CURSOR_NORMAL);
+	vulture_set_mcursor(V_CURSOR_NORMAL);
 	return V_EVENT_HANDLED_NOREDRAW;
 }
 

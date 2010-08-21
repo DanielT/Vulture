@@ -1,5 +1,5 @@
 Name "Vulture's Eye"
-OutFile "vultures-a.b.c-eye_win32-d.exe"
+OutFile "vulture-a.b.c-eye_win32-d.exe"
 InstallDir "$PROGRAMFILES\Vulture's Eye"
 
 ;--------------------------------

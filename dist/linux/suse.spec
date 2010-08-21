@@ -1,4 +1,4 @@
-Name:           nethack-vultures
+Name:           nethack-vulture
 Version:        2.1.0
 Release:        0
 Summary:        NetHack - Vulture's Eye and Vulture's Claw
@@ -9,8 +9,8 @@ License:        NetHack General Public License
 Requires:       /bin/gzip
 PreReq:         permissions
 %endif
-URL:            http://www.darkarts.co.za/projects/vultures/
-Source0:        http://www.darkarts.co.za/projects/vultures/downloads/vultures-%{version}/vultures-%{version}-full.tar.bz2
+URL:            http://www.darkarts.co.za/projects/vulture/
+Source0:        http://www.darkarts.co.za/projects/vulture/downloads/vulture-%{version}/vulture-%{version}-full.tar.bz2
 Source1:        SuSE.tar.bz2
 Patch0:         suse-nethack-config.patch
 Patch1:         suse-nethack-decl.patch
@@ -58,9 +58,9 @@ Claw, which is based on the Slash'Em core.
 
 Authors:
 --------
-    Vultures Eye Vultures Claw
+    Vulture for NetHack Vulture for Slash'EM
       Clive Crous <clive@darkarts.co.za>
-      isometric NetHack <vultures@lists.darkarts.co.za>
+      isometric NetHack <vulture@lists.darkarts.co.za>
       SUSE Linux/OpenSUSE maintainer
       Boyd Gerber <gerberb@zenez.com>
 
@@ -70,7 +70,7 @@ Authors:
       Boyd Gerber <gerberb@zenez.com>
 
 %prep
-%setup -q -n vultures-%{version}
+%setup -q -n vulture-%{version}
 %if %{?suse_version:1}0
 %if %suse_version
 %patch0 
@@ -119,20 +119,20 @@ sed -i -e 's|/var/lib/games/nethack|%{_var}/games/vulture-slashem|' \
 cd nethack
 sh sys/unix/setup.sh 1
 # tty
-cp -f ../SuSE/vultures/config.h.vulture-nethack include/config.h
-cp -f ../SuSE/vultures/unixconf.h.vulture-nethack include/unixconf.h
-cp -f ../SuSE/vultures/Makefile.src.vulture-nethack src/Makefile
-cp -f ../SuSE/vultures/Makefile.top.vulture-nethack sys/unix/Makefile.top
+cp -f ../SuSE/vulture/config.h.vulture-nethack include/config.h
+cp -f ../SuSE/vulture/unixconf.h.vulture-nethack include/unixconf.h
+cp -f ../SuSE/vulture/Makefile.src.vulture-nethack src/Makefile
+cp -f ../SuSE/vulture/Makefile.top.vulture-nethack sys/unix/Makefile.top
 cd ..
 
 # create symlinks to makefiles
 cd slashem
 sh sys/unix/setup.sh 1
 # tty
-cp -f ../SuSE/vultures/config.h.vulture-slashem include/config.h
-cp -f ../SuSE/vultures/unixconf.h.vulture-slashem include/unixconf.h
-cp -f ../SuSE/vultures/Makefile.src.vulture-slashem src/Makefile
-cp -f ../SuSE/vultures/Makefile.top.vulture-slashem sys/unix/Makefile.top
+cp -f ../SuSE/vulture/config.h.vulture-slashem include/config.h
+cp -f ../SuSE/vulture/unixconf.h.vulture-slashem include/unixconf.h
+cp -f ../SuSE/vulture/Makefile.src.vulture-slashem src/Makefile
+cp -f ../SuSE/vulture/Makefile.top.vulture-slashem sys/unix/Makefile.top
 cd ..
 %endif
 
@@ -185,14 +185,14 @@ chmod -R 0775 $RPM_BUILD_ROOT/var/games/vulture-slashem
 # install -m 2755 nethack/src/nethack.tty $RPM_BUILD_ROOT/usr/lib/nethack/
 # scripts
 #for STYLE in tty ; do 
-#    install -m 755 SuSE/$STYLE/vultures.sh $RPM_BUILD_ROOT/usr/share/games/vultures.$STYLE
+#    install -m 755 SuSE/$STYLE/vulture.sh $RPM_BUILD_ROOT/usr/share/games/vulture.$STYLE
 #    if [ -r SuSE/$STYLE/nethack-tty.sh ] ; then
 #        install -m 755 SuSE/$STYLE/nethack-tty.sh $RPM_BUILD_ROOT/usr/share/games/nethack.tty.$STYLE
 #    fi
 #done
 # options
-#mkdir -p $RPM_BUILD_ROOT/usr/lib/vultures
-#install -m 644 nethack/dat/options.tty $RPM_BUILD_ROOT/usr/lib/vultures/
+#mkdir -p $RPM_BUILD_ROOT/usr/lib/vulture
+#install -m 644 nethack/dat/options.tty $RPM_BUILD_ROOT/usr/lib/vulture/
 # man pages
 install -m 644 nethack/doc/nethack.6 $RPM_BUILD_ROOT/%{_mandir}/man6/vulture-nethack.6
 install -m 644 nethack/doc/recover.6 $RPM_BUILD_ROOT/%{_mandir}/man6/vulture-nethack-recover.6
@@ -214,9 +214,9 @@ mkdir -p $RPM_BUILD_ROOT/%{_docdir}/nethack
 #  install -m 644 nethack/dat/$file  $RPM_BUILD_ROOT/usr/share/games/nethack/
 #done
 # configs
-install -m 755 -d $RPM_BUILD_ROOT/etc/vultures
-for STYLE in vultures ; do
-    install -m 755 SuSE/$STYLE/vulturesrc $RPM_BUILD_ROOT/etc/vultures/vulturesrc.$STYLE
+install -m 755 -d $RPM_BUILD_ROOT/etc/vulture
+for STYLE in vulture ; do
+    install -m 755 SuSE/$STYLE/vulturerc $RPM_BUILD_ROOT/etc/vulture/vulturerc.$STYLE
 done
 # main launcher script
 # install -m 755 SuSE/nethack $RPM_BUILD_ROOT/usr/games/
@@ -241,9 +241,9 @@ make -C nethack install CHGRP=: CHOWN=: \
     SHELLDIR=$RPM_BUILD_ROOT/usr/games/
 
 mkdir -p $RPM_BUILD_ROOT/usr/share/games/vulture-nethack/graphics
-cp -p vultures/gamedata/graphics/gametiles.bin $RPM_BUILD_ROOT/usr/share/games/vulture-nethack/graphics/
+cp -p vulture/gamedata/graphics/gametiles.bin $RPM_BUILD_ROOT/usr/share/games/vulture-nethack/graphics/
 
-cp -f SuSE/vultures/Makefile.top.vulture-slashem slashem/sys/unix/Makefile.top
+cp -f SuSE/vulture/Makefile.top.vulture-slashem slashem/sys/unix/Makefile.top
 
 make -C slashem install CHGRP=: CHOWN=: \
     GAMEDIR=$RPM_BUILD_ROOT/usr/share/games/vulture-slashem \
@@ -251,7 +251,7 @@ make -C slashem install CHGRP=: CHOWN=: \
     SHELLDIR=$RPM_BUILD_ROOT/usr/games/
 
 mkdir -p $RPM_BUILD_ROOT/usr/share/games/vultureclaw/graphics
-cp -p vultures/gamedata/graphics/gametiles.bin $RPM_BUILD_ROOT/usr/share/games/vulture-slashem/graphics/
+cp -p vulture/gamedata/graphics/gametiles.bin $RPM_BUILD_ROOT/usr/share/games/vulture-slashem/graphics/
 
 # install -dm 755 $RPM_BUILD_ROOT/usr/share/games/vulture-nethack/icons/hicolor/48x48/apps
 # install -dm 755 $RPM_BUILD_ROOT/usr/share/games/vulture-slashem/icons/hicolor/48x48/apps
@@ -277,10 +277,10 @@ for i in vulture-nethack vulture-slashem ; do
         $RPM_BUILD_ROOT/usr/share/games/$i-recover
 done
 
-touch $RPM_BUILD_ROOT/usr/share/games/vulture-slashem/vultures_log.txt
-touch $RPM_BUILD_ROOT/usr/share/games/vulture-nethack/vultures_log.txt
-#install -m 644 vultures/build_n/gamedata/graphics/gamestiles.bin  $RPM_BUILD_ROOT/usr/share/games/vulture-nethack/
-#install -m 644 vultures/build_s/gamedata/graphics/gamestiles.bin  $RPM_BUILD_ROOT/usr/share/games/vulture-slashem/
+touch $RPM_BUILD_ROOT/usr/share/games/vulture-slashem/vulture_log.txt
+touch $RPM_BUILD_ROOT/usr/share/games/vulture-nethack/vulture_log.txt
+#install -m 644 vulture/build_n/gamedata/graphics/gamestiles.bin  $RPM_BUILD_ROOT/usr/share/games/vulture-nethack/
+#install -m 644 vulture/build_s/gamedata/graphics/gamestiles.bin  $RPM_BUILD_ROOT/usr/share/games/vulture-slashem/
 
 #rm -r $RPM_BUILD_ROOT/usr/share/games/vulture-nethack/manual
 #rm -r $RPM_BUILD_ROOT/usr/share/games/vulture-slashem/manual
@@ -293,14 +293,14 @@ for f in music sound ; do
         $RPM_BUILD_ROOT/usr/share/games/vulture-slashem/$f
 done
 
-#chmod -s $RPM_BUILD_ROOT/usr/games/vultures*/vultures* # for stripping
-chmod -s $RPM_BUILD_ROOT/usr/share/games/vultures*/vultures* # for stripping
-#chmod -s $RPM_BUILD_ROOT/usr/games/vultures* # for stripping
+#chmod -s $RPM_BUILD_ROOT/usr/games/vulture*/vulture* # for stripping
+chmod -s $RPM_BUILD_ROOT/usr/share/games/vulture*/vulture* # for stripping
+#chmod -s $RPM_BUILD_ROOT/usr/games/vulture* # for stripping
 
 # Clean up
-#sed -i -e "s|$RPM_BUILD_ROOT||" $RPM_BUILD_ROOT/usr/games/vultures{eye,claw}
-sed -i -e "s|$RPM_BUILD_ROOT||" $RPM_BUILD_ROOT/usr/games/vultures{eye,claw}
-rm $RPM_BUILD_ROOT/usr/share/games/vultures*/*.ico
+#sed -i -e "s|$RPM_BUILD_ROOT||" $RPM_BUILD_ROOT/usr/games/vulture{eye,claw}
+sed -i -e "s|$RPM_BUILD_ROOT||" $RPM_BUILD_ROOT/usr/games/vulture{eye,claw}
+rm $RPM_BUILD_ROOT/usr/share/games/vulture*/*.ico
 chmod -R 0775 $RPM_BUILD_ROOT/var/games/vulture-nethack
 chmod -R 0775 $RPM_BUILD_ROOT/var/games/vulture-slashem
 
@@ -338,9 +338,9 @@ ln -s /var/games/vulture-nethack/save /usr/share/games/vulture-nethack/save &>/d
 %files
 %defattr(-,games,games)
 # %verify(not mode) %attr(0755,games,games) /usr/lib/nethack/nethack.tty
-#/usr/lib/vultures/options.tty
-/etc/vultures
-/etc/vultures/vulturesrc.vultures
+#/usr/lib/vulture/options.tty
+/etc/vulture
+/etc/vulture/vulturerc.vulture
 /usr/games
 /usr/games/vulture-nethack
 /usr/games/vulture-slashem
@@ -350,7 +350,7 @@ ln -s /var/games/vulture-nethack/save /usr/share/games/vulture-nethack/save &>/d
 /var/games/vulture-slashem
 %attr(0777,games,games) /var/games/vulture-nethack
 %attr(0777,games,games) /var/games/vulture-slashem
-#%doc slashem/readme.txt slashem/history.txt slashem/slamfaq.txt vultures/win/jtp/gamedata/manual/
+#%doc slashem/readme.txt slashem/history.txt slashem/slamfaq.txt vulture/win/jtp/gamedata/manual/
 %doc slashem/readme.txt slashem/history.txt slashem/slamfaq.txt
 %attr(0777,games,games) %dir /usr/share/games/vulture-nethack/
 /usr/share/games/vulture-nethack/config/
@@ -361,7 +361,7 @@ ln -s /var/games/vulture-nethack/save /usr/share/games/vulture-nethack/save &>/d
 /usr/share/games/vulture-nethack/nhdat
 /usr/share/games/vulture-nethack/sound/
 %attr(666,games,games) /usr/share/games/vulture-nethack-recover
-%attr(666,games,games) /usr/share/games/vulture-nethack/vultures_log.txt
+%attr(666,games,games) /usr/share/games/vulture-nethack/vulture_log.txt
 %attr(2777,games,games) /usr/share/games/vulture-nethack/vulture-nethack
 %attr(0777,games,games) %dir /usr/share/games/vulture-slashem/
 /usr/share/games/vulture-slashem/config/
@@ -373,10 +373,10 @@ ln -s /var/games/vulture-nethack/save /usr/share/games/vulture-nethack/save &>/d
 /usr/share/games/vulture-slashem/nh*share
 /usr/share/games/vulture-slashem/sound/
 %attr(666,games,games) /usr/share/games/vulture-slashem-recover
-%attr(666,games,games) /usr/share/games/vulture-slashem/vultures_log.txt
+%attr(666,games,games) /usr/share/games/vulture-slashem/vulture_log.txt
 %attr(2777,games,games) /usr/share/games/vulture-slashem/vulture-slashem
-%{_datadir}/applications/*vultures*.desktop
-%{_datadir}/icons/hicolor/48x48/apps/vultures*.png
+%{_datadir}/applications/*vulture*.desktop
+%{_datadir}/icons/hicolor/48x48/apps/vulture*.png
 %defattr(666,games,games,775)
 %dir /var/games/vulture-nethack/
 %config(noreplace) %attr(666,games,games) /var/games/vulture-nethack/record
@@ -441,11 +441,11 @@ for f in graphics music sound ; do
         $RPM_BUILD_ROOT%{_prefix}/games/vulture-slashem/$f
 done
 
-chmod -s $RPM_BUILD_ROOT%{_prefix}/games/vultures*/vultures* # for stripping
+chmod -s $RPM_BUILD_ROOT%{_prefix}/games/vulture*/vulture* # for stripping
 
 # Clean up
-sed -i -e "s|$RPM_BUILD_ROOT||" $RPM_BUILD_ROOT%{_bindir}/vultures{eye,claw}
-rm $RPM_BUILD_ROOT%{_prefix}/games/vultures*/*.ico
+sed -i -e "s|$RPM_BUILD_ROOT||" $RPM_BUILD_ROOT%{_bindir}/vulture{eye,claw}
+rm $RPM_BUILD_ROOT%{_prefix}/games/vulture*/*.ico
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -462,9 +462,9 @@ gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
 %files
 %defattr(-,root,root,-)
 %doc nethack/README nethack/dat/license nethack/dat/history nethack/dat/*help
-#%doc slashem/readme.txt slashem/history.txt slashem/slamfaq.txt vultures/win/jtp/gamedata/manual/
+#%doc slashem/readme.txt slashem/history.txt slashem/slamfaq.txt vulture/win/jtp/gamedata/manual/
 %doc slashem/readme.txt slashem/history.txt slashem/slamfaq.txt
-%{_bindir}/vultures*
+%{_bindir}/vulture*
 %dir %{_prefix}/games/vulture-nethack/
 %{_prefix}/games/vulture-nethack/config/
 %{_prefix}/games/vulture-nethack/defaults.nh
@@ -484,9 +484,9 @@ gtk-update-icon-cache -qf %{_datadir}/icons/hicolor &>/dev/null || :
 %{_prefix}/games/vulture-slashem/nh*share
 %{_prefix}/games/vulture-slashem/sound/
 %attr(2755,root,games) %{_prefix}/games/vulture-slashem/vulture-slashem
-%{_datadir}/applications/*vultures*.desktop
-%{_datadir}/icons/hicolor/48x48/apps/vultures*.png
-%{_mandir}/man6/vultures*.6*
+%{_datadir}/applications/*vulture*.desktop
+%{_datadir}/icons/hicolor/48x48/apps/vulture*.png
+%{_mandir}/man6/vulture*.6*
 %defattr(664,root,games,775)
 %dir %{_var}/games/vulture-nethack/
 %config(noreplace) %{_var}/games/vulture-nethack/record

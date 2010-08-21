@@ -1,6 +1,6 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
-#include "vultures_sdl.h" /* XXX this must be the first include,
+#include "vulture_sdl.h" /* XXX this must be the first include,
                              no idea why but it won't compile otherwise */
 
 extern "C" {
@@ -12,11 +12,11 @@ extern long takeoff_mask;
 extern const char *disrobing;
 }
 
-#include "vultures_gra.h"
-#include "vultures_txt.h"
-#include "vultures_win.h"
-#include "vultures_mou.h"
-#include "vultures_tile.h"
+#include "vulture_gra.h"
+#include "vulture_txt.h"
+#include "vulture_win.h"
+#include "vulture_mou.h"
+#include "vulture_tile.h"
 
 #include "inventory.h"
 #include "objitemwin.h"
@@ -58,16 +58,16 @@ bool inventory::draw()
 	iw = w - border_left - border_right;
 	ih = h - border_top - border_bottom;
 
-	int headline_height = vultures_get_lineheight(V_FONT_HEADLINE);
-	int headline_width = vultures_text_length(V_FONT_HEADLINE, caption);
+	int headline_height = vulture_get_lineheight(V_FONT_HEADLINE);
+	int headline_width = vulture_text_length(V_FONT_HEADLINE, caption);
 
-	vultures_fill_rect(ix, iy, ix + iw - 1, iy + headline_height * 2, CLR32_BLACK_A50);
+	vulture_fill_rect(ix, iy, ix + iw - 1, iy + headline_height * 2, CLR32_BLACK_A50);
 
-	vultures_line(ix, iy, ix + iw - 1, iy, CLR32_GRAY20);
-	vultures_line(ix, iy + headline_height * 2, ix + iw - 1,
+	vulture_line(ix, iy, ix + iw - 1, iy, CLR32_GRAY20);
+	vulture_line(ix, iy + headline_height * 2, ix + iw - 1,
 				iy + headline_height * 2, CLR32_GRAY20);
 
-	vultures_put_text_shadow(V_FONT_HEADLINE, caption, vultures_screen, ix+(iw-headline_width)/2,
+	vulture_put_text_shadow(V_FONT_HEADLINE, caption, vulture_screen, ix+(iw-headline_width)/2,
 							iy+headline_height/2+2, CLR32_WHITE, CLR32_GRAY20);
 
 	if (ow_ncols > ow_vcols) {
@@ -77,9 +77,9 @@ bool inventory::draw()
     else
       snprintf(label, 32, "Pages %d to %d of %d", ow_firstcol + 1, ow_firstcol + ow_vcols, ow_ncols);
 
-		labelwidth = vultures_text_length(V_FONT_MENU, label);
+		labelwidth = vulture_text_length(V_FONT_MENU, label);
 
-		vultures_put_text_shadow(V_FONT_MENU, label, vultures_screen, x+(w-labelwidth)/2,
+		vulture_put_text_shadow(V_FONT_MENU, label, vulture_screen, x+(w-labelwidth)/2,
 								y+h-21, CLR32_BLACK, CLR32_GRAY20);
 	}
 
@@ -95,7 +95,7 @@ void inventory::update_invscroll(int newpos)
 	int leftoffset = border_left;
 	int topoffset = border_top;
 
-	topoffset += vultures_get_lineheight(V_FONT_HEADLINE) * 2 + 2;
+	topoffset += vulture_get_lineheight(V_FONT_HEADLINE) * 2 + 2;
 
 	if (newpos + ow_vcols > ow_ncols)
 		newpos = ow_ncols - ow_vcols;
@@ -171,13 +171,13 @@ eventresult inventory::context_menu(objitemwin *target)
 		menu->add_item("Name", V_INVACTION_NAME);
 
 	menu->layout();
-	vultures_event_dispatcher(&action, V_RESPOND_INT, menu);
+	vulture_event_dispatcher(&action, V_RESPOND_INT, menu);
 
 	delete menu;
 
 
 	if (action) {
-		vultures_eventstack_add('i', -1, -1, V_RESPOND_POSKEY);
+		vulture_eventstack_add('i', -1, -1, V_RESPOND_POSKEY);
 
 		switch (action)
 		{
@@ -216,16 +216,16 @@ eventresult inventory::context_menu(objitemwin *target)
 				return V_EVENT_HANDLED_FINAL;
 
 			case V_INVACTION_NAME:
-				vultures_eventstack_add(target->menu_id, -1, -1, V_RESPOND_ANY);
-				vultures_eventstack_add('n', -1,-1, V_RESPOND_ANY);
-				vultures_eventstack_add(META('n'), -1, -1, V_RESPOND_POSKEY);
+				vulture_eventstack_add(target->menu_id, -1, -1, V_RESPOND_ANY);
+				vulture_eventstack_add('n', -1,-1, V_RESPOND_ANY);
+				vulture_eventstack_add(META('n'), -1, -1, V_RESPOND_POSKEY);
 				return V_EVENT_HANDLED_FINAL;
 
 			case V_INVACTION_DROP:  key = 'd'; break;
 		}
 
-		vultures_eventstack_add(target->menu_id, -1, -1, V_RESPOND_CHARACTER);
-		vultures_eventstack_add(key, -1, -1, V_RESPOND_POSKEY);
+		vulture_eventstack_add(target->menu_id, -1, -1, V_RESPOND_CHARACTER);
+		vulture_eventstack_add(key, -1, -1, V_RESPOND_POSKEY);
 
 		return V_EVENT_HANDLED_FINAL;
 	}
@@ -238,7 +238,7 @@ eventresult inventory::context_menu(objitemwin *target)
 eventresult inventory::handle_mousemotion_event(window* target, void* result, int xrel, 
                                              int yrel, int state)
 {
-	vultures_set_mcursor(V_CURSOR_NORMAL);
+	vulture_set_mcursor(V_CURSOR_NORMAL);
 	return V_EVENT_HANDLED_NOREDRAW;
 }
 
@@ -246,7 +246,7 @@ eventresult inventory::handle_mousemotion_event(window* target, void* result, in
 eventresult inventory::handle_mousebuttonup_event(window* target, void* result,
                                             int mouse_x, int mouse_y, int button, int state)
 {
-	point mouse = vultures_get_mouse_pos();
+	point mouse = vulture_get_mouse_pos();
 	window *winelem;
 	objitemwin *oitem;
 	
@@ -490,7 +490,7 @@ eventresult inventory::handle_keydown_event(window* target, void* result, int sy
 		case MENU_SEARCH:
 			char str_to_find[512];
 			str_to_find[0] = '\0';
-			if (vultures_get_input(-1, -1, "What are you looking for?", str_to_find) != -1)
+			if (vulture_get_input(-1, -1, "What are you looking for?", str_to_find) != -1)
 			{
 				itemcount = 0;
 				for (winelem = first_child; winelem; winelem = winelem->sib_next) {
@@ -600,7 +600,7 @@ void inventory::layout()
 	int rightoffset = border_right;
 	int bottomoffset = 60; /* guesstimate for bottom border + page arrows + minimal spacing */
 
-	textheight = vultures_get_lineheight(V_FONT_LARGE);
+	textheight = vulture_get_lineheight(V_FONT_LARGE);
 	topoffset += textheight*2 + 2;
 
 	if (select_how != PICK_NONE)
@@ -676,8 +676,8 @@ void inventory::layout()
 		btn->y = h - border_bottom - 23;
 		btn->w = 100;
 		btn->h = 24;
-		btn->image = vultures_get_img_src(0, 0, vultures_winelem.invarrow_left->w,
-								vultures_winelem.invarrow_left->h, vultures_winelem.invarrow_left);
+		btn->image = vulture_get_img_src(0, 0, vulture_winelem.invarrow_left->w,
+								vulture_winelem.invarrow_left->h, vulture_winelem.invarrow_left);
 		btn->visible = 0;
 
 		btn = new button(this, "", V_INV_NEXTPAGE, '\0');
@@ -685,16 +685,16 @@ void inventory::layout()
 		btn->y = h - border_bottom - 23;
 		btn->w = 100;
 		btn->h = 24;
-		btn->image = vultures_get_img_src(0, 0, vultures_winelem.invarrow_right->w,
-								vultures_winelem.invarrow_right->h, vultures_winelem.invarrow_right);
+		btn->image = vulture_get_img_src(0, 0, vulture_winelem.invarrow_right->w,
+								vulture_winelem.invarrow_right->h, vulture_winelem.invarrow_right);
 		btn->visible = 1;
 	}
 
 	if (select_how != PICK_NONE) {
     int btn1_width = 0;
     if ( select_how == PICK_ANY )
-		  btn1_width = vultures_text_length(V_FONT_MENU, "Accept") + 14;
-		int btn2_width = vultures_text_length(V_FONT_MENU, "Cancel") + 14;
+		  btn1_width = vulture_text_length(V_FONT_MENU, "Accept") + 14;
+		int btn2_width = vulture_text_length(V_FONT_MENU, "Cancel") + 14;
 		int max_width = (btn1_width > btn2_width) ? btn1_width : btn2_width;
 		int total_width = max_width;
 
@@ -724,8 +724,8 @@ void inventory::layout()
 		btn->y = border_top + 2;
 		btn->w = 26;
 		btn->h = 26;
-		btn->image = vultures_get_img_src(0, 0, vultures_winelem.closebutton->w,
-								vultures_winelem.closebutton->h, vultures_winelem.closebutton);
+		btn->image = vulture_get_img_src(0, 0, vulture_winelem.closebutton->w,
+								vulture_winelem.closebutton->h, vulture_winelem.closebutton);
 	}
 
 	x = (parent->w - w) / 2;

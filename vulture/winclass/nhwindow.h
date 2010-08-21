@@ -27,6 +27,6 @@ public:
 	bool has_objects;
 };
 
-nhwindow * vultures_get_nhwindow(int winid);
+nhwindow * vulture_get_nhwindow(int winid);
 
 #endif

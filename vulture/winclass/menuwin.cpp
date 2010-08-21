@@ -1,17 +1,17 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
-#include "vultures_sdl.h" /* XXX this must be the first include,
+#include "vulture_sdl.h" /* XXX this must be the first include,
                              no idea why but it won't compile otherwise */
 
 extern "C" {
 	#include "hack.h"
 }
 
-#include "vultures_main.h"
-#include "vultures_win.h"
-#include "vultures_txt.h"
-#include "vultures_mou.h"
-#include "vultures_tile.h"
+#include "vulture_main.h"
+#include "vulture_win.h"
+#include "vulture_txt.h"
+#include "vulture_mou.h"
+#include "vulture_tile.h"
 
 #include "menuwin.h"
 #include "scrollwin.h"
@@ -79,7 +79,7 @@ void menuwin::select_option(optionwin *target, int count)
 eventresult menuwin::handle_mousemotion_event(window* target, void* result, int xrel, 
                                              int yrel, int state)
 {
-	vultures_set_mcursor(V_CURSOR_NORMAL);
+	vulture_set_mcursor(V_CURSOR_NORMAL);
 	return V_EVENT_HANDLED_NOREDRAW;
 }
 
@@ -249,7 +249,7 @@ eventresult menuwin::handle_keydown_event(window* target, void* result, int sym,
 		case MENU_SEARCH:
 			str_to_find = (char *)malloc(512);
 			str_to_find[0] = '\0';
-			if (vultures_get_input(-1, -1, "What are you looking for?", str_to_find) != -1) {
+			if (vulture_get_input(-1, -1, "What are you looking for?", str_to_find) != -1) {
 				for (winelem = scrollarea->first_child; winelem; winelem = winelem->sib_next) {
 					if (winelem->caption.find(str_to_find)) {
 						scrollarea->scrollto(V_SCROLL_PIXEL_ABS, winelem->y);
@@ -307,7 +307,7 @@ void menuwin::assign_accelerators()
 	used_accels[0] = '\0';
 	for (item_iterator i = items.begin(); i != items.end(); ++i) {
 		if (i->accelerator == 0 && i->identifier) {
-			new_accel = vultures_find_menu_accelerator(used_accels);
+			new_accel = vulture_find_menu_accelerator(used_accels);
 			if (new_accel >= 0)
 				i->accelerator = new_accel;
 		}
@@ -329,7 +329,7 @@ window * menuwin::find_accel(char accel)
 void menuwin::layout()
 {
 	int scrollheight = 0;
-	int buttonheight = vultures_get_lineheight(V_FONT_MENU) + 15;
+	int buttonheight = vulture_get_lineheight(V_FONT_MENU) + 15;
 	int menu_height_limit;
   std::string newcaption;
 	

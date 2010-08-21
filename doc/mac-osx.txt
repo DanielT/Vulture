@@ -8,8 +8,8 @@ Install Xcode
 
 Update to the latest Vulture?s source code
 
-git clone git://github.com/clivecrous/vultures.git
-cd vultures
+git clone git://github.com/clivecrous/vulture.git
+cd vulture
 git submodule init
 git submodule update
 install MacPorts ( Configure as per instructions on macports.org )

@@ -1,6 +1,6 @@
 /* NetHack may be freely redistributed.  See license for details. */
 
-#include "vultures_sdl.h" /* XXX this must be the first include,
+#include "vulture_sdl.h" /* XXX this must be the first include,
                              no idea why but it won't compile otherwise */
 
 extern "C" {
@@ -9,12 +9,12 @@ extern "C" {
 	extern "C" short glyph2tile[];
 }
 
-#include "vultures_gra.h"
-#include "vultures_gfl.h"
-#include "vultures_win.h"
-#include "vultures_txt.h"
-#include "vultures_mou.h"
-#include "vultures_tile.h"
+#include "vulture_gra.h"
+#include "vulture_gfl.h"
+#include "vulture_win.h"
+#include "vulture_txt.h"
+#include "vulture_mou.h"
+#include "vulture_tile.h"
 
 #include "map.h"
 #include "hotspot.h"
@@ -44,7 +44,7 @@ map::map(levelwin *p, mapdata *data) : window(p), map_data(data)
 	abs_y = parent->abs_y + y;
 
 	/* Load map parchment */
-	mapbg = vultures_load_graphic(V_FILENAME_MAP_PARCHMENT);
+	mapbg = vulture_load_graphic(V_FILENAME_MAP_PARCHMENT);
 
 	/* level title */
 	textwin *txt = new textwin(this, "");
@@ -57,12 +57,12 @@ map::map(levelwin *p, mapdata *data) : window(p), map_data(data)
 	close->abs_y = abs_y + close->y;
 
 	/* Load map symbols */
-	image = vultures_load_graphic(V_FILENAME_MAP_SYMBOLS);
+	image = vulture_load_graphic(V_FILENAME_MAP_SYMBOLS);
 	if (image == NULL)
 		return;
 	else {
 		for (i = 0; i < V_MAX_MAP_SYMBOLS; i++)
-			map_symbols[i] = vultures_get_img_src(
+			map_symbols[i] = vulture_get_img_src(
 				(i%40)*SYMBOL_WIDTH,
 				(i/40)*SYMBOL_HEIGHT,
 				(i%40)*SYMBOL_WIDTH + (SYMBOL_WIDTH - 1),
@@ -91,7 +91,7 @@ bool map::draw()
 	char buffer[256];
 
 	/* Draw parchment */
-	vultures_put_img(abs_x, abs_y, mapbg);
+	vulture_put_img(abs_x, abs_y, mapbg);
 
 	/* Draw the level name */
 #ifdef VULTURE_SLASHEM
@@ -101,10 +101,10 @@ bool map::draw()
 		sprintf(buffer, "%s, level %d ", dungeons[u.uz.dnum].dname, depth(&u.uz));
 #endif
 	txt->set_caption(buffer);
-	txt->x = (w - vultures_text_length(V_FONT_HEADLINE, txt->caption)) / 2;
+	txt->x = (w - vulture_text_length(V_FONT_HEADLINE, txt->caption)) / 2;
 	txt->abs_x = abs_x + txt->x;
 	txt->abs_y = abs_y + txt->y;
-	vultures_put_text_shadow(V_FONT_HEADLINE, txt->caption, vultures_screen,
+	vulture_put_text_shadow(V_FONT_HEADLINE, txt->caption, vulture_screen,
 	                      txt->abs_x, txt->abs_y, CLR32_BROWN, CLR32_BLACK_A50);
 
 	/* Find upper left corner of map on parchment */
@@ -120,14 +120,14 @@ bool map::draw()
 			if (map_glyph != NO_GLYPH &&
 				(map_glyph != cmap_to_glyph(S_stone) ||
 				(level.locations[j][i].seenv && is_dark))) {
-				vultures_put_img(
+				vulture_put_img(
 						map_x + SYMBOL_WIDTH*j,
 						map_y + SYMBOL_HEIGHT*i,
 						map_symbols[glyph2tile[map_glyph]]); 
 			}
 		}
 
-	vultures_invalidate_region(abs_x, abs_y, w, h);
+	vulture_invalidate_region(abs_x, abs_y, w, h);
 
 	return false;
 }
@@ -159,12 +159,12 @@ eventresult map::handle_timer_event(window* target, void* result, int time)
 
 	/* draw the tooltip for the close button */
 	if (this != target && target->menu_id == 1)
-		vultures_mouse_set_tooltip(target->caption);
+		vulture_mouse_set_tooltip(target->caption);
 	/* draw a tooltip for the map location */
 	else if (mappos.x != -1) {
 		ttext = map_data->map_square_description(mappos, 1);
 		if(!ttext.empty())
-			vultures_mouse_set_tooltip(ttext);
+			vulture_mouse_set_tooltip(ttext);
 	}
 
 	return V_EVENT_HANDLED_NOREDRAW;
@@ -174,7 +174,7 @@ eventresult map::handle_timer_event(window* target, void* result, int time)
 eventresult map::handle_mousemotion_event(window* target, void* result, int xrel, 
                                              int yrel, int state)
 {
-	vultures_set_mcursor(V_CURSOR_NORMAL);
+	vulture_set_mcursor(V_CURSOR_NORMAL);
 	return V_EVENT_HANDLED_NOREDRAW;
 }
 
@@ -187,7 +187,7 @@ eventresult map::handle_mousebuttonup_event(window* target, void* result,
 	/* handler != target if the user clicked on the X in the upper right corner */
 	if (this != target && target->menu_id == 1) {
 		toggle();
-		vultures_mouse_invalidate_tooltip(1);
+		vulture_mouse_invalidate_tooltip(1);
 		return V_EVENT_HANDLED_REDRAW;
 	}
 
@@ -211,7 +211,7 @@ point map::get_mouse_mappos(void)
 {
 	point mouse, mappos;
 
-	mouse = vultures_get_mouse_pos();
+	mouse = vulture_get_mouse_pos();
 	mappos.x = (mouse.x - abs_x - 39) / SYMBOL_WIDTH;
 	mappos.y = (mouse.y - abs_y - 91) / SYMBOL_HEIGHT;
 
