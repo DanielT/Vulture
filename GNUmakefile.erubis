@@ -1,0 +1,158 @@
+<%
+# This GNUMakefile.erubis file is a template used to generate the GNUMakefile
+# itself. If you're not a developer working on the Vulture project then most
+# likely you'll never need to use this.
+
+@game = 'vulture'
+@variants = {
+  :nethack => 'NetHack',
+  :slashem => "Slash'EM"
+}
+@compression = {
+  'tar.gz' => 'tar zcvfh',
+  'tar.bz2' => 'tar jcvfh',
+  '7z' => '7zr a -y -r -mx=9',
+  'zip' => 'zip -y -r -9'
+}
+@checksum = {
+  'md5' => 'md5sum',
+  'sha256' => 'sha256sum',
+  'sha1' => 'sha1sum'
+}
+
+def pad( string, length = 20 )
+  string + ' '*(length-string.length)
+end
+
+%>
+# This makefile is for unix and it's clones only.
+# This makefile is meant for developers and people wanting
+# to experiment with vulture only. It is NOT meant for system
+# installation, nor is it meant for building the game for
+# final gameplay. If you want to play vulture either check if
+# your distribution of unix has a port for it, or if you are
+# comfortable with system installation yourself then read and
+# follow the instructions of the README in the sys/unix directory
+# of NetHack and/or Slash'EM
+
+GAMEDEF = VULTURE
+GAMEDIRSUFFIX = -data
+DATE := $(shell date +%Y%m%d%H%M%S)
+GITREVISION := $(strip $(shell if ! [ -f .git-revision ]; then git rev-list `git describe --tags --abbrev=0`..master|wc -l > .git-revision; fi; cat .git-revision))
+VERSION = 2.2.$(GITREVISION)
+RELEASE = 1
+FULLNAME = <%= @game %>-$(VERSION)
+DISTDIR = dist/$(FULLNAME)
+BUILDDIR = $(DISTDIR)/build
+OS = ${shell case `uname -s` in *CYGWIN*|*MINGW*|*MSYS*|*Windows*) echo "win32" ;; *) echo "unix" ;; esac}
+CWD = $(shell pwd)
+INSTPREFIX = $$HOME/<%= @game %>
+
+.PHONY: \
+  help \
+<% @variants.keys.each do |name| %>
+  <%= name %>-home <%= name %>.dmg \
+<% end %>
+  distfiles \
+<% @compression.keys.each do |suffix| %>
+  distfiles.<%= suffix %> \
+<% end %>
+  clean spotless
+
+help:
+	@echo "\nPlay:"
+<% @variants.each do |name,description| %>
+	@echo "\t$(MAKE) <%= pad(name.to_s+'-home') %>Build $(FULLNAME) for <%= description %> in ~/<%= @game %>"
+<% end %>
+	@echo "\t$(MAKE) <%= pad('home') %>Build $(FULLNAME) for all variants in ~/<%= @game %>"
+	@echo "\nBundle:"
+<% @compression.keys.each do |suffix| %>
+	@echo "\t$(MAKE) <%= pad('distfiles.' + suffix) %>Bundle $(FULLNAME) in a <%= suffix %> file"
+<% end %>
+	@echo "\t$(MAKE) <%= pad('distfiles') %>Bundle $(FULLNAME) for all compression types"
+
+home: <%= @variants.keys.map{|n|n.to_s+'-home'}.join(' ') %>
+
+<% @variants.each do |name,description| %>
+<%= name %>-home: <%= name %>/Makefile <%= name %>/win/<%= @game %>
+	@echo "Building and installing <%= description %> in "$(INSTPREFIX)/<%= @game + '-' + name %>${GAMEDIRSUFFIX}
+	@mkdir -p $(INSTPREFIX)/<%= @game + '-' + name %>${GAMEDIRSUFFIX}
+	@$(MAKE) PREFIX=$(INSTPREFIX) GAMEDIR=$(INSTPREFIX)/<%= @game + '-' + name %>${GAMEDIRSUFFIX} SHELLDIR=$(INSTPREFIX) \
+	         GAMEPERM=0755 CHOWN=true CHGRP=true -C <%= name %> install >/dev/null
+
+<%= name %>/Makefile:
+	@echo "Setup <%= description %> build environment ..."
+	@cd <%= name %> && sh sys/unix/setup.sh - >/dev/null
+
+<%= name %>/win/<%= @game %>:
+	@cd <%= name %>/win && ln -s ../../<%= @game %>
+
+<% end %>
+
+clean:
+<% @variants.keys.each do |name| %>
+	-$(MAKE) -C <%= name %> clean
+<% end %>
+
+spotless:
+<% @variants.keys.each do |name| %>
+	-$(MAKE) -C <%= name %> spotless
+<% end %>
+	-rm -rf dist/<%= @game %>*
+
+distfiles: <%= @compression.keys.map{|suffix|'distfiles.'+suffix}.join(' ') %>
+
+<% @compression.each do |compression_suffix,compression_command| %>
+distfiles.<%= compression_suffix %>: \
+  $(DISTDIR)/$(FULLNAME).<%= compression_suffix %> \
+  <%= @variants.keys.map{|n|"$(DISTDIR)/$(FULLNAME)-#{n}.#{compression_suffix}"}.join(" \\\n  ") %>
+
+$(DISTDIR)/$(FULLNAME).<%= compression_suffix %>: $(DISTDIR)/$(FULLNAME)
+	cd $(DISTDIR); <%= compression_command %> $(FULLNAME).<%= compression_suffix %> $(FULLNAME)
+  <% @checksum.each do |checksum_suffix,checksum_command| %>
+	cd $(DISTDIR); <%= checksum_command %> $(FULLNAME).<%= compression_suffix %> > $(FULLNAME).<%= compression_suffix %>.<%= checksum_suffix %>
+  <% end %>
+
+  <% @variants.keys.each do |name| %>
+$(DISTDIR)/$(FULLNAME)-<%= name %>.<%= compression_suffix %>: $(DISTDIR)/$(FULLNAME)
+	cd $(DISTDIR); <%= compression_command %> $(FULLNAME)-<%= name %>.<%= compression_suffix %> $(FULLNAME)/<%= name %>
+    <% @checksum.each do |checksum_suffix,checksum_command| %>
+	cd $(DISTDIR); <%= checksum_command %> $(FULLNAME)-<%= name %>.<%= compression_suffix %> > $(FULLNAME)-<%= name %>.<%= compression_suffix %>.<%= checksum_suffix %>
+    <% end %>
+
+  <% end %>
+<% end %>
+
+$(DISTDIR)/$(FULLNAME): $(DISTDIR)
+	git submodule init
+	git submodule update
+	git clone ./ $@
+	cp .git-revision $@/.
+<% @variants.keys.each do |name| %>
+	rm -rf $@/<%= name %>
+	git clone ./<%= name %>/ $@/<%= name %>
+<% end %>
+	rm -rf $@/.git
+	rm -rf $@/.gitmodules
+<% @variants.keys.each do |name| %>
+	rm -rf $@/<%= name %>/.git
+<% end %>
+	echo "#define <%= @game.upcase %>_PORT_VERSION \"$(VERSION)\"">$@/<%= @game %>/<%= @game %>_port_version.h
+<% @variants.keys.each do |name| %>
+	ln -s ../../<%= @game %> $@/<%= name %>/win/<%= @game %>
+<% end %>
+
+$(DISTDIR):
+	mkdir -p $(DISTDIR)
+	
+<% @variants.each do |name,description| %>
+<%= name %>.dmg:
+	@echo "Building <%= description %> dmg"
+	@rm -rf $(BUILDDIR)
+	@mkdir -p $(BUILDDIR)/<%= name %> $(DISTDIR)
+	@$(MAKE) PREFIX=$(BUILDDIR)/<%= name %>/ GAMEPERM=0755 CHOWN=true CHGRP=true -C <%= name %> install >/dev/null
+	@chmod +x dist/macosx/makedmg-<%= name %>
+	@dist/macosx/makedmg-<%= name %> $(BUILDDIR)/<%= name %>/games $(DISTDIR) dist/macosx $(VERSION) <%= description %> $(RELEASE)
+	@echo "dmg should now be located in $(DISTDIR)"
+
+<% end %>
