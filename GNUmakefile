@@ -90,7 +90,7 @@ distfiles.tar.gz: \
   $(DISTDIR)/$(FULLNAME)-slashem.tar.gz
 
 $(DISTDIR)/$(FULLNAME).tar.gz: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); tar zcvfh $(FULLNAME).tar.gz $(FULLNAME)
+	cd $(DISTDIR); tar zcvf $(FULLNAME).tar.gz $(FULLNAME)
 	cd $(DISTDIR); md5sum $(FULLNAME).tar.gz > $(FULLNAME).tar.gz.md5
 	cd $(DISTDIR); sha256sum $(FULLNAME).tar.gz > $(FULLNAME).tar.gz.sha256
 	cd $(DISTDIR); sha1sum $(FULLNAME).tar.gz > $(FULLNAME).tar.gz.sha1
@@ -113,7 +113,7 @@ distfiles.tar.bz2: \
   $(DISTDIR)/$(FULLNAME)-slashem.tar.bz2
 
 $(DISTDIR)/$(FULLNAME).tar.bz2: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); tar jcvfh $(FULLNAME).tar.bz2 $(FULLNAME)
+	cd $(DISTDIR); tar jcvf $(FULLNAME).tar.bz2 $(FULLNAME)
 	cd $(DISTDIR); md5sum $(FULLNAME).tar.bz2 > $(FULLNAME).tar.bz2.md5
 	cd $(DISTDIR); sha256sum $(FULLNAME).tar.bz2 > $(FULLNAME).tar.bz2.sha256
 	cd $(DISTDIR); sha1sum $(FULLNAME).tar.bz2 > $(FULLNAME).tar.bz2.sha1
@@ -142,13 +142,13 @@ $(DISTDIR)/$(FULLNAME).7z: $(DISTDIR)/$(FULLNAME)
 	cd $(DISTDIR); sha1sum $(FULLNAME).7z > $(FULLNAME).7z.sha1
 
 $(DISTDIR)/$(FULLNAME)-nethack.7z: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); 7zr a -y -r -mx=9 $(FULLNAME)-nethack.7z $(FULLNAME)/nethack
+	cd $(DISTDIR); 7zr a -y -r -mx=9 -l $(FULLNAME)-nethack.7z $(FULLNAME)/nethack
 	cd $(DISTDIR); md5sum $(FULLNAME)-nethack.7z > $(FULLNAME)-nethack.7z.md5
 	cd $(DISTDIR); sha256sum $(FULLNAME)-nethack.7z > $(FULLNAME)-nethack.7z.sha256
 	cd $(DISTDIR); sha1sum $(FULLNAME)-nethack.7z > $(FULLNAME)-nethack.7z.sha1
 
 $(DISTDIR)/$(FULLNAME)-slashem.7z: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); 7zr a -y -r -mx=9 $(FULLNAME)-slashem.7z $(FULLNAME)/slashem
+	cd $(DISTDIR); 7zr a -y -r -mx=9 -l $(FULLNAME)-slashem.7z $(FULLNAME)/slashem
 	cd $(DISTDIR); md5sum $(FULLNAME)-slashem.7z > $(FULLNAME)-slashem.7z.md5
 	cd $(DISTDIR); sha256sum $(FULLNAME)-slashem.7z > $(FULLNAME)-slashem.7z.sha256
 	cd $(DISTDIR); sha1sum $(FULLNAME)-slashem.7z > $(FULLNAME)-slashem.7z.sha1
@@ -159,19 +159,19 @@ distfiles.zip: \
   $(DISTDIR)/$(FULLNAME)-slashem.zip
 
 $(DISTDIR)/$(FULLNAME).zip: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); zip -y -r -9 $(FULLNAME).zip $(FULLNAME)
+	cd $(DISTDIR); zip -r -9 -y $(FULLNAME).zip $(FULLNAME)
 	cd $(DISTDIR); md5sum $(FULLNAME).zip > $(FULLNAME).zip.md5
 	cd $(DISTDIR); sha256sum $(FULLNAME).zip > $(FULLNAME).zip.sha256
 	cd $(DISTDIR); sha1sum $(FULLNAME).zip > $(FULLNAME).zip.sha1
 
 $(DISTDIR)/$(FULLNAME)-nethack.zip: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); zip -y -r -9 $(FULLNAME)-nethack.zip $(FULLNAME)/nethack
+	cd $(DISTDIR); zip -r -9 $(FULLNAME)-nethack.zip $(FULLNAME)/nethack
 	cd $(DISTDIR); md5sum $(FULLNAME)-nethack.zip > $(FULLNAME)-nethack.zip.md5
 	cd $(DISTDIR); sha256sum $(FULLNAME)-nethack.zip > $(FULLNAME)-nethack.zip.sha256
 	cd $(DISTDIR); sha1sum $(FULLNAME)-nethack.zip > $(FULLNAME)-nethack.zip.sha1
 
 $(DISTDIR)/$(FULLNAME)-slashem.zip: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); zip -y -r -9 $(FULLNAME)-slashem.zip $(FULLNAME)/slashem
+	cd $(DISTDIR); zip -r -9 $(FULLNAME)-slashem.zip $(FULLNAME)/slashem
 	cd $(DISTDIR); md5sum $(FULLNAME)-slashem.zip > $(FULLNAME)-slashem.zip.md5
 	cd $(DISTDIR); sha256sum $(FULLNAME)-slashem.zip > $(FULLNAME)-slashem.zip.sha256
 	cd $(DISTDIR); sha1sum $(FULLNAME)-slashem.zip > $(FULLNAME)-slashem.zip.sha1

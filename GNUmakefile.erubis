@@ -9,10 +9,10 @@
   :slashem => "Slash'EM"
 }
 @compression = {
-  'tar.gz' => 'tar zcvfh',
-  'tar.bz2' => 'tar jcvfh',
-  '7z' => '7zr a -y -r -mx=9',
-  'zip' => 'zip -y -r -9'
+  'tar.gz' => lambda{|follow|'tar zcvf' + ( follow ? 'h' : '' ) },
+  'tar.bz2' => lambda{|follow|'tar jcvf' + ( follow ? 'h' : '' ) },
+  '7z' => lambda{|follow|'7zr a -y -r -mx=9' + ( follow ? ' -l' : '' ) },
+  'zip' => lambda{|follow|'zip -r -9' + ( follow ? '' : ' -y' ) }
 }
 @checksum = {
   'md5' => 'md5sum',
@@ -108,14 +108,14 @@ distfiles.<%= compression_suffix %>: \
   <%= @variants.keys.map{|n|"$(DISTDIR)/$(FULLNAME)-#{n}.#{compression_suffix}"}.join(" \\\n  ") %>
 
 $(DISTDIR)/$(FULLNAME).<%= compression_suffix %>: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); <%= compression_command %> $(FULLNAME).<%= compression_suffix %> $(FULLNAME)
+	cd $(DISTDIR); <%= compression_command.call( false ) %> $(FULLNAME).<%= compression_suffix %> $(FULLNAME)
   <% @checksum.each do |checksum_suffix,checksum_command| %>
 	cd $(DISTDIR); <%= checksum_command %> $(FULLNAME).<%= compression_suffix %> > $(FULLNAME).<%= compression_suffix %>.<%= checksum_suffix %>
   <% end %>
 
   <% @variants.keys.each do |name| %>
 $(DISTDIR)/$(FULLNAME)-<%= name %>.<%= compression_suffix %>: $(DISTDIR)/$(FULLNAME)
-	cd $(DISTDIR); <%= compression_command %> $(FULLNAME)-<%= name %>.<%= compression_suffix %> $(FULLNAME)/<%= name %>
+	cd $(DISTDIR); <%= compression_command.call( true ) %> $(FULLNAME)-<%= name %>.<%= compression_suffix %> $(FULLNAME)/<%= name %>
     <% @checksum.each do |checksum_suffix,checksum_command| %>
 	cd $(DISTDIR); <%= checksum_command %> $(FULLNAME)-<%= name %>.<%= compression_suffix %> > $(FULLNAME)-<%= name %>.<%= compression_suffix %>.<%= checksum_suffix %>
     <% end %>
