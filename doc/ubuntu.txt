@@ -1,14 +1,27 @@
 Install Dependencies
-sudo apt-get install git-core bison libsdl1.2-dev build-dependencies
+--------------------
+  sudo apt-get install git-core bison flex libsdl1.2-dev build-dependencies
+
 Clone the project
-git clone git://github.com/clivecrous/vulture.git
-cd vulture
-git submodule init
-git submodule update
-Make
-patch -Np1 -i dist/linux/debian/debian.patch
-sudo dpkg-buildpackage
-cd ../
-sudo gdebi vulture-data_2.1.90-1_all.deb
-sudo gdebi vulture-nethack_2.1.90-1_amd64.deb
-Grab a cup of coffee, and wait about 15 minutes.
+-----------------
+  git clone http://dl.dropbox.com/u/2939773/git/vulture
+  cd vulture
+  git submodule init
+  git submodule update
+
+Compile whichever variant(s) you want to play
+---------------------------------------------
+  make
+
+Follow the instructions given
+
+If you just want to play Vulture this is all you need to do, you're done :)
+At this point you should have Vulture installed inside ~/vulture
+
+Build a deb file 
+----------------
+  patch -Np1 -i dist/linux/debian/debian.patch
+  sudo dpkg-buildpackage
+  cd ../
+  sudo gdebi vulture-data_2.1.90-1_all.deb
+  sudo gdebi vulture-nethack_2.1.90-1_amd64.deb
