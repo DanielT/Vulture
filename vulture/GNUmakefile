@@ -23,11 +23,20 @@ endif
 CFLAGS := $(BASECFLAGS) $(SDL_CFLAGS) -DUSE_SDL_SYSCALLS -g3 -Wall
 
 ifeq ($(BUILD), nethack)
-	BUILDDIR := build_n
+	BUILDDIR := build_nethack
 	CFLAGS += -DVULTURE_NETHACK
 else
-	BUILDDIR := build_s
-	CFLAGS += -DVULTURE_SLASHEM
+	ifeq ($(BUILD), slashem)
+		BUILDDIR := build_slashem
+		CFLAGS += -DVULTURE_SLASHEM
+	else
+		ifeq ($(BUILD), unnethack)
+			BUILDDIR := build_unnethack
+			CFLAGS += -DVULTURE_UNNETHACK
+		else
+			$(error No valid variant supplied in BUILD!)
+		endif
+	endif
 endif
 
 # build target

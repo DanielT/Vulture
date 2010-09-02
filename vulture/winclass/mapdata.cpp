@@ -864,9 +864,10 @@ map_action mapdata::get_map_contextmenu(point mappos)
 		menu->add_item("Sit", V_ACTION_SIT);
 
 		/* do a minimum check to leave turn undead out for those who _definitely_ can't do it */
-#ifdef VULTURE_NETHACK
+#if defined(VULTURE_NETHACK) || defined(VULTURE_UNNETHACK)
 		if (Role_if(PM_PRIEST) || Role_if(PM_KNIGHT) ||
-#else /* VULTURE_SLASHEM */
+#endif
+#ifdef VULTURE_SLASHEM
 		if (tech_known(T_TURN_UNDEAD) ||
 #endif
 			objects[SPE_TURN_UNDEAD].oc_name_known)

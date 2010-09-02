@@ -4,7 +4,11 @@
 # ifdef VULTURE_SLASHEM
 #  define VULTURE_PORT_ID_NAME "SlashEM"
 # else
-#  define VULTURE_PORT_ID_NAME "Something"
+#  ifdef VULTURE_UNNETHACK
+#   define VULTURE_PORT_ID_NAME "UnNetHack"
+#  else
+#   define VULTURE_PORT_ID_NAME "Something"
+#  endif
 # endif
 #endif
 #include "vulture_port_version.h"

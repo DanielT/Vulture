@@ -11,6 +11,14 @@
 #ifdef VULTURE_SLASHEM
 # define V_MAX_MAP_SYMBOLS  (40*36)
 #endif
+#ifdef VULTURE_UNNETHACK
+# define V_MAX_MAP_SYMBOLS  (40*31)
+#endif
+
+#ifndef V_MAX_MAP_SYMBOLS
+#error Variant?
+#endif
+
 
 class levelwin;
 class mapdata;

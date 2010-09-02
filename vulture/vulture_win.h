@@ -24,10 +24,16 @@ class window;
 */
 #define V_FILENAME_LOGO                 "logo"
 #ifdef VULTURE_NETHACK
-#define V_FILENAME_MAP_SYMBOLS          "nh_tiles"
+#define V_FILENAME_MAP_SYMBOLS          "nethack_tiles"
 #endif
 #ifdef VULTURE_SLASHEM
-#define V_FILENAME_MAP_SYMBOLS          "se_tiles"
+#define V_FILENAME_MAP_SYMBOLS          "slashem_tiles"
+#endif
+#ifdef VULTURE_UNNETHACK
+#define V_FILENAME_MAP_SYMBOLS          "unnethack_tiles"
+#endif
+#ifndef V_FILENAME_MAP_SYMBOLS
+#error Variant?
 #endif
 #define V_FILENAME_CHARACTER_GENERATION "chargen2"
 #define V_FILENAME_FONT                 "VeraSe.ttf"

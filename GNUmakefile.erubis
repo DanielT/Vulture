@@ -6,7 +6,8 @@
 @game = 'vulture'
 @variants = {
   :nethack => 'NetHack',
-  :slashem => "Slash'EM"
+  :slashem => "Slash'EM",
+  :unnethack => "UnNetHack"
 }
 @compression = {
   'tar.gz' => lambda{|follow|'tar zcvf' + ( follow ? 'h' : '' ) },
