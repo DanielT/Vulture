@@ -47,7 +47,7 @@ help:
 home: nethack-home slashem-home
 
 nethack-home: nethack/Makefile nethack/win/vulture
-	@echo "Building and installing NetHack in "$(INSTPREFIX)/vulture-nethack${GAMEDIRSUFFIX}
+	@echo "Building and installing NetHack in "$(INSTPREFIX)
 	@mkdir -p $(INSTPREFIX)/vulture-nethack${GAMEDIRSUFFIX}
 	@$(MAKE) PREFIX=$(INSTPREFIX) GAMEDIR=$(INSTPREFIX)/vulture-nethack${GAMEDIRSUFFIX} SHELLDIR=$(INSTPREFIX) \
 	         GAMEPERM=0755 CHOWN=true CHGRP=true -C nethack install >/dev/null
@@ -60,7 +60,7 @@ nethack/win/vulture:
 	@cd nethack/win && ln -s ../../vulture
 
 slashem-home: slashem/Makefile slashem/win/vulture
-	@echo "Building and installing Slash'EM in "$(INSTPREFIX)/vulture-slashem${GAMEDIRSUFFIX}
+	@echo "Building and installing Slash'EM in "$(INSTPREFIX)
 	@mkdir -p $(INSTPREFIX)/vulture-slashem${GAMEDIRSUFFIX}
 	@$(MAKE) PREFIX=$(INSTPREFIX) GAMEDIR=$(INSTPREFIX)/vulture-slashem${GAMEDIRSUFFIX} SHELLDIR=$(INSTPREFIX) \
 	         GAMEPERM=0755 CHOWN=true CHGRP=true -C slashem install >/dev/null

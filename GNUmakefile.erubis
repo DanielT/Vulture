@@ -75,7 +75,7 @@ home: <%= @variants.keys.map{|n|n.to_s+'-home'}.join(' ') %>
 
 <% @variants.each do |name,description| %>
 <%= name %>-home: <%= name %>/Makefile <%= name %>/win/<%= @game %>
-	@echo "Building and installing <%= description %> in "$(INSTPREFIX)/<%= @game + '-' + name %>${GAMEDIRSUFFIX}
+	@echo "Building and installing <%= description %> in "$(INSTPREFIX)
 	@mkdir -p $(INSTPREFIX)/<%= @game + '-' + name %>${GAMEDIRSUFFIX}
 	@$(MAKE) PREFIX=$(INSTPREFIX) GAMEDIR=$(INSTPREFIX)/<%= @game + '-' + name %>${GAMEDIRSUFFIX} SHELLDIR=$(INSTPREFIX) \
 	         GAMEPERM=0755 CHOWN=true CHGRP=true -C <%= name %> install >/dev/null
