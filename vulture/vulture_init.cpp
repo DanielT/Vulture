@@ -41,7 +41,7 @@ void vulture_show_logo_screen(void)
 
 	if (iflags.wc_splash_screen)
 	{
-		logo = vulture_load_graphic(V_FILENAME_NETHACK_LOGO);
+		logo = vulture_load_graphic(V_FILENAME_LOGO);
 		if (logo != NULL)
 		{
 			/* TODO Stretch this image fullscreen */

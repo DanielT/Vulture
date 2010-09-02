@@ -22,12 +22,11 @@ class window;
 /*
 * graphics files, without ".png" extension
 */
+#define V_FILENAME_LOGO                 "logo"
 #ifdef VULTURE_NETHACK
-#define V_FILENAME_NETHACK_LOGO         "nh_ve_1"
 #define V_FILENAME_MAP_SYMBOLS          "nh_tiles"
 #endif
 #ifdef VULTURE_SLASHEM
-#define V_FILENAME_NETHACK_LOGO         "se_vc_1"
 #define V_FILENAME_MAP_SYMBOLS          "se_tiles"
 #endif
 #define V_FILENAME_CHARACTER_GENERATION "chargen2"
