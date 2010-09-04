@@ -58,6 +58,7 @@ INSTPREFIX = $$HOME/<%= @game %>
 <% @compression.keys.each do |suffix| %>
   distfiles.<%= suffix %> \
 <% end %>
+  changelog \
   clean spotless
 
 help:
@@ -71,6 +72,11 @@ help:
 	@echo "\t$(MAKE) <%= pad('distfiles.' + suffix) %>Bundle $(FULLNAME) in a <%= suffix %> file"
 <% end %>
 	@echo "\t$(MAKE) <%= pad('distfiles') %>Bundle $(FULLNAME) for all compression types"
+	@echo "\nInformation:"
+	@echo "\t$(MAKE) <%= pad('changelog') %>Show list of changes since most recent release"
+
+changelog:
+	git log --oneline `git describe --tags --abbrev=0`..master
 
 home: <%= @variants.keys.map{|n|n.to_s+'-home'}.join(' ') %>
 

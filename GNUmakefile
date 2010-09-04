@@ -31,6 +31,7 @@ INSTPREFIX = $$HOME/vulture
   distfiles.tar.bz2 \
   distfiles.7z \
   distfiles.zip \
+  changelog \
   clean spotless
 
 help:
@@ -45,6 +46,11 @@ help:
 	@echo "\t$(MAKE) distfiles.7z        Bundle $(FULLNAME) in a 7z file"
 	@echo "\t$(MAKE) distfiles.zip       Bundle $(FULLNAME) in a zip file"
 	@echo "\t$(MAKE) distfiles           Bundle $(FULLNAME) for all compression types"
+	@echo "\nInformation:"
+	@echo "\t$(MAKE) changelog           Show list of changes since most recent release"
+
+changelog:
+	git log --oneline `git describe --tags --abbrev=0`..master
 
 home: nethack-home slashem-home unnethack-home
 
