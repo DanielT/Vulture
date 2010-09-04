@@ -4,9 +4,6 @@
 [submodule "slashem"]
 	path = slashem
 	url = http://dl.dropbox.com/u/2939773/git/nethack
-[submodule "sporkhack"]
-	path = sporkhack
-	url = http://dl.dropbox.com/u/2939773/git/nethack
 [submodule "unnethack"]
 	path = unnethack
 	url = http://dl.dropbox.com/u/2939773/git/nethack
