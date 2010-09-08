@@ -124,4 +124,4 @@ endif
 
 .PHONY:
 clean:
-	rm -rf build_n/ build_s/
+	rm -rf build_*
