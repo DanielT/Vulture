@@ -1,10 +1,14 @@
 For all information see the vulture's home page:
 
-http://clivecrous.github.com/vulture/
+http://www.darkarts.co.za/vulture/
 
 For distribution specific build meta-data see
 the dist directory.
 
 For the latest source code clone the git repository:
 
-git clone git://github.com/clivecrous/vulture.git
+  git clone http://dl.dropbox.com/u/2939773/git/vulture
+  cd vulture
+  git submodule init
+  git submodule update
+  make home
