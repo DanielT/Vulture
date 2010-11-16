@@ -269,10 +269,12 @@ eventresult menuwin::handle_keydown_event(window* target, void* result, int sym,
 			}
 		
 			/* try to match the key to an accelerator */
-			target = scrollarea->find_accel(key);
-			if (target)
-			{
-				select_option(static_cast<optionwin*>(target), count ? count : -1);
+      std::vector<window *> targets_found( scrollarea->find_accel( key ) );
+      for ( std::vector<window *>::iterator target = targets_found.begin();
+            target != targets_found.end();
+            ++target )
+      {
+				select_option(static_cast<optionwin*>(*target), count ? count : -1);
 				count = 0;
 				if (select_how == PICK_ONE) {
 					*(int*)result = V_MENU_ACCEPT;
@@ -280,8 +282,8 @@ eventresult menuwin::handle_keydown_event(window* target, void* result, int sym,
 				}
 
 				/* if the selected element isn't visible bring it into view */
-				if (!target->visible)
-					scrollarea->scrollto(V_SCROLL_PIXEL_ABS, target->y);
+				if (!(*target)->visible)
+					scrollarea->scrollto(V_SCROLL_PIXEL_ABS, (*target)->y);
 
 				need_redraw = 1;
 				return V_EVENT_HANDLED_REDRAW;
@@ -314,18 +316,6 @@ void menuwin::assign_accelerators()
 	}
 }
 
-
-window * menuwin::find_accel(char accel)
-{
-	for (window *child = first_child; child; child = child->sib_next) {
-		if (child->accelerator == accel)
-			return child;
-	}
-
-	return NULL;
-}
-
-
 void menuwin::layout()
 {
 	int scrollheight = 0;
@@ -351,7 +341,8 @@ void menuwin::layout()
 			new textwin(scrollarea, newcaption);
 		else
 			new optionwin(scrollarea, &(*i), newcaption, i->accelerator, 
-			             i->glyph, i->preselected, select_how == PICK_ANY);
+                   i->group_accelerator, i->glyph, i->preselected,
+                   select_how == PICK_ANY);
 	}
 	scrollarea->layout();
 	scrollheight = scrollarea->get_scrollheight();

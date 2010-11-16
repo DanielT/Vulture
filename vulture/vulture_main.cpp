@@ -397,7 +397,7 @@ void vulture_add_menu(int winid, int glyph, const ANY_P * identifier,
 	if (glyph_is_object(glyph))
 		win->has_objects = true;
 	
-	win->add_menuitem(str, !!preselected, identifier->a_void, accelerator, glyph);
+	win->add_menuitem(str, !!preselected, identifier->a_void, accelerator, groupacc, glyph);
 }
 
 
@@ -438,7 +438,8 @@ int vulture_select_menu(int winid, int how, menu_item **menu_list)
 		queued_event->rtype == V_RESPOND_ANY) {
 		for (nhwindow::item_iterator iter = nhwin->items.begin();
 		     iter != nhwin->items.end(); ++iter) {
-			if (iter->accelerator == (char)queued_event->num) {
+			if ( (iter->accelerator == (char)queued_event->num) ||
+			     (iter->group_accelerator == (char)queued_event->num) ) {
 				*menu_list = (menu_item *)malloc(sizeof(menu_item));
 				(*menu_list)[0].item.a_void = (void*)iter->identifier;
 				(*menu_list)[0].count = -1;
@@ -574,7 +575,7 @@ void vulture_putstr(int winid, int attr, const char *str)
 		case NHW_TEXT:
 		case NHW_MENU:
 			/* Add the new text line as a menu item */
-			win->add_menuitem(str, false, NULL, '\0', 0);
+			win->add_menuitem(str, false, NULL, '\0', '\0', 0);
 			break;
 
 		case NHW_STATUS:

@@ -46,7 +46,6 @@ public:
 
 	
 	virtual void layout();
-	window *find_accel(char accel);
 	selection_iterator selection_begin() { return selection_iterator(items.begin(), items.end()); }
 	selection_iterator selection_end() { return selection_iterator(items.end(), items.end()); }
 	

@@ -9,12 +9,13 @@
 #include "vulture_txt.h"
 
 
-optionwin::optionwin(window *p, menuitem* mi, std::string cap, char accel, 
+optionwin::optionwin(window *p, menuitem* mi, std::string cap, char accel, char group_accel,
                      int glyph, bool selected, bool is_checkbox) : window(p),
                      glyph(glyph), item(mi), is_checkbox(is_checkbox)
 {
 	v_type = V_WINTYPE_OPTION;
 	accelerator = accel;
+	group_accelerator = group_accel;
 	
 	caption = cap;
 	menu_id_v = (void*)mi->identifier;

@@ -525,9 +525,12 @@ eventresult inventory::handle_keydown_event(window* target, void* result, int sy
 			}
 
 			/* try to match the key to an accelerator */
-			target = find_accel(key);
-			if (target) {
-				select_option(static_cast<objitemwin*>(target), -1);
+      std::vector<window *> targets_found( find_accel( key ) );
+      for ( std::vector<window *>::iterator target = targets_found.begin();
+            target != targets_found.end();
+            ++target )
+      {
+				select_option(static_cast<objitemwin*>(*target), -1);
 				if (select_how == PICK_ONE) {
 					*(int*)result = V_MENU_ACCEPT;
 					return V_EVENT_HANDLED_FINAL;
@@ -535,22 +538,26 @@ eventresult inventory::handle_keydown_event(window* target, void* result, int sy
 
 				if (ow_lasttoggled)
 					ow_lasttoggled->last_toggled = 0;
-				ow_lasttoggled = static_cast<objitemwin*>(target);
+				ow_lasttoggled = static_cast<objitemwin*>(*target);
 				ow_lasttoggled->last_toggled = 1;
 
 
 				/* if the selected element isn't visible bring it into view */
-				if (!target->visible) {
+				if (!(*target)->visible) {
 					itemcount = 0;
-					for (winelem = first_child; winelem && winelem != target;
+					for (winelem = first_child; winelem && winelem != *target;
 						winelem = winelem->sib_next)
 						itemcount++;
 					
 					colno = itemcount / ow_vrows;
 					update_invscroll(colno);
 				}
-				return V_EVENT_HANDLED_REDRAW;
 			}
+
+      if ( targets_found.size() > 0 ) {
+				return V_EVENT_HANDLED_REDRAW;
+      }
+
 			break;
 	}
 	
@@ -610,7 +617,7 @@ void inventory::layout()
 		if (!i->identifier)
 			new objheaderwin(this, i->str);
 		else
-			new objitemwin(this, &(*i), i->str, i->accelerator, 
+			new objitemwin(this, &(*i), i->str, i->accelerator, i->group_accelerator,
 						i->glyph, i->preselected, select_how == PICK_ANY);
 		itemcount++;
 

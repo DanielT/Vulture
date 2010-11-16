@@ -100,18 +100,18 @@ eventresult choicedialog::handle_keydown_event(window* target, void* result, int
 			break;
 
 		case SDLK_ESCAPE:
-			if (find_accel('q')) {
+			if (find_accel('q').size()>0) {
 				*(char*)result = 'q';
 				return V_EVENT_HANDLED_FINAL;
 			}
-			else if (find_accel('n')) {
+			else if (find_accel('n').size()>0) {
 				*(char*)result = 'n';
 				return V_EVENT_HANDLED_FINAL;
 			}
 			break;
 
 		default:
-			if (find_accel((char)unicode)) {
+			if (find_accel((char)unicode).size()>0) {
 				*(char*)result = (char)unicode;
 				return V_EVENT_HANDLED_FINAL;
 			}
