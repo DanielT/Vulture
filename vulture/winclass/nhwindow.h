@@ -15,7 +15,7 @@ public:
 
 	nhwindow(int type);
 	~nhwindow();
-	void add_menuitem(std::string str, bool preselected, void *identifier, char accelerator, int glyph);
+	void add_menuitem(std::string str, bool preselected, void *identifier, char accelerator, char group_accelerator, int glyph);
 	void reset();
 	
 	int id;

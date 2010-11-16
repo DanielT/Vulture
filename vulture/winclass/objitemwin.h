@@ -11,7 +11,7 @@ class objitemwin : public optionwin
 {
 public:
 	objitemwin(window *p, menuitem* mi, std::string cap,
-	          char accel, int glyph, bool selected, bool multiselect);
+	          char accel, char group_accel, int glyph, bool selected, bool multiselect);
 	virtual bool draw();
 	virtual eventresult handle_mousemotion_event(window* target, void* result, 
 	                                             int xrel, int yrel, int state);

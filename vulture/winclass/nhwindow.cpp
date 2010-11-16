@@ -58,9 +58,9 @@ nhwindow::~nhwindow()
 }
 
 
-void nhwindow::add_menuitem(std::string str, bool preselected, void *identifier, char accelerator, int glyph)
+void nhwindow::add_menuitem(std::string str, bool preselected, void *identifier, char accelerator, char group_accelerator, int glyph)
 {
-	items.push_back(menuitem(str, preselected, identifier, accelerator, glyph));
+	items.push_back(menuitem(str, preselected, identifier, accelerator, group_accelerator, glyph));
 }
 
 

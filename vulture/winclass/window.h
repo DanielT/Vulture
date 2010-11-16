@@ -5,6 +5,7 @@
 
 #include <string>
 #include <SDL.h>
+#include <vector>
 #include "vulture_types.h"
 
 #define V_LISTITEM_WIDTH  300
@@ -122,13 +123,13 @@ public:
 	bool need_redraw;
 	bool visible;
 	
-	virtual window* find_accel(char accel);
-
+	virtual std::vector<window*> find_accel(char accel);
 
 // protected:
 	window_type v_type;
   std::string caption;
 	char accelerator;
+	char group_accelerator;
 
 
 	/* absolute coords; calculated before drawing */

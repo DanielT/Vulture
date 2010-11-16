@@ -73,7 +73,7 @@ eventresult anykeydialog::handle_keydown_event(window* target, void* result,
 
 		default:
 			/* was it an accelerator for one of the buttons? */
-			if (unicode && find_accel(unicode)) {
+			if (unicode && find_accel(unicode).size() > 0) {
 				*(char*)result = unicode;
 				return V_EVENT_HANDLED_FINAL;
 			}

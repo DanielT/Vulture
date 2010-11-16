@@ -19,6 +19,7 @@ window::window(window *p) : parent(p)
 	abs_x = abs_y = x = y = w = h = 0;
 	caption = "";
 	accelerator = '\0';
+	group_accelerator = '\0';
 	background = NULL;
 	autobg = false;
 	menu_id_v = NULL;
@@ -161,15 +162,16 @@ void window::update_background(void)
 
 
 /* find the window that has the accelerator "accel" */
-window* window::find_accel(char accel)
+std::vector<window*> window::find_accel(char accel)
 {
-    struct window *child;
+  struct window *child;
+  std::vector<window *> accelerators_found;
 
-    for (child = first_child; child; child = child->sib_next)
-        if (child->accelerator == accel)
-            return child;
+  for (child = first_child; child; child = child->sib_next)
+      if (child->accelerator == accel || child->group_accelerator == accel )
+          accelerators_found.push_back( child );
 
-    return NULL;
+  return accelerators_found;
 }
 
 

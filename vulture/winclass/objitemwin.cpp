@@ -11,9 +11,9 @@
 #include "objitemwin.h"
 
 
-objitemwin::objitemwin(window *p, menuitem* mi, std::string cap, char accel,
+objitemwin::objitemwin(window *p, menuitem* mi, std::string cap, char accel, char group_accel,
                        int glyph, bool selected, bool multiselect) : 
-                       optionwin(p, mi, cap, accel, glyph, selected, multiselect)
+                       optionwin(p, mi, cap, accel, group_accel, glyph, selected, multiselect)
 {
 	v_type = V_WINTYPE_OBJITEM;
 	last_toggled = false;
