@@ -26,7 +26,7 @@ enum vulture_event_sound_enum {
 typedef struct {
 	char * searchpattern;
 	int soundtype;
-  std::string filename;
+  std::vector<std::string> filenames;
 } vulture_event_sound;
 
 
