@@ -88,21 +88,23 @@ void vulture_play_event_sound(const char * str)
 {
 	unsigned int i;
 
+
 	/* search the configured sounds for one that matches str */
 	for (i = 0; i < vulture_event_sounds.size(); i++) {
 		if (strstr(str, vulture_event_sounds[i].searchpattern)) {
+      unsigned int effect_enum( rand()%vulture_event_sounds[i].filenames.size() );
 			switch (vulture_event_sounds[i].soundtype)
 			{
 				case V_EVENT_SOUND_TYPE_SND:
-					vulture_play_sound(vulture_event_sounds[i].filename);
+					vulture_play_sound(vulture_event_sounds[i].filenames[effect_enum]);
 					break;
 
 				case V_EVENT_SOUND_TYPE_MUS:
-					vulture_play_song(vulture_event_sounds[i].filename);
+					vulture_play_song(vulture_event_sounds[i].filenames[effect_enum]);
 					break;
 
 				case V_EVENT_SOUND_TYPE_CD_AUDIO:
-					vulture_play_cd_track(vulture_event_sounds[i].filename);
+					vulture_play_cd_track(vulture_event_sounds[i].filenames[effect_enum]);
 					break;
 
 				case V_EVENT_SOUND_TYPE_RANDOM_SONG:
