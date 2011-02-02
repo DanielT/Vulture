@@ -1,3 +1,5 @@
 vulture/build_*
 *.swp
 .git-revision
+.bundle
+vendor
