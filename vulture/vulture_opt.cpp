@@ -243,7 +243,7 @@ void vulture_read_options(void)
   std::string userdir = vulture_get_userdir();
 	
 	/* initialize these, in case they aren't set in the config file */
-	vulture_opts.wall_opacity = 1.0;
+	vulture_opts.wall_opacity = 0.8;
 	vulture_opts.wall_style = V_WALL_DISPLAY_STYLE_FULL;
 	vulture_opts.width = 800;
 	vulture_opts.height = 600;
@@ -255,7 +255,7 @@ void vulture_read_options(void)
 	vulture_opts.show_minimap = 1;
 	vulture_opts.use_standard_inventory = 0;
 	vulture_opts.use_standard_object_menus = 0;
-	vulture_opts.messagelines = 3;
+	vulture_opts.messagelines = 5;
 	vulture_opts.no_key_translation = 0;
 	vulture_opts.highlight_cursor_square = 1;
 	vulture_opts.debug = 0;
@@ -289,7 +289,7 @@ void vulture_read_options(void)
 
 	if (vulture_opts.wall_opacity > 1.0 || vulture_opts.wall_opacity < 0) {
 		fprintf(stderr, "WARNING: detected an invalid value for wall_opacity. Set 1.0 instead.\n");
-		vulture_opts.wall_opacity = 1.0;
+		vulture_opts.wall_opacity = 0.8;
 	}
 
 	/* minimum window size: the map + inventory windows need at least this much space */
@@ -610,7 +610,7 @@ int vulture_iface_opts(void)
 				{
 					vulture_opts.messagelines = atoi(str);
 					if (vulture_opts.messagelines < 1 || vulture_opts.messagelines > 10)
-						vulture_opts.messagelines = 3;
+						vulture_opts.messagelines = 5;
 				}
 				break;
 
