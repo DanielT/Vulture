@@ -16,6 +16,7 @@ extern "C" {
 #else
 #include "patchlevel.h"
 #endif
+#include "extern.h"
 
 #include "func_tab.h" /* For extended commands list */
 }
@@ -695,61 +696,15 @@ void vulture_bail(const char *mesg)
 	/*NOTREACHED*/
 }
 
+extern int NDECL(extcmd_via_menu);
 
 /* display a list of extended commands for the user to pick from */
 int vulture_get_ext_cmd(void)
 {
-	int i, j, len;
-	int win;
-	int nselected;
-	anything id;
-	menu_item * selected = NULL;
-	char used_accels[128];
-	char cur_accelerator = '\0';
-
-// TODO: use functions of class menuwin directly
-	win = vulture_create_nhwindow(NHW_MENU);
-	vulture_start_menu(win);
-	used_accels[0] = '\0';
-
-	/* Add extended commands as menu items */
-	for (i = 0; extcmdlist[i].ef_txt != NULL; i++) {
-		/* try to find an accelerator that fits the command name */
-		cur_accelerator = tolower(extcmdlist[i].ef_txt[0]);
-
-		/* check whether the cosen accel is already in use */
-		j = 0;
-		while (cur_accelerator != used_accels[j] && used_accels[j])
-			j++;
-
-		len = strlen(used_accels);
-		if (j < len)
-			/* cur_accelerator is already used, so find another */
-			cur_accelerator = vulture_find_menu_accelerator(used_accels);
-		else {
-			/* cur_accelerator is not in use: claim it */
-			used_accels[len] = cur_accelerator;
-			used_accels[len+1] = '\0';
-		}
-
-		/* add the command with the chosen accelerator */
-		id.a_int = i + 1;
-		vulture_add_menu(win, NO_GLYPH, &id, cur_accelerator, 0,
-						ATR_NONE, extcmdlist[i].ef_txt, FALSE);
-	}
-
-	vulture_end_menu(win, "Select a command");
-	nselected = vulture_select_menu(win, PICK_ONE, &selected);
-	vulture_destroy_nhwindow(win);
-
-	id.a_int = 0;
-
-	if (nselected > 0)
-		id = selected[0].item;
-
-	free(selected);
-
-	return (id.a_int - 1);
+  return extcmd_via_menu();
+  // TODO if ( iflags.extmenu ) return extcmd_via_menu();
+  // ... in the rest of this function should be code to create an input box
+  // where individual (autocompleted) characters could be entered.
 }
 
 
