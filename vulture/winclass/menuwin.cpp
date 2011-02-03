@@ -263,7 +263,7 @@ eventresult menuwin::handle_keydown_event(window* target, void* result, int sym,
 
 		default:
 			/* numbers are part of a count */
-			if (key >= '0' && key <= '9') {
+			if (select_how == PICK_ANY && key >= '0' && key <= '9') {
 				count = count * 10 + (key - '0');
 				break;
 			}
