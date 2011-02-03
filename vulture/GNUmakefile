@@ -116,7 +116,7 @@ $(BUILDDIR)/%.d: %.cpp
 else # BUILD not defined
 .PHONY:all
 all:
-	@echo "you must invoke this makefile with BUILD=(nethack|slashem)"
+	@echo "you must invoke this makefile with BUILD=(nethack|slashem|unnethack)"
 	@echo "so that we can find our includes..."
 	@echo "you may also give additional parameters such as CFLAGS= etc"
 endif
