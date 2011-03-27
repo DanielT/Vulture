@@ -72,6 +72,9 @@ mapdata::mapdata()
 #ifdef VULTURE_SLASHEM
 	vulture_tilemap_misc[S_toilet] = V_MISC_TOILET;
 #endif
+#ifdef VULTURE_UNNETHACK
+	vulture_tilemap_misc[S_darkroom] = V_TILE_FLOOR_COBBLESTONE;
+#endif
 
 	vulture_tilemap_misc[S_stone] = V_MISC_UNMAPPED_AREA;
 	vulture_tilemap_misc[S_vwall] = V_TILE_WALL_GENERIC;
