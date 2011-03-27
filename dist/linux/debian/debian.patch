@@ -1,7 +1,13 @@
-diff -Naur vulture/debian/changelog vulture.debian/debian/changelog
---- vulture/debian/changelog	1970-01-01 01:00:00.000000000 +0100
-+++ vulture.debian/debian/changelog	2008-04-03 09:22:43.000000000 +0200
-@@ -0,0 +1,7 @@
+diff -Naur a/debian/changelog b/debian/changelog
+--- a/debian/changelog	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/changelog	2011-03-26 01:44:37.906251007 +0100
+@@ -0,0 +1,13 @@
++vulture (2.2.100-1) unstable; urgency=low
++
++  * trivial adjustments to include support for UnNetHack
++
++ -- Daniel Thaler <daniel@dthaler.de>  Fri, 25 Mar 2011 17:05:00 +0100
++
 +vulture (2.1.90-1) unstable; urgency=low
 +
 +  * Built the initial package for vulture using heavy-handed copying of large parts of the debian/
@@ -9,15 +15,15 @@ diff -Naur vulture/debian/changelog vulture.debian/debian/changelog
 +
 + -- Daniel Thaler <daniel@dthaler.de>  Wed, 2 Apr 2008 16:16:16 +0200
 +
-diff -Naur vulture/debian/compat vulture.debian/debian/compat
---- vulture/debian/compat	1970-01-01 01:00:00.000000000 +0100
-+++ vulture.debian/debian/compat	2008-04-03 09:22:43.000000000 +0200
+diff -Naur a/debian/compat b/debian/compat
+--- a/debian/compat	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/compat	2011-03-26 01:44:37.906251007 +0100
 @@ -0,0 +1 @@
 +5
-diff -Naur vulture/debian/control vulture.debian/debian/control
---- vulture/debian/control	1970-01-01 01:00:00.000000000 +0100
-+++ vulture.debian/debian/control	2008-04-03 09:22:43.000000000 +0200
-@@ -0,0 +1,52 @@
+diff -Naur a/debian/control b/debian/control
+--- a/debian/control	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/control	2011-03-26 01:44:37.906251007 +0100
+@@ -0,0 +1,61 @@
 +Source: vulture
 +Section: games
 +Priority: optional
@@ -27,7 +33,7 @@ diff -Naur vulture/debian/control vulture.debian/debian/control
 +
 +Package: vulture-nethack
 +Architecture: any
-+Depends: vulture-data (>= 2.1.90), ${shlibs:Depends}
++Depends: vulture-data (>= 2.2.100), ${shlibs:Depends}
 +Replaces: falconseye
 +Description: A port of NetHack using SDL
 + Vulture for NetHack is a mouse-driven interface for NetHack that enhances the visuals,
@@ -46,16 +52,25 @@ diff -Naur vulture/debian/control vulture.debian/debian/control
 +
 +Package: vulture-slashem
 +Architecture: any
-+Depends: vulture-data (>= 2.1.90), ${shlibs:Depends}
++Depends: vulture-data (>= 2.2.100), ${shlibs:Depends}
 +Description: A port of SLASH'em using SDL
 + Vulture for Slash'EM is a mouse-driven interface for SLASH'em that enhances the visuals,
 + audio and accessibility of the game, yet retains all the original gameplay and 
 + game features.
 +
 +
++Package: vulture-unnethack
++Architecture: any
++Depends: vulture-data (>= 2.2.100), ${shlibs:Depends}
++Description: Play UnNetHack using the Vulture UI
++ Vulture for UnNetHack is a mouse-driven interface that enhances the visuals,
++ audio and accessibility of the game, yet retains all the original gameplay and 
++ game features.
++
++
 +Package: vulture-data
 +Architecture: all
-+Description: Data files for Vulture for NetHack and Vulture for Slash'EM
++Description: Data files for Vulture-NetHack, Vulture-SlashEM and Vulture-UnNetHack
 + Vulture for NetHack and Vulture for Slash'EM are mouse-driven interfaces for NetHack and SLASH'em
 + that enhance the visuals, audio and accessibility of the game, yet retain all the
 + original gameplay and game features.
@@ -70,9 +85,9 @@ diff -Naur vulture/debian/control vulture.debian/debian/control
 + dungeon and its denizens to be discovered by the player in one of a number of
 + characters: you can pick your race, your role, and your gender.
 +
-diff -Naur vulture/debian/copyright vulture.debian/debian/copyright
---- vulture/debian/copyright	1970-01-01 01:00:00.000000000 +0100
-+++ vulture.debian/debian/copyright	2008-04-03 09:22:43.000000000 +0200
+diff -Naur a/debian/copyright b/debian/copyright
+--- a/debian/copyright	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/copyright	2011-03-26 01:44:37.906251007 +0100
 @@ -0,0 +1,109 @@
 +This package was debianized by Daniel Thaler <daniel@dthaler.de> on
 +Wed, 2 Apr 2008 16:16:16 +0200.
@@ -183,9 +198,9 @@ diff -Naur vulture/debian/copyright vulture.debian/debian/copyright
 +other words, go ahead and share NetHack, but don't try to stop anyone else
 +from sharing it farther.
 +
-diff -Naur vulture/debian/README.Debian vulture.debian/debian/README.Debian
---- vulture/debian/README.Debian	1970-01-01 01:00:00.000000000 +0100
-+++ vulture.debian/debian/README.Debian	2008-04-03 09:22:43.000000000 +0200
+diff -Naur a/debian/README.Debian b/debian/README.Debian
+--- a/debian/README.Debian	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/README.Debian	2011-03-26 01:44:37.906251007 +0100
 @@ -0,0 +1,13 @@
 +vulture for Debian
 +---------------------
@@ -200,10 +215,10 @@ diff -Naur vulture/debian/README.Debian vulture.debian/debian/README.Debian
 +Vulture for Slash'EM is the same interface running on the SLASH'em core.
 +
 + -- Jonathan Hseu <vomjom@debian.org>, Sat, 23 Jun 2001 16:16:49 -0500
-diff -Naur vulture/debian/rules vulture.debian/debian/rules
---- vulture/debian/rules	1970-01-01 01:00:00.000000000 +0100
-+++ vulture.debian/debian/rules	2008-04-03 09:22:43.000000000 +0200
-@@ -0,0 +1,214 @@
+diff -Naur a/debian/rules b/debian/rules
+--- a/debian/rules	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/rules	2011-03-26 01:44:37.906251007 +0100
+@@ -0,0 +1,255 @@
 +#!/usr/bin/make -f
 +# Sample debian/rules that uses debhelper.
 +# GNU copyright 1997 to 1999 by Joey Hess.
@@ -212,7 +227,7 @@ diff -Naur vulture/debian/rules vulture.debian/debian/rules
 +# build-arch and build-indep targets  by Bill Allombert 2001
 +
 +# Uncomment this to turn on verbose mode.
-+#export DH_VERBOSE=1
++export DH_VERBOSE=0
 +
 +# This has to be exported to make some magic below work.
 +export DH_OPTIONS
@@ -248,6 +263,11 @@ diff -Naur vulture/debian/rules vulture.debian/debian/rules
 +	-@cd slashem/win && ln -s ../../vulture/ vulture
 +	$(MAKE) -C slashem all
 +
++	# build vulture-unnethack
++	cd unnethack && sh sys/unix/setup.sh 1
++	-@cd unnethack/win && ln -s ../../vulture/ vulture
++	$(MAKE) -C unnethack all
++
 +build-indep: build-indep-stamp
 +build-indep-stamp: #CONFIGURE_STAMP# #CONFIG_STATUS#
 +	
@@ -262,9 +282,11 @@ diff -Naur vulture/debian/rules vulture.debian/debian/rules
 +	# Add here commands to clean up after the build process.
 +	-$(MAKE) -C nethack spotless
 +	-$(MAKE) -C slashem spotless
++	-$(MAKE) -C unnethack spotless
 +	-find nethack/ -name Makefile -print0 | xargs -r -0 rm
 +	-find slashem/ -name Makefile -print0 | xargs -r -0 rm
-+	-@rm -f nethack/win/vulture slashem/win/vulture
++	-find unnethack/ -name Makefile -print0 | xargs -r -0 rm
++	-@rm -f nethack/win/vulture slashem/win/vulture unnethack/win/vulture
 +	
 +	# this file may be created during parallel make, remove it
 +	-@rm -f vulture/vulture
@@ -321,6 +343,8 @@ diff -Naur vulture/debian/rules vulture.debian/debian/rules
 +		debian/vulture-data/usr/lib/games/vulture-nethack/; \
 +		ln -s /usr/share/games/vulture/`basename $$x` \
 +		debian/vulture-data/usr/lib/games/vulture-slashem/; \
++		ln -s /usr/share/games/vulture/`basename $$x` \
++		debian/vulture-data/usr/lib/games/vulture-unnethack/; \
 +	done
 +
 +install-arch:
@@ -355,10 +379,11 @@ diff -Naur vulture/debian/rules vulture.debian/debian/rules
 +	install -m 644 -o root -g root debian/vulture-nethackrc \
 +	  debian/vulture-nethack/etc/vulture/vulture-nethackrc
 +										
-+	install -m 644 -o root -g root vulture/gamedata/nh_icon.png \
-+	  debian/vulture-nethack/usr/share/pixmaps/vulture-nethack.png
++	#install -m 644 -o root -g root vulture/gamedata/nh_icon.png \
++	#  debian/vulture-nethack/usr/share/pixmaps/vulture-nethack.png
 +
-+	install -m 644 debian/vulture-nethack.desktop $(CURDIR)/debian/vulture-nethack/usr/share/applications
++	install -m 644 debian/vulture-nethack.desktop \
++	  debian/vulture-nethack/usr/share/applications
 +
 +
 +	#install vulture-slashem
@@ -383,10 +408,41 @@ diff -Naur vulture/debian/rules vulture.debian/debian/rules
 +	install -m 644 -o root -g root debian/vulture-slashemrc \
 +	  debian/vulture-slashem/etc/vulture/vulture-slashemrc
 +										
-+	install -m 644 -o root -g root vulture/gamedata/se_icon.png \
-+	  debian/vulture-slashem/usr/share/pixmaps/vulture-slashem.png
++	#install -m 644 -o root -g root vulture/gamedata/se_icon.png \
++	#  debian/vulture-slashem/usr/share/pixmaps/vulture-slashem.png
 +
-+	install -m 644 debian/vulture-slashem.desktop $(CURDIR)/debian/vulture-slashem/usr/share/applications
++	install -m 644 debian/vulture-slashem.desktop \
++	  debian/vulture-slashem/usr/share/applications
++
++
++	#install vulture-unnethack
++	chgrp -R games debian/vulture-unnethack/var/games/vulture-unnethack
++	chmod -R 770 debian/vulture-unnethack/var/games/vulture-unnethack
++
++	for file in license nhdat; \
++	do \
++	  install -m 0644 -o root -g root unnethack/dat/$$file \
++	  debian/vulture-unnethack/usr/lib/games/vulture-unnethack/; \
++	done
++
++	install -m 2755 -o root -g games debian/vulture-unnethack.sh \
++	  debian/vulture-unnethack/usr/games/vulture-unnethack
++										
++	install -m 2755 -o root -g games unnethack/src/vulture-unnethack \
++	  debian/vulture-unnethack/usr/lib/games/vulture-unnethack/vulture-unnethack
++										
++	install -m 755 -o root -g root unnethack/util/recover \
++	  debian/vulture-unnethack/usr/lib/games/vulture-unnethack/recover
++										
++	install -m 644 -o root -g root debian/vulture-unnethackrc \
++	  debian/vulture-unnethack/etc/vulture/vulture-unnethackrc
++										
++	#install -m 644 -o root -g root vulture/gamedata/se_icon.png \
++	#  debian/vulture-unnethack/usr/share/pixmaps/vulture-unnethack.png
++
++	install -m 644 debian/vulture-unnethack.desktop \
++	  debian/vulture-unnethack/usr/share/applications
++
 +# Must not depend on anything. This is to be called by
 +# binary-arch/binary-multi
 +# in another 'make' thread.
@@ -418,395 +474,13 @@ diff -Naur vulture/debian/rules vulture.debian/debian/rules
 +
 +binary: binary-arch binary-indep
 +.PHONY: build clean binary-indep binary-arch binary install install-indep install-arch #PHONY_CONFIGURE#
-diff -Naur vulture/debian/vulture-slashem.6 vulture.debian/debian/vulture-slashem.6
---- vulture/debian/vulture-slashem.6	1970-01-01 01:00:00.000000000 +0100
-+++ vulture.debian/debian/vulture-slashem.6	2008-04-03 09:22:43.000000000 +0200
-@@ -0,0 +1,89 @@
-+.TH VULTURECLAW 6 "April 2008"
-+.SH NAME
-+vulture-slashem \- play SLASH'em using a mouse-driven isometric graphical interface
-+.SH SYNOPSIS
-+.B vulture-slashem
-+[-d \fIdirectory\fR] [-n] [-p \fIprofession (role)\fR] [-r \fIrace\fR] [-D] [-X] [-u \fIplayername\fR]
-+
-+.B vulture-slashem
-+[-d \fIdirectory\fR] -s [-v] [-p \fIprofession (role)\fR] [-r \fIrace\fR] [\fIplayer_name\fR] [\fIOPTION\fR]
-+
-+.SH DESCRIPTION
-+Vulture 2.2.0 is an enhanced, highly graphical window port (user
-+interface) for SLASH'em. It adds a lot of eye candy and multimedia to the
-+game while keeping the original gameplay of SLASH'em.
-+
-+Here's a brief list of features:
-+
-+High-res, 32-bit isometric graphics with real-time lighting 
-+
-+Customizable digitized sound effects 
-+
-+Symphonic soundtracks
-+
-+Mouse-driven interface (keyboard play also works)
-+
-+HTML manual 
-+
-+Command-line options are the same as SLASH'em:
-+
-+.TP
-+\fB\-d\fR \fIdirectory\fR
-+Use the given directory as the playground. Help files, top scorers and saved games are stored in this directory.
-+This must be the first argument, if specified.
-+.TP
-+\fB\-n\fR
-+Suppress news from the administrator.
-+.TP
-+\fB\-p\fR \fIprofession\fR
-+Set your character's profession.
-+.TP
-+\fB\-r\fR \fIrace\fR
-+Set your character's race.
-+.TP
-+\fB\-D\fR
-+Start the game in wizard mode. You cannot switch to a normal game while
-+wizard mode is active, and your score will not be listed in the top scores.
-+You need to be root to enter wizard mode. Normal users will get explore mode instead.
-+.TP
-+\fB\-X\fR
-+Start the game in explore mode. You cannot switch to a normal game while
-+explore mode is active, and your score will not be listed in the top scores.
-+.TP
-+\fB\-u\fR \fIplayer_name\fR
-+Set your character's name.
-+.TP
-+\fB\-s\fR
-+Display top scores for the current version of NetHack, filtered by
-+professions, races or player names if specified.
-+.TP
-+\fB\-v\fR
-+Display top scores for all versions. Should immediately follow \fB-s\fR.
-+
-+.SH "AUTHORS"
-+
-+Daniel Thaler, <daniel@dthaler.de>
-+
-+Clive Crous, <clive@crous.co.za>
-+
-+Based on Falcon's Eye by:
-+Jaakko Peltonen, <jaakko dot peltonen at hut dot fi>
-+
-+.SH "REPORTING BUGS"
-+
-+Report Vulture-specific bugs on track.darkarts.co.za and
-+NetHack bugs to <nethack-bugs@nethack.org>.
-+
-+.SH "SEE ALSO"
-+
-+NetHack is documented in \fBnethack(6)\fR.
-+
-+The full documentation for Vulture is maintained in HTML at
-+/usr/share/doc/vulture/manual/index.html
-+
-+The Vulture project page is http://darkarts.co.za/project/vulture
-+
-+The NetHack project page is http://www.nethack.org
-+
-+The SLASH'em project page is http://www.slashem.org
-+
-diff -Naur vulture/debian/vulture-slashem.desktop vulture.debian/debian/vulture-slashem.desktop
---- vulture/debian/vulture-slashem.desktop	1970-01-01 01:00:00.000000000 +0100
-+++ vulture.debian/debian/vulture-slashem.desktop	2008-04-03 09:22:43.000000000 +0200
-@@ -0,0 +1,11 @@
-+[Desktop Entry]
-+Type=Application
-+Encoding=UTF-8
-+Name=Vulture's Claw
-+GenericName=
-+Comment=Dungeons and dragons inspired role play game
-+Comment[de_DE]=Rollenspiel im Sinne von Dungeons und Dragons
-+Icon=vulture-slashem.png
-+Exec=/usr/games/vulture-slashem
-+Terminal=false
-+Categories=Application;Game;
-diff -Naur vulture/debian/vulture-slashem.dirs vulture.debian/debian/vulture-slashem.dirs
---- vulture/debian/vulture-slashem.dirs	1970-01-01 01:00:00.000000000 +0100
-+++ vulture.debian/debian/vulture-slashem.dirs	2008-04-03 09:22:43.000000000 +0200
-@@ -0,0 +1,6 @@
-+usr/games
-+var/games/vulture-slashem/save
-+usr/lib/games/vulture-slashem
-+etc/vulture
-+usr/share/pixmaps
-+usr/share/applications
-diff -Naur vulture/debian/vulture-slashem.manpages vulture.debian/debian/vulture-slashem.manpages
---- vulture/debian/vulture-slashem.manpages	1970-01-01 01:00:00.000000000 +0100
-+++ vulture.debian/debian/vulture-slashem.manpages	2008-04-03 09:22:43.000000000 +0200
-@@ -0,0 +1 @@
-+debian/vulture-slashem.6
-diff -Naur vulture/debian/vulture-slashem.menu vulture.debian/debian/vulture-slashem.menu
---- vulture/debian/vulture-slashem.menu	1970-01-01 01:00:00.000000000 +0100
-+++ vulture.debian/debian/vulture-slashem.menu	2008-04-03 09:22:43.000000000 +0200
-@@ -0,0 +1,4 @@
-+?package(vulture-nethack):needs="X11" section="Games/Adventure"\
-+  title="Vulture's Eye" \
-+  	icon="/usr/share/pixmaps/vulture-nethack.png" \
-+	command="/usr/games/vulture-nethack"
-diff -Naur vulture/debian/vulture-slashem.postinst vulture.debian/debian/vulture-slashem.postinst
---- vulture/debian/vulture-slashem.postinst	1970-01-01 01:00:00.000000000 +0100
-+++ vulture.debian/debian/vulture-slashem.postinst	2008-04-03 09:22:43.000000000 +0200
-@@ -0,0 +1,56 @@
-+#! /bin/sh
-+# postinst script for vulture
-+#
-+# see: dh_installdeb(1)
-+
-+set -e
-+
-+# summary of how this script can be called:
-+#        * <postinst> `configure' <most-recently-configured-version>
-+#        * <old-postinst> `abort-upgrade' <new version>
-+#        * <conflictor's-postinst> `abort-remove' `in-favour' <package>
-+#          <new-version>
-+#        * <deconfigured's-postinst> `abort-deconfigure' `in-favour'
-+#          <failed-install-package> <version> `removing'
-+#          <conflicting-package> <version>
-+# for details, see /usr/share/doc/packaging-manual/
-+#
-+# quoting from the policy:
-+#     Any necessary prompting should almost always be confined to the
-+#     post-installation script, and should be protected with a conditional
-+#     so that unnecessary prompting doesn't happen if a package's
-+#     installation fails and the `postinst' is called with `abort-upgrade',
-+#     `abort-remove' or `abort-deconfigure'.
-+
-+case "$1" in
-+    configure)
-+
-+    ;;
-+
-+    abort-upgrade|abort-remove|abort-deconfigure)
-+
-+    ;;
-+
-+    *)
-+        echo "postinst called with unknown argument \`$1'" >&2
-+        exit 0
-+    ;;
-+esac
-+
-+for file in vulture_log.txt logfile perm record; \
-+do \
-+  if [ ! -f /var/games/vulture-slashem/$file ]; then
-+    touch /var/games/vulture-slashem/$file
-+    chown root:games /var/games/vulture-slashem/$file
-+    chmod 664 /var/games/vulture-slashem/$file
-+  fi; \
-+done
-+
-+# dh_installdeb will replace this with shell code automatically
-+# generated by other debhelper scripts.
-+
-+#DEBHELPER#
-+
-+exit 0
-+
-+
-diff -Naur vulture/debian/vulture-slashem.postrm vulture.debian/debian/vulture-slashem.postrm
---- vulture/debian/vulture-slashem.postrm	1970-01-01 01:00:00.000000000 +0100
-+++ vulture.debian/debian/vulture-slashem.postrm	2008-04-03 09:22:43.000000000 +0200
-@@ -0,0 +1,42 @@
-+#! /bin/sh
-+# postrm script for vulture
-+#
-+# see: dh_installdeb(1)
-+
-+set -e
-+
-+# summary of how this script can be called:
-+#        * <postrm> `remove'
-+#        * <postrm> `purge'
-+#        * <old-postrm> `upgrade' <new-version>
-+#        * <new-postrm> `failed-upgrade' <old-version>
-+#        * <new-postrm> `abort-install'
-+#        * <new-postrm> `abort-install' <old-version>
-+#        * <new-postrm> `abort-upgrade' <old-version>
-+#        * <disappearer's-postrm> `disappear' <r>overwrit>r> <new-version>
-+# for details, see /usr/share/doc/packaging-manual/
-+
-+case "$1" in
-+       purge|remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
-+
-+
-+        ;;
-+
-+    *)
-+        echo "postrm called with unknown argument \`$1'" >&2
-+        exit 0
-+
-+esac
-+
-+if [ "$1" = "purge" ]; then
-+    echo -n "Purging high-scores and save-files for vulture-slashem... "
-+    rm -rf /var/games/vulture-slashem/
-+    echo "done."
-+fi
-+
-+# dh_installdeb will replace this with shell code automatically
-+# generated by other debhelper scripts.
-+
-+#DEBHELPER#
-+
-+
-diff -Naur vulture/debian/vulture-slashemrc vulture.debian/debian/vulture-slashemrc
---- vulture/debian/vulture-slashemrc	1970-01-01 01:00:00.000000000 +0100
-+++ vulture.debian/debian/vulture-slashemrc	2008-04-03 09:22:43.000000000 +0200
-@@ -0,0 +1,72 @@
-+# A '#' at the beginning of a line means the rest of the line is a comment.
-+#
-+# Some options MUST be set in this file, other options can be toggled while
-+# playing.  For a list of options available see the <opthelp.> file.
-+#
-+# If you want to customize the configuration, you should copy this file
-+# (/etc/vulture/vulture-nethackrc) to ~/.vulture-nethackrc and modify that
-+#
-+# To change the configuration, comment out the unwanted lines, and
-+# uncomment the configuration you want.
-+
-+# Use the vulture window port
-+OPTIONS=windowtype:vulture
-+
-+# *** OPTIONS ***
-+# Some options to set personal preferences.  Uncomment and change these to
-+# suit your personal preference.  If several people are to use the same
-+# configuration, options like these should not be set.
-+#
-+#OPTIONS=name:Janet,role:Valkyrie,race:Human,gender:female,align:lawful
-+#OPTIONS=dogname:Fido,catname:Morris,fruit:guava
-+#OPTIONS=horsename:Silver
-+#OPTIONS=autopickup,pickup_types:$"=/!?+
-+#OPTIONS=packorder:")[%?+/=!(*0_`
-+#OPTIONS=scores:10 top/2 around/own
-+#OPTIONS=nolegacy,noverbose
-+
-+# verbose help messages make no sense for vulture
-+OPTIONS=noverbose
-+
-+OPTIONS=toptenwin
-+
-+#
-+# General options.  You might also set "silent" so as not to attract
-+# the boss's attention.
-+OPTIONS=time,number_pad:2,lit_corridor,rest_on_space,nomail
-+
-+# *** LOCATIONS ***
-+# IMPORTANT: If you change any of these locations, the directories they
-+# point at must exist.  NetHack will not create them for you.
-+#
-+# HACKDIR is the default location for everything.
-+# Note: On Windows HACKDIR defaults to the location 
-+#       of the NetHack.exe or NetHackw.exe file so
-+#       setting HACKDIR below to override that is 
-+#       not usually necessary or recommended.
-+#HACKDIR=c:\games\nethack
-+#
-+# The location that level files in progress are stored (default=HACKDIR, writeable)
-+#LEVELDIR=c:\nethack\levels
-+#
-+# The location where saved games are kept (default=HACKDIR, writeable)
-+#SAVEDIR=c:\nethack\save
-+#
-+# The location that bones files are kept (default=HACKDIR, writeable)
-+#BONESDIR=c:\nethack\save
-+#
-+# The location that file synchronization locks are stored (default=HACKDIR, writeable)
-+#LOCKDIR=c:\nethack\levels
-+#
-+# The location that a record of game aborts and self-diagnosed game problems
-+# is kept (default=HACKDIR, writeable)
-+#TROUBLEDIR=c:\nethack\trouble
-+
-+# Finnish keyboards might need these modifications uncommented. 
-+# For  \, @, $, [, |
-+#OPTIONS=subkeyvalue:171/92
-+#OPTIONS=subkeyvalue:178/64
-+#OPTIONS=subkeyvalue:180/36
-+#OPTIONS=subkeyvalue:184/91
-+#OPTIONS=subkeyvalue:188/124
-+
-diff -Naur vulture/debian/vulture-slashem.sh vulture.debian/debian/vulture-slashem.sh
---- vulture/debian/vulture-slashem.sh	1970-01-01 01:00:00.000000000 +0100
-+++ vulture.debian/debian/vulture-slashem.sh	2008-04-03 09:22:43.000000000 +0200
-@@ -0,0 +1,66 @@
-+#!/bin/sh
-+#	SCCS Id: @(#)nethack.sh	3.3	90/02/26
-+
-+HACKDIR=/usr/lib/games/vulture-slashem
-+export HACKDIR
-+HACK=$HACKDIR/vulture-slashem
-+MAXNROFPLAYERS=4
-+if [ -f ~/.vulture-slashemrc ]
-+then
-+	NETHACKOPTIONS=~/.vulture-slashemrc
-+else
-+	NETHACKOPTIONS=/etc/vulture/vulture-slashemrc
-+fi
-+export NETHACKOPTIONS
-+
-+# see if we can find the full path name of PAGER, so help files work properly
-+# assume that if someone sets up a special variable (HACKPAGER) for NetHack,
-+# it will already be in a form acceptable to NetHack
-+# ideas from brian@radio.astro.utoronto.ca
-+if test \( "xxx$PAGER" != xxx \) -a \( "xxx$HACKPAGER" = xxx \)
-+then
-+
-+	HACKPAGER=$PAGER
-+
-+#	use only the first word of the pager variable
-+#	this prevents problems when looking for file names with trailing
-+#	options, but also makes the options unavailable for later use from
-+#	NetHack
-+	for i in $HACKPAGER
-+	do
-+		HACKPAGER=$i
-+		break
-+	done
-+
-+	if test ! -f $HACKPAGER
-+	then
-+		IFS=:
-+		for i in $PATH
-+		do
-+			if test -f $i/$HACKPAGER
-+			then
-+				HACKPAGER=$i/$HACKPAGER
-+				export HACKPAGER
-+				break
-+			fi
-+		done
-+		IFS=' 	'
-+	fi
-+	if test ! -f $HACKPAGER
-+	then
-+		echo Cannot find $PAGER -- unsetting PAGER.
-+		unset HACKPAGER
-+		unset PAGER
-+	fi
-+fi
-+
-+
-+cd $HACKDIR
-+case $1 in
-+	-s*)
-+		exec $HACK "$@"
-+		;;
-+	*)
-+		exec $HACK "$@" $MAXNROFPLAYERS
-+		;;
-+esac
-diff -Naur vulture/debian/vulture-data.dirs vulture.debian/debian/vulture-data.dirs
---- vulture/debian/vulture-data.dirs	1970-01-01 01:00:00.000000000 +0100
-+++ vulture.debian/debian/vulture-data.dirs	2008-04-03 09:22:43.000000000 +0200
-@@ -0,0 +1,12 @@
+diff -Naur a/debian/vulture-data.dirs b/debian/vulture-data.dirs
+--- a/debian/vulture-data.dirs	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-data.dirs	2011-03-26 01:44:37.906251007 +0100
+@@ -0,0 +1,13 @@
 +usr/lib/games/vulture-nethack
 +usr/lib/games/vulture-slashem
++usr/lib/games/vulture-unnethack
 +usr/share/games/vulture
 +usr/share/games/vulture/config
 +usr/share/games/vulture/graphics
@@ -817,11 +491,11 @@ diff -Naur vulture/debian/vulture-data.dirs vulture.debian/debian/vulture-data.d
 +usr/share/doc/vulture/manual
 +usr/share/doc/vulture/manual/img
 +usr/share/applications
-diff -Naur vulture/debian/vulture-nethack.6 vulture.debian/debian/vulture-nethack.6
---- vulture/debian/vulture-nethack.6	1970-01-01 01:00:00.000000000 +0100
-+++ vulture.debian/debian/vulture-nethack.6	2008-04-03 09:22:43.000000000 +0200
+diff -Naur a/debian/vulture-nethack.6 b/debian/vulture-nethack.6
+--- a/debian/vulture-nethack.6	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-nethack.6	2011-03-26 01:44:37.906251007 +0100
 @@ -0,0 +1,87 @@
-+.TH VULTUREEYE 6 "April 2008"
++.TH VULTURE-NETHACK 6 "March 2011"
 +.SH NAME
 +vulture-nethack \- play NetHack using a mouse-driven isometric graphical interface
 +.SH SYNOPSIS
@@ -832,7 +506,7 @@ diff -Naur vulture/debian/vulture-nethack.6 vulture.debian/debian/vulture-nethac
 +[-d \fIdirectory\fR] -s [-v] [-p \fIprofession (role)\fR] [-r \fIrace\fR] [\fIplayer_name\fR] [\fIOPTION\fR]
 +
 +.SH DESCRIPTION
-+Vulture 2.2.0 is an enhanced, highly graphical window port (user
++Vulture 2.2.100 is an enhanced, highly graphical window port (user
 +interface) for NetHack. It adds a lot of eye candy and multimedia to the
 +game while keeping the original gameplay of NetHack.
 +
@@ -908,14 +582,14 @@ diff -Naur vulture/debian/vulture-nethack.6 vulture.debian/debian/vulture-nethac
 +
 +The NetHack project page is http://www.nethack.org
 +
-diff -Naur vulture/debian/vulture-nethack.desktop vulture.debian/debian/vulture-nethack.desktop
---- vulture/debian/vulture-nethack.desktop	1970-01-01 01:00:00.000000000 +0100
-+++ vulture.debian/debian/vulture-nethack.desktop	2008-04-03 09:22:43.000000000 +0200
+diff -Naur a/debian/vulture-nethack.desktop b/debian/vulture-nethack.desktop
+--- a/debian/vulture-nethack.desktop	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-nethack.desktop	2011-03-26 01:44:37.906251007 +0100
 @@ -0,0 +1,11 @@
 +[Desktop Entry]
 +Type=Application
 +Encoding=UTF-8
-+Name=Vulture's Eye
++Name=Vulture-Nethack
 +GenericName=
 +Comment=Dungeons and dragons inspired role play game
 +Comment[de_DE]=Rollenspiel im Sinne von Dungeons und Dragons
@@ -923,9 +597,9 @@ diff -Naur vulture/debian/vulture-nethack.desktop vulture.debian/debian/vulture-
 +Exec=/usr/games/vulture-nethack
 +Terminal=false
 +Categories=Application;Game;
-diff -Naur vulture/debian/vulture-nethack.dirs vulture.debian/debian/vulture-nethack.dirs
---- vulture/debian/vulture-nethack.dirs	1970-01-01 01:00:00.000000000 +0100
-+++ vulture.debian/debian/vulture-nethack.dirs	2008-04-03 09:22:43.000000000 +0200
+diff -Naur a/debian/vulture-nethack.dirs b/debian/vulture-nethack.dirs
+--- a/debian/vulture-nethack.dirs	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-nethack.dirs	2011-03-26 01:44:37.906251007 +0100
 @@ -0,0 +1,6 @@
 +usr/games
 +var/games/vulture-nethack/save
@@ -933,22 +607,22 @@ diff -Naur vulture/debian/vulture-nethack.dirs vulture.debian/debian/vulture-net
 +etc/vulture
 +usr/share/pixmaps
 +usr/share/applications
-diff -Naur vulture/debian/vulture-nethack.manpages vulture.debian/debian/vulture-nethack.manpages
---- vulture/debian/vulture-nethack.manpages	1970-01-01 01:00:00.000000000 +0100
-+++ vulture.debian/debian/vulture-nethack.manpages	2008-04-03 09:22:43.000000000 +0200
+diff -Naur a/debian/vulture-nethack.manpages b/debian/vulture-nethack.manpages
+--- a/debian/vulture-nethack.manpages	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-nethack.manpages	2011-03-26 01:44:37.906251007 +0100
 @@ -0,0 +1 @@
 +debian/vulture-nethack.6
-diff -Naur vulture/debian/vulture-nethack.menu vulture.debian/debian/vulture-nethack.menu
---- vulture/debian/vulture-nethack.menu	1970-01-01 01:00:00.000000000 +0100
-+++ vulture.debian/debian/vulture-nethack.menu	2008-04-03 09:22:43.000000000 +0200
+diff -Naur a/debian/vulture-nethack.menu b/debian/vulture-nethack.menu
+--- a/debian/vulture-nethack.menu	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-nethack.menu	2011-03-26 01:44:37.910249007 +0100
 @@ -0,0 +1,4 @@
 +?package(vulture-nethack):needs="X11" section="Games/Adventure"\
 +  title="Vulture's Eye" \
 +  	icon="/usr/share/pixmaps/vulture-nethack.png" \
 +	command="/usr/games/vulture-nethack"
-diff -Naur vulture/debian/vulture-nethack.postinst vulture.debian/debian/vulture-nethack.postinst
---- vulture/debian/vulture-nethack.postinst	1970-01-01 01:00:00.000000000 +0100
-+++ vulture.debian/debian/vulture-nethack.postinst	2008-04-03 09:22:43.000000000 +0200
+diff -Naur a/debian/vulture-nethack.postinst b/debian/vulture-nethack.postinst
+--- a/debian/vulture-nethack.postinst	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-nethack.postinst	2011-03-26 01:44:37.910249007 +0100
 @@ -0,0 +1,56 @@
 +#! /bin/sh
 +# postinst script for vulture
@@ -1006,9 +680,9 @@ diff -Naur vulture/debian/vulture-nethack.postinst vulture.debian/debian/vulture
 +exit 0
 +
 +
-diff -Naur vulture/debian/vulture-nethack.postrm vulture.debian/debian/vulture-nethack.postrm
---- vulture/debian/vulture-nethack.postrm	1970-01-01 01:00:00.000000000 +0100
-+++ vulture.debian/debian/vulture-nethack.postrm	2008-04-03 09:22:43.000000000 +0200
+diff -Naur a/debian/vulture-nethack.postrm b/debian/vulture-nethack.postrm
+--- a/debian/vulture-nethack.postrm	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-nethack.postrm	2011-03-26 01:44:37.910249007 +0100
 @@ -0,0 +1,42 @@
 +#! /bin/sh
 +# postrm script for vulture
@@ -1052,9 +726,9 @@ diff -Naur vulture/debian/vulture-nethack.postrm vulture.debian/debian/vulture-n
 +#DEBHELPER#
 +
 +
-diff -Naur vulture/debian/vulture-nethackrc vulture.debian/debian/vulture-nethackrc
---- vulture/debian/vulture-nethackrc	1970-01-01 01:00:00.000000000 +0100
-+++ vulture.debian/debian/vulture-nethackrc	2008-04-03 09:22:43.000000000 +0200
+diff -Naur a/debian/vulture-nethackrc b/debian/vulture-nethackrc
+--- a/debian/vulture-nethackrc	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-nethackrc	2011-03-26 01:44:37.910249007 +0100
 @@ -0,0 +1,52 @@
 +# A '#' at the beginning of a line means the rest of the line is a comment.
 +#
@@ -1108,9 +782,9 @@ diff -Naur vulture/debian/vulture-nethackrc vulture.debian/debian/vulture-nethac
 +#LEVELS=c:\games\nethack\bones
 +#SAVE=c:\games\nethack\bones
 +
-diff -Naur vulture/debian/vulture-nethack.sh vulture.debian/debian/vulture-nethack.sh
---- vulture/debian/vulture-nethack.sh	1970-01-01 01:00:00.000000000 +0100
-+++ vulture.debian/debian/vulture-nethack.sh	2008-04-03 09:22:43.000000000 +0200
+diff -Naur a/debian/vulture-nethack.sh b/debian/vulture-nethack.sh
+--- a/debian/vulture-nethack.sh	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-nethack.sh	2011-03-26 01:44:37.910249007 +0100
 @@ -0,0 +1,66 @@
 +#!/bin/sh
 +#	SCCS Id: @(#)nethack.sh	3.3	90/02/26
@@ -1178,9 +852,775 @@ diff -Naur vulture/debian/vulture-nethack.sh vulture.debian/debian/vulture-netha
 +		exec $HACK "$@" $MAXNROFPLAYERS
 +		;;
 +esac
-diff -Naur vulture/nethack/include/config.h vulture.debian/nethack/include/config.h
---- vulture/nethack/include/config.h	2008-03-29 00:52:19.000000000 +0100
-+++ vulture.debian/nethack/include/config.h	2008-04-03 09:14:52.000000000 +0200
+diff -Naur a/debian/vulture-slashem.6 b/debian/vulture-slashem.6
+--- a/debian/vulture-slashem.6	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-slashem.6	2011-03-26 01:44:37.910249007 +0100
+@@ -0,0 +1,89 @@
++.TH VULTURE-SLASHEM 6 "March 2011"
++.SH NAME
++vulture-slashem \- play SLASH'em using a mouse-driven isometric graphical interface
++.SH SYNOPSIS
++.B vulture-slashem
++[-d \fIdirectory\fR] [-n] [-p \fIprofession (role)\fR] [-r \fIrace\fR] [-D] [-X] [-u \fIplayername\fR]
++
++.B vulture-slashem
++[-d \fIdirectory\fR] -s [-v] [-p \fIprofession (role)\fR] [-r \fIrace\fR] [\fIplayer_name\fR] [\fIOPTION\fR]
++
++.SH DESCRIPTION
++Vulture 2.2.100 is an enhanced, highly graphical window port (user
++interface) for SLASH'em. It adds a lot of eye candy and multimedia to the
++game while keeping the original gameplay of SLASH'em.
++
++Here's a brief list of features:
++
++High-res, 32-bit isometric graphics with real-time lighting 
++
++Customizable digitized sound effects 
++
++Symphonic soundtracks
++
++Mouse-driven interface (keyboard play also works)
++
++HTML manual 
++
++Command-line options are the same as SLASH'em:
++
++.TP
++\fB\-d\fR \fIdirectory\fR
++Use the given directory as the playground. Help files, top scorers and saved games are stored in this directory.
++This must be the first argument, if specified.
++.TP
++\fB\-n\fR
++Suppress news from the administrator.
++.TP
++\fB\-p\fR \fIprofession\fR
++Set your character's profession.
++.TP
++\fB\-r\fR \fIrace\fR
++Set your character's race.
++.TP
++\fB\-D\fR
++Start the game in wizard mode. You cannot switch to a normal game while
++wizard mode is active, and your score will not be listed in the top scores.
++You need to be root to enter wizard mode. Normal users will get explore mode instead.
++.TP
++\fB\-X\fR
++Start the game in explore mode. You cannot switch to a normal game while
++explore mode is active, and your score will not be listed in the top scores.
++.TP
++\fB\-u\fR \fIplayer_name\fR
++Set your character's name.
++.TP
++\fB\-s\fR
++Display top scores for the current version of NetHack, filtered by
++professions, races or player names if specified.
++.TP
++\fB\-v\fR
++Display top scores for all versions. Should immediately follow \fB-s\fR.
++
++.SH "AUTHORS"
++
++Daniel Thaler, <daniel@dthaler.de>
++
++Clive Crous, <clive@crous.co.za>
++
++Based on Falcon's Eye by:
++Jaakko Peltonen, <jaakko dot peltonen at hut dot fi>
++
++.SH "REPORTING BUGS"
++
++Report Vulture-specific bugs to Clive Crous and
++NetHack bugs to <nethack-bugs@nethack.org>.
++
++.SH "SEE ALSO"
++
++NetHack is documented in \fBnethack(6)\fR.
++
++The full documentation for Vulture is maintained in HTML at
++/usr/share/doc/vulture/manual/index.html
++
++The Vulture project page is http://darkarts.co.za/project/vulture
++
++The NetHack project page is http://www.nethack.org
++
++The SLASH'em project page is http://www.slashem.org
++
+diff -Naur a/debian/vulture-slashem.desktop b/debian/vulture-slashem.desktop
+--- a/debian/vulture-slashem.desktop	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-slashem.desktop	2011-03-26 01:44:37.910249007 +0100
+@@ -0,0 +1,11 @@
++[Desktop Entry]
++Type=Application
++Encoding=UTF-8
++Name=Vulture-SLASH'em
++GenericName=
++Comment=Dungeons and dragons inspired role play game
++Comment[de_DE]=Rollenspiel im Sinne von Dungeons und Dragons
++Icon=vulture-slashem.png
++Exec=/usr/games/vulture-slashem
++Terminal=false
++Categories=Application;Game;
+diff -Naur a/debian/vulture-slashem.dirs b/debian/vulture-slashem.dirs
+--- a/debian/vulture-slashem.dirs	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-slashem.dirs	2011-03-26 01:44:37.910249007 +0100
+@@ -0,0 +1,6 @@
++usr/games
++var/games/vulture-slashem/save
++usr/lib/games/vulture-slashem
++etc/vulture
++usr/share/pixmaps
++usr/share/applications
+diff -Naur a/debian/vulture-slashem.manpages b/debian/vulture-slashem.manpages
+--- a/debian/vulture-slashem.manpages	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-slashem.manpages	2011-03-26 01:44:37.910249007 +0100
+@@ -0,0 +1 @@
++debian/vulture-slashem.6
+diff -Naur a/debian/vulture-slashem.menu b/debian/vulture-slashem.menu
+--- a/debian/vulture-slashem.menu	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-slashem.menu	2011-03-26 01:44:37.910249007 +0100
+@@ -0,0 +1,4 @@
++?package(vulture-slashem):needs="X11" section="Games/Adventure"\
++  title="Vulture-SLASH'em" \
++  	icon="/usr/share/pixmaps/vulture-slashem.png" \
++	command="/usr/games/vulture-slashem"
+diff -Naur a/debian/vulture-slashem.postinst b/debian/vulture-slashem.postinst
+--- a/debian/vulture-slashem.postinst	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-slashem.postinst	2011-03-26 01:44:37.910249007 +0100
+@@ -0,0 +1,56 @@
++#! /bin/sh
++# postinst script for vulture
++#
++# see: dh_installdeb(1)
++
++set -e
++
++# summary of how this script can be called:
++#        * <postinst> `configure' <most-recently-configured-version>
++#        * <old-postinst> `abort-upgrade' <new version>
++#        * <conflictor's-postinst> `abort-remove' `in-favour' <package>
++#          <new-version>
++#        * <deconfigured's-postinst> `abort-deconfigure' `in-favour'
++#          <failed-install-package> <version> `removing'
++#          <conflicting-package> <version>
++# for details, see /usr/share/doc/packaging-manual/
++#
++# quoting from the policy:
++#     Any necessary prompting should almost always be confined to the
++#     post-installation script, and should be protected with a conditional
++#     so that unnecessary prompting doesn't happen if a package's
++#     installation fails and the `postinst' is called with `abort-upgrade',
++#     `abort-remove' or `abort-deconfigure'.
++
++case "$1" in
++    configure)
++
++    ;;
++
++    abort-upgrade|abort-remove|abort-deconfigure)
++
++    ;;
++
++    *)
++        echo "postinst called with unknown argument \`$1'" >&2
++        exit 0
++    ;;
++esac
++
++for file in vulture_log.txt logfile perm record; \
++do \
++  if [ ! -f /var/games/vulture-slashem/$file ]; then
++    touch /var/games/vulture-slashem/$file
++    chown root:games /var/games/vulture-slashem/$file
++    chmod 664 /var/games/vulture-slashem/$file
++  fi; \
++done
++
++# dh_installdeb will replace this with shell code automatically
++# generated by other debhelper scripts.
++
++#DEBHELPER#
++
++exit 0
++
++
+diff -Naur a/debian/vulture-slashem.postrm b/debian/vulture-slashem.postrm
+--- a/debian/vulture-slashem.postrm	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-slashem.postrm	2011-03-26 01:44:37.910249007 +0100
+@@ -0,0 +1,42 @@
++#! /bin/sh
++# postrm script for vulture
++#
++# see: dh_installdeb(1)
++
++set -e
++
++# summary of how this script can be called:
++#        * <postrm> `remove'
++#        * <postrm> `purge'
++#        * <old-postrm> `upgrade' <new-version>
++#        * <new-postrm> `failed-upgrade' <old-version>
++#        * <new-postrm> `abort-install'
++#        * <new-postrm> `abort-install' <old-version>
++#        * <new-postrm> `abort-upgrade' <old-version>
++#        * <disappearer's-postrm> `disappear' <r>overwrit>r> <new-version>
++# for details, see /usr/share/doc/packaging-manual/
++
++case "$1" in
++       purge|remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
++
++
++        ;;
++
++    *)
++        echo "postrm called with unknown argument \`$1'" >&2
++        exit 0
++
++esac
++
++if [ "$1" = "purge" ]; then
++    echo -n "Purging high-scores and save-files for vulture-slashem... "
++    rm -rf /var/games/vulture-slashem/
++    echo "done."
++fi
++
++# dh_installdeb will replace this with shell code automatically
++# generated by other debhelper scripts.
++
++#DEBHELPER#
++
++
+diff -Naur a/debian/vulture-slashemrc b/debian/vulture-slashemrc
+--- a/debian/vulture-slashemrc	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-slashemrc	2011-03-26 01:44:37.910249007 +0100
+@@ -0,0 +1,72 @@
++# A '#' at the beginning of a line means the rest of the line is a comment.
++#
++# Some options MUST be set in this file, other options can be toggled while
++# playing.  For a list of options available see the <opthelp.> file.
++#
++# If you want to customize the configuration, you should copy this file
++# (/etc/vulture/vulture-nethackrc) to ~/.vulture-nethackrc and modify that
++#
++# To change the configuration, comment out the unwanted lines, and
++# uncomment the configuration you want.
++
++# Use the vulture window port
++OPTIONS=windowtype:vulture
++
++# *** OPTIONS ***
++# Some options to set personal preferences.  Uncomment and change these to
++# suit your personal preference.  If several people are to use the same
++# configuration, options like these should not be set.
++#
++#OPTIONS=name:Janet,role:Valkyrie,race:Human,gender:female,align:lawful
++#OPTIONS=dogname:Fido,catname:Morris,fruit:guava
++#OPTIONS=horsename:Silver
++#OPTIONS=autopickup,pickup_types:$"=/!?+
++#OPTIONS=packorder:")[%?+/=!(*0_`
++#OPTIONS=scores:10 top/2 around/own
++#OPTIONS=nolegacy,noverbose
++
++# verbose help messages make no sense for vulture
++OPTIONS=noverbose
++
++OPTIONS=toptenwin
++
++#
++# General options.  You might also set "silent" so as not to attract
++# the boss's attention.
++OPTIONS=time,number_pad:2,lit_corridor,rest_on_space,nomail
++
++# *** LOCATIONS ***
++# IMPORTANT: If you change any of these locations, the directories they
++# point at must exist.  NetHack will not create them for you.
++#
++# HACKDIR is the default location for everything.
++# Note: On Windows HACKDIR defaults to the location 
++#       of the NetHack.exe or NetHackw.exe file so
++#       setting HACKDIR below to override that is 
++#       not usually necessary or recommended.
++#HACKDIR=c:\games\nethack
++#
++# The location that level files in progress are stored (default=HACKDIR, writeable)
++#LEVELDIR=c:\nethack\levels
++#
++# The location where saved games are kept (default=HACKDIR, writeable)
++#SAVEDIR=c:\nethack\save
++#
++# The location that bones files are kept (default=HACKDIR, writeable)
++#BONESDIR=c:\nethack\save
++#
++# The location that file synchronization locks are stored (default=HACKDIR, writeable)
++#LOCKDIR=c:\nethack\levels
++#
++# The location that a record of game aborts and self-diagnosed game problems
++# is kept (default=HACKDIR, writeable)
++#TROUBLEDIR=c:\nethack\trouble
++
++# Finnish keyboards might need these modifications uncommented. 
++# For  \, @, $, [, |
++#OPTIONS=subkeyvalue:171/92
++#OPTIONS=subkeyvalue:178/64
++#OPTIONS=subkeyvalue:180/36
++#OPTIONS=subkeyvalue:184/91
++#OPTIONS=subkeyvalue:188/124
++
+diff -Naur a/debian/vulture-slashem.sh b/debian/vulture-slashem.sh
+--- a/debian/vulture-slashem.sh	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-slashem.sh	2011-03-26 01:44:37.910249007 +0100
+@@ -0,0 +1,66 @@
++#!/bin/sh
++#	SCCS Id: @(#)nethack.sh	3.3	90/02/26
++
++HACKDIR=/usr/lib/games/vulture-slashem
++export HACKDIR
++HACK=$HACKDIR/vulture-slashem
++MAXNROFPLAYERS=4
++if [ -f ~/.vulture-slashemrc ]
++then
++	NETHACKOPTIONS=~/.vulture-slashemrc
++else
++	NETHACKOPTIONS=/etc/vulture/vulture-slashemrc
++fi
++export NETHACKOPTIONS
++
++# see if we can find the full path name of PAGER, so help files work properly
++# assume that if someone sets up a special variable (HACKPAGER) for NetHack,
++# it will already be in a form acceptable to NetHack
++# ideas from brian@radio.astro.utoronto.ca
++if test \( "xxx$PAGER" != xxx \) -a \( "xxx$HACKPAGER" = xxx \)
++then
++
++	HACKPAGER=$PAGER
++
++#	use only the first word of the pager variable
++#	this prevents problems when looking for file names with trailing
++#	options, but also makes the options unavailable for later use from
++#	NetHack
++	for i in $HACKPAGER
++	do
++		HACKPAGER=$i
++		break
++	done
++
++	if test ! -f $HACKPAGER
++	then
++		IFS=:
++		for i in $PATH
++		do
++			if test -f $i/$HACKPAGER
++			then
++				HACKPAGER=$i/$HACKPAGER
++				export HACKPAGER
++				break
++			fi
++		done
++		IFS=' 	'
++	fi
++	if test ! -f $HACKPAGER
++	then
++		echo Cannot find $PAGER -- unsetting PAGER.
++		unset HACKPAGER
++		unset PAGER
++	fi
++fi
++
++
++cd $HACKDIR
++case $1 in
++	-s*)
++		exec $HACK "$@"
++		;;
++	*)
++		exec $HACK "$@" $MAXNROFPLAYERS
++		;;
++esac
+diff -Naur a/debian/vulture-unnethack.6 b/debian/vulture-unnethack.6
+--- a/debian/vulture-unnethack.6	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-unnethack.6	2011-03-26 01:44:37.910249007 +0100
+@@ -0,0 +1,89 @@
++.TH VULTURE-UNNETHACK 6 "March 2011"
++.SH NAME
++vulture-unnethack \- play unnethack using a mouse-driven isometric graphical interface
++.SH SYNOPSIS
++.B vulture-unnethack
++[-d \fIdirectory\fR] [-n] [-p \fIprofession (role)\fR] [-r \fIrace\fR] [-D] [-X] [-u \fIplayername\fR]
++
++.B vulture-unnethack
++[-d \fIdirectory\fR] -s [-v] [-p \fIprofession (role)\fR] [-r \fIrace\fR] [\fIplayer_name\fR] [\fIOPTION\fR]
++
++.SH DESCRIPTION
++Vulture 2.2.100 is an enhanced, highly graphical window port (user
++interface) for UnNetHack 3.5.3. It adds a lot of eye candy and multimedia to the
++game while keeping the original gameplay of UnNetHack.
++
++Here's a brief list of features:
++
++High-res, 32-bit isometric graphics with real-time lighting 
++
++Customizable digitized sound effects 
++
++Symphonic soundtracks
++
++Mouse-driven interface (keyboard play also works)
++
++HTML manual 
++
++Command-line options are the same as UnNetHack:
++
++.TP
++\fB\-d\fR \fIdirectory\fR
++Use the given directory as the playground. Help files, top scorers and saved games are stored in this directory.
++This must be the first argument, if specified.
++.TP
++\fB\-n\fR
++Suppress news from the administrator.
++.TP
++\fB\-p\fR \fIprofession\fR
++Set your character's profession.
++.TP
++\fB\-r\fR \fIrace\fR
++Set your character's race.
++.TP
++\fB\-D\fR
++Start the game in wizard mode. You cannot switch to a normal game while
++wizard mode is active, and your score will not be listed in the top scores.
++You need to be root to enter wizard mode. Normal users will get explore mode instead.
++.TP
++\fB\-X\fR
++Start the game in explore mode. You cannot switch to a normal game while
++explore mode is active, and your score will not be listed in the top scores.
++.TP
++\fB\-u\fR \fIplayer_name\fR
++Set your character's name.
++.TP
++\fB\-s\fR
++Display top scores for the current version of NetHack, filtered by
++professions, races or player names if specified.
++.TP
++\fB\-v\fR
++Display top scores for all versions. Should immediately follow \fB-s\fR.
++
++.SH "AUTHORS"
++
++Daniel Thaler, <daniel@dthaler.de>
++
++Clive Crous, <clive@crous.co.za>
++
++Based on Falcon's Eye by:
++Jaakko Peltonen, <jaakko dot peltonen at hut dot fi>
++
++.SH "REPORTING BUGS"
++
++Report Vulture-specific bugs to Clive Crous and
++NetHack bugs to <nethack-bugs@nethack.org>.
++
++.SH "SEE ALSO"
++
++NetHack is documented in \fBnethack(6)\fR.
++
++The full documentation for Vulture is maintained in HTML at
++/usr/share/doc/vulture/manual/index.html
++
++The Vulture project page is http://darkarts.co.za/project/vulture
++
++The NetHack project page is http://www.nethack.org
++
++The UnNetHack project page is http://sourceforge.net/apps/trac/unnethack/
++
+diff -Naur a/debian/vulture-unnethack.desktop b/debian/vulture-unnethack.desktop
+--- a/debian/vulture-unnethack.desktop	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-unnethack.desktop	2011-03-26 01:44:37.910249007 +0100
+@@ -0,0 +1,11 @@
++[Desktop Entry]
++Type=Application
++Encoding=UTF-8
++Name=Vulture-UnNetHack
++GenericName=
++Comment=Dungeons and dragons inspired role play game
++Comment[de_DE]=Rollenspiel im Sinne von Dungeons und Dragons
++Icon=vulture-unnethack.png
++Exec=/usr/games/vulture-unnethack
++Terminal=false
++Categories=Application;Game;
+diff -Naur a/debian/vulture-unnethack.dirs b/debian/vulture-unnethack.dirs
+--- a/debian/vulture-unnethack.dirs	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-unnethack.dirs	2011-03-26 01:44:37.910249007 +0100
+@@ -0,0 +1,6 @@
++usr/games
++var/games/vulture-unnethack/save
++usr/lib/games/vulture-unnethack
++etc/vulture
++usr/share/pixmaps
++usr/share/applications
+diff -Naur a/debian/vulture-unnethack.manpages b/debian/vulture-unnethack.manpages
+--- a/debian/vulture-unnethack.manpages	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-unnethack.manpages	2011-03-26 01:44:37.914247007 +0100
+@@ -0,0 +1 @@
++debian/vulture-unnethack.6
+diff -Naur a/debian/vulture-unnethack.menu b/debian/vulture-unnethack.menu
+--- a/debian/vulture-unnethack.menu	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-unnethack.menu	2011-03-26 01:44:37.914247007 +0100
+@@ -0,0 +1,4 @@
++?package(vulture-unnethack):needs="X11" section="Games/Adventure"\
++  title="Vulture-UnNetHack" \
++  	icon="/usr/share/pixmaps/vulture-unnethack.png" \
++	command="/usr/games/vulture-unnethack"
+diff -Naur a/debian/vulture-unnethack.postinst b/debian/vulture-unnethack.postinst
+--- a/debian/vulture-unnethack.postinst	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-unnethack.postinst	2011-03-26 01:44:37.914247007 +0100
+@@ -0,0 +1,56 @@
++#! /bin/sh
++# postinst script for vulture
++#
++# see: dh_installdeb(1)
++
++set -e
++
++# summary of how this script can be called:
++#        * <postinst> `configure' <most-recently-configured-version>
++#        * <old-postinst> `abort-upgrade' <new version>
++#        * <conflictor's-postinst> `abort-remove' `in-favour' <package>
++#          <new-version>
++#        * <deconfigured's-postinst> `abort-deconfigure' `in-favour'
++#          <failed-install-package> <version> `removing'
++#          <conflicting-package> <version>
++# for details, see /usr/share/doc/packaging-manual/
++#
++# quoting from the policy:
++#     Any necessary prompting should almost always be confined to the
++#     post-installation script, and should be protected with a conditional
++#     so that unnecessary prompting doesn't happen if a package's
++#     installation fails and the `postinst' is called with `abort-upgrade',
++#     `abort-remove' or `abort-deconfigure'.
++
++case "$1" in
++    configure)
++
++    ;;
++
++    abort-upgrade|abort-remove|abort-deconfigure)
++
++    ;;
++
++    *)
++        echo "postinst called with unknown argument \`$1'" >&2
++        exit 0
++    ;;
++esac
++
++for file in vulture_log.txt logfile perm record; \
++do \
++  if [ ! -f /var/games/vulture-unnethack/$file ]; then
++    touch /var/games/vulture-unnethack/$file
++    chown root:games /var/games/vulture-unnethack/$file
++    chmod 664 /var/games/vulture-unnethack/$file
++  fi; \
++done
++
++# dh_installdeb will replace this with shell code automatically
++# generated by other debhelper scripts.
++
++#DEBHELPER#
++
++exit 0
++
++
+diff -Naur a/debian/vulture-unnethack.postrm b/debian/vulture-unnethack.postrm
+--- a/debian/vulture-unnethack.postrm	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-unnethack.postrm	2011-03-26 01:44:37.914247007 +0100
+@@ -0,0 +1,42 @@
++#! /bin/sh
++# postrm script for vulture
++#
++# see: dh_installdeb(1)
++
++set -e
++
++# summary of how this script can be called:
++#        * <postrm> `remove'
++#        * <postrm> `purge'
++#        * <old-postrm> `upgrade' <new-version>
++#        * <new-postrm> `failed-upgrade' <old-version>
++#        * <new-postrm> `abort-install'
++#        * <new-postrm> `abort-install' <old-version>
++#        * <new-postrm> `abort-upgrade' <old-version>
++#        * <disappearer's-postrm> `disappear' <r>overwrit>r> <new-version>
++# for details, see /usr/share/doc/packaging-manual/
++
++case "$1" in
++       purge|remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
++
++
++        ;;
++
++    *)
++        echo "postrm called with unknown argument \`$1'" >&2
++        exit 0
++
++esac
++
++if [ "$1" = "purge" ]; then
++    echo -n "Purging high-scores and save-files for vulture-unnethack... "
++    rm -rf /var/games/vulture-unnethack/
++    echo "done."
++fi
++
++# dh_installdeb will replace this with shell code automatically
++# generated by other debhelper scripts.
++
++#DEBHELPER#
++
++
+diff -Naur a/debian/vulture-unnethackrc b/debian/vulture-unnethackrc
+--- a/debian/vulture-unnethackrc	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-unnethackrc	2011-03-26 01:44:37.914247007 +0100
+@@ -0,0 +1,72 @@
++# A '#' at the beginning of a line means the rest of the line is a comment.
++#
++# Some options MUST be set in this file, other options can be toggled while
++# playing.  For a list of options available see the <opthelp.> file.
++#
++# If you want to customize the configuration, you should copy this file
++# (/etc/vulture/vulture-nethackrc) to ~/.vulture-nethackrc and modify that
++#
++# To change the configuration, comment out the unwanted lines, and
++# uncomment the configuration you want.
++
++# Use the vulture window port
++OPTIONS=windowtype:vulture
++
++# *** OPTIONS ***
++# Some options to set personal preferences.  Uncomment and change these to
++# suit your personal preference.  If several people are to use the same
++# configuration, options like these should not be set.
++#
++#OPTIONS=name:Janet,role:Valkyrie,race:Human,gender:female,align:lawful
++#OPTIONS=dogname:Fido,catname:Morris,fruit:guava
++#OPTIONS=horsename:Silver
++#OPTIONS=autopickup,pickup_types:$"=/!?+
++#OPTIONS=packorder:")[%?+/=!(*0_`
++#OPTIONS=scores:10 top/2 around/own
++#OPTIONS=nolegacy,noverbose
++
++# verbose help messages make no sense for vulture
++OPTIONS=noverbose
++
++OPTIONS=toptenwin
++
++#
++# General options.  You might also set "silent" so as not to attract
++# the boss's attention.
++OPTIONS=time,number_pad:2,lit_corridor,rest_on_space,nomail
++
++# *** LOCATIONS ***
++# IMPORTANT: If you change any of these locations, the directories they
++# point at must exist.  NetHack will not create them for you.
++#
++# HACKDIR is the default location for everything.
++# Note: On Windows HACKDIR defaults to the location 
++#       of the NetHack.exe or NetHackw.exe file so
++#       setting HACKDIR below to override that is 
++#       not usually necessary or recommended.
++#HACKDIR=c:\games\nethack
++#
++# The location that level files in progress are stored (default=HACKDIR, writeable)
++#LEVELDIR=c:\nethack\levels
++#
++# The location where saved games are kept (default=HACKDIR, writeable)
++#SAVEDIR=c:\nethack\save
++#
++# The location that bones files are kept (default=HACKDIR, writeable)
++#BONESDIR=c:\nethack\save
++#
++# The location that file synchronization locks are stored (default=HACKDIR, writeable)
++#LOCKDIR=c:\nethack\levels
++#
++# The location that a record of game aborts and self-diagnosed game problems
++# is kept (default=HACKDIR, writeable)
++#TROUBLEDIR=c:\nethack\trouble
++
++# Finnish keyboards might need these modifications uncommented. 
++# For  \, @, $, [, |
++#OPTIONS=subkeyvalue:171/92
++#OPTIONS=subkeyvalue:178/64
++#OPTIONS=subkeyvalue:180/36
++#OPTIONS=subkeyvalue:184/91
++#OPTIONS=subkeyvalue:188/124
++
+diff -Naur a/debian/vulture-unnethack.sh b/debian/vulture-unnethack.sh
+--- a/debian/vulture-unnethack.sh	1970-01-01 01:00:00.000000000 +0100
++++ b/debian/vulture-unnethack.sh	2011-03-26 01:44:37.914247007 +0100
+@@ -0,0 +1,66 @@
++#!/bin/sh
++#	SCCS Id: @(#)nethack.sh	3.3	90/02/26
++
++HACKDIR=/usr/lib/games/vulture-unnethack
++export HACKDIR
++HACK=$HACKDIR/vulture-unnethack
++MAXNROFPLAYERS=4
++if [ -f ~/.vulture-unnethackrc ]
++then
++	NETHACKOPTIONS=~/.vulture-unnethackrc
++else
++	NETHACKOPTIONS=/etc/vulture/vulture-unnethackrc
++fi
++export NETHACKOPTIONS
++
++# see if we can find the full path name of PAGER, so help files work properly
++# assume that if someone sets up a special variable (HACKPAGER) for NetHack,
++# it will already be in a form acceptable to NetHack
++# ideas from brian@radio.astro.utoronto.ca
++if test \( "xxx$PAGER" != xxx \) -a \( "xxx$HACKPAGER" = xxx \)
++then
++
++	HACKPAGER=$PAGER
++
++#	use only the first word of the pager variable
++#	this prevents problems when looking for file names with trailing
++#	options, but also makes the options unavailable for later use from
++#	NetHack
++	for i in $HACKPAGER
++	do
++		HACKPAGER=$i
++		break
++	done
++
++	if test ! -f $HACKPAGER
++	then
++		IFS=:
++		for i in $PATH
++		do
++			if test -f $i/$HACKPAGER
++			then
++				HACKPAGER=$i/$HACKPAGER
++				export HACKPAGER
++				break
++			fi
++		done
++		IFS=' 	'
++	fi
++	if test ! -f $HACKPAGER
++	then
++		echo Cannot find $PAGER -- unsetting PAGER.
++		unset HACKPAGER
++		unset PAGER
++	fi
++fi
++
++
++cd $HACKDIR
++case $1 in
++	-s*)
++		exec $HACK "$@"
++		;;
++	*)
++		exec $HACK "$@" $MAXNROFPLAYERS
++		;;
++esac
+diff -Naur a/nethack/include/config.h b/nethack/include/config.h
+--- a/nethack/include/config.h	2011-03-25 16:06:32.559735016 +0100
++++ b/nethack/include/config.h	2011-03-26 01:44:37.914247007 +0100
 @@ -153,7 +153,7 @@
  
  #ifndef WIZARD		/* allow for compile-time or Makefile changes */
@@ -1190,22 +1630,6 @@ diff -Naur vulture/nethack/include/config.h vulture.debian/nethack/include/confi
  # else
  #  define WIZARD
  #  define WIZARD_NAME "wizard"
-@@ -179,11 +179,11 @@
- 
- #ifdef UNIX
- /* path and file name extension for compression program */
--#define COMPRESS "/usr/bin/compress"   /* Lempel-Ziv compression */                                      
--#define COMPRESS_EXTENSION ".Z"        /* compress's extension */                                        
-+/* #define COMPRESS "/usr/bin/compress" */   /* Lempel-Ziv compression */
-+/* #define COMPRESS_EXTENSION ".Z" */        /* compress's extension */
- /* An example of one alternative you might want to use: */
--/* #define COMPRESS "/usr/local/bin/gzip" */   /* FSF gzip compression */                                
--/* #define COMPRESS_EXTENSION ".gz" */     /* normal gzip extension */                                   
-+#define COMPRESS "/bin/gzip"   /* FSF gzip compression */
-+#define COMPRESS_EXTENSION ".gz"     /* normal gzip extension */                                   
- #endif
- 
- #ifndef COMPRESS
 @@ -214,7 +214,7 @@
   * otherwise it will be the current directory.
   */
@@ -1224,18 +1648,385 @@ diff -Naur vulture/nethack/include/config.h vulture.debian/nethack/include/confi
  /* monsters & objects */
  #define KOPS		/* Keystone Kops by Scott R. Turner */
  #define SEDUCE		/* Succubi/incubi seduction, by KAA, suggested by IM */
-@@ -359,7 +359,7 @@
-  */
- 
- /*#define GOLDOBJ */	/* Gold is kept on obj chains - Helge Hafting */
--/*#define AUTOPICKUP_EXCEPTIONS */ /* exceptions to autopickup */
+diff -Naur a/nethack/include/config.h.orig b/nethack/include/config.h.orig
+--- a/nethack/include/config.h.orig	1970-01-01 01:00:00.000000000 +0100
++++ b/nethack/include/config.h.orig	2011-03-26 01:44:37.914247007 +0100
+@@ -0,0 +1,372 @@
++/*	SCCS Id: @(#)config.h	3.4	2003/12/06	*/
++/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
++/* NetHack may be freely redistributed.  See license for details. */
++
++#ifndef CONFIG_H /* make sure the compiler does not see the typedefs twice */
++#define CONFIG_H
++
++
++/*
++ * Section 1:	Operating and window systems selection.
++ *		Select the version of the OS you are using.
++ *		For "UNIX" select BSD, ULTRIX, SYSV, or HPUX in unixconf.h.
++ *		A "VMS" option is not needed since the VMS C-compilers
++ *		provide it (no need to change sec#1, vmsconf.h handles it).
++ */
++
++#define UNIX		/* delete if no fork(), exec() available */
++
++/* #define MSDOS */	/* in case it's not auto-detected */
++
++/* #define OS2 */	/* define for OS/2 */
++
++/* #define TOS */	/* define for Atari ST/TT */
++
++/* #define STUPID */	/* avoid some complicated expressions if
++			   your C compiler chokes on them */
++/* #define MINIMAL_TERM */
++			/* if a terminal handles highlighting or tabs poorly,
++			   try this define, used in pager.c and termcap.c */
++/* #define ULTRIX_CC20 */
++			/* define only if using cc v2.0 on a DECstation */
++/* #define ULTRIX_PROTO */
++			/* define for Ultrix 4.0 (or higher) on a DECstation;
++			 * if you get compiler errors, don't define this. */
++			/* Hint: if you're not developing code, don't define
++			   ULTRIX_PROTO. */
++
++#include "config1.h"	/* should auto-detect MSDOS, MAC, AMIGA, and WIN32 */
++
++
++/* Windowing systems...
++ * Define all of those you want supported in your binary.
++ * Some combinations make no sense.  See the installation document.
++ */
++#define TTY_GRAPHICS 	/* good old tty based graphics */
++/* #define X11_GRAPHICS */	/* X11 interface */
++/* #define QT_GRAPHICS */	/* Qt interface */
++/* #define GNOME_GRAPHICS */	/* Gnome interface */
++/* #define MSWIN_GRAPHICS */	/* Windows NT, CE, Graphics */
++
++#define VULTURE_GRAPHICS /* Vulture's Eye isometric graphics interface */
++#undef TTY_GRAPHICS
++
++/*
++ * Define the default window system.  This should be one that is compiled
++ * into your system (see defines above).  Known window systems are:
++ *
++ *	tty, X11, mac, amii, BeOS, Qt, Gem, Gnome
++ *	vulture (Vulture's Eye)
++ */
++
++/* MAC also means MAC windows */
++#ifdef MAC
++# ifndef	AUX
++#  define DEFAULT_WINDOW_SYS "mac"
++# endif
++#endif
++
++/* Amiga supports AMII_GRAPHICS and/or TTY_GRAPHICS */
++#ifdef AMIGA
++# define AMII_GRAPHICS			/* (optional) */
++# define DEFAULT_WINDOW_SYS "amii"	/* "amii", "amitile" or "tty" */
++#endif
++
++/* Atari supports GEM_GRAPHICS and/or TTY_GRAPHICS */
++#ifdef TOS
++# define GEM_GRAPHICS			/* Atari GEM interface (optional) */
++# define DEFAULT_WINDOW_SYS "Gem"	/* "Gem" or "tty" */
++#endif
++
++#ifdef __BEOS__
++#define BEOS_GRAPHICS /* (optional) */
++#define DEFAULT_WINDOW_SYS "BeOS"  /* "tty" */
++#ifndef HACKDIR	/* override the default hackdir below */
++# define HACKDIR "/boot/apps/NetHack"
++#endif
++#endif
++
++#ifdef QT_GRAPHICS
++# define DEFAULT_WC_TILED_MAP   /* Default to tiles if users doesn't say wc_ascii_map */
++# define USER_SOUNDS		/* Use sounds */
++# ifndef __APPLE__
++#  define USER_SOUNDS_REGEX
++# endif
++# define USE_XPM		/* Use XPM format for images (required) */
++# define GRAPHIC_TOMBSTONE	/* Use graphical tombstone (rip.ppm) */
++# ifndef DEFAULT_WINDOW_SYS
++#  define DEFAULT_WINDOW_SYS "Qt"
++# endif
++#endif
++
++#ifdef VULTURE_GRAPHICS
++# ifndef DEFAULT_WINDOW_SYS
++#  define DEFAULT_WINDOW_SYS "vulture"
++# endif
++#endif /* VULTURE_GRAPHICS */
++
++#ifdef GNOME_GRAPHICS
++# define USE_XPM		/* Use XPM format for images (required) */
++# define GRAPHIC_TOMBSTONE	/* Use graphical tombstone (rip.ppm) */
++# ifndef DEFAULT_WINDOW_SYS
++#  define DEFAULT_WINDOW_SYS "Gnome"
++# endif
++#endif
++
++#ifdef MSWIN_GRAPHICS
++# ifdef TTY_GRAPHICS
++# undef TTY_GRAPHICS
++# endif
++# ifndef DEFAULT_WINDOW_SYS
++#  define DEFAULT_WINDOW_SYS "mswin"
++# endif
++# define HACKDIR "\\nethack"
++#endif
++
++#ifndef DEFAULT_WINDOW_SYS
++# define DEFAULT_WINDOW_SYS "tty"
++#endif
++
++#ifdef X11_GRAPHICS
++/*
++ * There are two ways that X11 tiles may be defined.  (1) using a custom
++ * format loaded by NetHack code, or (2) using the XPM format loaded by
++ * the free XPM library.  The second option allows you to then use other
++ * programs to generate tiles files.  For example, the PBMPlus tools
++ * would allow:
++ *  xpmtoppm <x11tiles.xpm | pnmscale 1.25 | ppmquant 90 >x11tiles_big.xpm
++ */
++/* # define USE_XPM */		/* Disable if you do not have the XPM library */
++# ifdef USE_XPM
++#  define GRAPHIC_TOMBSTONE	/* Use graphical tombstone (rip.xpm) */
++# endif
++#endif
++
++
++/*
++ * Section 2:	Some global parameters and filenames.
++ *		Commenting out WIZARD, LOGFILE, NEWS or PANICLOG removes that
++ *		feature from the game; otherwise set the appropriate wizard
++ *		name.  LOGFILE, NEWS and PANICLOG refer to files in the
++ *		playground.
++ */
++
++#ifndef WIZARD		/* allow for compile-time or Makefile changes */
++# ifndef KR1ED
++#  define WIZARD  "wizard" /* the person allowed to use the -D option */
++# else
++#  define WIZARD
++#  define WIZARD_NAME "wizard"
++# endif
++#endif
++
++#define LOGFILE "logfile"	/* larger file for debugging purposes */
++#define NEWS "news"		/* the file containing the latest hack news */
++#define PANICLOG "paniclog"	/* log of panic and impossible events */
++
++/*
++ *	If COMPRESS is defined, it should contain the full path name of your
++ *	'compress' program.  Defining INTERNAL_COMP causes NetHack to do
++ *	simpler byte-stream compression internally.  Both COMPRESS and
++ *	INTERNAL_COMP create smaller bones/level/save files, but require
++ *	additional code and time.  Currently, only UNIX fully implements
++ *	COMPRESS; other ports should be able to uncompress save files a
++ *	la unixmain.c if so inclined.
++ *	If you define COMPRESS, you must also define COMPRESS_EXTENSION
++ *	as the extension your compressor appends to filenames after
++ *	compression.
++ */
++
++#ifdef UNIX
++/* path and file name extension for compression program */
++/* #define COMPRESS "/usr/bin/compress" */  /* Lempel-Ziv compression */
++/* #define COMPRESS_EXTENSION ".Z" */       /* compress's extension */
++/* An example of one alternative you might want to use: */
++/* #define COMPRESS "/usr/local/bin/gzip" */   /* FSF gzip compression */                                
++/* #define COMPRESS_EXTENSION ".gz" */     /* normal gzip extension */                                   
++#endif
++
++#ifndef COMPRESS
++# define INTERNAL_COMP	/* control use of NetHack's compression routines */
++#endif
++
++/*
++ *	Data librarian.  Defining DLB places most of the support files into
++ *	a tar-like file, thus making a neater installation.  See *conf.h
++ *	for detailed configuration.
++ */
++#define DLB  /* not supported on all platforms */
++
++/*
++ *	Defining INSURANCE slows down level changes, but allows games that
++ *	died due to program or system crashes to be resumed from the point
++ *	of the last level change, after running a utility program.
++ */
++#define INSURANCE	/* allow crashed game recovery */
++
++#ifndef MAC
++# define CHDIR		/* delete if no chdir() available */
++#endif
++
++#ifdef CHDIR
++/*
++ * If you define HACKDIR, then this will be the default playground;
++ * otherwise it will be the current directory.
++ */
++# ifndef HACKDIR
++#  define HACKDIR "/usr/games/lib/nethackdir"
++# endif
++
++/*
++ * Some system administrators are stupid enough to make Hack suid root
++ * or suid daemon, where daemon has other powers besides that of reading or
++ * writing Hack files.	In such cases one should be careful with chdir's
++ * since the user might create files in a directory of his choice.
++ * Of course SECURE is meaningful only if HACKDIR is defined.
++ */
++/* #define SECURE */	/* do setuid(getuid()) after chdir() */
++
++/*
++ * If it is desirable to limit the number of people that can play Hack
++ * simultaneously, define HACKDIR, SECURE and MAX_NR_OF_PLAYERS.
++ * #define MAX_NR_OF_PLAYERS 6
++ */
++#endif /* CHDIR */
++
++
++
++/*
++ * Section 3:	Definitions that may vary with system type.
++ *		For example, both schar and uchar should be short ints on
++ *		the AT&T 3B2/3B5/etc. family.
++ */
++
++/*
++ * Uncomment the following line if your compiler doesn't understand the
++ * 'void' type (and thus would give all sorts of compile errors without
++ * this definition).
++ */
++/* #define NOVOID */			/* define if no "void" data type. */
++
++/*
++ * Uncomment the following line if your compiler falsely claims to be
++ * a standard C compiler (i.e., defines __STDC__ without cause).
++ * Examples are Apollo's cc (in some versions) and possibly SCO UNIX's rcc.
++ */
++/* #define NOTSTDC */			/* define for lying compilers */
++
++#include "tradstdc.h"
++
++/*
++ * type schar: small signed integers (8 bits suffice) (eg. TOS)
++ *
++ *	typedef char	schar;
++ *
++ *	will do when you have signed characters; otherwise use
++ *
++ *	typedef short int schar;
++ */
++#ifdef AZTEC
++# define schar	char
++#else
++typedef signed char	schar;
++#endif
++
++/*
++ * type uchar: small unsigned integers (8 bits suffice - but 7 bits do not)
++ *
++ *	typedef unsigned char	uchar;
++ *
++ *	will be satisfactory if you have an "unsigned char" type;
++ *	otherwise use
++ *
++ *	typedef unsigned short int uchar;
++ */
++#ifndef _AIX32		/* identical typedef in system file causes trouble */
++typedef unsigned char	uchar;
++#endif
++
++/*
++ * Various structures have the option of using bitfields to save space.
++ * If your C compiler handles bitfields well (e.g., it can initialize structs
++ * containing bitfields), you can define BITFIELDS.  Otherwise, the game will
++ * allocate a separate character for each bitfield.  (The bitfields used never
++ * have more than 7 bits, and most are only 1 bit.)
++ */
++#define BITFIELDS	/* Good bitfield handling */
++
++/* #define STRNCMPI */	/* compiler/library has the strncmpi function */
++
++/*
++ * There are various choices for the NetHack vision system.  There is a
++ * choice of two algorithms with the same behavior.  Defining VISION_TABLES
++ * creates huge (60K) tables at compile time, drastically increasing data
++ * size, but runs slightly faster than the alternate algorithm.  (MSDOS in
++ * particular cannot tolerate the increase in data size; other systems can
++ * flip a coin weighted to local conditions.)
++ *
++ * If VISION_TABLES is not defined, things will be faster if you can use
++ * MACRO_CPATH.  Some cpps, however, cannot deal with the size of the
++ * functions that have been macroized.
++ */
++
++/* #define VISION_TABLES */ /* use vision tables generated at compile time */
++#ifndef VISION_TABLES
++# ifndef NO_MACRO_CPATH
++#  define MACRO_CPATH	/* use clear_path macros instead of functions */
++# endif
++#endif
++
++/*
++ * Section 4:  THE FUN STUFF!!!
++ *
++ * Conditional compilation of special options are controlled here.
++ * If you define the following flags, you will add not only to the
++ * complexity of the game but also to the size of the load module.
++ */
++
++/* dungeon features */
++#define SINKS		/* Kitchen sinks - Janet Walz */
++/* dungeon levels */
++#define WALLIFIED_MAZE	/* Fancy mazes - Jean-Christophe Collet */
++#define REINCARNATION	/* Special Rogue-like levels */
++/* monsters & objects */
++#define KOPS		/* Keystone Kops by Scott R. Turner */
++#define SEDUCE		/* Succubi/incubi seduction, by KAA, suggested by IM */
++#define STEED		/* Riding steeds */
++#define TOURIST		/* Tourist players with cameras and Hawaiian shirts */
++/* difficulty */
++#define ELBERETH	/* Engraving the E-word repels monsters */
++/* I/O */
++#define REDO		/* support for redoing last command - DGK */
++#if !defined(MAC)
++# define CLIPPING	/* allow smaller screens -- ERS */
++#endif
++
++#ifdef REDO
++# define DOAGAIN '\001' /* ^A, the "redo" key used in cmd.c and getline.c */
++#endif
++
++#define EXP_ON_BOTL	/* Show experience on bottom line */
++/* #define SCORE_ON_BOTL */	/* added by Gary Erickson (erickson@ucivax) */
++
++/*
++ * Section 5:  EXPERIMENTAL STUFF
++ *
++ * Conditional compilation of new or experimental options are controlled here.
++ * Enable any of these at your own risk -- there are almost certainly
++ * bugs left here.
++ */
++
++/*#define GOLDOBJ */	/* Gold is kept on obj chains - Helge Hafting */
 +#define AUTOPICKUP_EXCEPTIONS /* exceptions to autopickup */
- #define DUMP_LOG        /* Dump game end information to a file */
- /* #define DUMP_FN "/tmp/%n.nh" */      /* Fixed dumpfile name, if you want
-                                          * to prevent definition by users */
-diff -Naur vulture/nethack/include/unixconf.h vulture.debian/nethack/include/unixconf.h
---- vulture/nethack/include/unixconf.h	2008-03-29 00:52:19.000000000 +0100
-+++ vulture.debian/nethack/include/unixconf.h	2008-04-03 09:16:21.000000000 +0200
++#define DUMP_LOG        /* Dump game end information to a file */
++/* #define DUMP_FN "/tmp/%n.nh" */      /* Fixed dumpfile name, if you want
++                                         * to prevent definition by users */
++#define DUMPMSGS 20     /* Number of latest messages in the dump file  */
++
++/* End of Section 5 */
++
++#include "global.h"	/* Define everything else according to choices above */
++
++#endif /* CONFIG_H */
+diff -Naur a/nethack/include/unixconf.h b/nethack/include/unixconf.h
+--- a/nethack/include/unixconf.h	2011-03-25 16:06:32.283873016 +0100
++++ b/nethack/include/unixconf.h	2011-03-26 01:44:37.914247007 +0100
 @@ -37,7 +37,7 @@
  #define NETWORK		/* if running on a networked system */
  			/* e.g. Suns sharing a playground through NFS */
@@ -1254,9 +2045,9 @@ diff -Naur vulture/nethack/include/unixconf.h vulture.debian/nethack/include/uni
  
  
  /*
-diff -Naur vulture/slashem/include/config.h vulture.debian/slashem/include/config.h
---- vulture/slashem/include/config.h	2008-03-29 00:52:03.000000000 +0100
-+++ vulture.debian/slashem/include/config.h	2008-04-03 09:19:16.000000000 +0200
+diff -Naur a/slashem/include/config.h b/slashem/include/config.h
+--- a/slashem/include/config.h	2011-03-25 16:05:56.741015016 +0100
++++ b/slashem/include/config.h	2011-03-26 01:45:16.091148998 +0100
 @@ -209,7 +209,7 @@
  
  #ifndef WIZARD		/* allow for compile-time or Makefile changes */
@@ -1283,18 +2074,525 @@ diff -Naur vulture/slashem/include/config.h vulture.debian/slashem/include/confi
  
  /* # define COMPRESS "/usr/bin/bzip2"	*//* bzip2 compression */
  /* # define COMPRESS_EXTENSION ".bz2"	*//* bzip2 extension */
-@@ -494,7 +494,7 @@
-  */
+@@ -278,7 +278,7 @@
+ #  ifdef __APPLE__
+ #    define HACKDIR "nethackdir"      /* nethack directory */
+ #  else
+-#    define HACKDIR "."
++#    define HACKDIR "/usr/lib/games/vulture-slashem"
+ #  endif
+ # endif
  
- /*#define GOLDOBJ */	/* Gold is kept on obj chains - Helge Hafting */
--/*#define AUTOPICKUP_EXCEPTIONS */ /* exceptions to autopickup */
+diff -Naur a/slashem/include/config.h.orig b/slashem/include/config.h.orig
+--- a/slashem/include/config.h.orig	1970-01-01 01:00:00.000000000 +0100
++++ b/slashem/include/config.h.orig	2011-03-26 01:44:37.918245007 +0100
+@@ -0,0 +1,503 @@
++/*	SCCS Id: @(#)config.h	3.4	2003/12/06	*/
++/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
++/* NetHack may be freely redistributed.  See license for details. */
++
++#ifndef CONFIG_H /* make sure the compiler does not see the typedefs twice */
++#define CONFIG_H
++
++#undef SHORT_FILENAMES
++
++
++/*#define DEBUG*/
++/*#define DDEBUG*/
++/*#define MONITOR_HEAP*/
++#if defined(MONITOR_HEAP) && (defined(UNIX) || defined(WIN32))
++#define INTERNAL_MALLOC		/* Use internal malloc implementation */
++#endif
++
++/*
++ * Section 1:	Operating and window systems selection.
++ *		Select the version of the OS you are using.
++ *		For "UNIX" select BSD, ULTRIX, SYSV, or HPUX in unixconf.h.
++ *		A "VMS" option is not needed since the VMS C-compilers
++ *		provide it (no need to change sec#1, vmsconf.h handles it).
++ */
++
++#define UNIX		/* delete if no fork(), exec() available */
++
++/* #define MSDOS */	/* in case it's not auto-detected */
++  
++/* #define OS2 */	/* in case it's not auto-detected */
++  
++/* #define TOS */	/* define for Atari ST/TT */
++  
++/* #define STUPID */	/* avoid some complicated expressions if
++  			   your C compiler chokes on them */
++/* #define MINIMAL_TERM */
++			/* if a terminal handles highlighting or tabs poorly,
++  			   try this define, used in pager.c and termcap.c */
++/* #define ULTRIX_CC20 */
++			/* define only if using cc v2.0 on a DECstation */
++/* #define ULTRIX_PROTO */
++			/* define for Ultrix 4.0 (or higher) on a DECstation;
++  			 * if you get compiler errors, don't define this. */
++  			/* Hint: if you're not developing code, don't define
++  			   ULTRIX_PROTO. */
++  
++#include "config1.h"	/* should auto-detect MSDOS, MAC, AMIGA, WIN32 and OS2 */
++  
++/* Windowing systems...
++ * Define all of those you want supported in your binary.
++ * Some combinations make no sense.  See the installation document.
++ */
++/* #define TTY_GRAPHICS */	/* good old tty based graphics */
++/* #define X11_GRAPHICS */	/* X11 interface */
++/* #define QT_GRAPHICS */	/* Qt Interface */
++/* #define KDE */		/* KDE Interface */
++/* #define GTK_GRAPHICS */	/* GTK Interface */
++/* #define GNOME_GRAPHICS */	/* Gnome interface */
++/* #define PROXY_GRAPHICS */	/* Plug-in interfaces */
++/* #define MSWIN_GRAPHICS */	/* Windows NT, CE, Graphics */
++/* #define GL_GRAPHICS */	/* OpenGL graphics */
++/* #define SDL_GRAPHICS */	/* Software SDL graphics */
++#define VULTURE_GRAPHICS /* Vulture's Eye isometric graphics interface */
++
++/*
++ * Define the default window system.  This should be one that is compiled
++ * into your system (see defines above).  Known window systems are:
++ *
++ *	tty, X11, mac, amii, BeOS, Qt, Gem, Gnome, gtk, proxy, GL, SDL, Vulture's Eye (vulture)
++ */
++
++/* MAC also means MAC windows */
++#ifdef MAC
++# ifndef	AUX
++#  define DEFAULT_WINDOW_SYS "Mac"
++# endif
++#endif
++
++/* Amiga supports AMII_GRAPHICS and/or TTY_GRAPHICS */
++#ifdef AMIGA
++# define AMII_GRAPHICS			/* (optional) */
++# define DEFAULT_WINDOW_SYS "amii"	/* "amii", "amitile" or "tty" */
++#endif
++
++#if 0 /* Removed in 3.3.0 */
++/* Windows NT supports TTY_GRAPHICS */
++#ifdef WIN32
++#  define DEFAULT_WINDOW_SYS "tty"
++#endif
++#endif
++
++/* Atari supports GEM_GRAPHICS and/or TTY_GRAPHICS */
++#ifdef TOS
++# define GEM_GRAPHICS			/* Atari GEM interface (optional) */
++# define DEFAULT_WINDOW_SYS "Gem"	/* "Gem" or "tty" */
++#endif
++
++#ifdef __BEOS__
++#define BEOS_GRAPHICS /* (optional) */
++#define DEFAULT_WINDOW_SYS "BeOS"  /* "tty" */
++#ifndef HACKDIR	/* override the default hackdir below */
++# define HACKDIR "/boot/apps/NetHack"
++#endif
++#endif
++
++#ifdef QT_GRAPHICS
++# define DEFAULT_WC_TILED_MAP   /* Default to tiles if users doesn't say wc_ascii_map */
++# define USER_SOUNDS		/* Use sounds */
++# ifndef __APPLE__
++#  define USER_SOUNDS_REGEX
++# endif
++# define USE_XPM		/* Use XPM format for images (required) */
++# define GRAPHIC_TOMBSTONE	/* Use graphical tombstone (rip.xpm) */
++# ifndef DEFAULT_WINDOW_SYS
++#  define DEFAULT_WINDOW_SYS "Qt"
++# endif
++#endif
++
++#ifdef VULTURE_GRAPHICS
++# ifndef DEFAULT_WINDOW_SYS
++#  define DEFAULT_WINDOW_SYS "vulture"
++# endif
++#endif /* VULTURE_GRAPHICS */
++
++#ifdef GNOME_GRAPHICS
++# define USE_XPM		/* Use XPM format for images (required) */
++# define GRAPHIC_TOMBSTONE	/* Use graphical tombstone (rip.ppm) */
++# ifndef DEFAULT_WINDOW_SYS
++#  define DEFAULT_WINDOW_SYS "Gnome"
++# endif
++#endif
++
++#ifdef GTK_GRAPHICS
++# define USE_XPM		/* Use XPM format for images (required) */
++# define GRAPHIC_TOMBSTONE	/* Use graphical tombstone (rip.xpm) */
++/* # define GTK_PROXY */	/* Build for proxy interface */
++# ifndef DEFAULT_WINDOW_SYS
++#  define DEFAULT_WINDOW_SYS "gtk"
++# endif
++#endif
++
++#ifdef PROXY_GRAPHICS
++# define USE_XPM		/* Use XPM format for images */
++/*
++ * The proxy interface shouldn't be used as the default window system.
++ * This will cause it to always be initialized with undesirable side
++ * effects. Instead, use the windowtype option.  --ALI
++ */
++#endif
++
++#ifdef MSWIN_GRAPHICS
++# ifndef DEFAULT_WINDOW_SYS
++#  define DEFAULT_WINDOW_SYS "mswin"
++# endif
++# define HACKDIR "\\nethack"
++#endif
++
++#ifdef GL_GRAPHICS
++# ifndef DEFAULT_WINDOW_SYS
++#  define DEFAULT_WINDOW_SYS "GL"
++# endif
++#endif
++
++#ifdef SDL_GRAPHICS
++# ifndef DEFAULT_WINDOW_SYS
++#  define DEFAULT_WINDOW_SYS "SDL"
++# endif
++#endif
++
++#if defined(GL_GRAPHICS) || defined(SDL_GRAPHICS)
++# define GRAPHIC_TOMBSTONE     /* Use graphical tombstone */
++/* -AJA- workaround for clash with ZLIB headers */
++# if defined(VANILLA_GLHACK)
++#  define compress    nh_compress
++#  define uncompress  nh_uncompress
++# endif
++#endif
++
++#ifdef X11_GRAPHICS
++/*
++ * There are two ways that X11 tiles may be defined.  (1) using a custom
++ * format loaded by NetHack code, or (2) using the XPM format loaded by
++ * the free XPM library.  The second option allows you to then use other
++ * programs to generate tiles files.  For example, the PBMPlus tools
++ * would allow:
++ *  xpmtoppm <x11tiles.xpm | pnmscale 1.25 | pnmdepth 255 |
++ *     ppmquant 90 | ppmtoxpm >x11tiles_big.xpm
++ */
++/* # define USE_XPM */		/* Disable if you do not have the XPM library */
++# ifdef USE_XPM
++#  define GRAPHIC_TOMBSTONE	/* Use graphical tombstone (rip.xpm) */
++# endif
++# ifndef DEFAULT_WINDOW_SYS
++#  define DEFAULT_WINDOW_SYS "X11"
++# endif
++#endif
++
++#ifndef DEFAULT_WINDOW_SYS
++# define DEFAULT_WINDOW_SYS "tty"
++#endif
++
++/*
++ * Section 2:	Some global parameters and filenames.
++ *		Commenting out WIZARD, LOGFILE, NEWS or PANICLOG removes that
++ *		feature from the game; otherwise set the appropriate wizard
++ *		name.  LOGFILE, NEWS and PANICLOG refer to files in the
++ *		playground.
++ */
++
++#ifndef WIZARD		/* allow for compile-time or Makefile changes */
++# ifndef KR1ED
++#  define WIZARD  "wizard" /* the person allowed to use the -D option */
++# else
++#  define WIZARD
++#  define WIZARD_NAME "wizard"
++# endif
++#endif
++
++#define LOGFILE "logfile"	/* larger file for debugging purposes */
++#define LOGAREA FILE_AREA_VAR
++#define NEWS "news"		/* the file containing the latest hack news */
++#define NEWS_AREA FILE_AREA_SHARE
++#define PANICLOG "paniclog"	/* log of panic and impossible events */
++
++/*
++ *	If COMPRESS is defined, it should contain the full path name of your
++ *	'compress' program.  Defining INTERNAL_COMP causes NetHack to do
++ *	simpler byte-stream compression internally.  Both COMPRESS and
++ *	INTERNAL_COMP create smaller bones/level/save files, but require
++ *	additional code and time.  Currently, only UNIX fully implements
++ *	COMPRESS; other ports should be able to uncompress save files a
++ *	la unixmain.c if so inclined.
++ *	If you define COMPRESS, you must also define COMPRESS_EXTENSION
++ *	as the extension your compressor appends to filenames after
++ *	compression.
++ */
++
++#ifdef UNIX
++/* path and file name extension for compression program */
++# define COMPRESS "/usr/bin/compress" /* Lempel-Ziv compression */
++# define COMPRESS_EXTENSION ".Z"	     /* compress's extension */
++
++/* An example of one alternative you might want to use: */
++/* # define COMPRESS "/usr/local/bin/gzip" */   /* FSF gzip compression */
++/* # define COMPRESS_EXTENSION ".gz" */	     /* normal gzip extension */
++
++/* # define COMPRESS "/usr/bin/bzip2"	*//* bzip2 compression */
++/* # define COMPRESS_EXTENSION ".bz2"	*//* bzip2 extension */
++#endif
++#ifndef COMPRESS
++# define INTERNAL_COMP	/* control use of NetHack's compression routines */
++#endif
++
++/*
++ *	Data librarian.  Defining DLB places most of the support files into
++ *	a tar-like file, thus making a neater installation.  See *conf.h
++ *	for detailed configuration.
++ */
++#define DLB             /* not supported on all platforms */
++
++/*
++ *	Defining INSURANCE slows down level changes, but allows games that
++ *	died due to program or system crashes to be resumed from the point
++ *	of the last level change, after running a utility program.
++ */
++#define INSURANCE	/* allow crashed game recovery */
++
++#ifndef MAC
++# define CHDIR		/* delete if no chdir() available */
++#endif
++
++#ifdef CHDIR
++/*
++ * If you define HACKDIR, then this will be the default playground;
++ * otherwise it will be the current directory.
++ */
++# ifndef HACKDIR
++#  ifdef __APPLE__
++#    define HACKDIR "nethackdir"      /* nethack directory */
++#  else
++#    define HACKDIR "."
++#  endif
++# endif
++
++/*
++ * Some system administrators are stupid enough to make Hack suid root
++ * or suid daemon, where daemon has other powers besides that of reading or
++ * writing Hack files.  In such cases one should be careful with chdir's
++ * since the user might create files in a directory of his choice.
++ * Of course SECURE is meaningful only if HACKDIR is defined.
++ */
++/* #define SECURE */	/* do setuid(getuid()) after chdir() */
++
++/*
++ * If it is desirable to limit the number of people that can play Hack
++ * simultaneously, define HACKDIR, SECURE and MAX_NR_OF_PLAYERS.
++ * #define MAX_NR_OF_PLAYERS 6
++ */
++#endif /* CHDIR */
++
++
++
++/*
++ * Section 3:	Definitions that may vary with system type.
++ *		For example, both schar and uchar should be short ints on
++ *		the AT&T 3B2/3B5/etc. family.
++ */
++
++/*
++ * Uncomment the following line if your compiler doesn't understand the
++ * 'void' type (and thus would give all sorts of compile errors without
++ * this definition).
++ */
++/* #define NOVOID */			/* define if no "void" data type. */
++
++/*
++ * Uncomment the following line if your compiler falsely claims to be
++ * a standard C compiler (i.e., defines __STDC__ without cause).
++ * Examples are Apollo's cc (in some versions) and possibly SCO UNIX's rcc.
++ */
++/* #define NOTSTDC */			/* define for lying compilers */
++
++#include "tradstdc.h"
++
++/*
++ * type schar: small signed integers (8 bits suffice) (eg. TOS)
++ *
++ *	typedef char	schar;
++ *
++ *      will do when you have signed characters; otherwise use
++ *
++ *	typedef short int schar;
++ */
++#ifdef AZTEC
++# define schar	char
++#else
++typedef signed char	schar;
++#endif
++
++/*
++ * type uchar: small unsigned integers (8 bits suffice - but 7 bits do not)
++ *
++ *	typedef unsigned char	uchar;
++ *
++ *	will be satisfactory if you have an "unsigned char" type;
++ *	otherwise use
++ *
++ *	typedef unsigned short int uchar;
++ */
++#ifndef _AIX32		/* identical typedef in system file causes trouble */
++typedef unsigned char	uchar;
++#endif
++
++#define RECORD_CONDUCT /* Record conduct challenges in logfile */
++
++/*
++ * Various structures have the option of using bitfields to save space.
++ * If your C compiler handles bitfields well (e.g., it can initialize structs
++ * containing bitfields), you can define BITFIELDS.  Otherwise, the game will
++ * allocate a separate character for each bitfield.  (The bitfields used never
++ * have more than 7 bits, and most are only 1 bit.)
++ */
++#define BITFIELDS	/* Good bitfield handling */
++
++/* #define STRNCMPI */ /* compiler/library has the strncmpi function */
++
++/*
++ * There are various choices for the NetHack vision system.  There is a
++ * choice of two algorithms with the same behavior.  Defining VISION_TABLES
++ * creates huge (60K) tables at compile time, drastically increasing data
++ * size, but runs slightly faster than the alternate algorithm.  (MSDOS in
++ * particular cannot tolerate the increase in data size; other systems can
++ * flip a coin weighted to local conditions.)
++ *
++ * If VISION_TABLES is not defined, things will be faster if you can use
++ * MACRO_CPATH.  Some cpps, however, cannot deal with the size of the
++ * functions that have been macroized.
++ */
++/* WAC Can be defined under DJGPP,  even though it's DOS*/
++/*#define VISION_TABLES */ /* use vision tables generated at compile time */
++#ifndef VISION_TABLES
++# ifndef NO_MACRO_CPATH
++#  define MACRO_CPATH	/* use clear_path macros instead of functions */
++# endif
++#endif
++
++/*
++ * Section 4:  THE FUN STUFF!!!
++ *
++ * Conditional compilation of special options are controlled here.
++ * If you define the following flags, you will add not only to the
++ * complexity of the game but also to the size of the load module.
++ */
++
++/* dungeon features */
++#define SINKS		/* Kitchen sinks - Janet Walz */
++#define LIGHT_SRC_SPELL /* WAC Light sourced spells (wac@intergate.bc.ca)*/
++
++/* dungeon levels */
++#define WALLIFIED_MAZE	/* Fancy mazes - Jean-Christophe Collet */
++/* #define REINCARNATION */     /* Special Rogue-like levels */
++#define BLACKMARKET     /* Massimo Campostrini (campo@sunthpi3.difi.unipi.it) */
++
++/* monsters & objects */
++#define KOPS		/* Keystone Kops by Scott R. Turner */
++#define SEDUCE		/* Succubi/incubi seduction, by KAA, suggested by IM */
++#define INVISIBLE_OBJECTS /* Not yet fully implemented */
++#define UNPOLYPILE	/* WAC -- Items can unpolymorph */
++#define WALLET_O_P      /* Perseus' Wallet, and all related code (tsanth@iname.com)*/
++#define LIGHTSABERS
++#ifdef LIGHTSABERS
++# define D_SABER	/* Enable WEAPON(dimsaber), and all related code (tsanth@iname.com)*/
++#endif
++#define P_SPOON         /* Enable WEPTOOL(spoon), and all related code (tsanth@iname.com)*/
++#define FIREARMS	/* KMH -- Guns and bullets */
++#define EATEN_MEMORY	/* WAC -- Remember which monsters have been eaten */
++#define STEED		/* The ability to ride monsters */
++
++/* Roles */
++#define DWARF		/* Dwarf Patch, Osku Salerma (osku@iki.fi) */
++#define TOURIST		/* Tourist players with cameras and Hawaiian shirts */
++#define YEOMAN		/* KMH -- Yeoman class  */
++/* #define ZOUTHERN */	/* KMH -- Zoutherner class and its animals */
++
++/* I/O */
++#define REDO		/* support for redoing last command - DGK */
++#if !defined(MAC)
++# define CLIPPING	/* allow smaller screens -- ERS */
++#endif
++#ifdef TTY_GRAPHICS
++# define MENU_COLOR
++#endif
++
++#if defined(UNIX)
++#define USE_REGEX_MATCH
++/* if USE_REGEX_MATCH is defined, use regular expressions (GNU regex.h)
++ * otherwise use pmatch() to match menu color lines.
++ * pmatch() provides basic globbing: '*' and '?' wildcards.
++ */
++#endif
++
++/* difficulty */
++#define ELBERETH	/* Engraving the E-word repels monsters */
++/* #define NOARTIFACTWISH */  /* No wishing for special artifacts -- swhite@cs.mun.ca */
++/* #define NO_BONES */	/*Disables loading and saving bones levels*/
++
++/* The following are best left disabled until their bugs are completely fixed */
++
++
++/* User_sounds are sounds matches with messages.  The messages are defined
++ * in the player's .nethackrc using lines of the form:
++ *
++ * SOUND=MESG <message-regex-pattern> <sound-filename> <volume>
++ *
++ * For example:
++ *
++ * SOUND=MESG "board beneath .....* squeaks" "squeak.au" 60
++ *
++ * By default, the filenames are relative to the nethack install directory,
++ * but this can be set in the .nethackrc via:
++ *
++ * SOUNDDIR=<directory>
++ */
++/* #define USER_SOUNDS */   /* Allow user-defined regex mappings from messages to sounds */
++                      /* Only supported on Qt with NAS - Network Audio System */
++
++
++#ifdef REDO
++# define DOAGAIN '\001'	/* ^A, the "redo" key used in cmd.c and getline.c */
++#endif
++
++#define EXP_ON_BOTL	/* Show experience on bottom line */
++/* #define SCORE_ON_BOTL */	/* added by Gary Erickson (erickson@ucivax) */
++/* #define BORG */            /* Works only under DOS */
++/* #define KEEP_SAVE */       /* Keep savefiles after Restore (wac@intergate.bc.ca)*/
++/* #define CHARON */	/* Charon's boat, enables Cerebus - not implemented */
++#define SHOW_DMG        /* WAC made dmg reports optional (wac@intergate.bc.ca)*/
++#define SHOW_WEIGHT     /* [max] added display of object weight when picking up */
++                        /* and in inventory (madmax@fly.cc.fer.hr). */
++                        /* Originally added by zaga. */
++#define OTHER_SERVICES  /* shopkeeper services */
++#define DUNGEON_GROWTH
++
++/* #define SHOUT */ /* JRN -- shouting and petcommands - not implemented */
++
++#define DISPLAY_LAYERS	/* Improved support for transparent tile sets - ALI */
++
++/*
++ * Section 5:  EXPERIMENTAL STUFF
++ *
++ * Conditional compilation of new or experimental options are controlled here.
++ * Enable any of these at your own risk -- there are almost certainly
++ * bugs left here.
++ */
++
++/*#define GOLDOBJ */	/* Gold is kept on obj chains - Helge Hafting */
 +#define AUTOPICKUP_EXCEPTIONS /* exceptions to autopickup */
- 
- /* End of Section 5 */
- 
-diff -Naur vulture/slashem/include/unixconf.h vulture.debian/slashem/include/unixconf.h
---- vulture/slashem/include/unixconf.h	2008-03-29 00:52:03.000000000 +0100
-+++ vulture.debian/slashem/include/unixconf.h	2008-04-03 09:19:53.000000000 +0200
++
++/* End of Section 5 */
++
++#include "global.h"	/* Define everything else according to choices above */
++
++#endif /* CONFIG_H */
+diff -Naur a/slashem/include/unixconf.h b/slashem/include/unixconf.h
+--- a/slashem/include/unixconf.h	2011-03-25 16:05:56.393015016 +0100
++++ b/slashem/include/unixconf.h	2011-03-26 01:44:37.918245007 +0100
 @@ -174,7 +174,7 @@
   * If you want the static parts of your playground on a read-only file
   * system, define VAR_PLAYGROUND to be where the variable parts are kept.
@@ -1304,3 +2602,38 @@ diff -Naur vulture/slashem/include/unixconf.h vulture.debian/slashem/include/uni
  
  
  
+diff -Naur a/unnethack/include/config.h b/unnethack/include/config.h
+--- a/unnethack/include/config.h	2011-03-25 16:07:02.920547017 +0100
++++ b/unnethack/include/config.h	2011-03-26 01:44:37.918245007 +0100
+@@ -198,8 +198,8 @@
+ /* #define COMPRESS "/usr/bin/compress" */	/* Lempel-Ziv compression */
+ /* #define COMPRESS_EXTENSION ".Z"	*/	/* compress's extension */
+ /* An example of one alternative you might want to use: */
+-#define COMPRESS "/bin/gzip"	/* FSF gzip compression */
+-#define COMPRESS_EXTENSION ".gz"		/* normal gzip extension */
++// #define COMPRESS "/bin/gzip"	/* FSF gzip compression */
++// #define COMPRESS_EXTENSION ".gz"		/* normal gzip extension */
+ #endif
+ 
+ #ifndef COMPRESS
+@@ -231,7 +231,7 @@
+  * otherwise it will be the current directory.
+  */
+ # ifndef HACKDIR
+-#  define HACKDIR "/usr/games/lib/unnethackdir"
++#  define HACKDIR "/usr/lib/games/vulture-unnethack"
+ # endif
+ 
+ /*
+diff -Naur a/unnethack/include/unixconf.h b/unnethack/include/unixconf.h
+--- a/unnethack/include/unixconf.h	2011-03-25 16:07:02.560727016 +0100
++++ b/unnethack/include/unixconf.h	2011-03-26 01:44:37.918245007 +0100
+@@ -102,7 +102,7 @@
+  * If you want the static parts of your playground on a read-only file
+  * system, define VAR_PLAYGROUND to be where the variable parts are kept.
+  */
+-/* #define VAR_PLAYGROUND "/var/lib/games/nethack" */
++#define VAR_PLAYGROUND "/var/games/vulture-unnethack"
+ 
+ 
+ /*
