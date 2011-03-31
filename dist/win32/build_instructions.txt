@@ -1,0 +1,78 @@
+Building vulture on Windows
+===========================
+
+Daniel Thaler <daniel@dthaler.de>, March 2011
+
+Intro
+-----
+Historically, Vulture has not been built on Windows very often. In fact, it is
+typicaly only done before releases which are rather infrequent.
+This has the consequence that build instructions for Windows are frequently out
+of date.
+For this reason this document aims to give an overview rather than an exact
+sequence of steps to perform.
+Experiance building software on Linux/Unix is very helpful, as we will use
+MinGW to simulate that environment: It is the only known way to build Vulture on
+Windows.
+The more natural route of creating creating a Project in VS2010 does NOT work: I
+have wasted several days trying to do exactly that before giving up.
+The build issues can all be fixed up with a resonable amount of effort, but the 
+resulting binary does not run: modern versions of MSVCRT run into assertions for
+practically every operation involving files. If you have guru-level mastery of
+debugging with Visual Studio and want to tackle this problem, I would love to
+hear from you
+
+
+Creating a build environment
+----------------------------
+1) Make sure you do NOT have cygwin, tools from gnuwin32 or anything like that.
+All of these my interact with the fake Unix environment provided by MinGW, causing
+unpredictable results.
+
+2) Install MinGW and Msys
+The mingw-get installer from mingw.org works fine. It is what I used.
+The result should be a C:\MinGW directory, with msys in C:\MinGW\msys\1.0\
+If you feel you must install elsewhere, make sure the directory name does not
+contain any spaces.
+If you want or need to set this up by hand, make sure you have a full development
+environment (gcc, g++, bison, flex, make, ...) and run pi.bat in the postinstall
+directory under msys\ to link MinGW and Msys
+
+3) Install prerequisites
+You need the following libraries in order to build Vulture
+ - zlib       (tested: 1.2.5)
+ - libpng     (tested: 1.4.5; NOTE: 1.5 has API changes)
+ - freetype   (tested: 2.4.4)
+ - libogg     (tested: 1.2.2)
+ - libvorbis  (tested: 1.3.2)
+ - SDL        (tested: 1.2.14)
+ - SDL_ttf    (tested: 2.0.10)
+ - SDL_mixer  (tested: 1.2.11)
+ 
+Run msys.bat (in C:\MinGW\msys\1.0 if you have a standard setup) to get the msys shell.
+Unpack and compile the libraries inside this environment.
+For zlib run:
+make -f win32/Makefile.gcc -j 8
+make -f win32/Makefile.gcc SHARED_MODE=1 BINARY_PATH=/mingw/bin INCLUDE_PATH=/mingw/include LIBRARY_PATH=/mingw/lib install
+
+For all others the command is
+./configure --prefix=/mingw ; make -j 8 ; make install
+
+4) Build vulture for nethack,slashem and unnethack
+In your msys shell window cd into the top level of the source tree of vulture.
+Run
+	make -f dist/win32/Makefile VARIANT=vulture-nethack -j8
+	make -f dist/win32/Makefile VARIANT=vulture-slashem -j8
+	make -f dist/win32/Makefile VARIANT=vulture-unnethack -j8
+
+You will likely see build errors. Presently you will need to comment out the
+line "#define USER_SOUNDS" in ntconf.h for each of nethack and slashem.
+Unnethack on the other hand has problems with its definition of BOOLEAN_P; every
+time the build fails on a line containing this type, replace it with "int" to
+continue...
+
+Once you have dealt with the compile errors you will find the result of your labors
+in vulture-<foo>-build/binary/. ou can run the game directly from this directory
+or move it wherever you want it.
+
+Congratulations!

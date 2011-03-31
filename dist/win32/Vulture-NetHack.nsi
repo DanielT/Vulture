@@ -1,6 +1,6 @@
-Name "Vulture's Eye"
-OutFile "vulture-a.b.c-eye_win32-d.exe"
-InstallDir "$PROGRAMFILES\Vulture's Eye"
+Name "Vulture-Nethack"
+OutFile "vulture-nethack-a.b.c_win32.exe"
+InstallDir "$PROGRAMFILES\Vulture-Nethack"
 
 ;--------------------------------
 
@@ -11,25 +11,25 @@ Page instfiles
 
 Section ""
   SetOutPath $INSTDIR
-  File ..\..\nethack\binary\*
+  File ..\..\vulture-nethack-build\binary\*
   SetOutPath $INSTDIR\config
-  File ..\..\nethack\binary\config\*
+  File ..\..\vulture-nethack-build\binary\config\*
   SetOutPath $INSTDIR\graphics
-  File ..\..\nethack\binary\graphics\*
+  File ..\..\vulture-nethack-build\binary\graphics\*
   SetOutPath $INSTDIR\tiles
-  File ..\..\nethack\binary\tiles\*
+  File ..\..\vulture-nethack-build\binary\tiles\*
   SetOutPath $INSTDIR\manual
-  File ..\..\nethack\binary\manual\*
+  File ..\..\vulture-nethack-build\binary\manual\*
   SetOutPath $INSTDIR\manual\img
-  File ..\..\nethack\binary\manual\img\*
+  File ..\..\vulture-nethack-build\binary\manual\img\*
   SetOutPath $INSTDIR\sound
-  File ..\..\nethack\binary\sound\*
+  File ..\..\vulture-nethack-build\binary\sound\*
   SetOutPath $INSTDIR\music
-  File ..\..\nethack\binary\music\*
+  File ..\..\vulture-nethack-build\binary\music\*
   SetOutPath $INSTDIR\fonts
-  File ..\..\nethack\binary\fonts\*
+  File ..\..\vulture-nethack-build\binary\fonts\*
 
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vulture-NetHack" "DisplayName" "Vulture's Eye"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vulture-NetHack" "DisplayName" "Vulture-Nethack"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vulture-NetHack" "UninstallString" '"$INSTDIR\uninstall.exe"'
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vulture-NetHack" "NoModify" 1
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vulture-NetHack" "NoRepair" 1
@@ -38,16 +38,16 @@ SectionEnd
 
 Section "Desktop icon" SecDesktop
   SetOutPath $INSTDIR
-  CreateShortcut "$DESKTOP\Vulture's Eye.lnk" "$INSTDIR\Vulture-NetHack.exe" "" "$INSTDIR\Vulture-NetHack.exe" 0
+  CreateShortcut "$DESKTOP\Vulture-NetHack.lnk" "$INSTDIR\Vulture-NetHack.exe" "" "$INSTDIR\Vulture-NetHack.exe" 0
 SectionEnd
 
 Section "Start Menu Shortcuts"
   SetOutPath $INSTDIR
-  CreateDirectory "$SMPROGRAMS\Vulture's Eye"
-  CreateShortCut "$SMPROGRAMS\Vulture's Eye\Play Vulture's Eye.lnk" "$INSTDIR\Vulture-NetHack.exe" "" "$INSTDIR\Vulture-NetHack.exe" 0
-  CreateShortCut "$SMPROGRAMS\Vulture's Eye\Manual.lnk" "$INSTDIR\manual\index.html" "" "$INSTDIR\manual\index.html" 0
-  CreateShortCut "$SMPROGRAMS\Vulture's Eye\Darkarts Studios.lnk" "http://www.darkarts.co.za" "" "http://www.darkarts.co.za" 0
-  CreateShortCut "$SMPROGRAMS\Vulture's Eye\Uninstall Vulture's Eye.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
+  CreateDirectory "$SMPROGRAMS\Vulture-NetHack"
+  CreateShortCut "$SMPROGRAMS\Vulture-NetHack\Vulture-NetHack.lnk" "$INSTDIR\Vulture-NetHack.exe" "" "$INSTDIR\Vulture-NetHack.exe" 0
+  CreateShortCut "$SMPROGRAMS\Vulture-NetHack\Manual.lnk" "$INSTDIR\manual\index.html" "" "$INSTDIR\manual\index.html" 0
+  CreateShortCut "$SMPROGRAMS\Vulture-NetHack\Darkarts Studios.lnk" "http://www.darkarts.co.za" "" "http://www.darkarts.co.za" 0
+  CreateShortCut "$SMPROGRAMS\Vulture-NetHack\Uninstall Vulture-NetHack.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
 SectionEnd
 
 Section "Uninstall"
@@ -71,10 +71,10 @@ Section "Uninstall"
   RMDir "$INSTDIR\music"
   RMDir "$INSTDIR\fonts"
   RMDir "$INSTDIR"
-  Delete "$SMPROGRAMS\Vulture's Eye\Play Vulture's Eye.lnk"
-  Delete "$SMPROGRAMS\Vulture's Eye\Manual.lnk"
-  Delete "$SMPROGRAMS\Vulture's Eye\Darkarts Studios.lnk"
-  Delete "$SMPROGRAMS\Vulture's Eye\Uninstall Vulture's Eye.lnk"
-  RMDir "$SMPROGRAMS\Vulture's Eye"
-  Delete "$DESKTOP\Vulture's Eye.lnk"
+  Delete "$SMPROGRAMS\Vulture-NetHack\Vulture-NetHack.lnk"
+  Delete "$SMPROGRAMS\Vulture-NetHack\Manual.lnk"
+  Delete "$SMPROGRAMS\Vulture-NetHack\Darkarts Studios.lnk"
+  Delete "$SMPROGRAMS\Vulture-NetHack\Uninstall Vulture-NetHack.lnk"
+  RMDir "$SMPROGRAMS\Vulture-NetHack"
+  Delete "$DESKTOP\Vulture-NetHack.lnk"
 SectionEnd

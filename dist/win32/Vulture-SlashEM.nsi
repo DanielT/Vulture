@@ -1,6 +1,6 @@
-Name "Vulture's Claw"
-OutFile "vulture-a.b.c-claw_win32-d.exe"
-InstallDir "$PROGRAMFILES\Vulture's Claw"
+Name "Vulture-SlashEM"
+OutFile "vulture-SlashEM-a.b.c_win32.exe"
+InstallDir "$PROGRAMFILES\Vulture-SlashEM"
 
 ;--------------------------------
 
@@ -11,25 +11,25 @@ Page instfiles
 
 Section ""
   SetOutPath $INSTDIR
-  File ..\..\slashem\binary\*
+  File ..\..\vulture-SlashEM-build\binary\*
   SetOutPath $INSTDIR\config
-  File ..\..\slashem\binary\config\*
+  File ..\..\vulture-SlashEM-build\binary\config\*
   SetOutPath $INSTDIR\graphics
-  File ..\..\slashem\binary\graphics\*
+  File ..\..\vulture-SlashEM-build\binary\graphics\*
   SetOutPath $INSTDIR\tiles
-  File ..\..\slashem\binary\tiles\*
+  File ..\..\vulture-SlashEM-build\binary\tiles\*
   SetOutPath $INSTDIR\manual
-  File ..\..\slashem\binary\manual\*
+  File ..\..\vulture-SlashEM-build\binary\manual\*
   SetOutPath $INSTDIR\manual\img
-  File ..\..\slashem\binary\manual\img\*
+  File ..\..\vulture-SlashEM-build\binary\manual\img\*
   SetOutPath $INSTDIR\sound
-  File ..\..\slashem\binary\sound\*
+  File ..\..\vulture-SlashEM-build\binary\sound\*
   SetOutPath $INSTDIR\music
-  File ..\..\slashem\binary\music\*
+  File ..\..\vulture-SlashEM-build\binary\music\*
   SetOutPath $INSTDIR\fonts
-  File ..\..\slashem\binary\fonts\*
+  File ..\..\vulture-SlashEM-build\binary\fonts\*
 
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vulture-SlashEM" "DisplayName" "Vulture's Claw"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vulture-SlashEM" "DisplayName" "Vulture-SlashEM"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vulture-SlashEM" "UninstallString" '"$INSTDIR\uninstall.exe"'
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vulture-SlashEM" "NoModify" 1
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Vulture-SlashEM" "NoRepair" 1
@@ -38,16 +38,16 @@ SectionEnd
 
 Section "Desktop icon" SecDesktop
   SetOutPath $INSTDIR
-  CreateShortcut "$DESKTOP\Vulture's Claw.lnk" "$INSTDIR\Vulture-SlashEM.exe" "" "$INSTDIR\Vulture-SlashEM.exe" 0
+  CreateShortcut "$DESKTOP\Vulture-SlashEM.lnk" "$INSTDIR\Vulture-SlashEM.exe" "" "$INSTDIR\Vulture-SlashEM.exe" 0
 SectionEnd
 
 Section "Start Menu Shortcuts"
   SetOutPath $INSTDIR
-  CreateDirectory "$SMPROGRAMS\Vulture's Claw"
-  CreateShortCut "$SMPROGRAMS\Vulture's Claw\Play Vulture's Claw.lnk" "$INSTDIR\Vulture-SlashEM.exe" "" "$INSTDIR\Vulture-SlashEM.exe" 0
-  CreateShortCut "$SMPROGRAMS\Vulture's Claw\Manual.lnk" "$INSTDIR\manual\index.html" "" "$INSTDIR\manual\index.html" 0
-  CreateShortCut "$SMPROGRAMS\Vulture's Claw\Darkarts Studios.lnk" "http://www.darkarts.co.za" "" "http://www.darkarts.co.za" 0
-  CreateShortCut "$SMPROGRAMS\Vulture's Claw\Uninstall Vulture's Claw.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
+  CreateDirectory "$SMPROGRAMS\Vulture-SlashEM"
+  CreateShortCut "$SMPROGRAMS\Vulture-SlashEM\Vulture-SlashEM.lnk" "$INSTDIR\Vulture-SlashEM.exe" "" "$INSTDIR\Vulture-SlashEM.exe" 0
+  CreateShortCut "$SMPROGRAMS\Vulture-SlashEM\Manual.lnk" "$INSTDIR\manual\index.html" "" "$INSTDIR\manual\index.html" 0
+  CreateShortCut "$SMPROGRAMS\Vulture-SlashEM\Darkarts Studios.lnk" "http://www.darkarts.co.za" "" "http://www.darkarts.co.za" 0
+  CreateShortCut "$SMPROGRAMS\Vulture-SlashEM\Uninstall Vulture-SlashEM.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
 SectionEnd
 
 Section "Uninstall"
@@ -71,10 +71,10 @@ Section "Uninstall"
   RMDir "$INSTDIR\music"
   RMDir "$INSTDIR\fonts"
   RMDir "$INSTDIR"
-  Delete "$SMPROGRAMS\Vulture's Claw\Play Vulture's Claw.lnk"
-  Delete "$SMPROGRAMS\Vulture's Claw\Manual.lnk"
-  Delete "$SMPROGRAMS\Vulture's Claw\Darkarts Studios.lnk"
-  Delete "$SMPROGRAMS\Vulture's Claw\Uninstall Vulture's Claw.lnk"
-  RMDir "$SMPROGRAMS\Vulture's Claw"
-  Delete "$DESKTOP\Vulture's Claw.lnk"
+  Delete "$SMPROGRAMS\Vulture-SlashEM\Vulture-SlashEM.lnk"
+  Delete "$SMPROGRAMS\Vulture-SlashEM\Manual.lnk"
+  Delete "$SMPROGRAMS\Vulture-SlashEM\Darkarts Studios.lnk"
+  Delete "$SMPROGRAMS\Vulture-SlashEM\Uninstall Vulture-SlashEM.lnk"
+  RMDir "$SMPROGRAMS\Vulture-SlashEM"
+  Delete "$DESKTOP\Vulture-SlashEM.lnk"
 SectionEnd
