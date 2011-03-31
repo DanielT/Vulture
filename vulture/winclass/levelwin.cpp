@@ -668,44 +668,47 @@ eventresult levelwin::handle_keydown_event(window* target, void* result, int sym
 
 eventresult levelwin::handle_resize_event(window* target, void* result, int res_w, int res_h)
 {
+	window *winelem;
+	
 	if (this == target) {
 		w = res_w;
 		h = res_h;
-	} else {
-		switch (target->menu_id)
-		{
-			/* case V_HOTSPOT_SCROLL_UPLEFT: never needs updating on resize*/
+		
+		/* update window scrolling activation regions */
+		for (winelem = first_child; winelem; winelem = winelem->sib_next) {
+			switch (winelem->menu_id) {
+				/* case V_HOTSPOT_SCROLL_UPLEFT: never needs updating on resize*/
+				case V_HOTSPOT_SCROLL_UP:
+					winelem->w = w - 40;
+					break;
 
-			case V_HOTSPOT_SCROLL_UP:
-				target->w = w - 40;
-				break;
+				case V_HOTSPOT_SCROLL_UPRIGHT:
+					winelem->x = w - 20;
+					break;
 
-			case V_HOTSPOT_SCROLL_UPRIGHT:
-				target->x = w - 20;
-				break;
+				case V_HOTSPOT_SCROLL_LEFT:
+					winelem->h = h - 40;
+					break;
 
-			case V_HOTSPOT_SCROLL_LEFT:
-				target->h = h - 40;
-				break;
+				case V_HOTSPOT_SCROLL_RIGHT:
+					winelem->h = h - 40;
+					winelem->x = w - 20;
+					break;
 
-			case V_HOTSPOT_SCROLL_RIGHT:
-				target->h = h - 40;
-				target->x = w - 20;
-				break;
+				case V_HOTSPOT_SCROLL_DOWNLEFT:
+					winelem->y = h - 20;
+					break;
 
-			case V_HOTSPOT_SCROLL_DOWNLEFT:
-				target->y = h - 20;
-				break;
+				case V_HOTSPOT_SCROLL_DOWN:
+					winelem->y = h - 20;
+					winelem->w = w - 40;
+					break;
 
-			case V_HOTSPOT_SCROLL_DOWN:
-				target->y = h - 20;
-				target->w = w - 40;
-				break;
-
-			case V_HOTSPOT_SCROLL_DOWNRIGHT:
-				target->x = w - 20;
-				target->y = h - 20;
-				break;
+				case V_HOTSPOT_SCROLL_DOWNRIGHT:
+					winelem->x = w - 20;
+					winelem->y = h - 20;
+					break;
+			}
 		}
 	}
 	return V_EVENT_HANDLED_NOREDRAW;
