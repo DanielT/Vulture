@@ -31,7 +31,7 @@ bool scrollwin::draw()
 	/* ensure correct clipping */
 	vulture_set_draw_region(abs_x, abs_y, abs_x + w, abs_y + h);
 
-	for (struct window *winelem = first_child; winelem; winelem = winelem->sib_next) {
+	for (window *winelem = first_child; winelem; winelem = winelem->sib_next) {
 		winelem->abs_x = abs_x + winelem->x;
 		winelem->abs_y = abs_y + winelem->y;
 
@@ -63,7 +63,7 @@ int scrollwin::get_scrollheight(void)
 	if (first_child == NULL)
 		return 0;
 	
-	for (struct window *winelem = first_child; winelem; winelem = winelem->sib_next) {
+	for (window *winelem = first_child; winelem; winelem = winelem->sib_next) {
 		if (winelem != scroll) {
 			lower_edge = winelem->y + winelem->h;
 			max_y = (max_y > lower_edge) ? max_y : lower_edge;

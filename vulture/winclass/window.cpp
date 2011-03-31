@@ -164,7 +164,7 @@ void window::update_background(void)
 /* find the window that has the accelerator "accel" */
 std::vector<window*> window::find_accel(char accel)
 {
-  struct window *child;
+  window *child;
   std::vector<window *> accelerators_found;
 
   for (child = first_child; child; child = child->sib_next)

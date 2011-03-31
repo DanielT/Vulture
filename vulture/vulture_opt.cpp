@@ -397,7 +397,7 @@ void vulture_write_userconfig(void)
 /* display the interface options dialog */
 int vulture_iface_opts(void)
 {
-	struct window * win;
+	window * win;
 	int winid, num_selected, num_selected_sub, i;
 	int size_changed = 0;
 	anything any;

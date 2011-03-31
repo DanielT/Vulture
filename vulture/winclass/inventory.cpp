@@ -89,7 +89,7 @@ bool inventory::draw()
 
 void inventory::update_invscroll(int newpos)
 {
-	struct window * winelem;
+	window * winelem;
 	int itemcount = 0;
 	int itemcol;
 	int leftoffset = border_left;

@@ -48,8 +48,8 @@ int vulture_eventstack_top;
 * function pre-declarations
 ******************************************************************************/
 
-static int vulture_event_dispatcher_core(SDL_Event * event, void * result, struct window * topwin);
-static int vulture_handle_event(struct window * topwin, struct window * win,
+static int vulture_event_dispatcher_core(SDL_Event * event, void * result, window * topwin);
+static int vulture_handle_event(window * topwin, window * win,
 								void * result, SDL_Event * event, int * redraw);
 
 
@@ -286,7 +286,7 @@ static int vulture_handle_event(window *topwin, window *win,
 								void *result, SDL_Event *event, int *redraw)
 {
 	int event_result = V_EVENT_UNHANDLED;
-	struct window * winptr = win;
+	window * winptr = win;
 
 	while (event_result < V_EVENT_HANDLED_NOREDRAW)
 	{
@@ -428,7 +428,7 @@ void vulture_refresh_window_region(void)
 /* resize the vulture application window to the given width and height */
 void vulture_win_resize(int width, int height)
 {
-	struct window *current, *topwin;
+	window *current, *topwin;
 	SDL_Event event;
 	vulture_event dummy;
 	bool descend = true;
