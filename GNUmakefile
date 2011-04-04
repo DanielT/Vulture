@@ -12,7 +12,7 @@ GAMEDEF = VULTURE
 GAMEDIRSUFFIX = -data
 DATE := $(shell date +%Y%m%d%H%M%S)
 GITREVISION := $(strip $(shell git rev-list `git describe --tags --abbrev=0`..master|wc -l > .git-revision; cat .git-revision))
-VERSION = 2.2.$(GITREVISION)
+VERSION = 2.3.$(GITREVISION)
 RELEASE = 1
 FULLNAME = vulture-$(VERSION)
 DISTDIR = dist/$(FULLNAME)
