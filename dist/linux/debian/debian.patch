@@ -1,7 +1,13 @@
-diff -Naur a/debian/changelog b/debian/changelog
---- a/debian/changelog	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/changelog	2011-03-26 01:44:37.906251007 +0100
-@@ -0,0 +1,13 @@
+diff -Nur a//debian/changelog b//debian/changelog
+--- a//debian/changelog	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/changelog	2011-04-05 03:09:18.751209048 +0200
+@@ -0,0 +1,19 @@
++vulture (2.3.67-1) unstable; urgency=low
++
++  * Package new release (2.3.67)
++
++ -- Daniel Thaler <daniel@dthaler.de>  Tue, 05 Apr 2011 02:55:00 +0200
++
 +vulture (2.2.100-1) unstable; urgency=low
 +
 +  * trivial adjustments to include support for UnNetHack
@@ -15,14 +21,14 @@ diff -Naur a/debian/changelog b/debian/changelog
 +
 + -- Daniel Thaler <daniel@dthaler.de>  Wed, 2 Apr 2008 16:16:16 +0200
 +
-diff -Naur a/debian/compat b/debian/compat
---- a/debian/compat	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/compat	2011-03-26 01:44:37.906251007 +0100
+diff -Nur a//debian/compat b//debian/compat
+--- a//debian/compat	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/compat	2011-04-05 03:09:02.907209238 +0200
 @@ -0,0 +1 @@
 +5
-diff -Naur a/debian/control b/debian/control
---- a/debian/control	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/control	2011-03-26 01:44:37.906251007 +0100
+diff -Nur a//debian/control b//debian/control
+--- a//debian/control	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/control	2011-04-05 03:09:13.731209039 +0200
 @@ -0,0 +1,61 @@
 +Source: vulture
 +Section: games
@@ -33,7 +39,7 @@ diff -Naur a/debian/control b/debian/control
 +
 +Package: vulture-nethack
 +Architecture: any
-+Depends: vulture-data (>= 2.2.100), ${shlibs:Depends}
++Depends: vulture-data (>= 2.3.67), ${shlibs:Depends}
 +Replaces: falconseye
 +Description: A port of NetHack using SDL
 + Vulture for NetHack is a mouse-driven interface for NetHack that enhances the visuals,
@@ -52,7 +58,7 @@ diff -Naur a/debian/control b/debian/control
 +
 +Package: vulture-slashem
 +Architecture: any
-+Depends: vulture-data (>= 2.2.100), ${shlibs:Depends}
++Depends: vulture-data (>= 2.3.67), ${shlibs:Depends}
 +Description: A port of SLASH'em using SDL
 + Vulture for Slash'EM is a mouse-driven interface for SLASH'em that enhances the visuals,
 + audio and accessibility of the game, yet retains all the original gameplay and 
@@ -61,7 +67,7 @@ diff -Naur a/debian/control b/debian/control
 +
 +Package: vulture-unnethack
 +Architecture: any
-+Depends: vulture-data (>= 2.2.100), ${shlibs:Depends}
++Depends: vulture-data (>= 2.3.67), ${shlibs:Depends}
 +Description: Play UnNetHack using the Vulture UI
 + Vulture for UnNetHack is a mouse-driven interface that enhances the visuals,
 + audio and accessibility of the game, yet retains all the original gameplay and 
@@ -85,9 +91,9 @@ diff -Naur a/debian/control b/debian/control
 + dungeon and its denizens to be discovered by the player in one of a number of
 + characters: you can pick your race, your role, and your gender.
 +
-diff -Naur a/debian/copyright b/debian/copyright
---- a/debian/copyright	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/copyright	2011-03-26 01:44:37.906251007 +0100
+diff -Nur a//debian/copyright b//debian/copyright
+--- a//debian/copyright	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/copyright	2011-04-05 03:09:02.911209138 +0200
 @@ -0,0 +1,109 @@
 +This package was debianized by Daniel Thaler <daniel@dthaler.de> on
 +Wed, 2 Apr 2008 16:16:16 +0200.
@@ -198,9 +204,9 @@ diff -Naur a/debian/copyright b/debian/copyright
 +other words, go ahead and share NetHack, but don't try to stop anyone else
 +from sharing it farther.
 +
-diff -Naur a/debian/README.Debian b/debian/README.Debian
---- a/debian/README.Debian	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/README.Debian	2011-03-26 01:44:37.906251007 +0100
+diff -Nur a//debian/README.Debian b//debian/README.Debian
+--- a//debian/README.Debian	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/README.Debian	2011-04-05 03:09:02.911209138 +0200
 @@ -0,0 +1,13 @@
 +vulture for Debian
 +---------------------
@@ -215,9 +221,9 @@ diff -Naur a/debian/README.Debian b/debian/README.Debian
 +Vulture for Slash'EM is the same interface running on the SLASH'em core.
 +
 + -- Jonathan Hseu <vomjom@debian.org>, Sat, 23 Jun 2001 16:16:49 -0500
-diff -Naur a/debian/rules b/debian/rules
---- a/debian/rules	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/rules	2011-03-26 01:44:37.906251007 +0100
+diff -Nur a//debian/rules b//debian/rules
+--- a//debian/rules	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/rules	2011-04-05 03:09:02.911209138 +0200
 @@ -0,0 +1,255 @@
 +#!/usr/bin/make -f
 +# Sample debian/rules that uses debhelper.
@@ -474,9 +480,9 @@ diff -Naur a/debian/rules b/debian/rules
 +
 +binary: binary-arch binary-indep
 +.PHONY: build clean binary-indep binary-arch binary install install-indep install-arch #PHONY_CONFIGURE#
-diff -Naur a/debian/vulture-data.dirs b/debian/vulture-data.dirs
---- a/debian/vulture-data.dirs	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-data.dirs	2011-03-26 01:44:37.906251007 +0100
+diff -Nur a//debian/vulture-data.dirs b//debian/vulture-data.dirs
+--- a//debian/vulture-data.dirs	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-data.dirs	2011-04-05 03:09:02.911209138 +0200
 @@ -0,0 +1,13 @@
 +usr/lib/games/vulture-nethack
 +usr/lib/games/vulture-slashem
@@ -491,9 +497,9 @@ diff -Naur a/debian/vulture-data.dirs b/debian/vulture-data.dirs
 +usr/share/doc/vulture/manual
 +usr/share/doc/vulture/manual/img
 +usr/share/applications
-diff -Naur a/debian/vulture-nethack.6 b/debian/vulture-nethack.6
---- a/debian/vulture-nethack.6	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-nethack.6	2011-03-26 01:44:37.906251007 +0100
+diff -Nur a//debian/vulture-nethack.6 b//debian/vulture-nethack.6
+--- a//debian/vulture-nethack.6	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-nethack.6	2011-04-05 03:09:02.911209138 +0200
 @@ -0,0 +1,87 @@
 +.TH VULTURE-NETHACK 6 "March 2011"
 +.SH NAME
@@ -582,9 +588,9 @@ diff -Naur a/debian/vulture-nethack.6 b/debian/vulture-nethack.6
 +
 +The NetHack project page is http://www.nethack.org
 +
-diff -Naur a/debian/vulture-nethack.desktop b/debian/vulture-nethack.desktop
---- a/debian/vulture-nethack.desktop	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-nethack.desktop	2011-03-26 01:44:37.906251007 +0100
+diff -Nur a//debian/vulture-nethack.desktop b//debian/vulture-nethack.desktop
+--- a//debian/vulture-nethack.desktop	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-nethack.desktop	2011-04-05 03:09:02.911209138 +0200
 @@ -0,0 +1,11 @@
 +[Desktop Entry]
 +Type=Application
@@ -597,9 +603,9 @@ diff -Naur a/debian/vulture-nethack.desktop b/debian/vulture-nethack.desktop
 +Exec=/usr/games/vulture-nethack
 +Terminal=false
 +Categories=Application;Game;
-diff -Naur a/debian/vulture-nethack.dirs b/debian/vulture-nethack.dirs
---- a/debian/vulture-nethack.dirs	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-nethack.dirs	2011-03-26 01:44:37.906251007 +0100
+diff -Nur a//debian/vulture-nethack.dirs b//debian/vulture-nethack.dirs
+--- a//debian/vulture-nethack.dirs	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-nethack.dirs	2011-04-05 03:09:02.911209138 +0200
 @@ -0,0 +1,6 @@
 +usr/games
 +var/games/vulture-nethack/save
@@ -607,22 +613,22 @@ diff -Naur a/debian/vulture-nethack.dirs b/debian/vulture-nethack.dirs
 +etc/vulture
 +usr/share/pixmaps
 +usr/share/applications
-diff -Naur a/debian/vulture-nethack.manpages b/debian/vulture-nethack.manpages
---- a/debian/vulture-nethack.manpages	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-nethack.manpages	2011-03-26 01:44:37.906251007 +0100
+diff -Nur a//debian/vulture-nethack.manpages b//debian/vulture-nethack.manpages
+--- a//debian/vulture-nethack.manpages	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-nethack.manpages	2011-04-05 03:09:02.911209138 +0200
 @@ -0,0 +1 @@
 +debian/vulture-nethack.6
-diff -Naur a/debian/vulture-nethack.menu b/debian/vulture-nethack.menu
---- a/debian/vulture-nethack.menu	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-nethack.menu	2011-03-26 01:44:37.910249007 +0100
+diff -Nur a//debian/vulture-nethack.menu b//debian/vulture-nethack.menu
+--- a//debian/vulture-nethack.menu	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-nethack.menu	2011-04-05 03:09:02.911209138 +0200
 @@ -0,0 +1,4 @@
 +?package(vulture-nethack):needs="X11" section="Games/Adventure"\
 +  title="Vulture's Eye" \
 +  	icon="/usr/share/pixmaps/vulture-nethack.png" \
 +	command="/usr/games/vulture-nethack"
-diff -Naur a/debian/vulture-nethack.postinst b/debian/vulture-nethack.postinst
---- a/debian/vulture-nethack.postinst	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-nethack.postinst	2011-03-26 01:44:37.910249007 +0100
+diff -Nur a//debian/vulture-nethack.postinst b//debian/vulture-nethack.postinst
+--- a//debian/vulture-nethack.postinst	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-nethack.postinst	2011-04-05 03:09:02.911209138 +0200
 @@ -0,0 +1,56 @@
 +#! /bin/sh
 +# postinst script for vulture
@@ -680,9 +686,9 @@ diff -Naur a/debian/vulture-nethack.postinst b/debian/vulture-nethack.postinst
 +exit 0
 +
 +
-diff -Naur a/debian/vulture-nethack.postrm b/debian/vulture-nethack.postrm
---- a/debian/vulture-nethack.postrm	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-nethack.postrm	2011-03-26 01:44:37.910249007 +0100
+diff -Nur a//debian/vulture-nethack.postrm b//debian/vulture-nethack.postrm
+--- a//debian/vulture-nethack.postrm	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-nethack.postrm	2011-04-05 03:09:02.911209138 +0200
 @@ -0,0 +1,42 @@
 +#! /bin/sh
 +# postrm script for vulture
@@ -726,9 +732,9 @@ diff -Naur a/debian/vulture-nethack.postrm b/debian/vulture-nethack.postrm
 +#DEBHELPER#
 +
 +
-diff -Naur a/debian/vulture-nethackrc b/debian/vulture-nethackrc
---- a/debian/vulture-nethackrc	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-nethackrc	2011-03-26 01:44:37.910249007 +0100
+diff -Nur a//debian/vulture-nethackrc b//debian/vulture-nethackrc
+--- a//debian/vulture-nethackrc	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-nethackrc	2011-04-05 03:09:02.911209138 +0200
 @@ -0,0 +1,52 @@
 +# A '#' at the beginning of a line means the rest of the line is a comment.
 +#
@@ -782,9 +788,9 @@ diff -Naur a/debian/vulture-nethackrc b/debian/vulture-nethackrc
 +#LEVELS=c:\games\nethack\bones
 +#SAVE=c:\games\nethack\bones
 +
-diff -Naur a/debian/vulture-nethack.sh b/debian/vulture-nethack.sh
---- a/debian/vulture-nethack.sh	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-nethack.sh	2011-03-26 01:44:37.910249007 +0100
+diff -Nur a//debian/vulture-nethack.sh b//debian/vulture-nethack.sh
+--- a//debian/vulture-nethack.sh	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-nethack.sh	2011-04-05 03:09:02.911209138 +0200
 @@ -0,0 +1,66 @@
 +#!/bin/sh
 +#	SCCS Id: @(#)nethack.sh	3.3	90/02/26
@@ -852,9 +858,9 @@ diff -Naur a/debian/vulture-nethack.sh b/debian/vulture-nethack.sh
 +		exec $HACK "$@" $MAXNROFPLAYERS
 +		;;
 +esac
-diff -Naur a/debian/vulture-slashem.6 b/debian/vulture-slashem.6
---- a/debian/vulture-slashem.6	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-slashem.6	2011-03-26 01:44:37.910249007 +0100
+diff -Nur a//debian/vulture-slashem.6 b//debian/vulture-slashem.6
+--- a//debian/vulture-slashem.6	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-slashem.6	2011-04-05 03:09:02.915209054 +0200
 @@ -0,0 +1,89 @@
 +.TH VULTURE-SLASHEM 6 "March 2011"
 +.SH NAME
@@ -945,9 +951,9 @@ diff -Naur a/debian/vulture-slashem.6 b/debian/vulture-slashem.6
 +
 +The SLASH'em project page is http://www.slashem.org
 +
-diff -Naur a/debian/vulture-slashem.desktop b/debian/vulture-slashem.desktop
---- a/debian/vulture-slashem.desktop	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-slashem.desktop	2011-03-26 01:44:37.910249007 +0100
+diff -Nur a//debian/vulture-slashem.desktop b//debian/vulture-slashem.desktop
+--- a//debian/vulture-slashem.desktop	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-slashem.desktop	2011-04-05 03:09:02.915209054 +0200
 @@ -0,0 +1,11 @@
 +[Desktop Entry]
 +Type=Application
@@ -960,9 +966,9 @@ diff -Naur a/debian/vulture-slashem.desktop b/debian/vulture-slashem.desktop
 +Exec=/usr/games/vulture-slashem
 +Terminal=false
 +Categories=Application;Game;
-diff -Naur a/debian/vulture-slashem.dirs b/debian/vulture-slashem.dirs
---- a/debian/vulture-slashem.dirs	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-slashem.dirs	2011-03-26 01:44:37.910249007 +0100
+diff -Nur a//debian/vulture-slashem.dirs b//debian/vulture-slashem.dirs
+--- a//debian/vulture-slashem.dirs	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-slashem.dirs	2011-04-05 03:09:02.915209054 +0200
 @@ -0,0 +1,6 @@
 +usr/games
 +var/games/vulture-slashem/save
@@ -970,22 +976,22 @@ diff -Naur a/debian/vulture-slashem.dirs b/debian/vulture-slashem.dirs
 +etc/vulture
 +usr/share/pixmaps
 +usr/share/applications
-diff -Naur a/debian/vulture-slashem.manpages b/debian/vulture-slashem.manpages
---- a/debian/vulture-slashem.manpages	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-slashem.manpages	2011-03-26 01:44:37.910249007 +0100
+diff -Nur a//debian/vulture-slashem.manpages b//debian/vulture-slashem.manpages
+--- a//debian/vulture-slashem.manpages	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-slashem.manpages	2011-04-05 03:09:02.915209054 +0200
 @@ -0,0 +1 @@
 +debian/vulture-slashem.6
-diff -Naur a/debian/vulture-slashem.menu b/debian/vulture-slashem.menu
---- a/debian/vulture-slashem.menu	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-slashem.menu	2011-03-26 01:44:37.910249007 +0100
+diff -Nur a//debian/vulture-slashem.menu b//debian/vulture-slashem.menu
+--- a//debian/vulture-slashem.menu	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-slashem.menu	2011-04-05 03:09:02.915209054 +0200
 @@ -0,0 +1,4 @@
 +?package(vulture-slashem):needs="X11" section="Games/Adventure"\
 +  title="Vulture-SLASH'em" \
 +  	icon="/usr/share/pixmaps/vulture-slashem.png" \
 +	command="/usr/games/vulture-slashem"
-diff -Naur a/debian/vulture-slashem.postinst b/debian/vulture-slashem.postinst
---- a/debian/vulture-slashem.postinst	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-slashem.postinst	2011-03-26 01:44:37.910249007 +0100
+diff -Nur a//debian/vulture-slashem.postinst b//debian/vulture-slashem.postinst
+--- a//debian/vulture-slashem.postinst	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-slashem.postinst	2011-04-05 03:09:02.915209054 +0200
 @@ -0,0 +1,56 @@
 +#! /bin/sh
 +# postinst script for vulture
@@ -1043,9 +1049,9 @@ diff -Naur a/debian/vulture-slashem.postinst b/debian/vulture-slashem.postinst
 +exit 0
 +
 +
-diff -Naur a/debian/vulture-slashem.postrm b/debian/vulture-slashem.postrm
---- a/debian/vulture-slashem.postrm	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-slashem.postrm	2011-03-26 01:44:37.910249007 +0100
+diff -Nur a//debian/vulture-slashem.postrm b//debian/vulture-slashem.postrm
+--- a//debian/vulture-slashem.postrm	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-slashem.postrm	2011-04-05 03:09:02.915209054 +0200
 @@ -0,0 +1,42 @@
 +#! /bin/sh
 +# postrm script for vulture
@@ -1089,9 +1095,9 @@ diff -Naur a/debian/vulture-slashem.postrm b/debian/vulture-slashem.postrm
 +#DEBHELPER#
 +
 +
-diff -Naur a/debian/vulture-slashemrc b/debian/vulture-slashemrc
---- a/debian/vulture-slashemrc	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-slashemrc	2011-03-26 01:44:37.910249007 +0100
+diff -Nur a//debian/vulture-slashemrc b//debian/vulture-slashemrc
+--- a//debian/vulture-slashemrc	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-slashemrc	2011-04-05 03:09:02.915209054 +0200
 @@ -0,0 +1,72 @@
 +# A '#' at the beginning of a line means the rest of the line is a comment.
 +#
@@ -1165,9 +1171,9 @@ diff -Naur a/debian/vulture-slashemrc b/debian/vulture-slashemrc
 +#OPTIONS=subkeyvalue:184/91
 +#OPTIONS=subkeyvalue:188/124
 +
-diff -Naur a/debian/vulture-slashem.sh b/debian/vulture-slashem.sh
---- a/debian/vulture-slashem.sh	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-slashem.sh	2011-03-26 01:44:37.910249007 +0100
+diff -Nur a//debian/vulture-slashem.sh b//debian/vulture-slashem.sh
+--- a//debian/vulture-slashem.sh	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-slashem.sh	2011-04-05 03:09:02.915209054 +0200
 @@ -0,0 +1,66 @@
 +#!/bin/sh
 +#	SCCS Id: @(#)nethack.sh	3.3	90/02/26
@@ -1235,9 +1241,9 @@ diff -Naur a/debian/vulture-slashem.sh b/debian/vulture-slashem.sh
 +		exec $HACK "$@" $MAXNROFPLAYERS
 +		;;
 +esac
-diff -Naur a/debian/vulture-unnethack.6 b/debian/vulture-unnethack.6
---- a/debian/vulture-unnethack.6	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-unnethack.6	2011-03-26 01:44:37.910249007 +0100
+diff -Nur a//debian/vulture-unnethack.6 b//debian/vulture-unnethack.6
+--- a//debian/vulture-unnethack.6	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-unnethack.6	2011-04-05 03:09:02.915209054 +0200
 @@ -0,0 +1,89 @@
 +.TH VULTURE-UNNETHACK 6 "March 2011"
 +.SH NAME
@@ -1328,9 +1334,9 @@ diff -Naur a/debian/vulture-unnethack.6 b/debian/vulture-unnethack.6
 +
 +The UnNetHack project page is http://sourceforge.net/apps/trac/unnethack/
 +
-diff -Naur a/debian/vulture-unnethack.desktop b/debian/vulture-unnethack.desktop
---- a/debian/vulture-unnethack.desktop	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-unnethack.desktop	2011-03-26 01:44:37.910249007 +0100
+diff -Nur a//debian/vulture-unnethack.desktop b//debian/vulture-unnethack.desktop
+--- a//debian/vulture-unnethack.desktop	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-unnethack.desktop	2011-04-05 03:09:02.915209054 +0200
 @@ -0,0 +1,11 @@
 +[Desktop Entry]
 +Type=Application
@@ -1343,9 +1349,9 @@ diff -Naur a/debian/vulture-unnethack.desktop b/debian/vulture-unnethack.desktop
 +Exec=/usr/games/vulture-unnethack
 +Terminal=false
 +Categories=Application;Game;
-diff -Naur a/debian/vulture-unnethack.dirs b/debian/vulture-unnethack.dirs
---- a/debian/vulture-unnethack.dirs	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-unnethack.dirs	2011-03-26 01:44:37.910249007 +0100
+diff -Nur a//debian/vulture-unnethack.dirs b//debian/vulture-unnethack.dirs
+--- a//debian/vulture-unnethack.dirs	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-unnethack.dirs	2011-04-05 03:09:02.915209054 +0200
 @@ -0,0 +1,6 @@
 +usr/games
 +var/games/vulture-unnethack/save
@@ -1353,22 +1359,22 @@ diff -Naur a/debian/vulture-unnethack.dirs b/debian/vulture-unnethack.dirs
 +etc/vulture
 +usr/share/pixmaps
 +usr/share/applications
-diff -Naur a/debian/vulture-unnethack.manpages b/debian/vulture-unnethack.manpages
---- a/debian/vulture-unnethack.manpages	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-unnethack.manpages	2011-03-26 01:44:37.914247007 +0100
+diff -Nur a//debian/vulture-unnethack.manpages b//debian/vulture-unnethack.manpages
+--- a//debian/vulture-unnethack.manpages	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-unnethack.manpages	2011-04-05 03:09:02.915209054 +0200
 @@ -0,0 +1 @@
 +debian/vulture-unnethack.6
-diff -Naur a/debian/vulture-unnethack.menu b/debian/vulture-unnethack.menu
---- a/debian/vulture-unnethack.menu	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-unnethack.menu	2011-03-26 01:44:37.914247007 +0100
+diff -Nur a//debian/vulture-unnethack.menu b//debian/vulture-unnethack.menu
+--- a//debian/vulture-unnethack.menu	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-unnethack.menu	2011-04-05 03:09:02.915209054 +0200
 @@ -0,0 +1,4 @@
 +?package(vulture-unnethack):needs="X11" section="Games/Adventure"\
 +  title="Vulture-UnNetHack" \
 +  	icon="/usr/share/pixmaps/vulture-unnethack.png" \
 +	command="/usr/games/vulture-unnethack"
-diff -Naur a/debian/vulture-unnethack.postinst b/debian/vulture-unnethack.postinst
---- a/debian/vulture-unnethack.postinst	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-unnethack.postinst	2011-03-26 01:44:37.914247007 +0100
+diff -Nur a//debian/vulture-unnethack.postinst b//debian/vulture-unnethack.postinst
+--- a//debian/vulture-unnethack.postinst	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-unnethack.postinst	2011-04-05 03:09:02.915209054 +0200
 @@ -0,0 +1,56 @@
 +#! /bin/sh
 +# postinst script for vulture
@@ -1426,9 +1432,9 @@ diff -Naur a/debian/vulture-unnethack.postinst b/debian/vulture-unnethack.postin
 +exit 0
 +
 +
-diff -Naur a/debian/vulture-unnethack.postrm b/debian/vulture-unnethack.postrm
---- a/debian/vulture-unnethack.postrm	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-unnethack.postrm	2011-03-26 01:44:37.914247007 +0100
+diff -Nur a//debian/vulture-unnethack.postrm b//debian/vulture-unnethack.postrm
+--- a//debian/vulture-unnethack.postrm	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-unnethack.postrm	2011-04-05 03:09:02.915209054 +0200
 @@ -0,0 +1,42 @@
 +#! /bin/sh
 +# postrm script for vulture
@@ -1472,9 +1478,9 @@ diff -Naur a/debian/vulture-unnethack.postrm b/debian/vulture-unnethack.postrm
 +#DEBHELPER#
 +
 +
-diff -Naur a/debian/vulture-unnethackrc b/debian/vulture-unnethackrc
---- a/debian/vulture-unnethackrc	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-unnethackrc	2011-03-26 01:44:37.914247007 +0100
+diff -Nur a//debian/vulture-unnethackrc b//debian/vulture-unnethackrc
+--- a//debian/vulture-unnethackrc	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-unnethackrc	2011-04-05 03:09:02.915209054 +0200
 @@ -0,0 +1,72 @@
 +# A '#' at the beginning of a line means the rest of the line is a comment.
 +#
@@ -1548,9 +1554,9 @@ diff -Naur a/debian/vulture-unnethackrc b/debian/vulture-unnethackrc
 +#OPTIONS=subkeyvalue:184/91
 +#OPTIONS=subkeyvalue:188/124
 +
-diff -Naur a/debian/vulture-unnethack.sh b/debian/vulture-unnethack.sh
---- a/debian/vulture-unnethack.sh	1970-01-01 01:00:00.000000000 +0100
-+++ b/debian/vulture-unnethack.sh	2011-03-26 01:44:37.914247007 +0100
+diff -Nur a//debian/vulture-unnethack.sh b//debian/vulture-unnethack.sh
+--- a//debian/vulture-unnethack.sh	1970-01-01 01:00:00.000000000 +0100
++++ b//debian/vulture-unnethack.sh	2011-04-05 03:09:02.919208964 +0200
 @@ -0,0 +1,66 @@
 +#!/bin/sh
 +#	SCCS Id: @(#)nethack.sh	3.3	90/02/26
@@ -1618,9 +1624,9 @@ diff -Naur a/debian/vulture-unnethack.sh b/debian/vulture-unnethack.sh
 +		exec $HACK "$@" $MAXNROFPLAYERS
 +		;;
 +esac
-diff -Naur a/nethack/include/config.h b/nethack/include/config.h
---- a/nethack/include/config.h	2011-03-25 16:06:32.559735016 +0100
-+++ b/nethack/include/config.h	2011-03-26 01:44:37.914247007 +0100
+diff -Nur a//nethack/include/config.h b//nethack/include/config.h
+--- a//nethack/include/config.h	2011-04-04 20:23:52.000000000 +0200
++++ b//nethack/include/config.h	2011-04-05 03:09:02.919208964 +0200
 @@ -153,7 +153,7 @@
  
  #ifndef WIZARD		/* allow for compile-time or Makefile changes */
@@ -1648,9 +1654,9 @@ diff -Naur a/nethack/include/config.h b/nethack/include/config.h
  /* monsters & objects */
  #define KOPS		/* Keystone Kops by Scott R. Turner */
  #define SEDUCE		/* Succubi/incubi seduction, by KAA, suggested by IM */
-diff -Naur a/nethack/include/config.h.orig b/nethack/include/config.h.orig
---- a/nethack/include/config.h.orig	1970-01-01 01:00:00.000000000 +0100
-+++ b/nethack/include/config.h.orig	2011-03-26 01:44:37.914247007 +0100
+diff -Nur a//nethack/include/config.h.orig b//nethack/include/config.h.orig
+--- a//nethack/include/config.h.orig	1970-01-01 01:00:00.000000000 +0100
++++ b//nethack/include/config.h.orig	2011-04-05 03:09:02.919208964 +0200
 @@ -0,0 +1,372 @@
 +/*	SCCS Id: @(#)config.h	3.4	2003/12/06	*/
 +/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
@@ -2024,9 +2030,9 @@ diff -Naur a/nethack/include/config.h.orig b/nethack/include/config.h.orig
 +#include "global.h"	/* Define everything else according to choices above */
 +
 +#endif /* CONFIG_H */
-diff -Naur a/nethack/include/unixconf.h b/nethack/include/unixconf.h
---- a/nethack/include/unixconf.h	2011-03-25 16:06:32.283873016 +0100
-+++ b/nethack/include/unixconf.h	2011-03-26 01:44:37.914247007 +0100
+diff -Nur a//nethack/include/unixconf.h b//nethack/include/unixconf.h
+--- a//nethack/include/unixconf.h	2011-04-04 20:23:52.000000000 +0200
++++ b//nethack/include/unixconf.h	2011-04-05 03:09:02.919208964 +0200
 @@ -37,7 +37,7 @@
  #define NETWORK		/* if running on a networked system */
  			/* e.g. Suns sharing a playground through NFS */
@@ -2045,9 +2051,9 @@ diff -Naur a/nethack/include/unixconf.h b/nethack/include/unixconf.h
  
  
  /*
-diff -Naur a/slashem/include/config.h b/slashem/include/config.h
---- a/slashem/include/config.h	2011-03-25 16:05:56.741015016 +0100
-+++ b/slashem/include/config.h	2011-03-26 01:45:16.091148998 +0100
+diff -Nur a//slashem/include/config.h b//slashem/include/config.h
+--- a//slashem/include/config.h	2011-04-04 20:23:53.000000000 +0200
++++ b//slashem/include/config.h	2011-04-05 03:09:02.919208964 +0200
 @@ -209,7 +209,7 @@
  
  #ifndef WIZARD		/* allow for compile-time or Makefile changes */
@@ -2083,9 +2089,9 @@ diff -Naur a/slashem/include/config.h b/slashem/include/config.h
  #  endif
  # endif
  
-diff -Naur a/slashem/include/config.h.orig b/slashem/include/config.h.orig
---- a/slashem/include/config.h.orig	1970-01-01 01:00:00.000000000 +0100
-+++ b/slashem/include/config.h.orig	2011-03-26 01:44:37.918245007 +0100
+diff -Nur a//slashem/include/config.h.orig b//slashem/include/config.h.orig
+--- a//slashem/include/config.h.orig	1970-01-01 01:00:00.000000000 +0100
++++ b//slashem/include/config.h.orig	2011-04-05 03:09:02.923208931 +0200
 @@ -0,0 +1,503 @@
 +/*	SCCS Id: @(#)config.h	3.4	2003/12/06	*/
 +/* Copyright (c) Stichting Mathematisch Centrum, Amsterdam, 1985. */
@@ -2590,9 +2596,9 @@ diff -Naur a/slashem/include/config.h.orig b/slashem/include/config.h.orig
 +#include "global.h"	/* Define everything else according to choices above */
 +
 +#endif /* CONFIG_H */
-diff -Naur a/slashem/include/unixconf.h b/slashem/include/unixconf.h
---- a/slashem/include/unixconf.h	2011-03-25 16:05:56.393015016 +0100
-+++ b/slashem/include/unixconf.h	2011-03-26 01:44:37.918245007 +0100
+diff -Nur a//slashem/include/unixconf.h b//slashem/include/unixconf.h
+--- a//slashem/include/unixconf.h	2011-04-04 20:23:53.000000000 +0200
++++ b//slashem/include/unixconf.h	2011-04-05 03:09:02.923208931 +0200
 @@ -174,7 +174,7 @@
   * If you want the static parts of your playground on a read-only file
   * system, define VAR_PLAYGROUND to be where the variable parts are kept.
@@ -2602,9 +2608,9 @@ diff -Naur a/slashem/include/unixconf.h b/slashem/include/unixconf.h
  
  
  
-diff -Naur a/unnethack/include/config.h b/unnethack/include/config.h
---- a/unnethack/include/config.h	2011-03-25 16:07:02.920547017 +0100
-+++ b/unnethack/include/config.h	2011-03-26 01:44:37.918245007 +0100
+diff -Nur a//unnethack/include/config.h b//unnethack/include/config.h
+--- a//unnethack/include/config.h	2011-04-04 20:23:53.000000000 +0200
++++ b//unnethack/include/config.h	2011-04-05 03:09:02.923208931 +0200
 @@ -198,8 +198,8 @@
  /* #define COMPRESS "/usr/bin/compress" */	/* Lempel-Ziv compression */
  /* #define COMPRESS_EXTENSION ".Z"	*/	/* compress's extension */
@@ -2625,9 +2631,9 @@ diff -Naur a/unnethack/include/config.h b/unnethack/include/config.h
  # endif
  
  /*
-diff -Naur a/unnethack/include/unixconf.h b/unnethack/include/unixconf.h
---- a/unnethack/include/unixconf.h	2011-03-25 16:07:02.560727016 +0100
-+++ b/unnethack/include/unixconf.h	2011-03-26 01:44:37.918245007 +0100
+diff -Nur a//unnethack/include/unixconf.h b//unnethack/include/unixconf.h
+--- a//unnethack/include/unixconf.h	2011-04-04 20:23:53.000000000 +0200
++++ b//unnethack/include/unixconf.h	2011-04-05 03:09:02.923208931 +0200
 @@ -102,7 +102,7 @@
   * If you want the static parts of your playground on a read-only file
   * system, define VAR_PLAYGROUND to be where the variable parts are kept.
